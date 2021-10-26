@@ -20,7 +20,7 @@ Along with following custom commands:
     count datasets  
     visited  
     submit <arg> - where arg is a member name  
-    cancel <arg> - where arg is a task name  
+    cancel <arg> - where arg is a task/job name  
   
 To quit from the command shell UI, you can either press ctrl-c keys or enter 'end' keyword.  
   
