@@ -2,7 +2,7 @@
 
 This project demostrates the usage of the Zowe Java SDK located here https://github.com/zowe/zowe-client-java-sdk.    
   
-Project provides a shell GUI command prompt that allows you to manipulate datasets and its members. The shell performs linux like commands:  
+Project provides a UI shell command prompt that allows you to manipulate datasets and its members. The shell performs linux like commands:  
   
     cat
     cd
