@@ -1,8 +1,11 @@
+package com;
+
 import core.ZOSConnection;
 import org.apache.commons.io.IOUtils;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextIoFactory;
 import org.beryx.textio.TextTerminal;
+import org.beryx.textio.swing.SwingTextTerminal;
 import org.beryx.textio.web.RunnerData;
 import utility.UtilIO;
 import zosconsole.ConsoleResponse;
@@ -39,8 +42,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static TextTerminal<?> terminal;
 
     public static void main(String[] args) {
-        TextIO textIO = TextIoFactory.getTextIO();
-        new ZosShell().accept(textIO, null);
+        SwingTextTerminal mainTerm = new SwingTextTerminal();
+        mainTerm.init();
+        TextIO mainTextIO = new TextIO(mainTerm);
+        new ZosShell().accept(mainTextIO, null);
     }
 
     @Override
@@ -121,7 +126,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     terminal.printf("specified either \"count members\" or \"count datasets\"\n");
                     return;
                 }
-                if ( !("members".equalsIgnoreCase(commands[1]) || "datasets".equalsIgnoreCase(commands[1])) ) {
+                if (!("members".equalsIgnoreCase(commands[1]) || "datasets".equalsIgnoreCase(commands[1]))) {
                     terminal.printf("specified either \"count members\" or \"count datasets\"\n");
                     return;
                 }
@@ -376,7 +381,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             e.printStackTrace();
         }
         jobs.sort(Comparator.comparing((Job j) -> j.getJobName().get())
-                        .thenComparing(j -> j.getStatus().get()).thenComparing(j -> j.getJobId().get()));
+                .thenComparing(j -> j.getStatus().get()).thenComparing(j -> j.getJobId().get()));
         jobs.forEach(job -> terminal.printf(
                 String.format("%-8s %-8s %-8s\n", job.getJobName().get(), job.getJobId().get(), job.getStatus().get()))
         );
