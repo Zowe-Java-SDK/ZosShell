@@ -43,6 +43,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     public static void main(String[] args) {
         SwingTextTerminal mainTerm = new SwingTextTerminal();
+        mainTerm.setPaneTitle("ZosShell");
         mainTerm.init();
         TextIO mainTextIO = new TextIO(mainTerm);
         new ZosShell().accept(mainTextIO, null);
