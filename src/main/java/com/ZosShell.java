@@ -92,34 +92,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 if (isParamsExceeded(2, commands))
                     return;
-
-                String dataSet = commands[1];
-
-                if (isDataSet(dataSet)) {
-                    currDataSet = dataSet;
-                } else if (dataSet.equals("..") && !currDataSet.isEmpty()) {
-
-                    String[] tokens = currDataSet.split("\\.");
-                    int length = tokens.length - 1;
-                    if (length == 1) {
-                        terminal.printf("cant change to high qualifier level, try again...\n");
-                        return;
-                    }
-
-                    StringBuilder newDataSet = new StringBuilder();
-                    for (int i = 0; i < length; i++) {
-                        newDataSet.append(tokens[i]);
-                        newDataSet.append(".");
-                    }
-
-                    String str = newDataSet.toString();
-                    str = str.substring(0, str.length() - 1);
-                    currDataSet = str;
-                } else {
-                    terminal.printf("invalid dataset or cant change to high qualifier level, try again...\n");
-                    return;
-                }
-
+                if (cd(commands[1])) return;
                 dataSets.add(currDataSet);
                 break;
             case "count":
@@ -218,6 +191,36 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             display(inputStream);
         } catch (Exception e) {
         }
+    }
+
+    private static boolean cd(String command1) {
+        String dataSet = command1;
+
+        if (isDataSet(dataSet)) {
+            currDataSet = dataSet;
+        } else if (dataSet.equals("..") && !currDataSet.isEmpty()) {
+
+            String[] tokens = currDataSet.split("\\.");
+            int length = tokens.length - 1;
+            if (length == 1) {
+                terminal.printf("cant change to high qualifier level, try again...\n");
+                return true;
+            }
+
+            StringBuilder newDataSet = new StringBuilder();
+            for (int i = 0; i < length; i++) {
+                newDataSet.append(tokens[i]);
+                newDataSet.append(".");
+            }
+
+            String str = newDataSet.toString();
+            str = str.substring(0, str.length() - 1);
+            currDataSet = str;
+        } else {
+            terminal.printf("invalid dataset or cant change to high qualifier level, try again...\n");
+            return true;
+        }
+        return false;
     }
 
     private static void count(String param) {
