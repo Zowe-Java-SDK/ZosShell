@@ -3,7 +3,6 @@ package com;
 import core.ZOSConnection;
 import org.apache.commons.io.IOUtils;
 import org.beryx.textio.TextIO;
-import org.beryx.textio.TextIoFactory;
 import org.beryx.textio.TextTerminal;
 import org.beryx.textio.swing.SwingTextTerminal;
 import org.beryx.textio.web.RunnerData;
