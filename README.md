@@ -2,9 +2,9 @@
 
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demo.gif)
   
-This project demostrates the usage of the Zowe Java SDK located here https://github.com/zowe/zowe-client-java-sdk.
+This project demonstrates the usage of the [Zowe Java SDK](https://github.com/zowe/zowe-client-java-sdk).
   
-Project provides a UI shell command prompt that allows you to manipulate datasets and its members. The shell performs linux like commands:  
+Project provides a UI shell command prompt that allows you to manipulate datasets and its members. The shell performs the following linux commands:  
   
     cat
     cd
@@ -14,7 +14,7 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
     ps <arg> - where arg is a task/job name   
     pwd   
   
-Along with following custom like commands:  
+Along with following custom commands:  
     
     count members  
     count datasets  
@@ -22,5 +22,5 @@ Along with following custom like commands:
     submit <arg> - where arg is a member name  
     cancel <arg> - where arg is a task name  
   
-To quit from the command shell UI, you can either ctrl-c or enter 'end' keyword.  
+To quit from the command shell UI, you can either press ctrl-c keys or enter 'end' keyword.  
   
