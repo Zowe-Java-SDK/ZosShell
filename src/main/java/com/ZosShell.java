@@ -242,7 +242,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             StringWriter writer = new StringWriter();
             IOUtils.copy(inputStream, writer, UtilIO.UTF8);
             String[] content = writer.toString().split("\\n");
-            Arrays.stream(content).forEach(c -> terminal.printf(c + "\n"));
+            Arrays.stream(content).forEach(c -> terminal.println(c));
         }
         inputStream.close();
     }
