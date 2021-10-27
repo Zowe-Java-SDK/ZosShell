@@ -13,14 +13,17 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
     ps
     ps <arg> - where arg is a task/job name   
     pwd   
+    uname
   
 Along with following custom commands:  
     
     count members  
     count datasets  
-    visited  
-    submit <arg> - where arg is a member name  
-    cancel <arg> - where arg is a task/job name  
+    visited         - a list of visited datasets
+    submit <arg>    - where arg is a member name  
+    cancel <arg>    - where arg is a task/job name  
+    connections     - a list of connection(s)   
+    change <arg>    - where arg is a number representing a connection
   
 To quit from the command shell UI, you can either press ctrl-c keys or enter 'end' keyword.  
   
@@ -31,13 +34,13 @@ To quit from the command shell UI, you can either press ctrl-c keys or enter 'en
     
 ## Build And Execute  
 
-Edit src/main/java/com/ZosShell.java and change the following variables with the needed values to connect to your mainframe instance:  
+Create a creds.txt under the C:\ drive that contains a list of z/OSMF connections per line with a comma delimiter for
+connection values. You can specify drive location by changing the hard coded value in the code.  
   
-    private static final String hostName = "xxxx";
-    private static final String zosmfPort = "xxxx";
-    private static final String userName = "xxxx";
-    private static final String password = "xxxx";
-  
+For format will be:  
+    
+    hostname,zomsfportnumber,username,password  
+    
 At the root directory prompt, execute the following maven command:  
   
     mvn clean install  
