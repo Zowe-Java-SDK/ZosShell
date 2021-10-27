@@ -19,10 +19,9 @@ import zosjobs.SubmitJobs;
 import zosjobs.input.GetJobParams;
 import zosjobs.response.Job;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,14 +32,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private static List<String> dataSets = new ArrayList<>();
     private static String currDataSet = "";
-    private static final String hostName = "xxxx";
-    private static final String zosmfPort = "xxxx";
-    private static final String userName = "xxxx";
-    private static final String password = "xxxx";
-    private static ZOSConnection connection = new ZOSConnection(hostName, zosmfPort, userName, password);
+    private static List<ZOSConnection> connections = new ArrayList<>();
+    private static ZOSConnection currConnection;
     private static TextTerminal<?> terminal;
 
     public static void main(String[] args) {
+        readCredentials();
+        if (!connections.isEmpty())
+            currConnection = connections.get(0);
         SwingTextTerminal mainTerm = new SwingTextTerminal();
         mainTerm.setPaneTitle("ZosShell");
         mainTerm.init();
@@ -48,11 +47,31 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         new ZosShell().accept(mainTextIO, null);
     }
 
+    private static void readCredentials() {
+        File file = new File("C:\\creds.txt");
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            String str;
+            while ((str = br.readLine()) != null) {
+                String line[] = str.split(",");
+                if (line.length < 4)
+                    continue;
+                ZOSConnection connection = new ZOSConnection(line[0], line[1], line[2], line[3]);
+                connections.add(connection);
+            }
+        } catch (IOException e) {
+        }
+    }
+
     @Override
     public void accept(TextIO textIO, RunnerData runnerData) {
         terminal = textIO.getTextTerminal();
-        terminal.println("Connected to " + hostName + " with user " + userName);
-
+        if (currConnection == null) {
+            terminal.println("No connection(s) made or defined..");
+        } else {
+            terminal.println("Connected to " + currConnection.getHost() + " with user " + currConnection.getUser());
+        }
         String[] commands;
         String commandLine = "";
         while (!"end".equalsIgnoreCase(commandLine)) {
@@ -93,6 +112,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 if (cd(commands[1])) return;
                 dataSets.add(currDataSet);
+                break;
+            case "change":
+                if (commands.length == 1)
+                    return;
+                change(commands);
+                break;
+            case "connections":
+                connections();
                 break;
             case "count":
                 if (commands.length == 1) {
@@ -151,6 +178,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 param = commands[1];
                 submit(param);
                 break;
+            case "uname":
+                if (currConnection != null) {
+                    terminal.printf(
+                            "hostname: " + currConnection.getHost() + ", port: " + currConnection.getZosmfPort() + "\n");
+                } else {
+                    terminal.printf("no info...\n");
+                }
+                break;
             case "visited":
                 if (isParamsExceeded(1, commands))
                     return;
@@ -164,7 +199,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void cancel(String param) {
-        IssueCommand issueCommand = new IssueCommand(connection);
+        IssueCommand issueCommand = new IssueCommand(currConnection);
         IssueParams params = new IssueParams();
         params.setCommand("C " + param);
         ConsoleResponse response;
@@ -178,7 +213,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void cat(String param) {
-        ZosDsnDownload dl = new ZosDsnDownload(connection);
+        ZosDsnDownload dl = new ZosDsnDownload(currConnection);
         DownloadParams dlParams = new DownloadParams.Builder().build();
         InputStream inputStream;
         try {
@@ -222,8 +257,33 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         return false;
     }
 
+    private static void change(String[] commands) {
+        if (currConnection != null) {
+            int index = Integer.parseInt(commands[1]);
+            if (index-- > connections.size()) {
+                terminal.printf("no connection to change too...\n");
+                return;
+            }
+            currConnection = connections.get(index);
+        } else {
+            terminal.printf("no connection to change too...\n");
+        }
+    }
+
+    private static void connections() {
+        if (currConnection != null) {
+            AtomicInteger i = new AtomicInteger(1);
+            connections.forEach(c -> {
+                terminal.printf(i.getAndIncrement() + " " + "hostname: " + c.getHost() + ", port: " +
+                        c.getZosmfPort() + ", user = " + c.getUser() + "\n");
+            });
+        } else {
+            terminal.printf("no info, check connection settings...\n");
+        }
+    }
+
     private static void count(String param) {
-        ZosDsnList zosDsnList = new ZosDsnList(connection);
+        ZosDsnList zosDsnList = new ZosDsnList(currConnection);
         ListParams params = new ListParams.Builder().build();
         List<String> items = new ArrayList<>();
         try {
@@ -302,7 +362,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void ls() {
-        ZosDsnList zosDsnList = new ZosDsnList(connection);
+        ZosDsnList zosDsnList = new ZosDsnList(currConnection);
         ListParams params = new ListParams.Builder().build();
         try {
             List<String> dataSetNames = zosDsnList.listDsn(currDataSet, params);
@@ -317,7 +377,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void lsl() {
-        ZosDsnList zosDsnList = new ZosDsnList(connection);
+        ZosDsnList zosDsnList = new ZosDsnList(currConnection);
         ListParams params = new ListParams.Builder().build();
         try {
             List<String> dataSetNames = zosDsnList.listDsn(currDataSet, params);
@@ -371,7 +431,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void ps(String task) {
-        GetJobs getJobs = new GetJobs(connection);
+        GetJobs getJobs = new GetJobs(currConnection);
         List<Job> jobs = null;
         try {
             GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");
@@ -391,7 +451,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void submit(String param) {
-        SubmitJobs submitJobs = new SubmitJobs(connection);
+        SubmitJobs submitJobs = new SubmitJobs(currConnection);
         Job job = null;
         try {
             job = submitJobs.submitJob(String.format("%s(%s)", currDataSet, param));
