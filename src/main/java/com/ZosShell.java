@@ -2,6 +2,8 @@ package com;
 
 import core.ZOSConnection;
 import org.apache.commons.io.IOUtils;
+import org.beryx.textio.ReadHandlerData;
+import org.beryx.textio.ReadInterruptionStrategy;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.beryx.textio.swing.SwingTextTerminal;
@@ -41,10 +43,18 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         if (!connections.isEmpty())
             currConnection = connections.get(0);
         SwingTextTerminal mainTerm = new SwingTextTerminal();
-        mainTerm.setPaneTitle("ZosShell");
         mainTerm.init();
+        setTerminalProperties(mainTerm);
         TextIO mainTextIO = new TextIO(mainTerm);
         new ZosShell().accept(mainTextIO, null);
+    }
+
+    private static void setTerminalProperties(SwingTextTerminal mainTerm) {
+        mainTerm.setPaneTitle("ZosShell");
+        mainTerm.registerHandler("ctrl C", t -> {
+            t.getTextPane().copy();
+            return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+        });
     }
 
     private static void readCredentials() {
@@ -441,7 +451,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             GetJobParams params = getJobParams.build();
             jobs = getJobs.getJobsCommon(params);
         } catch (Exception e) {
-            e.printStackTrace();
         }
         jobs.sort(Comparator.comparing((Job j) -> j.getJobName().get())
                 .thenComparing(j -> j.getStatus().get()).thenComparing(j -> j.getJobId().get()));

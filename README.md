@@ -25,7 +25,7 @@ Along with following custom commands:
     connections     - a list of connection(s)   
     change <arg>    - where arg is a number representing a connection
   
-To quit from the command shell UI, you can either press ctrl-c keys or enter 'end' keyword.  
+To quit from the command shell UI, you can either press 'X' windows close icon or enter 'end' keyword.  
   
 ## Requirements  
   
