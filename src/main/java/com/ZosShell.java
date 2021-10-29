@@ -10,12 +10,14 @@ import org.beryx.textio.TextTerminal;
 import org.beryx.textio.swing.SwingTextTerminal;
 import org.beryx.textio.web.RunnerData;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
-    private static LinkedHashSet <String> dataSets = new LinkedHashSet <>();
+    private static LinkedHashSet<String> dataSets = new LinkedHashSet<>();
     private static String currDataSet = "";
     private static List<ZOSConnection> connections = new ArrayList<>();
     private static ZOSConnection currConnection;
@@ -31,7 +33,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         setTerminalProperties(mainTerm);
         TextIO mainTextIO = new TextIO(mainTerm);
         new ZosShell().accept(mainTextIO, null);
-        commands = new Commands(connections, terminal);
     }
 
     private static void setTerminalProperties(SwingTextTerminal mainTerm) {
@@ -45,6 +46,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     @Override
     public void accept(TextIO textIO, RunnerData runnerData) {
         terminal = textIO.getTextTerminal();
+        commands = new Commands(connections, terminal);
         if (currConnection == null) {
             terminal.println(Constants.NO_CONNECTIONS);
         } else {
