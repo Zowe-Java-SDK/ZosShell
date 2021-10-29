@@ -1,5 +1,6 @@
 package com.command;
 
+import com.Constants;
 import com.utility.Util;
 import core.ZOSConnection;
 import org.apache.commons.io.IOUtils;
@@ -20,10 +21,7 @@ import zosjobs.response.Job;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Commands {
@@ -94,7 +92,7 @@ public class Commands {
     public ZOSConnection change(ZOSConnection connection, String[] commands) {
         int index = Integer.parseInt(commands[1]);
         if (index-- > connections.size()) {
-            terminal.printf("no connection to change too...\n");
+            terminal.printf(Constants.NO_CONNECTION + "\n");
             return connection;
         }
         return connections.get(index);
@@ -108,7 +106,7 @@ public class Commands {
                         c.getZosmfPort() + ", user = " + c.getUser() + "\n");
             });
         } else {
-            terminal.printf("no info, check connection settings...\n");
+            terminal.printf(Constants.NO_CONNECTION_INFO + "\n");
         }
     }
 

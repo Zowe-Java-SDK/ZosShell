@@ -1,5 +1,6 @@
 package com.credential;
 
+import com.Constants;
 import core.ZOSConnection;
 
 import java.io.BufferedReader;
@@ -10,10 +11,8 @@ import java.util.List;
 
 public class Credentials {
 
-    private static final String PATH_FILE = "C:\\creds.txt";
-
     public static void readCredentials(List<ZOSConnection> connections) {
-        File file = new File(PATH_FILE);
+        File file = new File(Constants.PATH_FILE);
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
 

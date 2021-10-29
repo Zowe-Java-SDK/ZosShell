@@ -15,8 +15,6 @@ import java.util.function.BiConsumer;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
-    private static final String TOO_MANY_PARAMETERS = "too many parameters, try again...\n";
-
     private static LinkedHashSet <String> dataSets = new LinkedHashSet <>();
     private static String currDataSet = "";
     private static List<ZOSConnection> connections = new ArrayList<>();
@@ -37,7 +35,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void setTerminalProperties(SwingTextTerminal mainTerm) {
-        mainTerm.setPaneTitle("ZosShell");
+        mainTerm.setPaneTitle(Constants.APP_TITLE);
         mainTerm.registerHandler("ctrl C", t -> {
             t.getTextPane().copy();
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
@@ -48,7 +46,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     public void accept(TextIO textIO, RunnerData runnerData) {
         terminal = textIO.getTextTerminal();
         if (currConnection == null) {
-            terminal.println("No connection(s) made or defined..");
+            terminal.println(Constants.NO_CONNECTIONS);
         } else {
             terminal.println("Connected to " + currConnection.getHost() + " with user " + currConnection.getUser());
         }
@@ -103,11 +101,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 break;
             case "count":
                 if (params.length == 1) {
-                    terminal.printf("specified either \"count members\" or \"count datasets\"\n");
+                    terminal.printf(Constants.MISSING_COUNT_PARAM + "\n");
                     return;
                 }
                 if (!("members".equalsIgnoreCase(params[1]) || "datasets".equalsIgnoreCase(params[1]))) {
-                    terminal.printf("specified either \"count members\" or \"count datasets\"\n");
+                    terminal.printf(Constants.MISSING_COUNT_PARAM + "\n");
                     return;
                 }
                 if (isParamsExceeded(2, params))
@@ -121,7 +119,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params))
                     return;
                 if (params.length == 2 && !"-l".equalsIgnoreCase(params[1])) {
-                    terminal.printf(TOO_MANY_PARAMETERS);
+                    terminal.printf(Constants.TOO_MANY_PARAMETERS + "\n");
                     return;
                 }
                 if (params.length == 2 && "-l".equalsIgnoreCase(params[1])) {
@@ -174,13 +172,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 dataSets.forEach(terminal::println);
                 break;
             default:
-                terminal.printf("invalid command, try again...\n");
+                terminal.printf(Constants.INVALID_COMMAND + "\n");
         }
     }
 
     private static boolean isParamsExceeded(int num, String[] commands) {
         if (commands.length > num) {
-            terminal.printf(TOO_MANY_PARAMETERS);
+            terminal.printf(Constants.TOO_MANY_PARAMETERS + "\n");
             return true;
         }
         return false;
