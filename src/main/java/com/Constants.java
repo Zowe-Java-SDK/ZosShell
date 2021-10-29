@@ -10,5 +10,6 @@ public class Constants {
     public static final String PATH_FILE = "C:\\creds.txt";
     public static final String NO_CONNECTION_INFO = "no info, check connection settings...";
     public static final String NO_CONNECTION = "no connection to change too...";
+    public static final String NO_INFO = "no info...";
 
 }

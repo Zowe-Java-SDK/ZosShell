@@ -163,7 +163,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     terminal.printf(
                             "hostname: " + currConnection.getHost() + ", port: " + currConnection.getZosmfPort() + "\n");
                 } else {
-                    terminal.printf("no info...\n");
+                    terminal.printf(Constants.NO_INFO + "\n");
                 }
                 break;
             case "visited":
