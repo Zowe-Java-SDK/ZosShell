@@ -13,6 +13,7 @@ import zosfiles.ZosDsnDownload;
 import zosfiles.ZosDsnList;
 import zosfiles.input.DownloadParams;
 import zosfiles.input.ListParams;
+import zosfiles.response.Dataset;
 import zosjobs.GetJobs;
 import zosjobs.SubmitJobs;
 import zosjobs.input.GetJobParams;
@@ -116,29 +117,30 @@ public class Commands {
     public void count(ZOSConnection connection, String dataSet, String param) {
         ZosDsnList zosDsnList = new ZosDsnList(connection);
         ListParams params = new ListParams.Builder().build();
-        List<String> items = new ArrayList<>();
+        List<Dataset> ds = new ArrayList<>();
+        List<String> members = new ArrayList<>();
         try {
             if ("members".equalsIgnoreCase(param)) {
-                items = zosDsnList.listDsnMembers(dataSet, params);
+                members = zosDsnList.listDsnMembers(dataSet, params);
             }
             if ("datasets".equalsIgnoreCase(param)) {
-                items = zosDsnList.listDsn(dataSet, params);
+                ds = zosDsnList.listDsn(dataSet, params);
             }
         } catch (Exception e) {
             terminal.printf("0" + "\n");
             return;
         }
-        terminal.printf(items.size() + "\n");
+        terminal.printf(members.size() + ds.size() + "\n");
     }
 
     public void ls(ZOSConnection connection, String dataSet) {
         ZosDsnList zosDsnList = new ZosDsnList(connection);
         ListParams params = new ListParams.Builder().build();
         try {
-            List<String> dataSetNames = zosDsnList.listDsn(dataSet, params);
-            dataSetNames.forEach(ds -> {
-                if (!ds.equalsIgnoreCase(dataSet))
-                    terminal.printf(ds + "\n");
+            List<Dataset> dataSets = zosDsnList.listDsn(dataSet, params);
+            dataSets.forEach(ds -> {
+                if (!ds.getDsname().get().equalsIgnoreCase(dataSet))
+                    terminal.printf(ds.getDsname().get() + "\n");
             });
             List<String> members = zosDsnList.listDsnMembers(dataSet, params);
             members.forEach(m -> terminal.printf(m + "\n"));
@@ -150,10 +152,10 @@ public class Commands {
         ZosDsnList zosDsnList = new ZosDsnList(connection);
         ListParams params = new ListParams.Builder().build();
         try {
-            List<String> dataSetNames = zosDsnList.listDsn(dataSet, params);
-            dataSetNames.forEach(ds -> {
-                if (!ds.equalsIgnoreCase(dataSet))
-                    terminal.printf(ds + "\n");
+            List<Dataset> dataSets = zosDsnList.listDsn(dataSet, params);
+            dataSets.forEach(ds -> {
+                if (!ds.getDsname().get().equalsIgnoreCase(dataSet))
+                    terminal.printf(ds.getDsname().get() + "\n");
             });
             List<String> members = zosDsnList.listDsnMembers(dataSet, params);
             int size = members.size();
