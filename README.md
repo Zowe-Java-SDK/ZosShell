@@ -37,7 +37,7 @@ To quit from the command shell UI, you can either press 'X' windows close icon o
 Create a creds.txt under the C:\ drive that contains a list of z/OSMF connections per line with a comma delimiter for
 connection values. You can specify drive location by changing the hard coded value in the code.  
   
-For format will be:  
+Format:  
     
     hostname,zomsfportnumber,username,password  
     
