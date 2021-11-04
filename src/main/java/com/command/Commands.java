@@ -105,10 +105,10 @@ public class Commands {
     public void connections(ZOSConnection connection) {
         if (connection != null) {
             AtomicInteger i = new AtomicInteger(1);
-            connections.forEach(c -> {
+            connections.forEach(c ->
                 terminal.printf(i.getAndIncrement() + " " + "hostname: " + c.getHost() + ", port: " +
-                        c.getZosmfPort() + ", user = " + c.getUser() + "\n");
-            });
+                        c.getZosmfPort() + ", user = " + c.getUser() + "\n")
+            );
         } else {
             terminal.printf(Constants.NO_CONNECTION_INFO + "\n");
         }
@@ -171,7 +171,7 @@ public class Commands {
                 numOfColumns = 6;
             } else if (size > 700 && size < 900) {
                 numOfColumns = 7;
-            } else if (size > 1000)
+            } else if (size >= 1000)
                 numOfColumns = 8;
 
             int numOfLines = size / numOfColumns;
