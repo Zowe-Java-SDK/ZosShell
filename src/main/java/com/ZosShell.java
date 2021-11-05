@@ -2,6 +2,7 @@ package com;
 
 import com.command.Commands;
 import com.credential.Credentials;
+import com.utility.Util;
 import core.ZOSConnection;
 import org.beryx.textio.ReadHandlerData;
 import org.beryx.textio.ReadInterruptionStrategy;
@@ -21,6 +22,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static String currDataSet = "";
     private static List<ZOSConnection> connections = new ArrayList<>();
     private static ZOSConnection currConnection;
+    private static List<String> currMembers = new ArrayList<>();
     private static TextTerminal<?> terminal;
     private static Commands commands;
 
@@ -90,6 +92,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 if (isParamsExceeded(2, params))
                     return;
+                currMembers = new ArrayList<>();
                 currDataSet = commands.cd(currDataSet, params[1]);
                 dataSets.add(currDataSet);
                 break;
@@ -100,6 +103,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 break;
             case "connections":
                 commands.connections(currConnection);
+                break;
+            case "cp":
+            case "copy":
+                if (params.length < 3)
+                    return;
+                if (isParamsExceeded(3, params))
+                    return;
+                commands.copy(currConnection, currMembers, currDataSet, params);
                 break;
             case "count":
                 if (params.length == 1) {
@@ -120,17 +131,21 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             case "ls":
                 if (isParamsExceeded(2, params))
                     return;
+                if (params.length == 2 && Util.isDataSet(params[1])) {
+                    commands.ls(currConnection, params[1]);
+                    return;
+                }
                 if (params.length == 2 && !"-l".equalsIgnoreCase(params[1])) {
                     terminal.printf(Constants.TOO_MANY_PARAMETERS + "\n");
                     return;
                 }
                 if (params.length == 2 && "-l".equalsIgnoreCase(params[1])) {
-                    commands.lsl(currConnection, currDataSet);
+                    currMembers = commands.lsl(currConnection, currDataSet);
                     return;
                 }
                 if (currDataSet.isEmpty())
                     return;
-                commands.ls(currConnection, currDataSet);
+                currMembers = commands.ls(currConnection, currDataSet);
                 break;
             case "ps":
                 if (isParamsExceeded(2, params))
@@ -172,6 +187,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (currDataSet.isEmpty())
                     return;
                 dataSets.forEach(terminal::println);
+                break;
+            case "whoami":
+                if (isParamsExceeded(1, params))
+                    return;
+                terminal.printf(currConnection.getUser() + "\n");
                 break;
             default:
                 terminal.printf(Constants.INVALID_COMMAND + "\n");
