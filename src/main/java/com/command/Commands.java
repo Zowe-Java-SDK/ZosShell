@@ -9,6 +9,7 @@ import utility.UtilIO;
 import zosconsole.ConsoleResponse;
 import zosconsole.IssueCommand;
 import zosconsole.input.IssueParams;
+import zosfiles.ZosDsnCopy;
 import zosfiles.ZosDsnDownload;
 import zosfiles.ZosDsnList;
 import zosfiles.input.DownloadParams;
@@ -106,12 +107,63 @@ public class Commands {
         if (connection != null) {
             AtomicInteger i = new AtomicInteger(1);
             connections.forEach(c ->
-                terminal.printf(i.getAndIncrement() + " " + "hostname: " + c.getHost() + ", port: " +
-                        c.getZosmfPort() + ", user = " + c.getUser() + "\n")
+                    terminal.printf(i.getAndIncrement() + " " + "hostname: " + c.getHost() + ", port: " +
+                            c.getZosmfPort() + ", user = " + c.getUser() + "\n")
             );
         } else {
             terminal.printf(Constants.NO_CONNECTION_INFO + "\n");
         }
+    }
+
+    public void copy(ZOSConnection connection, List<String> members, String currDataSet, String[] params) {
+        final ZosDsnCopy zosDsnCopy = new ZosDsnCopy(connection);
+        final String memberOrDataset = params[1].toUpperCase();
+        final String dataset = params[2];
+        String member = "";
+        String fromDataSetName;
+        String toDataSetName;
+        boolean copyAllMembers = false;
+
+        if (members.isEmpty() && !currDataSet.isEmpty()) {
+            final ZosDsnList zosDsnList = new ZosDsnList(connection);
+            ListParams listParams = new ListParams.Builder().build();
+            try {
+                members = zosDsnList.listDsnMembers(currDataSet, listParams);
+            } catch (Exception e) {
+            }
+        }
+
+        if (members.isEmpty())
+            return;
+
+        if (!Util.isDataSet(memberOrDataset)) {
+            member = memberOrDataset;
+            if (!members.contains(member) && !".".equals(member)) {
+                terminal.printf("member does not exist, try again.." + "\n");
+                return;
+            }
+            fromDataSetName = currDataSet + "(" + member + ")";
+        } else {
+            fromDataSetName = memberOrDataset;
+        }
+
+        toDataSetName = dataset;
+        if (Util.isDataSet(dataset) && !member.isEmpty()) {
+            toDataSetName += "(" + member + ")";
+        }
+
+        if (".".equals(member)) {
+            fromDataSetName = currDataSet;
+            toDataSetName = dataset;
+            copyAllMembers = true;
+        }
+
+        try {
+            zosDsnCopy.copy(fromDataSetName, toDataSetName, true, copyAllMembers);
+        } catch (Exception e) {
+            terminal.printf(e.getMessage() + "\n");
+        }
+
     }
 
     public void count(ZOSConnection connection, String dataSet, String param) {
@@ -133,31 +185,34 @@ public class Commands {
         terminal.printf(members.size() + ds.size() + "\n");
     }
 
-    public void ls(ZOSConnection connection, String dataSet) {
+    public List<String> ls(ZOSConnection connection, String dataSet) {
         ZosDsnList zosDsnList = new ZosDsnList(connection);
         ListParams params = new ListParams.Builder().build();
+        List<String> members = new ArrayList<>();
         try {
             List<Dataset> dataSets = zosDsnList.listDsn(dataSet, params);
             dataSets.forEach(ds -> {
                 if (!ds.getDsname().get().equalsIgnoreCase(dataSet))
                     terminal.printf(ds.getDsname().get() + "\n");
             });
-            List<String> members = zosDsnList.listDsnMembers(dataSet, params);
+            members = zosDsnList.listDsnMembers(dataSet, params);
             members.forEach(m -> terminal.printf(m + "\n"));
         } catch (Exception e) {
         }
+        return members;
     }
 
-    public void lsl(ZOSConnection connection, String dataSet) {
+    public List<String> lsl(ZOSConnection connection, String dataSet) {
         ZosDsnList zosDsnList = new ZosDsnList(connection);
         ListParams params = new ListParams.Builder().build();
+        List<String> members = new ArrayList<>();
         try {
             List<Dataset> dataSets = zosDsnList.listDsn(dataSet, params);
             dataSets.forEach(ds -> {
                 if (!ds.getDsname().get().equalsIgnoreCase(dataSet))
                     terminal.printf(ds.getDsname().get() + "\n");
             });
-            List<String> members = zosDsnList.listDsnMembers(dataSet, params);
+            members = zosDsnList.listDsnMembers(dataSet, params);
             int size = members.size();
             int numOfColumns = 0;
 
@@ -196,6 +251,7 @@ public class Commands {
             });
         } catch (Exception e) {
         }
+        return members;
     }
 
     public void ps(ZOSConnection connection) {

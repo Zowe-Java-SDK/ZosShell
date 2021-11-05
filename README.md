@@ -8,22 +8,24 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
   
     cat
     cd
-    ls  
+    ls <arg> - where arg is a dataset value or empty 
     ls -l
     ps
     ps <arg> - where arg is a task/job name   
     pwd   
     uname
+    whoami
   
 Along with following custom commands:  
     
     count members  
-    count datasets  
-    visited         - a list of visited datasets
-    submit <arg>    - where arg is a member name  
-    cancel <arg>    - where arg is a task/job name  
-    connections     - a list of connection(s)   
-    change <arg>    - where arg is a number representing a connection
+    count datasets
+    cp | copy <arg> arg>    - where first arg is a ".", member or dataset, second arg is dataset
+    cancel <arg>            - where arg is a task/job name  
+    connections             - a list of connection(s)   
+    change <arg>            - where arg is a number representing a connection
+    submit <arg>            - where arg is a member name  
+    visited                 - a list of visited datasets
   
 To quit from the command shell UI, you can either press 'X' windows close icon or enter 'end' keyword.  
   
