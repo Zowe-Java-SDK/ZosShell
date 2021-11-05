@@ -189,8 +189,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 dataSets.forEach(terminal::println);
                 break;
             case "whoami":
-                if (isParamsExceeded(1, params))
-                    return;
                 terminal.printf(currConnection.getUser() + "\n");
                 break;
             default:
