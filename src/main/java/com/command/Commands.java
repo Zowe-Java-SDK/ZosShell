@@ -40,7 +40,7 @@ public class Commands {
     }
 
     public void cancel(ZOSConnection connection, String param) {
-        IssueCommand issueCommand = new IssueCommand(connection);
+        final IssueCommand issueCommand = new IssueCommand(connection);
         IssueParams params = new IssueParams();
         params.setCommand("C " + param);
         ConsoleResponse response;
@@ -54,7 +54,7 @@ public class Commands {
     }
 
     public void cat(ZOSConnection connection, String dataSet, String param) {
-        ZosDsnDownload dl = new ZosDsnDownload(connection);
+        final ZosDsnDownload dl = new ZosDsnDownload(connection);
         DownloadParams dlParams = new DownloadParams.Builder().build();
         InputStream inputStream;
         try {
@@ -167,7 +167,7 @@ public class Commands {
     }
 
     public void count(ZOSConnection connection, String dataSet, String param) {
-        ZosDsnList zosDsnList = new ZosDsnList(connection);
+        final ZosDsnList zosDsnList = new ZosDsnList(connection);
         ListParams params = new ListParams.Builder().build();
         List<Dataset> ds = new ArrayList<>();
         List<String> members = new ArrayList<>();
@@ -186,7 +186,7 @@ public class Commands {
     }
 
     public List<String> ls(ZOSConnection connection, String dataSet) {
-        ZosDsnList zosDsnList = new ZosDsnList(connection);
+        final ZosDsnList zosDsnList = new ZosDsnList(connection);
         ListParams params = new ListParams.Builder().build();
         List<String> members = new ArrayList<>();
         try {
@@ -203,7 +203,7 @@ public class Commands {
     }
 
     public List<String> lsl(ZOSConnection connection, String dataSet) {
-        ZosDsnList zosDsnList = new ZosDsnList(connection);
+        final ZosDsnList zosDsnList = new ZosDsnList(connection);
         ListParams params = new ListParams.Builder().build();
         List<String> members = new ArrayList<>();
         try {
@@ -259,7 +259,7 @@ public class Commands {
     }
 
     public void ps(ZOSConnection connection, String task) {
-        GetJobs getJobs = new GetJobs(connection);
+        final GetJobs getJobs = new GetJobs(connection);
         List<Job> jobs = null;
         try {
             GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");
@@ -278,7 +278,7 @@ public class Commands {
     }
 
     public void submit(ZOSConnection connection, String dataSet, String param) {
-        SubmitJobs submitJobs = new SubmitJobs(connection);
+        final SubmitJobs submitJobs = new SubmitJobs(connection);
         Job job = null;
         try {
             job = submitJobs.submitJob(String.format("%s(%s)", dataSet, param));
