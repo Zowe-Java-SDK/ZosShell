@@ -2,6 +2,8 @@ package com;
 
 import com.command.Commands;
 import com.credential.Credentials;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import com.utility.Util;
 import core.ZOSConnection;
 import org.beryx.textio.ReadHandlerData;
@@ -12,13 +14,12 @@ import org.beryx.textio.swing.SwingTextTerminal;
 import org.beryx.textio.web.RunnerData;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
-    private static LinkedHashSet<String> dataSets = new LinkedHashSet<>();
+    private static ListMultimap<String, String> dataSets = ArrayListMultimap.create();
     private static String currDataSet = "";
     private static List<ZOSConnection> connections = new ArrayList<>();
     private static ZOSConnection currConnection;
@@ -94,7 +95,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 currMembers = new ArrayList<>();
                 currDataSet = commands.cd(currConnection, currDataSet, params[1]);
-                dataSets.add(currDataSet);
+                dataSets.put(currConnection.getHost(), currDataSet);
                 break;
             case "change":
                 if (params.length == 1)
@@ -181,12 +182,16 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     terminal.printf(Constants.NO_INFO + "\n");
                 }
                 break;
+            case "v":
             case "visited":
                 if (isParamsExceeded(1, params))
                     return;
                 if (currDataSet.isEmpty())
                     return;
-                dataSets.forEach(terminal::println);
+                for (String key : dataSets.keySet()) {
+                    List<String> lst = dataSets.get(key);
+                    lst.forEach(l -> terminal.printf(l.toUpperCase() + " ==> " + key + "\n"));
+                }
                 break;
             case "whoami":
                 terminal.printf(currConnection.getUser() + "\n");
