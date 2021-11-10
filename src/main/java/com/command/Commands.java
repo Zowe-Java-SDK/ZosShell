@@ -40,8 +40,8 @@ public class Commands {
     }
 
     public void cancel(ZOSConnection connection, String param) {
-        IssueCommand issueCommand = new IssueCommand(connection);
-        IssueParams params = new IssueParams();
+        final IssueCommand issueCommand = new IssueCommand(connection);
+        final IssueParams params = new IssueParams();
         params.setCommand("C " + param);
         ConsoleResponse response;
         try {
@@ -54,8 +54,8 @@ public class Commands {
     }
 
     public void cat(ZOSConnection connection, String dataSet, String param) {
-        ZosDsnDownload dl = new ZosDsnDownload(connection);
-        DownloadParams dlParams = new DownloadParams.Builder().build();
+        final ZosDsnDownload dl = new ZosDsnDownload(connection);
+        final DownloadParams dlParams = new DownloadParams.Builder().build();
         InputStream inputStream;
         try {
             if (Util.isDataSet(param)) {
@@ -68,12 +68,12 @@ public class Commands {
         }
     }
 
-    public String cd(String currDataSet, String param) {
+    public String cd(ZOSConnection connection, String currDataSet, String param) {
         if (Util.isDataSet(param)) {
             return param;
         } else if (param.equals("..") && !currDataSet.isEmpty()) {
             String[] tokens = currDataSet.split("\\.");
-            int length = tokens.length - 1;
+            final int length = tokens.length - 1;
             if (length == 1) {
                 terminal.printf("cant change to high qualifier level, try again...\n");
                 return currDataSet;
@@ -89,7 +89,19 @@ public class Commands {
             dataSet = dataSet.substring(0, str.length() - 1);
             return dataSet;
         } else {
-            terminal.printf("invalid dataset or cant change to high qualifier level, try again...\n");
+            final String dataSetName = param;
+            ZosDsnList zosDsnList = new ZosDsnList(connection);
+            ListParams params = new ListParams.Builder().build();
+            List<Dataset> dsLst = new ArrayList<>();
+            try {
+                dsLst = zosDsnList.listDsn(currDataSet, params);
+            } catch (Exception e) {
+            }
+            String findDataSet = currDataSet + "." + dataSetName;
+            boolean found = dsLst.stream().anyMatch(d -> d.getDsname().get().contains(findDataSet));
+            if (found)
+                currDataSet += "." + dataSetName;
+            else terminal.printf("invalid dataset or cant change to high qualifier level, try again...\n");
             return currDataSet;
         }
     }
@@ -167,8 +179,8 @@ public class Commands {
     }
 
     public void count(ZOSConnection connection, String dataSet, String param) {
-        ZosDsnList zosDsnList = new ZosDsnList(connection);
-        ListParams params = new ListParams.Builder().build();
+        final ZosDsnList zosDsnList = new ZosDsnList(connection);
+        final ListParams params = new ListParams.Builder().build();
         List<Dataset> ds = new ArrayList<>();
         List<String> members = new ArrayList<>();
         try {
@@ -186,8 +198,8 @@ public class Commands {
     }
 
     public List<String> ls(ZOSConnection connection, String dataSet) {
-        ZosDsnList zosDsnList = new ZosDsnList(connection);
-        ListParams params = new ListParams.Builder().build();
+        final ZosDsnList zosDsnList = new ZosDsnList(connection);
+        final ListParams params = new ListParams.Builder().build();
         List<String> members = new ArrayList<>();
         try {
             List<Dataset> dataSets = zosDsnList.listDsn(dataSet, params);
@@ -203,8 +215,8 @@ public class Commands {
     }
 
     public List<String> lsl(ZOSConnection connection, String dataSet) {
-        ZosDsnList zosDsnList = new ZosDsnList(connection);
-        ListParams params = new ListParams.Builder().build();
+        final ZosDsnList zosDsnList = new ZosDsnList(connection);
+        final ListParams params = new ListParams.Builder().build();
         List<String> members = new ArrayList<>();
         try {
             List<Dataset> dataSets = zosDsnList.listDsn(dataSet, params);
@@ -259,7 +271,7 @@ public class Commands {
     }
 
     public void ps(ZOSConnection connection, String task) {
-        GetJobs getJobs = new GetJobs(connection);
+        final GetJobs getJobs = new GetJobs(connection);
         List<Job> jobs = null;
         try {
             GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");
@@ -278,7 +290,7 @@ public class Commands {
     }
 
     public void submit(ZOSConnection connection, String dataSet, String param) {
-        SubmitJobs submitJobs = new SubmitJobs(connection);
+        final SubmitJobs submitJobs = new SubmitJobs(connection);
         Job job = null;
         try {
             job = submitJobs.submitJob(String.format("%s(%s)", dataSet, param));

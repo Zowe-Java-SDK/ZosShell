@@ -93,7 +93,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params))
                     return;
                 currMembers = new ArrayList<>();
-                currDataSet = commands.cd(currDataSet, params[1]);
+                currDataSet = commands.cd(currConnection, currDataSet, params[1]);
                 dataSets.add(currDataSet);
                 break;
             case "change":
