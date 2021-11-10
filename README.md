@@ -25,7 +25,7 @@ Along with following custom commands:
     connections             - a list of connection(s)   
     change <arg>            - where arg is a number representing a connection
     submit <arg>            - where arg is a member name  
-    visited                 - a list of visited datasets
+    v | visited             - a list of visited datasets
   
 To quit from the command shell UI, you can either press 'X' windows close icon or enter 'end' keyword.  
   
