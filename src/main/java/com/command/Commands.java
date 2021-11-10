@@ -75,7 +75,7 @@ public class Commands {
             String[] tokens = currDataSet.split("\\.");
             final int length = tokens.length - 1;
             if (length == 1) {
-                terminal.printf("cant change to high qualifier level, try again...\n");
+                terminal.printf(Constants.HIGH_QUALIFIER_ERROR + "\n");
                 return currDataSet;
             }
 
@@ -101,7 +101,7 @@ public class Commands {
             boolean found = dsLst.stream().anyMatch(d -> d.getDsname().get().contains(findDataSet));
             if (found)
                 currDataSet += "." + dataSetName;
-            else terminal.printf("invalid dataset or cant change to high qualifier level, try again...\n");
+            else terminal.printf(Constants.DATASET_OR_HIGH_QUALIFIER_ERROR + "\n");
             return currDataSet;
         }
     }

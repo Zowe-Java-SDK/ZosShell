@@ -11,5 +11,7 @@ public class Constants {
     public static final String NO_CONNECTION_INFO = "no info, check connection settings...";
     public static final String NO_CONNECTION = "no connection to change too...";
     public static final String NO_INFO = "no info...";
+    public static final String HIGH_QUALIFIER_ERROR = "cant change to high qualifier level, try again...";
+    public static final String DATASET_OR_HIGH_QUALIFIER_ERROR = "invalid dataset or cant change to high qualifier level, try again...";
 
 }
