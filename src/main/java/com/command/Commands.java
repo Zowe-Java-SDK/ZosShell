@@ -92,8 +92,8 @@ public class Commands {
             return dataSet;
         } else {
             final String dataSetName = param;
-            ZosDsnList zosDsnList = new ZosDsnList(connection);
-            ListParams params = new ListParams.Builder().build();
+            final ZosDsnList zosDsnList = new ZosDsnList(connection);
+            final ListParams params = new ListParams.Builder().build();
             List<Dataset> dsLst;
             try {
                 dsLst = zosDsnList.listDsn(currDataSet, params);
