@@ -50,6 +50,7 @@ public class Commands {
             // remove last newline i.e. \n
             terminal.printf(result.substring(0, result.length() - 1) + "\n");
         } catch (Exception e) {
+            printError(e.getMessage());
         }
     }
 
@@ -65,6 +66,7 @@ public class Commands {
             }
             display(inputStream);
         } catch (Exception e) {
+            printError(e.getMessage());
         }
     }
 
@@ -92,10 +94,12 @@ public class Commands {
             final String dataSetName = param;
             ZosDsnList zosDsnList = new ZosDsnList(connection);
             ListParams params = new ListParams.Builder().build();
-            List<Dataset> dsLst = new ArrayList<>();
+            List<Dataset> dsLst;
             try {
                 dsLst = zosDsnList.listDsn(currDataSet, params);
             } catch (Exception e) {
+                printError(e.getMessage());
+                return currDataSet;
             }
             String findDataSet = currDataSet + "." + dataSetName;
             boolean found = dsLst.stream().anyMatch(d -> d.getDsname().get().contains(findDataSet));
@@ -142,6 +146,8 @@ public class Commands {
             try {
                 members = zosDsnList.listDsnMembers(currDataSet, listParams);
             } catch (Exception e) {
+                printError(e.getMessage());
+                return;
             }
         }
 
@@ -173,7 +179,7 @@ public class Commands {
         try {
             zosDsnCopy.copy(fromDataSetName, toDataSetName, true, copyAllMembers);
         } catch (Exception e) {
-            terminal.printf(e.getMessage() + "\n");
+            printError(e.getMessage());
         }
 
     }
@@ -210,6 +216,8 @@ public class Commands {
             members = zosDsnList.listDsnMembers(dataSet, params);
             members.forEach(m -> terminal.printf(m + "\n"));
         } catch (Exception e) {
+            printError(e.getMessage());
+            return members;
         }
         return members;
     }
@@ -262,6 +270,7 @@ public class Commands {
                 if (line != null) terminal.printf(line + "\n");
             });
         } catch (Exception e) {
+            printError(e.getMessage());
         }
         return members;
     }
@@ -272,7 +281,7 @@ public class Commands {
 
     public void ps(ZOSConnection connection, String task) {
         final GetJobs getJobs = new GetJobs(connection);
-        List<Job> jobs = null;
+        List<Job> jobs;
         try {
             GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");
             if (task != null) {
@@ -281,6 +290,8 @@ public class Commands {
             GetJobParams params = getJobParams.build();
             jobs = getJobs.getJobsCommon(params);
         } catch (Exception e) {
+            printError(e.getMessage());
+            return;
         }
         jobs.sort(Comparator.comparing((Job j) -> j.getJobName().get())
                 .thenComparing(j -> j.getStatus().get()).thenComparing(j -> j.getJobId().get()));
@@ -291,10 +302,12 @@ public class Commands {
 
     public void submit(ZOSConnection connection, String dataSet, String param) {
         final SubmitJobs submitJobs = new SubmitJobs(connection);
-        Job job = null;
+        Job job;
         try {
             job = submitJobs.submitJob(String.format("%s(%s)", dataSet, param));
         } catch (Exception e) {
+            printError(e.getMessage());
+            return;
         }
         if (job != null)
             terminal.printf("Job Name: " + job.getJobName().orElse("n\\a") +
@@ -309,6 +322,18 @@ public class Commands {
             Arrays.stream(content).forEach(c -> terminal.println(c));
         }
         inputStream.close();
+    }
+
+    private void printError(String message) {
+        if (message.contains("Not Found")) {
+            terminal.printf(Constants.NOT_FOUND + "\n");
+        } else if (message.contains("Connection refused")) {
+            terminal.printf(Constants.SEVERE_ERROR + "\n");
+        } else if (message.contains("dataSetName not specified")) {
+            terminal.printf(Constants.NO_DATASET + "\n");
+        } else {
+            terminal.printf(message + "\n");
+        }
     }
 
 }
