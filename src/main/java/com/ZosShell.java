@@ -130,14 +130,22 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             case "end":
                 break;
             case "ls":
-                if (isParamsExceeded(2, params))
+                if (isParamsExceeded(3, params))
                     return;
                 if (params.length == 2 && Util.isDataSet(params[1])) {
                     commands.ls(currConnection, params[1]);
                     return;
                 }
                 if (params.length == 2 && !"-l".equalsIgnoreCase(params[1])) {
-                    terminal.printf(Constants.TOO_MANY_PARAMETERS + "\n");
+                    terminal.printf(Constants.INVALID_COMMAND + "\n");
+                    return;
+                }
+                if (params.length == 3 && !"-l".equalsIgnoreCase(params[1])) {
+                    terminal.printf(Constants.INVALID_COMMAND + "\n");
+                    return;
+                }
+                if (params.length == 3 && "-l".equalsIgnoreCase(params[1])) {
+                    commands.lsl(currConnection, params[2]);
                     return;
                 }
                 if (params.length == 2 && "-l".equalsIgnoreCase(params[1])) {

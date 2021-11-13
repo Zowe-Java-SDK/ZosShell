@@ -7,11 +7,11 @@ This project demonstrates the usage of [Zowe Java SDK](https://github.com/zowe/z
 Project provides a UI shell command prompt that allows you to manipulate datasets and its members. The shell performs the following linux commands:  
   
     cat
-    cd
-    ls <arg> - where arg is a dataset value or empty 
-    ls -l
+    cd <arg>                 - where arg is a dataset value or empty
+    ls <arg>                 - where arg is a dataset value or empty 
+    ls -l <arg>              - where arg is a dataset value or empty 
     ps
-    ps <arg> - where arg is a task/job name   
+    ps <arg>                 - where arg is a task/job name   
     pwd   
     uname
     whoami
