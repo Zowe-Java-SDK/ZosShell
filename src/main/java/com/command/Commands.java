@@ -94,12 +94,14 @@ public class Commands {
             final String dataSetName = param;
             final ZosDsnList zosDsnList = new ZosDsnList(connection);
             final ListParams params = new ListParams.Builder().build();
-            List<Dataset> dsLst;
+            List<Dataset> dsLst = new ArrayList<>();
             try {
                 dsLst = zosDsnList.listDsn(currDataSet, params);
             } catch (Exception e) {
-                printError(e.getMessage());
-                return currDataSet;
+                if (e.getMessage().contains("Connection refused")) {
+                    terminal.printf(Constants.SEVERE_ERROR + "\n");
+                    return currDataSet;
+                }
             }
             String findDataSet = currDataSet + "." + dataSetName;
             boolean found = dsLst.stream().anyMatch(d -> d.getDsname().get().contains(findDataSet));
@@ -216,8 +218,8 @@ public class Commands {
             members = zosDsnList.listDsnMembers(dataSet, params);
             members.forEach(m -> terminal.printf(m + "\n"));
         } catch (Exception e) {
-            printError(e.getMessage());
-            return members;
+            if (e.getMessage().contains("Connection refused")) 
+                terminal.printf(Constants.SEVERE_ERROR + "\n");
         }
         return members;
     }
@@ -270,7 +272,8 @@ public class Commands {
                 if (line != null) terminal.printf(line + "\n");
             });
         } catch (Exception e) {
-            printError(e.getMessage());
+            if (e.getMessage().contains("Connection refused"))
+                terminal.printf(Constants.SEVERE_ERROR + "\n");
         }
         return members;
     }
