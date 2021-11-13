@@ -12,9 +12,16 @@ public class Constants {
     public static final String NO_CONNECTION = "no connection to change too...";
     public static final String NO_INFO = "no info...";
     public static final String HIGH_QUALIFIER_ERROR = "cant change to high qualifier level, try again...";
-    public static final String DATASET_OR_HIGH_QUALIFIER_ERROR = "invalid dataset or cant change to high qualifier level, try again...";
+    public static final String DATASET_OR_HIGH_QUALIFIER_ERROR =
+            "invalid dataset or cant change to high qualifier level, try again...";
     public static final String SEVERE_ERROR = "server error, check connection...";
     public static final String NOT_FOUND = "not found...";
     public static final String NO_DATASET = "no dataset...";
+    public static final String COPY_OPS_ITSELF_ERROR =
+            "first argument invalid for copy operation, cant copy from same location, try again...";
+    public static final String COPY_OPS_NO_MEMBER_ERROR =
+            "first argument invalid for copy operation, specified a member, try again...";
+    public static final String COPY_OPS_NO_MEMBER_AND_DATASET_ERROR =
+            "first argument invalid for copy operation, specified valid dataset and member, try again...";
 
 }

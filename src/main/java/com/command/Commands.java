@@ -133,50 +133,85 @@ public class Commands {
         }
     }
 
-    public void copy(ZOSConnection connection, List<String> members, String currDataSet, String[] params) {
+    public void copy(ZOSConnection connection, String currDataSet, String[] params) {
         final ZosDsnCopy zosDsnCopy = new ZosDsnCopy(connection);
-        final String memberOrDataset = params[1].toUpperCase();
-        final String dataset = params[2];
-        String member = "";
-        String fromDataSetName;
-        String toDataSetName;
+
+        String fromDataSetName = "";
+        String toDataSetName = "";
         boolean copyAllMembers = false;
 
-        if (members.isEmpty() && !currDataSet.isEmpty()) {
-            final ZosDsnList zosDsnList = new ZosDsnList(connection);
-            ListParams listParams = new ListParams.Builder().build();
-            try {
-                members = zosDsnList.listDsnMembers(currDataSet, listParams);
-            } catch (Exception e) {
-                printError(e.getMessage());
-                return;
-            }
+        String param1 = params[1].toUpperCase();
+        String param2 = params[2].toUpperCase();
+
+        if (Util.isMember(param1)) {
+            fromDataSetName = currDataSet + "(" + param1 + ")";
         }
 
-        if (members.isEmpty())
+        if (Util.isMember(param2)) {
+            toDataSetName = currDataSet + "(" + param2 + ")";
+        }
+
+        if (".".equals(param1) && ".".equals(param2)) {
+            terminal.printf(Constants.INVALID_COMMAND + "\n");
             return;
+        }
 
-        if (!Util.isDataSet(memberOrDataset)) {
-            member = memberOrDataset;
-            if (!members.contains(member) && !".".equals(member)) {
-                terminal.printf("member does not exist, try again.." + "\n");
+        if (".".equals(param1)) {
+            fromDataSetName = currDataSet;
+            if (Util.isDataSet(param2))
+                toDataSetName = param2;
+            else {
+                terminal.printf("second argument invalid for copy all operation, try again...\n");
                 return;
             }
-            fromDataSetName = currDataSet + "(" + member + ")";
-        } else {
-            fromDataSetName = memberOrDataset;
-        }
-
-        toDataSetName = dataset;
-        if (Util.isDataSet(dataset) && !member.isEmpty()) {
-            toDataSetName += "(" + member + ")";
-        }
-
-        if (".".equals(member)) {
-            fromDataSetName = currDataSet;
-            toDataSetName = dataset;
             copyAllMembers = true;
         }
+
+        if (".".equals(param2)) {
+
+            if (Util.isMember(param1)) {
+                terminal.printf(Constants.COPY_OPS_ITSELF_ERROR + "\n");
+                return;
+            }
+
+            if (Util.isDataSet(param1)) {
+                terminal.printf(Constants.COPY_OPS_NO_MEMBER_ERROR + "\n");
+                return;
+            }
+
+            if (param1.contains(currDataSet)) {
+                terminal.printf(Constants.COPY_OPS_ITSELF_ERROR + "\n");
+                return;
+            }
+
+            if (param1.contains("(") && param1.contains(")")) {
+                String member;
+                String dataset;
+
+                int index = param1.indexOf("(");
+                dataset = param1.substring(0, index);
+                if (!Util.isDataSet(dataset)) {
+                    terminal.printf(Constants.COPY_OPS_NO_MEMBER_AND_DATASET_ERROR + "\n");
+                    return;
+                }
+
+                member = param1.substring(index + 1, param1.length() - 1);
+                fromDataSetName = param1;
+                toDataSetName = currDataSet + "(" + member + ")";
+            }
+
+        }
+
+        if (Util.isMember(param1) && Util.isDataSet(param2)) {
+            fromDataSetName = currDataSet + "(" + param1 + ")";
+            toDataSetName = param2 + "(" + param1 + ")";
+        }
+
+        if (fromDataSetName.isEmpty())
+            fromDataSetName = param1;
+
+        if (toDataSetName.isEmpty())
+            toDataSetName = param2;
 
         try {
             zosDsnCopy.copy(fromDataSetName, toDataSetName, true, copyAllMembers);

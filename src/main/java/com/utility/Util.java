@@ -49,4 +49,24 @@ public class Util {
         return true;
     }
 
+    public static boolean isMember(String memberName) {
+        memberName = memberName.toUpperCase(Locale.ROOT);
+        String invalidMemberMsg = "Invalid member name '" + memberName + "'.";
+
+        // A member name cannot be longer than eight characters.
+        // The first member character must be either a letter or one of the following three special characters: #, @, $.
+        // The remaining seven characters can be letters, numbers, or one of the following special characters: #, @, or $.
+        // A PDS member name cannot contain a hyphen (-).
+        if (memberName.length() > 8) {
+            return false;
+        }
+        Pattern p = Pattern.compile("[A-Z#@\\$]{1}[A-Z0-9#@\\$]{1,7}");
+        Matcher m = p.matcher(memberName);
+        if (!m.matches()) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

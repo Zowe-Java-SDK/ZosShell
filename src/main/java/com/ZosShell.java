@@ -111,7 +111,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 if (isParamsExceeded(3, params))
                     return;
-                commands.copy(currConnection, currMembers, currDataSet, params);
+                commands.copy(currConnection, currDataSet, params);
                 break;
             case "count":
                 if (params.length == 1) {

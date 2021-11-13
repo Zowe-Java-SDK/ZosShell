@@ -20,7 +20,7 @@ Along with following custom commands:
     
     count members  
     count datasets
-    cp | copy <arg> arg>    - where first arg is a ".", member or dataset, second arg is dataset
+    cp | copy <arg> arg>    - where arg can be ".", member, dataset or dataset(member)  
     cancel <arg>            - where arg is a task/job name  
     connections             - a list of connection(s)   
     change <arg>            - where arg is a number representing a connection
