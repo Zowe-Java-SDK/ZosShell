@@ -59,8 +59,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         String commandLine = "";
         while (!"end".equalsIgnoreCase(commandLine)) {
             commandLine = textIO.newStringInputReader().withMaxLength(80).read(">");
-            System.out.print("> ");
             commands = commandLine.split(" ");
+            if ("rm".equals(commands[0])) {
+                terminal.printf("Are you sure you want to delete y/n");
+                commandLine = textIO.newStringInputReader().withMaxLength(80).read("?");
+                if (!"y".equalsIgnoreCase(commandLine) && !"yes".equalsIgnoreCase(commandLine))
+                    continue;
+            }
             executeCommand(commands);
         }
 
@@ -171,6 +176,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (currDataSet.isEmpty())
                     return;
                 terminal.printf(currDataSet + "\n");
+                break;
+            case "rm":
+                if (isParamsExceeded(2, params))
+                    return;
+                if (params.length == 1)
+                    return;
+                param = params[1];
+                commands.rm(currConnection, currDataSet, param);
                 break;
             case "submit":
                 if (params.length == 1)

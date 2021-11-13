@@ -9,6 +9,7 @@ import utility.UtilIO;
 import zosconsole.ConsoleResponse;
 import zosconsole.IssueCommand;
 import zosconsole.input.IssueParams;
+import zosfiles.ZosDsn;
 import zosfiles.ZosDsnCopy;
 import zosfiles.ZosDsnDownload;
 import zosfiles.ZosDsnList;
@@ -253,7 +254,7 @@ public class Commands {
             members = zosDsnList.listDsnMembers(dataSet, params);
             members.forEach(m -> terminal.printf(m + "\n"));
         } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) 
+            if (e.getMessage().contains("Connection refused"))
                 terminal.printf(Constants.SEVERE_ERROR + "\n");
         }
         return members;
@@ -336,6 +337,45 @@ public class Commands {
         jobs.forEach(job -> terminal.printf(
                 String.format("%-8s %-8s %-8s\n", job.getJobName().get(), job.getJobId().get(), job.getStatus().get()))
         );
+    }
+
+    public void rm(ZOSConnection connection, String currDataSet, String param) {
+        ZosDsn zosDsn = new ZosDsn(connection);
+
+        if ("*".equals(param)) {
+            if (currDataSet.isEmpty()) {
+                terminal.printf("nothing to delete, try again..\n");
+                return;
+            }
+            final ZosDsnList zosDsnList = new ZosDsnList(connection);
+            final ListParams params = new ListParams.Builder().build();
+            List<String> members = new ArrayList<>();
+            try {
+                members = zosDsnList.listDsnMembers(currDataSet, params);
+            } catch (Exception e) {
+                printError(e.getMessage());
+            }
+            members.forEach(m -> {
+                try {
+                    zosDsn.deleteDsn(currDataSet, m);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        if (Util.isMember(param)) {
+            if (currDataSet.isEmpty()) {
+                terminal.printf("nothing to delete, try again..\n");
+                return;
+            }
+            try {
+                zosDsn.deleteDsn(currDataSet, param);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public void submit(ZOSConnection connection, String dataSet, String param) {
