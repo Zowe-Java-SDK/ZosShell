@@ -73,7 +73,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void executeCommand(String[] params) {
-        final String command = params[0];
+        final var command = params[0];
         String param;
 
         switch (command.toLowerCase()) {

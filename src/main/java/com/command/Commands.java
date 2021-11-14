@@ -41,8 +41,8 @@ public class Commands {
     }
 
     public void cancel(ZOSConnection connection, String param) {
-        final IssueCommand issueCommand = new IssueCommand(connection);
-        final IssueParams params = new IssueParams();
+        final var issueCommand = new IssueCommand(connection);
+        final var params = new IssueParams();
         params.setCommand("C " + param);
         ConsoleResponse response;
         try {
@@ -56,8 +56,8 @@ public class Commands {
     }
 
     public void cat(ZOSConnection connection, String dataSet, String param) {
-        final ZosDsnDownload dl = new ZosDsnDownload(connection);
-        final DownloadParams dlParams = new DownloadParams.Builder().build();
+        final var dl = new ZosDsnDownload(connection);
+        final var dlParams = new DownloadParams.Builder().build();
         InputStream inputStream;
         try {
             if (Util.isDataSet(param)) {
@@ -76,13 +76,13 @@ public class Commands {
             return param;
         } else if (param.equals("..") && !currDataSet.isEmpty()) {
             String[] tokens = currDataSet.split("\\.");
-            final int length = tokens.length - 1;
+            final var length = tokens.length - 1;
             if (length == 1) {
                 terminal.printf(Constants.HIGH_QUALIFIER_ERROR + "\n");
                 return currDataSet;
             }
 
-            StringBuilder str = new StringBuilder();
+            var str = new StringBuilder();
             for (int i = 0; i < length; i++) {
                 str.append(tokens[i]);
                 str.append(".");
@@ -92,9 +92,9 @@ public class Commands {
             dataSet = dataSet.substring(0, str.length() - 1);
             return dataSet;
         } else {
-            final String dataSetName = param;
-            final ZosDsnList zosDsnList = new ZosDsnList(connection);
-            final ListParams params = new ListParams.Builder().build();
+            final var dataSetName = param;
+            final var zosDsnList = new ZosDsnList(connection);
+            final var params = new ListParams.Builder().build();
             List<Dataset> dsLst = new ArrayList<>();
             try {
                 dsLst = zosDsnList.listDsn(currDataSet, params);
@@ -104,7 +104,7 @@ public class Commands {
                     return currDataSet;
                 }
             }
-            String findDataSet = currDataSet + "." + dataSetName;
+            var findDataSet = currDataSet + "." + dataSetName;
             boolean found = dsLst.stream().anyMatch(d -> d.getDsname().get().contains(findDataSet));
             if (found)
                 currDataSet += "." + dataSetName;
@@ -114,7 +114,7 @@ public class Commands {
     }
 
     public ZOSConnection change(ZOSConnection connection, String[] commands) {
-        int index = Integer.parseInt(commands[1]);
+        var index = Integer.parseInt(commands[1]);
         if (index-- > connections.size()) {
             terminal.printf(Constants.NO_CONNECTION + "\n");
             return connection;
@@ -135,10 +135,10 @@ public class Commands {
     }
 
     public void copy(ZOSConnection connection, String currDataSet, String[] params) {
-        final ZosDsnCopy zosDsnCopy = new ZosDsnCopy(connection);
+        final var zosDsnCopy = new ZosDsnCopy(connection);
 
-        String fromDataSetName = "";
-        String toDataSetName = "";
+        var fromDataSetName = "";
+        var toDataSetName = "";
         boolean copyAllMembers = false;
 
         String param1 = params[1].toUpperCase();
@@ -169,7 +169,6 @@ public class Commands {
         }
 
         if (".".equals(param2)) {
-
             if (Util.isMember(param1)) {
                 terminal.printf(Constants.COPY_OPS_ITSELF_ERROR + "\n");
                 return;
@@ -200,7 +199,6 @@ public class Commands {
                 fromDataSetName = param1;
                 toDataSetName = currDataSet + "(" + member + ")";
             }
-
         }
 
         if (Util.isMember(param1) && Util.isDataSet(param2)) {
@@ -223,8 +221,8 @@ public class Commands {
     }
 
     public void count(ZOSConnection connection, String dataSet, String param) {
-        final ZosDsnList zosDsnList = new ZosDsnList(connection);
-        final ListParams params = new ListParams.Builder().build();
+        final var zosDsnList = new ZosDsnList(connection);
+        final var params = new ListParams.Builder().build();
         List<Dataset> ds = new ArrayList<>();
         List<String> members = new ArrayList<>();
         try {
@@ -242,8 +240,8 @@ public class Commands {
     }
 
     public List<String> ls(ZOSConnection connection, String dataSet) {
-        final ZosDsnList zosDsnList = new ZosDsnList(connection);
-        final ListParams params = new ListParams.Builder().build();
+        final var zosDsnList = new ZosDsnList(connection);
+        final var params = new ListParams.Builder().build();
         List<String> members = new ArrayList<>();
         try {
             List<Dataset> dataSets = zosDsnList.listDsn(dataSet, params);
@@ -261,8 +259,8 @@ public class Commands {
     }
 
     public List<String> lsl(ZOSConnection connection, String dataSet) {
-        final ZosDsnList zosDsnList = new ZosDsnList(connection);
-        final ListParams params = new ListParams.Builder().build();
+        final var zosDsnList = new ZosDsnList(connection);
+        final var params = new ListParams.Builder().build();
         List<String> members = new ArrayList<>();
         try {
             List<Dataset> dataSets = zosDsnList.listDsn(dataSet, params);
@@ -287,7 +285,7 @@ public class Commands {
             } else if (size >= 1000)
                 numOfColumns = 8;
 
-            int numOfLines = size / numOfColumns;
+            var numOfLines = size / numOfColumns;
             String[] lines = new String[numOfLines + 1];
 
             if (size > 5) {
@@ -319,14 +317,14 @@ public class Commands {
     }
 
     public void ps(ZOSConnection connection, String task) {
-        final GetJobs getJobs = new GetJobs(connection);
+        final var getJobs = new GetJobs(connection);
         List<Job> jobs;
         try {
             GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");
             if (task != null) {
                 getJobParams.prefix(task).build();
             }
-            GetJobParams params = getJobParams.build();
+            var params = getJobParams.build();
             jobs = getJobs.getJobsCommon(params);
         } catch (Exception e) {
             printError(e.getMessage());
@@ -341,8 +339,8 @@ public class Commands {
 
     public void rm(ZOSConnection connection, String currDataSet, String param) {
         final var zosDsn = new ZosDsn(connection);
-        final ZosDsnList zosDsnList = new ZosDsnList(connection);
-        final ListParams params = new ListParams.Builder().build();
+        final var zosDsnList = new ZosDsnList(connection);
+        final var params = new ListParams.Builder().build();
         List<String> members = new ArrayList<>();
 
         if ("*".equals(param)) {
@@ -411,11 +409,10 @@ public class Commands {
             }
             return;
         }
-
     }
 
     public void submit(ZOSConnection connection, String dataSet, String param) {
-        final SubmitJobs submitJobs = new SubmitJobs(connection);
+        final var submitJobs = new SubmitJobs(connection);
         Job job;
         try {
             job = submitJobs.submitJob(String.format("%s(%s)", dataSet, param));

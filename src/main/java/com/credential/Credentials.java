@@ -12,7 +12,7 @@ import java.util.List;
 public class Credentials {
 
     public static void readCredentials(List<ZOSConnection> connections) {
-        File file = new File(Constants.PATH_FILE);
+        var file = new File(Constants.PATH_FILE);
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
 
