@@ -23,5 +23,8 @@ public class Constants {
             "first argument invalid for copy operation, specified a member, try again...";
     public static final String COPY_OPS_NO_MEMBER_AND_DATASET_ERROR =
             "first argument invalid for copy operation, specified valid dataset and member, try again...";
+    public static final String DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR =
+            "first argument invalid for delete operation, specified valid dataset and member, try again...";
+    public static final String DELETE_NOTHING_ERROR = "nothing to delete, try again..";
 
 }

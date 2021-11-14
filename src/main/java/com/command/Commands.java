@@ -340,16 +340,16 @@ public class Commands {
     }
 
     public void rm(ZOSConnection connection, String currDataSet, String param) {
-        ZosDsn zosDsn = new ZosDsn(connection);
+        final var zosDsn = new ZosDsn(connection);
+        final ZosDsnList zosDsnList = new ZosDsnList(connection);
+        final ListParams params = new ListParams.Builder().build();
+        List<String> members = new ArrayList<>();
 
         if ("*".equals(param)) {
             if (currDataSet.isEmpty()) {
-                terminal.printf("nothing to delete, try again..\n");
+                terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
                 return;
             }
-            final ZosDsnList zosDsnList = new ZosDsnList(connection);
-            final ListParams params = new ListParams.Builder().build();
-            List<String> members = new ArrayList<>();
             try {
                 members = zosDsnList.listDsnMembers(currDataSet, params);
             } catch (Exception e) {
@@ -362,18 +362,54 @@ public class Commands {
                     e.printStackTrace();
                 }
             });
+            return;
         }
 
         if (Util.isMember(param)) {
             if (currDataSet.isEmpty()) {
-                terminal.printf("nothing to delete, try again..\n");
+                terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
                 return;
             }
             try {
+                members = zosDsnList.listDsnMembers(currDataSet, params);
+                if (!members.stream().anyMatch(m -> param.equals(m))) {
+                    terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
+                    return;
+                }
                 zosDsn.deleteDsn(currDataSet, param);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            return;
+        }
+
+        if (param.contains("(") && param.contains(")")) {
+            String member;
+            String dataset;
+
+            int index = param.indexOf("(");
+            dataset = param.substring(0, index);
+            if (!Util.isDataSet(dataset)) {
+                terminal.printf(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR + "\n");
+                return;
+            }
+
+            member = param.substring(index + 1, param.length() - 1);
+            try {
+                zosDsn.deleteDsn(dataset, member);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+
+        if (Util.isDataSet(param)) {
+            try {
+                zosDsn.deleteDsn(param);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return;
         }
 
     }
