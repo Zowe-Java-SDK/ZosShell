@@ -13,7 +13,7 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
     ps
     ps <arg>                 - where arg is a task/job name   
     pwd   
-    rm <arg>                 - where arg is "*" or a member value
+    rm <arg>                 - where arg is "*", member, dataset, or dataset with member value
     uname
     whoami
   
