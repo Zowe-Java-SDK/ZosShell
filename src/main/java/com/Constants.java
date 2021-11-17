@@ -26,5 +26,6 @@ public class Constants {
     public static final String DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR =
             "first argument invalid for delete operation, specified valid dataset and member, try again...";
     public static final String DELETE_NOTHING_ERROR = "nothing to delete, try again..";
+    public static final String INVALID_PARAMETER = "invalid parameter, try again...";
 
 }

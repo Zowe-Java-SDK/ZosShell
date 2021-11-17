@@ -8,12 +8,14 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
   
     cat
     cd <arg>                 - where arg is a dataset value or empty
+    get <arg>                - where arg is a job name - output job log
     ls <arg>                 - where arg is a dataset value or empty 
     ls -l <arg>              - where arg is a dataset value or empty 
     ps
     ps <arg>                 - where arg is a task/job name   
     pwd   
     rm <arg>                 - where arg is "*", member, dataset, or dataset with member value
+    tail <arg1> <arg2>       - where arg1 is job name, arg2 is optional and is line limit - tail job log
     uname
     whoami
   

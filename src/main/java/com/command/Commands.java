@@ -19,15 +19,13 @@ import zosfiles.response.Dataset;
 import zosjobs.GetJobs;
 import zosjobs.SubmitJobs;
 import zosjobs.input.GetJobParams;
+import zosjobs.input.JobFile;
 import zosjobs.response.Job;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Commands {
@@ -239,6 +237,58 @@ public class Commands {
         terminal.printf(members.size() + ds.size() + "\n");
     }
 
+    public void get(ZOSConnection connection, String[] params) {
+        final GetJobs getJobs = new GetJobs(connection);
+        final GetJobParams jobParams = new GetJobParams.Builder("*").prefix(params[1]).build();
+        String[] output;
+        try {
+            output = getJobOutput(getJobs, jobParams);
+        } catch (Exception e) {
+            printError(e.getMessage());
+            return;
+        }
+        Arrays.stream(output).forEach(l -> terminal.printf(l + "\n"));
+    }
+
+    public void tail(ZOSConnection connection, String[] params) {
+        final int LINES_LIMIT = 25;
+        final GetJobs getJobs = new GetJobs(connection);
+        final GetJobParams jobParams = new GetJobParams.Builder("*").prefix(params[1]).build();
+        String[] output;
+        try {
+            output = getJobOutput(getJobs, jobParams);
+        } catch (Exception e) {
+            printError(e.getMessage());
+            return;
+        }
+        int size = output.length;
+        int lines = 0;
+        if (params.length == 3) {
+            try {
+                lines = Integer.parseInt(params[2]);
+            } catch (NumberFormatException e) {
+                terminal.printf(Constants.INVALID_PARAMETER + "\n");
+                return;
+            }
+        }
+
+        if (lines > 0) {
+            if (lines < size) {
+                for (int i = size - lines; i < size; i++)
+                    terminal.printf(output[i] + "\n");
+            } else {
+                printAll(output, size);
+            }
+        } else {
+            if (size > LINES_LIMIT) {
+                for (int i = size - LINES_LIMIT; i < size; i++)
+                    terminal.printf(output[i] + "\n");
+            } else {
+                printAll(output, size);
+            }
+        }
+    }
+
     public List<String> ls(ZOSConnection connection, String dataSet) {
         final var zosDsnList = new ZosDsnList(connection);
         final var params = new ListParams.Builder().build();
@@ -425,6 +475,16 @@ public class Commands {
                     ", Job Id: " + job.getJobId().orElse("n\\a") + "\n");
     }
 
+    private String[] getJobOutput(GetJobs getJobs, GetJobParams jobParams) throws Exception {
+        String[] output;
+        List<Job> jobs = getJobs.getJobsCommon(jobParams);
+        // select the active one first not found then get highest job number
+        Optional<Job> job = jobs.stream().filter(j -> "ACTIVE".equalsIgnoreCase(j.getStatus().get())).findAny();
+        List<JobFile> files = getJobs.getSpoolFilesForJob(job.orElse(jobs.get(0)));
+        output = getJobs.getSpoolContent(files.get(0)).split("\n");
+        return output;
+    }
+
     private void display(InputStream inputStream) throws IOException {
         if (inputStream != null) {
             StringWriter writer = new StringWriter();
@@ -445,6 +505,11 @@ public class Commands {
         } else {
             terminal.printf(message + "\n");
         }
+    }
+
+    private void printAll(String[] output, int size) {
+        for (int i = 0; i < size; i++)
+            terminal.printf(output[i] + "\n");
     }
 
 }

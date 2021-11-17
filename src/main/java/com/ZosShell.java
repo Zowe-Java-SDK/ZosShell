@@ -105,6 +105,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             case "change":
                 if (params.length == 1)
                     return;
+                if (isParamsExceeded(2, params))
+                    return;
                 currConnection = commands.change(currConnection, params);
                 break;
             case "connections":
@@ -133,6 +135,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 commands.count(currConnection, currDataSet, param);
                 break;
             case "end":
+                break;
+            case "get":
+                if (params.length == 1)
+                    return;
+                if (isParamsExceeded(2, params))
+                    return;
+                commands.get(currConnection, params);
                 break;
             case "ls":
                 if (isParamsExceeded(3, params))
@@ -194,6 +203,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 param = params[1];
                 commands.submit(currConnection, currDataSet, param);
+                break;
+            case "tail":
+                if (params.length == 1)
+                    return;
+                if (isParamsExceeded(3, params))
+                    return;
+                commands.tail(currConnection, params);
                 break;
             case "uname":
                 if (currConnection != null) {
