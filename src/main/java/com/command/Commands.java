@@ -39,16 +39,20 @@ public class Commands {
     }
 
     public void cancel(ZOSConnection connection, String param) {
-        final var issueCommand = new IssueCommand(connection);
         final var params = new IssueParams();
         params.setCommand("C " + param);
         ConsoleResponse response;
         try {
+            final var issueCommand = new IssueCommand(connection);
             response = issueCommand.issue(params);
             String result = response.getCommandResponse().get();
             // remove last newline i.e. \n
             terminal.printf(result.substring(0, result.length() - 1) + "\n");
         } catch (Exception e) {
+            if (e.getMessage().contains("Connection refused")) {
+                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                return;
+            }
             printError(e.getMessage());
         }
     }
@@ -65,6 +69,10 @@ public class Commands {
             }
             display(inputStream);
         } catch (Exception e) {
+            if (e.getMessage().contains("Connection refused")) {
+                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                return;
+            }
             printError(e.getMessage());
         }
     }
@@ -91,16 +99,18 @@ public class Commands {
             return dataSet;
         } else {
             final var dataSetName = param;
-            final var zosDsnList = new ZosDsnList(connection);
-            final var params = new ListParams.Builder().build();
             List<Dataset> dsLst = new ArrayList<>();
             try {
+                final var zosDsnList = new ZosDsnList(connection);
+                final var params = new ListParams.Builder().build();
                 dsLst = zosDsnList.listDsn(currDataSet, params);
             } catch (Exception e) {
                 if (e.getMessage().contains("Connection refused")) {
                     terminal.printf(Constants.SEVERE_ERROR + "\n");
                     return currDataSet;
                 }
+                printError(e.getMessage());
+                return currDataSet;
             }
             var findDataSet = currDataSet + "." + dataSetName;
             boolean found = dsLst.stream().anyMatch(d -> d.getDsname().get().contains(findDataSet));
@@ -133,97 +143,101 @@ public class Commands {
     }
 
     public void copy(ZOSConnection connection, String currDataSet, String[] params) {
-        final var zosDsnCopy = new ZosDsnCopy(connection);
+        try {
+            final var zosDsnCopy = new ZosDsnCopy(connection);
 
-        var fromDataSetName = "";
-        var toDataSetName = "";
-        boolean copyAllMembers = false;
+            var fromDataSetName = "";
+            var toDataSetName = "";
+            boolean copyAllMembers = false;
 
-        String param1 = params[1].toUpperCase();
-        String param2 = params[2].toUpperCase();
+            String param1 = params[1].toUpperCase();
+            String param2 = params[2].toUpperCase();
 
-        if (Util.isMember(param1)) {
-            fromDataSetName = currDataSet + "(" + param1 + ")";
-        }
-
-        if (Util.isMember(param2)) {
-            toDataSetName = currDataSet + "(" + param2 + ")";
-        }
-
-        if (".".equals(param1) && ".".equals(param2)) {
-            terminal.printf(Constants.INVALID_COMMAND + "\n");
-            return;
-        }
-
-        if (".".equals(param1)) {
-            fromDataSetName = currDataSet;
-            if (Util.isDataSet(param2))
-                toDataSetName = param2;
-            else {
-                terminal.printf("second argument invalid for copy all operation, try again...\n");
-                return;
-            }
-            copyAllMembers = true;
-        }
-
-        if (".".equals(param2)) {
             if (Util.isMember(param1)) {
-                terminal.printf(Constants.COPY_OPS_ITSELF_ERROR + "\n");
+                fromDataSetName = currDataSet + "(" + param1 + ")";
+            }
+
+            if (Util.isMember(param2)) {
+                toDataSetName = currDataSet + "(" + param2 + ")";
+            }
+
+            if (".".equals(param1) && ".".equals(param2)) {
+                terminal.printf(Constants.INVALID_COMMAND + "\n");
                 return;
             }
 
-            if (Util.isDataSet(param1)) {
-                terminal.printf(Constants.COPY_OPS_NO_MEMBER_ERROR + "\n");
-                return;
+            if (".".equals(param1)) {
+                fromDataSetName = currDataSet;
+                if (Util.isDataSet(param2))
+                    toDataSetName = param2;
+                else {
+                    terminal.printf("second argument invalid for copy all operation, try again...\n");
+                    return;
+                }
+                copyAllMembers = true;
             }
 
-            if (param1.contains(currDataSet)) {
-                terminal.printf(Constants.COPY_OPS_ITSELF_ERROR + "\n");
-                return;
-            }
-
-            if (param1.contains("(") && param1.contains(")")) {
-                String member;
-                String dataset;
-
-                int index = param1.indexOf("(");
-                dataset = param1.substring(0, index);
-                if (!Util.isDataSet(dataset)) {
-                    terminal.printf(Constants.COPY_OPS_NO_MEMBER_AND_DATASET_ERROR + "\n");
+            if (".".equals(param2)) {
+                if (Util.isMember(param1)) {
+                    terminal.printf(Constants.COPY_OPS_ITSELF_ERROR + "\n");
                     return;
                 }
 
-                member = param1.substring(index + 1, param1.length() - 1);
-                fromDataSetName = param1;
-                toDataSetName = currDataSet + "(" + member + ")";
+                if (Util.isDataSet(param1)) {
+                    terminal.printf(Constants.COPY_OPS_NO_MEMBER_ERROR + "\n");
+                    return;
+                }
+
+                if (param1.contains(currDataSet)) {
+                    terminal.printf(Constants.COPY_OPS_ITSELF_ERROR + "\n");
+                    return;
+                }
+
+                if (param1.contains("(") && param1.contains(")")) {
+                    String member;
+                    String dataset;
+
+                    int index = param1.indexOf("(");
+                    dataset = param1.substring(0, index);
+                    if (!Util.isDataSet(dataset)) {
+                        terminal.printf(Constants.COPY_OPS_NO_MEMBER_AND_DATASET_ERROR + "\n");
+                        return;
+                    }
+
+                    member = param1.substring(index + 1, param1.length() - 1);
+                    fromDataSetName = param1;
+                    toDataSetName = currDataSet + "(" + member + ")";
+                }
             }
-        }
 
-        if (Util.isMember(param1) && Util.isDataSet(param2)) {
-            fromDataSetName = currDataSet + "(" + param1 + ")";
-            toDataSetName = param2 + "(" + param1 + ")";
-        }
+            if (Util.isMember(param1) && Util.isDataSet(param2)) {
+                fromDataSetName = currDataSet + "(" + param1 + ")";
+                toDataSetName = param2 + "(" + param1 + ")";
+            }
 
-        if (fromDataSetName.isEmpty())
-            fromDataSetName = param1;
+            if (fromDataSetName.isEmpty())
+                fromDataSetName = param1;
 
-        if (toDataSetName.isEmpty())
-            toDataSetName = param2;
+            if (toDataSetName.isEmpty())
+                toDataSetName = param2;
 
-        try {
             zosDsnCopy.copy(fromDataSetName, toDataSetName, true, copyAllMembers);
         } catch (Exception e) {
+            if (e.getMessage().contains("Connection refused")) {
+                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                return;
+            }
             printError(e.getMessage());
         }
 
     }
 
     public void count(ZOSConnection connection, String dataSet, String param) {
-        final var zosDsnList = new ZosDsnList(connection);
-        final var params = new ListParams.Builder().build();
         List<Dataset> ds = new ArrayList<>();
         List<String> members = new ArrayList<>();
         try {
+            final var zosDsnList = new ZosDsnList(connection);
+            final var params = new ListParams.Builder().build();
             if ("members".equalsIgnoreCase(param)) {
                 members = zosDsnList.listDsnMembers(dataSet, params);
             }
@@ -238,12 +252,16 @@ public class Commands {
     }
 
     public void get(ZOSConnection connection, String[] params) {
-        final GetJobs getJobs = new GetJobs(connection);
-        final GetJobParams jobParams = new GetJobParams.Builder("*").prefix(params[1]).build();
         String[] output;
         try {
+            final var getJobs = new GetJobs(connection);
+            final var jobParams = new GetJobParams.Builder("*").prefix(params[1]).build();
             output = getJobOutput(getJobs, jobParams);
         } catch (Exception e) {
+            if (e.getMessage().contains("Connection refused")) {
+                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                return;
+            }
             printError(e.getMessage());
             return;
         }
@@ -252,12 +270,16 @@ public class Commands {
 
     public void tail(ZOSConnection connection, String[] params) {
         final int LINES_LIMIT = 25;
-        final GetJobs getJobs = new GetJobs(connection);
-        final GetJobParams jobParams = new GetJobParams.Builder("*").prefix(params[1]).build();
         String[] output;
         try {
+            final var getJobs = new GetJobs(connection);
+            final var jobParams = new GetJobParams.Builder("*").prefix(params[1]).build();
             output = getJobOutput(getJobs, jobParams);
         } catch (Exception e) {
+            if (e.getMessage().contains("Connection refused")) {
+                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                return;
+            }
             printError(e.getMessage());
             return;
         }
@@ -290,10 +312,10 @@ public class Commands {
     }
 
     public List<String> ls(ZOSConnection connection, String dataSet) {
-        final var zosDsnList = new ZosDsnList(connection);
-        final var params = new ListParams.Builder().build();
         List<String> members = new ArrayList<>();
         try {
+            final var zosDsnList = new ZosDsnList(connection);
+            final var params = new ListParams.Builder().build();
             List<Dataset> dataSets = zosDsnList.listDsn(dataSet, params);
             dataSets.forEach(ds -> {
                 if (!ds.getDsname().get().equalsIgnoreCase(dataSet))
@@ -302,17 +324,20 @@ public class Commands {
             members = zosDsnList.listDsnMembers(dataSet, params);
             members.forEach(m -> terminal.printf(m + "\n"));
         } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused"))
+            if (e.getMessage().contains("Connection refused")) {
                 terminal.printf(Constants.SEVERE_ERROR + "\n");
+                return members;
+            }
+            printError(e.getMessage());
         }
         return members;
     }
 
     public List<String> lsl(ZOSConnection connection, String dataSet) {
-        final var zosDsnList = new ZosDsnList(connection);
-        final var params = new ListParams.Builder().build();
         List<String> members = new ArrayList<>();
         try {
+            final var zosDsnList = new ZosDsnList(connection);
+            final var params = new ListParams.Builder().build();
             List<Dataset> dataSets = zosDsnList.listDsn(dataSet, params);
             dataSets.forEach(ds -> {
                 if (!ds.getDsname().get().equalsIgnoreCase(dataSet))
@@ -356,8 +381,11 @@ public class Commands {
                 if (line != null) terminal.printf(line + "\n");
             });
         } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused"))
+            if (e.getMessage().contains("Connection refused")) {
                 terminal.printf(Constants.SEVERE_ERROR + "\n");
+                return members;
+            }
+            printError(e.getMessage());
         }
         return members;
     }
@@ -367,9 +395,9 @@ public class Commands {
     }
 
     public void ps(ZOSConnection connection, String task) {
-        final var getJobs = new GetJobs(connection);
         List<Job> jobs;
         try {
+            final var getJobs = new GetJobs(connection);
             GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");
             if (task != null) {
                 getJobParams.prefix(task).build();
@@ -377,6 +405,10 @@ public class Commands {
             var params = getJobParams.build();
             jobs = getJobs.getJobsCommon(params);
         } catch (Exception e) {
+            if (e.getMessage().contains("Connection refused")) {
+                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                return;
+            }
             printError(e.getMessage());
             return;
         }
@@ -388,87 +420,94 @@ public class Commands {
     }
 
     public void rm(ZOSConnection connection, String currDataSet, String param) {
-        final var zosDsn = new ZosDsn(connection);
-        final var zosDsnList = new ZosDsnList(connection);
-        final var params = new ListParams.Builder().build();
-        List<String> members = new ArrayList<>();
+        try {
+            final var zosDsn = new ZosDsn(connection);
+            final var zosDsnList = new ZosDsnList(connection);
+            final var params = new ListParams.Builder().build();
+            List<String> members = new ArrayList<>();
 
-        if ("*".equals(param)) {
-            if (currDataSet.isEmpty()) {
-                terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
-                return;
-            }
-            try {
-                members = zosDsnList.listDsnMembers(currDataSet, params);
-            } catch (Exception e) {
-                printError(e.getMessage());
-            }
-            members.forEach(m -> {
-                try {
-                    zosDsn.deleteDsn(currDataSet, m);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-            return;
-        }
-
-        if (Util.isMember(param)) {
-            if (currDataSet.isEmpty()) {
-                terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
-                return;
-            }
-            try {
-                members = zosDsnList.listDsnMembers(currDataSet, params);
-                if (!members.stream().anyMatch(m -> param.equals(m))) {
+            if ("*".equals(param)) {
+                if (currDataSet.isEmpty()) {
                     terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
                     return;
                 }
-                zosDsn.deleteDsn(currDataSet, param);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return;
-        }
-
-        if (param.contains("(") && param.contains(")")) {
-            String member;
-            String dataset;
-
-            int index = param.indexOf("(");
-            dataset = param.substring(0, index);
-            if (!Util.isDataSet(dataset)) {
-                terminal.printf(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR + "\n");
+                try {
+                    members = zosDsnList.listDsnMembers(currDataSet, params);
+                } catch (Exception e) {
+                    printError(e.getMessage());
+                }
+                members.forEach(m -> {
+                    try {
+                        zosDsn.deleteDsn(currDataSet, m);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
                 return;
             }
 
-            member = param.substring(index + 1, param.length() - 1);
-            try {
-                zosDsn.deleteDsn(dataset, member);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (Util.isMember(param)) {
+                if (currDataSet.isEmpty()) {
+                    terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
+                    return;
+                }
+                try {
+                    members = zosDsnList.listDsnMembers(currDataSet, params);
+                    if (!members.stream().anyMatch(m -> param.equals(m))) {
+                        terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
+                        return;
+                    }
+                    zosDsn.deleteDsn(currDataSet, param);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return;
             }
-            return;
-        }
 
-        if (Util.isDataSet(param)) {
-            try {
-                zosDsn.deleteDsn(param);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (param.contains("(") && param.contains(")")) {
+                String member;
+                String dataset;
+
+                int index = param.indexOf("(");
+                dataset = param.substring(0, index);
+                if (!Util.isDataSet(dataset)) {
+                    terminal.printf(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR + "\n");
+                    return;
+                }
+
+                member = param.substring(index + 1, param.length() - 1);
+                try {
+                    zosDsn.deleteDsn(dataset, member);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return;
             }
-            return;
+
+            if (Util.isDataSet(param)) {
+                zosDsn.deleteDsn(param);
+                return;
+            }
+        } catch (Exception e) {
+            if (e.getMessage().contains("Connection refused")) {
+                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                return;
+            }
+            printError(e.getMessage());
         }
     }
 
     public void submit(ZOSConnection connection, String dataSet, String param) {
-        final var submitJobs = new SubmitJobs(connection);
-        Job job;
+        Job job = null;
         try {
+            final var submitJobs = new SubmitJobs(connection);
             job = submitJobs.submitJob(String.format("%s(%s)", dataSet, param));
         } catch (Exception e) {
+            if (e.getMessage().contains("Connection refused")) {
+                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                return;
+            }
             printError(e.getMessage());
-            return;
         }
         if (job != null)
             terminal.printf("Job Name: " + job.getJobName().orElse("n\\a") +
