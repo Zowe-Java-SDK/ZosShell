@@ -14,12 +14,15 @@ import org.beryx.textio.swing.SwingTextTerminal;
 import org.beryx.textio.web.RunnerData;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private static ListMultimap<String, String> dataSets = ArrayListMultimap.create();
+    private static List<String> commandsLst = new LinkedList<>();
     private static String currDataSet = "";
     private static List<ZOSConnection> connections = new ArrayList<>();
     private static ZOSConnection currConnection;
@@ -75,6 +78,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static void executeCommand(String[] params) {
         final var command = params[0];
         String param;
+        addToCommandLst(params);
 
         switch (command.toLowerCase()) {
             case "cancel":
@@ -100,7 +104,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 currMembers = new ArrayList<>();
                 currDataSet = commands.cd(currConnection, currDataSet, params[1].toUpperCase());
-                dataSets.put(currConnection.getHost(), currDataSet);
+                if (currConnection != null)
+                    dataSets.put(currConnection.getHost(), currDataSet);
                 break;
             case "change":
                 if (params.length == 1)
@@ -142,6 +147,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params))
                     return;
                 commands.get(currConnection, params);
+                break;
+            case "history":
+                commands.history(commandsLst);
                 break;
             case "ls":
                 if (isParamsExceeded(3, params))
@@ -231,11 +239,18 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 break;
             case "whoami":
-                terminal.printf(currConnection.getUser() + "\n");
+                if (connections != null)
+                    terminal.printf(currConnection.getUser() + "\n");
                 break;
             default:
                 terminal.printf(Constants.INVALID_COMMAND + "\n");
         }
+    }
+
+    private static void addToCommandLst(String[] params) {
+        StringBuilder str = new StringBuilder();
+        Arrays.stream(params).forEach(p -> str.append(p + " "));
+        commandsLst.add(str.toString());
     }
 
     private static boolean isParamsExceeded(int num, String[] commands) {

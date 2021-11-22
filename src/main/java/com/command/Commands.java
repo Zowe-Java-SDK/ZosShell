@@ -268,6 +268,10 @@ public class Commands {
         Arrays.stream(output).forEach(l -> terminal.printf(l + "\n"));
     }
 
+    public void history(List<String> commands) {
+        commands.forEach(terminal::println);
+    }
+
     public void tail(ZOSConnection connection, String[] params) {
         final int LINES_LIMIT = 25;
         String[] output;
