@@ -29,8 +29,15 @@ Along with following custom commands:
     connections             - a list of connection(s)   
     change <arg>            - where arg is a number representing a connection
     submit <arg>            - where arg is a member name  
-    v | visited             - a list of visited datasets
+    v | visited             - a list of visited datasets  
   
+The following key combinations provide the following functionality within the shell:  
+  
+    CTRL C                  - copy text
+    CTRL V                  - paste coped text
+    UP arrow                - scroll up through history list
+    DOWN arrow              - scroll down through history list
+    
 To quit from the command shell UI, you can either press 'X' windows close icon or enter 'end' keyword.  
   
 ## Requirements  

@@ -22,7 +22,9 @@ import java.util.function.BiConsumer;
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private static ListMultimap<String, String> dataSets = ArrayListMultimap.create();
-    private static List<String> commandsLst = new LinkedList<>();
+    private static List<String> commandLst = new LinkedList<>();
+    private static int commandLstUpIndex = 0;
+    private static int commandLstDownIndex = 0;
     private static String currDataSet = "";
     private static List<ZOSConnection> connections = new ArrayList<>();
     private static ZOSConnection currConnection;
@@ -47,6 +49,30 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             t.getTextPane().copy();
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
+        mainTerm.registerHandler("UP", t -> {
+            listUpCommands();
+            return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+        });
+        mainTerm.registerHandler("DOWN", t -> {
+            listDownCommands();
+            return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+        });
+    }
+
+    private static void listUpCommands() {
+        if (commandLstUpIndex == 0)
+            return;
+        terminal.resetLine();
+        terminal.printf("> " + commandLst.get(commandLstUpIndex - 1));
+        commandLstUpIndex--;
+    }
+
+    private static void listDownCommands() {
+        if (commandLstDownIndex == commandLst.size() - 1)
+            return;
+        terminal.resetLine();
+        terminal.printf("> " + commandLst.get(commandLstDownIndex));
+        commandLstDownIndex++;
     }
 
     @Override
@@ -58,18 +84,25 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         } else {
             terminal.println("Connected to " + currConnection.getHost() + " with user " + currConnection.getUser());
         }
-        String[] commands;
+        String[] command;
         String commandLine = "";
         while (!"end".equalsIgnoreCase(commandLine)) {
             commandLine = textIO.newStringInputReader().withMaxLength(80).read(">");
-            commands = commandLine.split(" ");
-            if ("rm".equals(commands[0])) {
+            command = commandLine.split(" ");
+            if ("rm".equals(command[0])) {
                 terminal.printf("Are you sure you want to delete y/n");
                 commandLine = textIO.newStringInputReader().withMaxLength(80).read("?");
                 if (!"y".equalsIgnoreCase(commandLine) && !"yes".equalsIgnoreCase(commandLine))
                     continue;
             }
-            executeCommand(commands);
+
+            // if > was added by listCommands() then remove it..
+            if (">".equals(command[0])) {
+                String[] newCommand = copyCommand(command);
+                executeCommand(newCommand);
+            } else {
+                executeCommand(command);
+            }
         }
 
         textIO.dispose();
@@ -149,7 +182,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 commands.get(currConnection, params);
                 break;
             case "history":
-                commands.history(commandsLst);
+                if (isParamsExceeded(1, params))
+                    return;
+                commands.history(commandLst);
                 break;
             case "ls":
                 if (isParamsExceeded(3, params))
@@ -250,7 +285,21 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static void addToCommandLst(String[] params) {
         StringBuilder str = new StringBuilder();
         Arrays.stream(params).forEach(p -> str.append(p + " "));
-        commandsLst.add(str.toString());
+        String command = str.toString();
+        if (!command.startsWith("history")) {
+            commandLst.add(str.toString());
+            commandLstUpIndex = commandLst.size();
+            commandLstDownIndex = 0;
+        }
+    }
+
+    private String[] copyCommand(String[] command) {
+        int newSize = command.length - 1;
+        String newCommand[] = new String[newSize];
+        for (int i = 1, j = 0; i < command.length; i++, j++) {
+            newCommand[j] = command[i];
+        }
+        return newCommand;
     }
 
     private static boolean isParamsExceeded(int num, String[] commands) {
