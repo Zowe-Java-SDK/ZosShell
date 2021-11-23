@@ -60,16 +60,20 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void listUpCommands() {
-        if (commandLstUpIndex == 0)
+        if (commandLstUpIndex == 0) {
+            commandLstUpIndex = commandLst.size();
             return;
+        }
         terminal.resetLine();
         terminal.printf("> " + commandLst.get(commandLstUpIndex - 1));
         commandLstUpIndex--;
     }
 
     private static void listDownCommands() {
-        if (commandLstDownIndex == commandLst.size() - 1)
+        if (commandLstDownIndex == commandLst.size()) {
+            commandLstDownIndex = 0;
             return;
+        }
         terminal.resetLine();
         terminal.printf("> " + commandLst.get(commandLstDownIndex));
         commandLstDownIndex++;
