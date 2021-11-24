@@ -323,7 +323,7 @@ public class Commands {
             });
             try {
                 members = zosDsnList.listDsnMembers(dataSet, params);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             int size = members.size();
             if (size == 0 && dataSets.size() == 1) {
@@ -360,7 +360,7 @@ public class Commands {
             });
             try {
                 members = zosDsnList.listDsnMembers(dataSet, params);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             int size = members.size();
             if (size == 0 && dataSets.size() == 1) {

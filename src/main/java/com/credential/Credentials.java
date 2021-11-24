@@ -24,7 +24,7 @@ public class Credentials {
                 ZOSConnection connection = new ZOSConnection(line[0], line[1], line[2], line[3]);
                 connections.add(connection);
             }
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 
