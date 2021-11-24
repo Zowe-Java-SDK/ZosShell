@@ -29,5 +29,7 @@ public class Constants {
     public static final String INVALID_PARAMETER = "invalid parameter, try again...";
     public static final String MISSING_PARAMETERS = "missing parameter(s), try again..";
     public static final String DATASET_NOT_SPECIFIED = "no dataset specified, try again..";
+    public static final String INVALID_NUMBER = "specify a number, try again..";
+    public static final String NO_HISTORY = "no history, try again..";
 
 }

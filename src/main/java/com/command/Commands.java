@@ -268,10 +268,6 @@ public class Commands {
         Arrays.stream(output).forEach(l -> terminal.printf(l + "\n"));
     }
 
-    public void history(List<String> commands) {
-        commands.forEach(terminal::println);
-    }
-
     public void tail(ZOSConnection connection, String[] params) {
         final int LINES_LIMIT = 25;
         String[] output;
@@ -521,7 +517,7 @@ public class Commands {
     private String[] getJobOutput(GetJobs getJobs, GetJobParams jobParams) throws Exception {
         String[] output;
         List<Job> jobs = getJobs.getJobsCommon(jobParams);
-        // select the active one first not found then get highest job number
+        // select the active one first not found then get the highest job number
         Optional<Job> job = jobs.stream().filter(j -> "ACTIVE".equalsIgnoreCase(j.getStatus().get())).findAny();
         List<JobFile> files = getJobs.getSpoolFilesForJob(job.orElse(jobs.get(0)));
         output = getJobs.getSpoolContent(files.get(0)).split("\n");

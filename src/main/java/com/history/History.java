@@ -1,5 +1,6 @@
 package com.history;
 
+import com.Constants;
 import org.beryx.textio.TextTerminal;
 
 import java.util.Arrays;
@@ -45,6 +46,33 @@ public class History {
             commandLst.add(str.toString());
             commandLstUpIndex = commandLst.size();
             commandLstDownIndex = 0;
+        }
+    }
+
+    public void displayHistory() {
+        commandLst.forEach(terminal::println);
+    }
+
+    public void displayHistory(String param) {
+        int num;
+        try {
+            num = Integer.parseInt(param);
+        } catch (NumberFormatException e) {
+            terminal.printf(Constants.INVALID_NUMBER + "\n");
+            return;
+        }
+
+        if (this.commandLst.isEmpty()) {
+            terminal.printf(Constants.NO_HISTORY + "\n");
+            return;
+        }
+        int size = commandLst.size();
+        if (num > size)
+            commandLst.forEach(terminal::println);
+        else {
+            int startIndex = size - num;
+            for (int i = startIndex; i < size; i++)
+                terminal.printf(commandLst.get(i) + "\n");
         }
     }
 
