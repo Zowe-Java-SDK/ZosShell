@@ -9,7 +9,7 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
     cat
     cd <arg>                 - where arg is a dataset value or empty
     get <arg>                - where arg is a job name - output job log
-    history  
+    history <arg>            - where arg is optional and identicates the number to display from bottom 
     ls <arg>                 - where arg is a dataset value or empty 
     ls -l <arg>              - where arg is a dataset value or empty 
     ps
