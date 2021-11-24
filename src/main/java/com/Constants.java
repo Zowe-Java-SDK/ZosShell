@@ -25,12 +25,12 @@ public class Constants {
             "first argument invalid for copy operation, specified valid dataset and member, try again...";
     public static final String DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR =
             "first argument invalid for delete operation, specified valid dataset and member, try again...";
-    public static final String DELETE_NOTHING_ERROR = "nothing to delete, try again..";
+    public static final String DELETE_NOTHING_ERROR = "nothing to delete, try again...";
     public static final String INVALID_PARAMETER = "invalid parameter, try again...";
-    public static final String MISSING_PARAMETERS = "missing parameter(s), try again..";
-    public static final String DATASET_NOT_SPECIFIED = "no dataset specified, try again..";
-    public static final String INVALID_NUMBER = "specify a number, try again..";
-    public static final String NO_HISTORY = "no history, try again..";
-    public static final String NO_MEMBERS = "no members..";
+    public static final String MISSING_PARAMETERS = "missing parameter(s), try again...";
+    public static final String DATASET_NOT_SPECIFIED = "no dataset specified, try again...";
+    public static final String INVALID_NUMBER = "specify a number, try again...";
+    public static final String NO_HISTORY = "no history, try again...";
+    public static final String NO_MEMBERS = "no members...";
 
 }

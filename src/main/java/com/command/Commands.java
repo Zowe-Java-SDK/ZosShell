@@ -321,7 +321,19 @@ public class Commands {
                 if (!ds.getDsname().get().equalsIgnoreCase(dataSet))
                     terminal.printf(ds.getDsname().get() + "\n");
             });
-            members = zosDsnList.listDsnMembers(dataSet, params);
+            try {
+                members = zosDsnList.listDsnMembers(dataSet, params);
+            } catch (Exception e) {
+            }
+            int size = members.size();
+            if (size == 0 && dataSets.size() == 1) {
+                terminal.println(Constants.NO_MEMBERS);
+            }
+            if (size == 0 && dataSets.size() == 0) {
+                terminal.println(Constants.NO_DATASET);
+            }
+            if (size == 0)
+                return members;
             members.forEach(m -> terminal.printf(m + "\n"));
         } catch (Exception e) {
             if (e.getMessage().contains("Connection refused")) {
@@ -346,12 +358,19 @@ public class Commands {
                 if (!ds.getDsname().get().equalsIgnoreCase(dataSet))
                     terminal.printf(ds.getDsname().get() + "\n");
             });
-            members = zosDsnList.listDsnMembers(dataSet, params);
-            int size = members.size();
-            if (size == 0) {
-                terminal.println(Constants.NO_MEMBERS);
-                return members;
+            try {
+                members = zosDsnList.listDsnMembers(dataSet, params);
+            } catch (Exception e) {
             }
+            int size = members.size();
+            if (size == 0 && dataSets.size() == 1) {
+                terminal.println(Constants.NO_MEMBERS);
+            }
+            if (size == 0 && dataSets.size() == 0) {
+                terminal.println(Constants.NO_DATASET);
+            }
+            if (size == 0)
+                return members;
             int numOfColumns = 0;
 
             if (size > 0 && size < 100)
