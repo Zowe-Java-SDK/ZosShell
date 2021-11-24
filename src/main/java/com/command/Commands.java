@@ -99,7 +99,7 @@ public class Commands {
             return dataSet;
         } else {
             final var dataSetName = param;
-            List<Dataset> dsLst = new ArrayList<>();
+            List<Dataset> dsLst;
             try {
                 final var zosDsnList = new ZosDsnList(connection);
                 final var params = new ListParams.Builder().build();
@@ -544,7 +544,7 @@ public class Commands {
         } else if (message.contains("Connection refused")) {
             terminal.printf(Constants.SEVERE_ERROR + "\n");
         } else if (message.contains("dataSetName not specified")) {
-            terminal.printf(Constants.NO_DATASET + "\n");
+            terminal.printf(Constants.DATASET_NOT_SPECIFIED + "\n");
         } else {
             terminal.printf(message + "\n");
         }

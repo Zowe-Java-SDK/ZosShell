@@ -4,6 +4,7 @@ import com.command.Commands;
 import com.credential.Credentials;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import com.history.History;
 import com.utility.Util;
 import core.ZOSConnection;
 import org.beryx.textio.ReadHandlerData;
@@ -14,23 +15,19 @@ import org.beryx.textio.swing.SwingTextTerminal;
 import org.beryx.textio.web.RunnerData;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private static ListMultimap<String, String> dataSets = ArrayListMultimap.create();
-    private static List<String> commandLst = new LinkedList<>();
-    private static int commandLstUpIndex = 0;
-    private static int commandLstDownIndex = 0;
     private static String currDataSet = "";
     private static List<ZOSConnection> connections = new ArrayList<>();
     private static ZOSConnection currConnection;
     private static List<String> currMembers = new ArrayList<>();
     private static TextTerminal<?> terminal;
     private static Commands commands;
+    private static History history;
 
     public static void main(String[] args) {
         Credentials.readCredentials(connections);
@@ -50,39 +47,20 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerm.registerHandler("UP", t -> {
-            listUpCommands();
+            history.listUpCommands();
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerm.registerHandler("DOWN", t -> {
-            listDownCommands();
+            history.listDownCommands();
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
-    }
-
-    private static void listUpCommands() {
-        if (commandLstUpIndex == 0) {
-            commandLstUpIndex = commandLst.size();
-            return;
-        }
-        terminal.resetLine();
-        terminal.printf("> " + commandLst.get(commandLstUpIndex - 1));
-        commandLstUpIndex--;
-    }
-
-    private static void listDownCommands() {
-        if (commandLstDownIndex == commandLst.size()) {
-            commandLstDownIndex = 0;
-            return;
-        }
-        terminal.resetLine();
-        terminal.printf("> " + commandLst.get(commandLstDownIndex));
-        commandLstDownIndex++;
     }
 
     @Override
     public void accept(TextIO textIO, RunnerData runnerData) {
         terminal = textIO.getTextTerminal();
         commands = new Commands(connections, terminal);
+        history = new History(terminal);
         if (currConnection == null) {
             terminal.println(Constants.NO_CONNECTIONS);
         } else {
@@ -96,17 +74,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             if ("rm".equals(command[0])) {
                 terminal.printf("Are you sure you want to delete y/n");
                 commandLine = textIO.newStringInputReader().withMaxLength(80).read("?");
-                if (!"y".equalsIgnoreCase(commandLine) && !"yes".equalsIgnoreCase(commandLine))
+                if (!"y".equalsIgnoreCase(commandLine) && !"yes".equalsIgnoreCase(commandLine)) {
+                    terminal.printf("delete canceled\n");
                     continue;
+                }
             }
 
-            // if > was added by listCommands() then remove it..
-            if (">".equals(command[0])) {
-                String[] newCommand = copyCommand(command);
-                executeCommand(newCommand);
-            } else {
-                executeCommand(command);
-            }
+            executeCommand(history.filterCommand(command));
         }
 
         textIO.dispose();
@@ -115,11 +89,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static void executeCommand(String[] params) {
         final var command = params[0];
         String param;
-        addToCommandLst(params);
+        history.addHistory(params);
 
         switch (command.toLowerCase()) {
             case "cancel":
-                if (params.length == 1)
+                if (isParamsMissing(1, params))
                     return;
                 if (isParamsExceeded(2, params))
                     return;
@@ -127,7 +101,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 commands.cancel(currConnection, param);
                 break;
             case "cat":
-                if (params.length == 1)
+                if (isParamsMissing(1, params))
                     return;
                 if (isParamsExceeded(2, params))
                     return;
@@ -135,7 +109,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 commands.cat(currConnection, currDataSet, param);
                 break;
             case "cd":
-                if (params.length == 1)
+                if (isParamsMissing(1, params))
                     return;
                 if (isParamsExceeded(2, params))
                     return;
@@ -143,9 +117,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 currDataSet = commands.cd(currConnection, currDataSet, params[1].toUpperCase());
                 if (currConnection != null)
                     dataSets.put(currConnection.getHost(), currDataSet);
+                terminal.printf("set to " + currDataSet + "\n");
                 break;
             case "change":
-                if (params.length == 1)
+                if (isParamsMissing(1, params))
                     return;
                 if (isParamsExceeded(2, params))
                     return;
@@ -156,6 +131,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 break;
             case "cp":
             case "copy":
+                if (isParamsMissing(1, params))
+                    return;
                 if (params.length < 3)
                     return;
                 if (isParamsExceeded(3, params))
@@ -179,7 +156,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             case "end":
                 break;
             case "get":
-                if (params.length == 1)
+                if (isParamsMissing(1, params))
                     return;
                 if (isParamsExceeded(2, params))
                     return;
@@ -188,7 +165,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             case "history":
                 if (isParamsExceeded(1, params))
                     return;
-                commands.history(commandLst);
+                commands.history(history.getCommandLst());
                 break;
             case "ls":
                 if (isParamsExceeded(3, params))
@@ -213,7 +190,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     currMembers = commands.lsl(currConnection, currDataSet);
                     return;
                 }
-                if (currDataSet.isEmpty())
+                if (!isCurrDataSetSpecified())
                     return;
                 currMembers = commands.ls(currConnection, currDataSet);
                 break;
@@ -229,30 +206,30 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             case "pwd":
                 if (isParamsExceeded(1, params))
                     return;
-                if (currDataSet.isEmpty())
+                if (!isCurrDataSetSpecified())
                     return;
                 terminal.printf(currDataSet + "\n");
                 break;
             case "rm":
-                if (isParamsExceeded(2, params))
+                if (isParamsMissing(1, params))
                     return;
-                if (params.length == 1)
+                if (isParamsExceeded(2, params))
                     return;
                 param = params[1];
                 commands.rm(currConnection, currDataSet, param);
                 break;
             case "submit":
-                if (params.length == 1)
+                if (isParamsMissing(1, params))
                     return;
                 if (isParamsExceeded(2, params))
                     return;
-                if (currDataSet.isEmpty())
+                if (!isCurrDataSetSpecified())
                     return;
                 param = params[1];
                 commands.submit(currConnection, currDataSet, param);
                 break;
             case "tail":
-                if (params.length == 1)
+                if (isParamsMissing(1, params))
                     return;
                 if (isParamsExceeded(3, params))
                     return;
@@ -270,7 +247,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             case "visited":
                 if (isParamsExceeded(1, params))
                     return;
-                if (currDataSet.isEmpty())
+                if (!isCurrDataSetSpecified())
                     return;
                 for (String key : dataSets.keySet()) {
                     List<String> lst = dataSets.get(key);
@@ -286,31 +263,26 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         }
     }
 
-    private static void addToCommandLst(String[] params) {
-        StringBuilder str = new StringBuilder();
-        Arrays.stream(params).forEach(p -> str.append(p + " "));
-        String command = str.toString();
-        if (!command.startsWith("history")) {
-            commandLst.add(str.toString());
-            commandLstUpIndex = commandLst.size();
-            commandLstDownIndex = 0;
-        }
-    }
-
-    private String[] copyCommand(String[] command) {
-        int newSize = command.length - 1;
-        String newCommand[] = new String[newSize];
-        for (int i = 1, j = 0; i < command.length; i++, j++) {
-            newCommand[j] = command[i];
-        }
-        return newCommand;
-    }
-
-    private static boolean isParamsExceeded(int num, String[] commands) {
-        if (commands.length > num) {
+    private static boolean isParamsExceeded(int num, String[] params) {
+        if (params.length > num) {
             terminal.printf(Constants.TOO_MANY_PARAMETERS + "\n");
             return true;
         }
+        return false;
+    }
+
+    private static boolean isParamsMissing(int num, String[] params) {
+        if (params.length == num) {
+            terminal.printf(Constants.MISSING_PARAMETERS + "\n");
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean isCurrDataSetSpecified() {
+        if (!currDataSet.isEmpty())
+            return true;
+        terminal.printf(Constants.DATASET_NOT_SPECIFIED + "\n");
         return false;
     }
 
