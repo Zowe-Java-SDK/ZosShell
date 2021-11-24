@@ -521,7 +521,7 @@ public class Commands {
     private String[] getJobOutput(GetJobs getJobs, GetJobParams jobParams) throws Exception {
         String[] output;
         List<Job> jobs = getJobs.getJobsCommon(jobParams);
-        // select the active one first not found then get highest job number
+        // select the active one first not found then get the highest job number
         Optional<Job> job = jobs.stream().filter(j -> "ACTIVE".equalsIgnoreCase(j.getStatus().get())).findAny();
         List<JobFile> files = getJobs.getSpoolFilesForJob(job.orElse(jobs.get(0)));
         output = getJobs.getSpoolContent(files.get(0)).split("\n");
