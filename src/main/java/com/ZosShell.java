@@ -20,9 +20,9 @@ import java.util.function.BiConsumer;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
-    private static ListMultimap<String, String> dataSets = ArrayListMultimap.create();
+    private static final ListMultimap<String, String> dataSets = ArrayListMultimap.create();
     private static String currDataSet = "";
-    private static List<ZOSConnection> connections = new ArrayList<>();
+    private static final List<ZOSConnection> connections = new ArrayList<>();
     private static ZOSConnection currConnection;
     private static List<String> currMembers = new ArrayList<>();
     private static TextTerminal<?> terminal;

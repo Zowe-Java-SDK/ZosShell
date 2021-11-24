@@ -10,7 +10,7 @@ import java.util.List;
 public class History {
 
     private final TextTerminal<?> terminal;
-    private List<String> commandLst = new LinkedList<>();
+    private final List<String> commandLst = new LinkedList<>();
     private static int commandLstUpIndex = 0;
     private static int commandLstDownIndex = 0;
 
