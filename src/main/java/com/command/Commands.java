@@ -477,7 +477,7 @@ public class Commands {
                 }
                 try {
                     members = zosDsnList.listDsnMembers(currDataSet, params);
-                    if (members.stream().noneMatch(m -> param.equals(m))) {
+                    if (members.stream().noneMatch(param::equals)) {
                         terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
                         return;
                     }
@@ -552,7 +552,7 @@ public class Commands {
             StringWriter writer = new StringWriter();
             IOUtils.copy(inputStream, writer, UtilIO.UTF8);
             String[] content = writer.toString().split("\\n");
-            Arrays.stream(content).forEach(c -> terminal.println(c));
+            Arrays.stream(content).forEach(terminal::println);
         }
         inputStream.close();
     }
