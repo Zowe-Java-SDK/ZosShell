@@ -330,6 +330,9 @@ public class Commands {
             }
             printError(e.getMessage());
         }
+        if (members.size() == 0) {
+            terminal.println(Constants.NO_MEMBERS);
+        }
         return members;
     }
 
@@ -345,6 +348,10 @@ public class Commands {
             });
             members = zosDsnList.listDsnMembers(dataSet, params);
             int size = members.size();
+            if (size == 0) {
+                terminal.println(Constants.NO_MEMBERS);
+                return members;
+            }
             int numOfColumns = 0;
 
             if (size > 1 && size < 100)
