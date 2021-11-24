@@ -354,7 +354,7 @@ public class Commands {
             }
             int numOfColumns = 0;
 
-            if (size > 1 && size < 100)
+            if (size > 0 && size < 100)
                 numOfColumns = 3;
             else if (size > 100 && size < 300) {
                 numOfColumns = 4;
@@ -370,18 +370,16 @@ public class Commands {
             var numOfLines = size / numOfColumns;
             String[] lines = new String[numOfLines + 1];
 
-            if (size > 5) {
-                int lineIndex = 0;
-                for (int i = 0; i < size; ) {
-                    int count = 1;
-                    String line = "";
-                    while (count % (numOfColumns + 1) != 0) {
-                        if (i >= size) break;
-                        line += String.format("%-8s", members.get(i++)) + " ";
-                        count++;
-                    }
-                    lines[lineIndex++] = line;
+            int lineIndex = 0;
+            for (int i = 0; i < size; ) {
+                int count = 1;
+                String line = "";
+                while (count % (numOfColumns + 1) != 0) {
+                    if (i >= size) break;
+                    line += String.format("%-8s", members.get(i++)) + " ";
+                    count++;
                 }
+                lines[lineIndex++] = line;
             }
 
             Arrays.stream(lines).forEach(line -> {
