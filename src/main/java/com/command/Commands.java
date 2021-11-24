@@ -510,7 +510,6 @@ public class Commands {
 
             if (Util.isDataSet(param)) {
                 zosDsn.deleteDsn(param);
-                return;
             }
         } catch (Exception e) {
             if (e.getMessage().contains("Connection refused")) {
