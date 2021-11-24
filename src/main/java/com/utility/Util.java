@@ -8,7 +8,6 @@ public class Util {
 
     public static boolean isDataSet(String dataSetName) {
         dataSetName = dataSetName.toUpperCase(Locale.ROOT);
-        String invalidDatasetMsg = "Invalid data set name '" + dataSetName + "'.";
 
         // Check that the dataset contains more than one segment
         // This could be valid for additionalTests
@@ -51,7 +50,6 @@ public class Util {
 
     public static boolean isMember(String memberName) {
         memberName = memberName.toUpperCase(Locale.ROOT);
-        String invalidMemberMsg = "Invalid member name '" + memberName + "'.";
 
         // A member name cannot be longer than eight characters.
         // The first member character must be either a letter or one of the following three special characters: #, @, $.
