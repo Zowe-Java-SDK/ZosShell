@@ -82,7 +82,7 @@ public class History {
 
         // remove ">" first parameter, added by listUpCommands or listDownCommands method
         int newSize = command.length - 1;
-        String newCommand[] = new String[newSize];
+        String[] newCommand = new String[newSize];
         for (int i = 1, j = 0; i < command.length; i++, j++) {
             newCommand[j] = command[i];
         }
