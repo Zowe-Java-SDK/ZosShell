@@ -477,7 +477,7 @@ public class Commands {
                 }
                 try {
                     members = zosDsnList.listDsnMembers(currDataSet, params);
-                    if (!members.stream().anyMatch(m -> param.equals(m))) {
+                    if (members.stream().noneMatch(m -> param.equals(m))) {
                         terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
                         return;
                     }
