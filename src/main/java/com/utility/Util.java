@@ -62,11 +62,7 @@ public class Util {
         }
         Pattern p = Pattern.compile("[A-Z#@\\$]{1}[A-Z0-9#@\\$]{1,7}");
         Matcher m = p.matcher(memberName);
-        if (!m.matches()) {
-            return false;
-        }
-
-        return true;
+        return m.matches();
     }
 
 }
