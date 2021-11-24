@@ -89,8 +89,4 @@ public class History {
         return newCommand;
     }
 
-    public List<String> getCommandLst() {
-        return commandLst;
-    }
-
 }
