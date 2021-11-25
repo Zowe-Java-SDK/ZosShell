@@ -4,7 +4,7 @@ import com.command.Commands;
 import com.credential.Credentials;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import com.history.History;
+import com.command.History;
 import com.utility.Util;
 import core.ZOSConnection;
 import org.beryx.textio.ReadHandlerData;
