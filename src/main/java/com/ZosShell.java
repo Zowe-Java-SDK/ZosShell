@@ -185,10 +185,16 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 3 && "-l".equalsIgnoreCase(params[1])) {
+                    if (!Util.isDataSet(params[2])) {
+                        terminal.println(Constants.INVALID_DATASET);
+                        return;
+                    }
                     commands.lsl(currConnection, params[2], true);
                     return;
                 }
                 if (params.length == 2 && "-l".equalsIgnoreCase(params[1])) {
+                    if (!isCurrDataSetSpecified())
+                        return;
                     currMembers = commands.lsl(currConnection, currDataSet, true);
                     return;
                 }

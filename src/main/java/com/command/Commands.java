@@ -304,9 +304,9 @@ public class Commands {
 
         int membersSize = members.size();
         displayListStatus(membersSize, dataSets.size());
+        displayDataSets(dataSets, dataSet);
 
         if (!verbose) {
-            displayDataSets(dataSets, dataSet);
             displayMembers(members);
             return members;
         }
@@ -348,6 +348,10 @@ public class Commands {
         });
 
         return members;
+    }
+
+    public void ps(ZOSConnection connection) {
+        ps(connection, null);
     }
 
     public void ps(ZOSConnection connection, String task) {
@@ -534,11 +538,7 @@ public class Commands {
     }
 
     private void displayMembers(List<String> members) {
-        members.forEach(terminal::printf);
-    }
-
-    public void ps(ZOSConnection connection) {
-        ps(connection, null);
+        members.forEach(terminal::println);
     }
 
     private void printError(String message) {
