@@ -19,7 +19,6 @@ import zosfiles.response.Dataset;
 import zosjobs.GetJobs;
 import zosjobs.SubmitJobs;
 import zosjobs.input.GetJobParams;
-import zosjobs.input.JobFile;
 import zosjobs.response.Job;
 
 import java.io.IOException;
@@ -289,123 +288,65 @@ public class Commands {
         }
     }
 
-    private String[] getOutput(ZOSConnection connection, String param) {
-        String[] output;
-        try {
-            final var getJobs = new GetJobs(connection);
-            final var jobParams = new GetJobParams.Builder("*").prefix(param).build();
-            output = getJobOutput(getJobs, jobParams);
-        } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
-                return null;
-            }
-            printError(e.getMessage());
-            return null;
-        }
-        return output;
-    }
-
     public List<String> ls(ZOSConnection connection, String dataSet) {
-        List<String> members = new ArrayList<>();
-        try {
-            final var zosDsnList = new ZosDsnList(connection);
-            final var params = new ListParams.Builder().build();
-            List<Dataset> dataSets = zosDsnList.listDsn(dataSet, params);
-            dataSets.forEach(ds -> {
-                if (!ds.getDsname().get().equalsIgnoreCase(dataSet))
-                    terminal.printf(ds.getDsname().get() + "\n");
-            });
-            try {
-                members = zosDsnList.listDsnMembers(dataSet, params);
-            } catch (Exception ignored) {
-            }
-            int size = members.size();
-            if (size == 0 && dataSets.size() == 1) {
-                terminal.println(Constants.NO_MEMBERS);
-            }
-            if (size == 0 && dataSets.size() == 0) {
-                terminal.println(Constants.NO_DATASET);
-            }
-            if (size == 0)
-                return members;
-            members.forEach(m -> terminal.printf(m + "\n"));
-        } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
-                return members;
-            }
-            printError(e.getMessage());
-        }
-        if (members.size() == 0) {
-            terminal.println(Constants.NO_MEMBERS);
-        }
-        return members;
+        return lsl(connection, dataSet, false);
     }
 
-    public List<String> lsl(ZOSConnection connection, String dataSet) {
+    public List<String> lsl(ZOSConnection connection, String dataSet, boolean verbose) {
         List<String> members = new ArrayList<>();
+        List<Dataset> dataSets = new ArrayList<>();
+
         try {
-            final var zosDsnList = new ZosDsnList(connection);
-            final var params = new ListParams.Builder().build();
-            List<Dataset> dataSets = zosDsnList.listDsn(dataSet, params);
-            dataSets.forEach(ds -> {
-                if (!ds.getDsname().get().equalsIgnoreCase(dataSet))
-                    terminal.printf(ds.getDsname().get() + "\n");
-            });
-            try {
-                members = zosDsnList.listDsnMembers(dataSet, params);
-            } catch (Exception ignored) {
-            }
-            int size = members.size();
-            if (size == 0 && dataSets.size() == 1) {
-                terminal.println(Constants.NO_MEMBERS);
-            }
-            if (size == 0 && dataSets.size() == 0) {
-                terminal.println(Constants.NO_DATASET);
-            }
-            if (size == 0)
-                return members;
-            int numOfColumns = 0;
-
-            if (size > 0 && size < 100)
-                numOfColumns = 3;
-            else if (size > 100 && size < 300) {
-                numOfColumns = 4;
-            } else if (size > 300 && size < 500) {
-                numOfColumns = 5;
-            } else if (size > 500 && size < 700) {
-                numOfColumns = 6;
-            } else if (size > 700 && size < 900) {
-                numOfColumns = 7;
-            } else if (size >= 1000)
-                numOfColumns = 8;
-
-            var numOfLines = size / numOfColumns;
-            String[] lines = new String[numOfLines + 1];
-
-            int lineIndex = 0;
-            for (int i = 0; i < size; ) {
-                int count = 1;
-                String line = "";
-                while (count % (numOfColumns + 1) != 0) {
-                    if (i >= size) break;
-                    line += String.format("%-8s", members.get(i++)) + " ";
-                    count++;
-                }
-                lines[lineIndex++] = line;
-            }
-
-            Arrays.stream(lines).forEach(line -> {
-                if (line != null) terminal.printf(line + "\n");
-            });
-        } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
-                return members;
-            }
-            printError(e.getMessage());
+            dataSets = getDataSets(connection, dataSet);
+            members = getMembers(connection, dataSet);
+        } catch (Exception ignored) {
         }
+
+        int membersSize = members.size();
+        displayListStatus(membersSize, dataSets.size());
+        displayDataSets(dataSets, dataSet);
+
+        if (!verbose) {
+            displayMembers(members);
+            return members;
+        }
+
+        if (membersSize == 0)
+            return members;
+        int numOfColumns = 0;
+
+        if (membersSize > 0 && membersSize < 100)
+            numOfColumns = 3;
+        else if (membersSize > 100 && membersSize < 300) {
+            numOfColumns = 4;
+        } else if (membersSize > 300 && membersSize < 500) {
+            numOfColumns = 5;
+        } else if (membersSize > 500 && membersSize < 700) {
+            numOfColumns = 6;
+        } else if (membersSize > 700 && membersSize < 900) {
+            numOfColumns = 7;
+        } else if (membersSize >= 1000)
+            numOfColumns = 8;
+
+        var numOfLines = membersSize / numOfColumns;
+        String[] lines = new String[numOfLines + 1];
+
+        int lineIndex = 0;
+        for (int i = 0; i < membersSize; ) {
+            int count = 1;
+            String line = "";
+            while (count % (numOfColumns + 1) != 0) {
+                if (i >= membersSize) break;
+                line += String.format("%-8s", members.get(i++)) + " ";
+                count++;
+            }
+            lines[lineIndex++] = line;
+        }
+
+        Arrays.stream(lines).forEach(line -> {
+            if (line != null) terminal.printf(line + "\n");
+        });
+
         return members;
     }
 
@@ -532,24 +473,72 @@ public class Commands {
                     ", Job Id: " + job.getJobId().orElse("n\\a") + "\n");
     }
 
-    private String[] getJobOutput(GetJobs getJobs, GetJobParams jobParams) throws Exception {
+    private String[] getOutput(ZOSConnection connection, String param) {
         String[] output;
-        List<Job> jobs = getJobs.getJobsCommon(jobParams);
+        try {
+            final var getJobs = new GetJobs(connection);
+            final var jobParams = new GetJobParams.Builder("*").prefix(param).build();
+            output = getJobOutput(getJobs, jobParams);
+        } catch (Exception e) {
+            if (e.getMessage().contains("Connection refused")) {
+                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                return null;
+            }
+            printError(e.getMessage());
+            return null;
+        }
+        return output;
+    }
+
+    private String[] getJobOutput(GetJobs getJobs, GetJobParams jobParams) throws Exception {
+        final var jobs = getJobs.getJobsCommon(jobParams);
         // select the active one first not found then get the highest job number
         Optional<Job> job = jobs.stream().filter(j -> "ACTIVE".equalsIgnoreCase(j.getStatus().get())).findAny();
-        List<JobFile> files = getJobs.getSpoolFilesForJob(job.orElse(jobs.get(0)));
-        output = getJobs.getSpoolContent(files.get(0)).split("\n");
+        final var files = getJobs.getSpoolFilesForJob(job.orElse(jobs.get(0)));
+        var output = getJobs.getSpoolContent(files.get(0)).split("\n");
         return output;
     }
 
     private void display(InputStream inputStream) throws IOException {
         if (inputStream != null) {
-            StringWriter writer = new StringWriter();
+            var writer = new StringWriter();
             IOUtils.copy(inputStream, writer, UtilIO.UTF8);
             String[] content = writer.toString().split("\\n");
             Arrays.stream(content).forEach(terminal::println);
         }
         inputStream.close();
+    }
+
+    private List<Dataset> getDataSets(ZOSConnection connection, String dataSet) throws Exception {
+        final var zosDsnList = new ZosDsnList(connection);
+        final var params = new ListParams.Builder().build();
+        return zosDsnList.listDsn(dataSet, params);
+    }
+
+    private List<String> getMembers(ZOSConnection connection, String dataSet) throws Exception {
+        final var zosDsnList = new ZosDsnList(connection);
+        final var params = new ListParams.Builder().build();
+        return zosDsnList.listDsnMembers(dataSet, params);
+    }
+
+    private void displayListStatus(int membersSize, int dataSetsSize) {
+        if (membersSize == 0 && dataSetsSize == 1) {
+            terminal.println(Constants.NO_MEMBERS);
+        }
+        if (membersSize == 0 && dataSetsSize == 0) {
+            terminal.println(Constants.NO_LISTING);
+        }
+    }
+
+    private void displayDataSets(List<Dataset> dataSets, String ignoreDataSet) {
+        dataSets.forEach(ds -> {
+            if (!ds.getDsname().get().equalsIgnoreCase(ignoreDataSet))
+                terminal.printf(ds.getDsname().get() + "\n");
+        });
+    }
+
+    private void displayMembers(List<String> members) {
+        members.forEach(terminal::println);
     }
 
     private void printError(String message) {
