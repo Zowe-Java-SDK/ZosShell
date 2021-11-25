@@ -252,37 +252,15 @@ public class Commands {
     }
 
     public void get(ZOSConnection connection, String[] params) {
-        String[] output;
-        try {
-            final var getJobs = new GetJobs(connection);
-            final var jobParams = new GetJobParams.Builder("*").prefix(params[1]).build();
-            output = getJobOutput(getJobs, jobParams);
-        } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
-                return;
-            }
-            printError(e.getMessage());
-            return;
-        }
+        String[] output = getOutput(connection, params[1]);
+        if (output == null) return;
         Arrays.stream(output).forEach(l -> terminal.printf(l + "\n"));
     }
 
     public void tail(ZOSConnection connection, String[] params) {
         final int LINES_LIMIT = 25;
-        String[] output;
-        try {
-            final var getJobs = new GetJobs(connection);
-            final var jobParams = new GetJobParams.Builder("*").prefix(params[1]).build();
-            output = getJobOutput(getJobs, jobParams);
-        } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
-                return;
-            }
-            printError(e.getMessage());
-            return;
-        }
+        String[] output = getOutput(connection, params[1]);
+        if (output == null) return;
         int size = output.length;
         int lines = 0;
         if (params.length == 3) {
@@ -309,6 +287,23 @@ public class Commands {
                 printAll(output, size);
             }
         }
+    }
+
+    private String[] getOutput(ZOSConnection connection, String param) {
+        String[] output;
+        try {
+            final var getJobs = new GetJobs(connection);
+            final var jobParams = new GetJobParams.Builder("*").prefix(param).build();
+            output = getJobOutput(getJobs, jobParams);
+        } catch (Exception e) {
+            if (e.getMessage().contains("Connection refused")) {
+                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                return null;
+            }
+            printError(e.getMessage());
+            return null;
+        }
+        return output;
     }
 
     public List<String> ls(ZOSConnection connection, String dataSet) {
