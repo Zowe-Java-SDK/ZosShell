@@ -289,65 +289,13 @@ public class Commands {
     }
 
     public List<String> ls(ZOSConnection connection, String dataSet) {
-        return lsl(connection, dataSet, false);
+        Listing listing = new Listing(connection, terminal);
+        return listing.lsl(dataSet, false);
     }
 
-    public List<String> lsl(ZOSConnection connection, String dataSet, boolean verbose) {
-        List<String> members = new ArrayList<>();
-        List<Dataset> dataSets = new ArrayList<>();
-
-        try {
-            dataSets = getDataSets(connection, dataSet);
-            members = getMembers(connection, dataSet);
-        } catch (Exception ignored) {
-        }
-
-        int membersSize = members.size();
-        displayListStatus(membersSize, dataSets.size());
-        displayDataSets(dataSets, dataSet);
-
-        if (!verbose) {
-            displayMembers(members);
-            return members;
-        }
-
-        if (membersSize == 0)
-            return members;
-        int numOfColumns = 0;
-
-        if (membersSize > 0 && membersSize < 100)
-            numOfColumns = 3;
-        else if (membersSize > 100 && membersSize < 300) {
-            numOfColumns = 4;
-        } else if (membersSize > 300 && membersSize < 500) {
-            numOfColumns = 5;
-        } else if (membersSize > 500 && membersSize < 700) {
-            numOfColumns = 6;
-        } else if (membersSize > 700 && membersSize < 900) {
-            numOfColumns = 7;
-        } else if (membersSize >= 1000)
-            numOfColumns = 8;
-
-        var numOfLines = membersSize / numOfColumns;
-        String[] lines = new String[numOfLines + 1];
-
-        int lineIndex = 0;
-        for (int i = 0; i < membersSize; ) {
-            int count = 1;
-            String line = "";
-            while (count % (numOfColumns + 1) != 0) {
-                if (i >= membersSize) break;
-                line += String.format("%-8s", members.get(i++)) + " ";
-                count++;
-            }
-            lines[lineIndex++] = line;
-        }
-
-        Arrays.stream(lines).forEach(line -> {
-            if (line != null) terminal.printf(line + "\n");
-        });
-
-        return members;
+    public List<String> lsl(ZOSConnection connection, String dataSet) {
+        Listing listing = new Listing(connection, terminal);
+        return listing.lsl(dataSet, true);
     }
 
     public void ps(ZOSConnection connection) {
@@ -507,38 +455,6 @@ public class Commands {
             Arrays.stream(content).forEach(terminal::println);
         }
         inputStream.close();
-    }
-
-    private List<Dataset> getDataSets(ZOSConnection connection, String dataSet) throws Exception {
-        final var zosDsnList = new ZosDsnList(connection);
-        final var params = new ListParams.Builder().build();
-        return zosDsnList.listDsn(dataSet, params);
-    }
-
-    private List<String> getMembers(ZOSConnection connection, String dataSet) throws Exception {
-        final var zosDsnList = new ZosDsnList(connection);
-        final var params = new ListParams.Builder().build();
-        return zosDsnList.listDsnMembers(dataSet, params);
-    }
-
-    private void displayListStatus(int membersSize, int dataSetsSize) {
-        if (membersSize == 0 && dataSetsSize == 1) {
-            terminal.println(Constants.NO_MEMBERS);
-        }
-        if (membersSize == 0 && dataSetsSize == 0) {
-            terminal.println(Constants.NO_LISTING);
-        }
-    }
-
-    private void displayDataSets(List<Dataset> dataSets, String ignoreDataSet) {
-        dataSets.forEach(ds -> {
-            if (!ds.getDsname().get().equalsIgnoreCase(ignoreDataSet))
-                terminal.printf(ds.getDsname().get() + "\n");
-        });
-    }
-
-    private void displayMembers(List<String> members) {
-        members.forEach(terminal::println);
     }
 
     private void printError(String message) {

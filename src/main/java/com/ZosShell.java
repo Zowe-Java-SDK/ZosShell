@@ -1,10 +1,10 @@
 package com;
 
 import com.command.Commands;
+import com.command.History;
 import com.credential.Credentials;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import com.command.History;
 import com.utility.Util;
 import core.ZOSConnection;
 import org.beryx.textio.ReadHandlerData;
@@ -189,13 +189,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         terminal.println(Constants.INVALID_DATASET);
                         return;
                     }
-                    commands.lsl(currConnection, params[2], true);
+                    commands.lsl(currConnection, params[2]);
                     return;
                 }
                 if (params.length == 2 && "-l".equalsIgnoreCase(params[1])) {
                     if (!isCurrDataSetSpecified())
                         return;
-                    currMembers = commands.lsl(currConnection, currDataSet, true);
+                    currMembers = commands.lsl(currConnection, currDataSet);
                     return;
                 }
                 if (!isCurrDataSetSpecified())
