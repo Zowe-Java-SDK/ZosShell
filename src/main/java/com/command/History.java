@@ -1,4 +1,4 @@
-package com.history;
+package com.command;
 
 import com.Constants;
 import org.beryx.textio.TextTerminal;
