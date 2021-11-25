@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 
 public class Util {
 
+    private static final String PATTERN_STRING = "[A-Z#@\\$]{1}[A-Z0-9#@\\$\\-]{1,7}";
+
     public static boolean isDataSet(String dataSetName) {
         dataSetName = dataSetName.toUpperCase(Locale.ROOT);
 
@@ -38,7 +40,7 @@ public class Util {
             if (segment.length() > 8) {
                 return false;
             }
-            Pattern p = Pattern.compile("[A-Z#@\\$]{1}[A-Z0-9#@\\$\\-]{1,7}");
+            Pattern p = Pattern.compile(PATTERN_STRING);
             Matcher m = p.matcher(segment);
             if (!m.matches()) {
                 return false;
@@ -58,7 +60,7 @@ public class Util {
         if (memberName.length() > 8) {
             return false;
         }
-        Pattern p = Pattern.compile("[A-Z#@\\$]{1}[A-Z0-9#@\\$]{1,7}");
+        Pattern p = Pattern.compile(PATTERN_STRING);
         Matcher m = p.matcher(memberName);
         return m.matches();
     }
