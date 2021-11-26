@@ -44,7 +44,7 @@ public class Listing {
             return members;
         int numOfColumns = 0;
 
-        if (membersSize > 0 && membersSize < 100)
+        if (membersSize < 100)
             numOfColumns = 3;
         else if (membersSize > 100 && membersSize < 300) {
             numOfColumns = 4;
