@@ -49,8 +49,8 @@ public class Concatenate {
             IOUtils.copy(inputStream, writer, UtilIO.UTF8);
             String[] content = writer.toString().split("\\n");
             Arrays.stream(content).forEach(terminal::println);
+            inputStream.close();
         }
-        inputStream.close();
     }
 
 }
