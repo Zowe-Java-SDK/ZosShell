@@ -42,7 +42,6 @@ public class ChangeDir {
             dataSet = dataSet.substring(0, str.length() - 1);
             return dataSet;
         } else {
-            final var dataSetName = param;
             List<Dataset> dsLst;
             try {
                 dsLst = zosDsnList.listDsn(currDataSet, params);
@@ -54,10 +53,10 @@ public class ChangeDir {
                 Util.printError(terminal, e.getMessage());
                 return currDataSet;
             }
-            var findDataSet = currDataSet + "." + dataSetName;
+            var findDataSet = currDataSet + "." + param;
             boolean found = dsLst.stream().anyMatch(d -> d.getDsname().get().contains(findDataSet));
             if (found)
-                currDataSet += "." + dataSetName;
+                currDataSet += "." + param;
             else terminal.println(Constants.DATASET_OR_HIGH_QUALIFIER_ERROR);
             return currDataSet;
         }
