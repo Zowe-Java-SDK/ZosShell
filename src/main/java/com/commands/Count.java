@@ -1,4 +1,4 @@
-package com.command;
+package com.commands;
 
 import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;

@@ -1,4 +1,4 @@
-package com.command;
+package com.commands;
 
 import com.Constants;
 import core.ZOSConnection;
