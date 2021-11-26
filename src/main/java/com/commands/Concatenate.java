@@ -17,21 +17,21 @@ import java.util.Arrays;
 public class Concatenate {
 
     private final TextTerminal<?> terminal;
-    private final ZosDsnDownload dl;
+    private final ZosDsnDownload download;
     private final DownloadParams dlParams = new DownloadParams.Builder().build();
 
     public Concatenate(TextTerminal<?> terminal, ZOSConnection connection) {
         this.terminal = terminal;
-        dl = new ZosDsnDownload(connection);
+        download = new ZosDsnDownload(connection);
     }
 
     public void cat(String dataSet, String param) {
         InputStream inputStream;
         try {
             if (Util.isDataSet(param)) {
-                inputStream = dl.downloadDsn(String.format("%s", param), dlParams);
+                inputStream = download.downloadDsn(String.format("%s", param), dlParams);
             } else {
-                inputStream = dl.downloadDsn(String.format("%s(%s)", dataSet, param), dlParams);
+                inputStream = download.downloadDsn(String.format("%s(%s)", dataSet, param), dlParams);
             }
             display(inputStream);
         } catch (Exception e) {
