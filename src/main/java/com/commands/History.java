@@ -76,7 +76,7 @@ public class History {
         }
     }
 
-    public static String[] filterCommand(String[] command) {
+    public String[] filterCommand(String[] command) {
         if (!">".equals(command[0]))
             return command;
 
