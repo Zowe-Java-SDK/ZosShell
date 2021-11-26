@@ -10,7 +10,7 @@ import zosjobs.response.Job;
 public class Submit {
 
     private final TextTerminal<?> terminal;
-    private SubmitJobs submitJobs;
+    private final SubmitJobs submitJobs;
     private Job job;
 
     public Submit(TextTerminal<?> terminal, ZOSConnection connection) {

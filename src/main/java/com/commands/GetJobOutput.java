@@ -13,8 +13,8 @@ import java.util.Optional;
 public class GetJobOutput {
 
     private final TextTerminal<?> terminal;
-    private GetJobParams.Builder jobParams = new GetJobParams.Builder("*");
-    private GetJobs getJobs;
+    private final GetJobParams.Builder jobParams = new GetJobParams.Builder("*");
+    private final GetJobs getJobs;
 
     public GetJobOutput(TextTerminal<?> terminal, ZOSConnection connection) {
         this.terminal = terminal;
