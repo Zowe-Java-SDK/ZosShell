@@ -12,19 +12,18 @@ import java.util.List;
 public class Count {
 
     private final TextTerminal<?> terminal;
-    private final ZOSConnection connection;
+    private final ZosDsnList zosDsnList;
+    private final ListParams params = new ListParams.Builder().build();
 
     public Count(TextTerminal<?> terminal, ZOSConnection connection) {
         this.terminal = terminal;
-        this.connection = connection;
+        this.zosDsnList = new ZosDsnList(connection);
     }
 
     public void count(String dataSet, String param) {
         List<Dataset> ds = new ArrayList<>();
         List<String> members = new ArrayList<>();
         try {
-            final var zosDsnList = new ZosDsnList(connection);
-            final var params = new ListParams.Builder().build();
             if ("members".equalsIgnoreCase(param)) {
                 members = zosDsnList.listDsnMembers(dataSet, params);
             }

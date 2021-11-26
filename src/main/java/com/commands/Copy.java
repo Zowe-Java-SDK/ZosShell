@@ -9,20 +9,18 @@ import zosfiles.ZosDsnCopy;
 public class Copy {
 
     private final TextTerminal<?> terminal;
-    private final ZOSConnection connection;
+    private final ZosDsnCopy zosDsnCopy;
 
     public Copy(TextTerminal<?> terminal, ZOSConnection connection) {
         this.terminal = terminal;
-        this.connection = connection;
+        this.zosDsnCopy = new ZosDsnCopy(connection);
     }
 
     public void copy(String currDataSet, String[] params) {
         try {
-            final var zosDsnCopy = new ZosDsnCopy(connection);
-
             var fromDataSetName = "";
             var toDataSetName = "";
-            boolean copyAllMembers = false;
+            var copyAllMembers = false;
 
             String param1 = params[1].toUpperCase();
             String param2 = params[2].toUpperCase();

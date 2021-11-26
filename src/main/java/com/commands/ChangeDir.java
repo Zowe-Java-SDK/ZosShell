@@ -13,11 +13,12 @@ import java.util.List;
 public class ChangeDir {
 
     private final TextTerminal<?> terminal;
-    private final ZOSConnection connection;
+    private final ZosDsnList zosDsnList;
+    private final ListParams params = new ListParams.Builder().build();
 
     public ChangeDir(TextTerminal<?> terminal, ZOSConnection connection) {
         this.terminal = terminal;
-        this.connection = connection;
+        this.zosDsnList = new ZosDsnList(connection);
     }
 
     public String cd(String currDataSet, String param) {
@@ -44,8 +45,6 @@ public class ChangeDir {
             final var dataSetName = param;
             List<Dataset> dsLst;
             try {
-                final var zosDsnList = new ZosDsnList(connection);
-                final var params = new ListParams.Builder().build();
                 dsLst = zosDsnList.listDsn(currDataSet, params);
             } catch (Exception e) {
                 if (e.getMessage().contains("Connection refused")) {

@@ -16,11 +16,12 @@ public class Listing {
     private final TextTerminal<?> terminal;
     private List<String> members = new ArrayList<>();
     private List<Dataset> dataSets = new ArrayList<>();
-    private final ZOSConnection connection;
+    private final ZosDsnList zosDsnList;
+    private final ListParams params = new ListParams.Builder().build();
 
     public Listing(ZOSConnection connection, TextTerminal<?> terminal) {
-        this.connection = connection;
         this.terminal = terminal;
+        this.zosDsnList = new ZosDsnList(connection);
     }
 
     public List<String> ls(String dataSet, boolean verbose) {
@@ -79,14 +80,10 @@ public class Listing {
     }
 
     private List<Dataset> getDataSets(String dataSet) throws Exception {
-        final var zosDsnList = new ZosDsnList(connection);
-        final var params = new ListParams.Builder().build();
         return zosDsnList.listDsn(dataSet, params);
     }
 
     private List<String> getMembers(String dataSet) throws Exception {
-        final var zosDsnList = new ZosDsnList(connection);
-        final var params = new ListParams.Builder().build();
         return zosDsnList.listDsnMembers(dataSet, params);
     }
 

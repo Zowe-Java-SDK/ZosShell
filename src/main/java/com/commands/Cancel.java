@@ -11,11 +11,11 @@ import zosconsole.input.IssueParams;
 public class Cancel {
 
     private final TextTerminal<?> terminal;
-    private final ZOSConnection connection;
+    private final IssueCommand issueCommand;
 
     public Cancel(TextTerminal<?> terminal, ZOSConnection connection) {
         this.terminal = terminal;
-        this.connection = connection;
+        this.issueCommand = new IssueCommand(connection);
     }
 
     public void cancel(String param) {
@@ -23,7 +23,6 @@ public class Cancel {
         params.setCommand("C " + param);
         ConsoleResponse response;
         try {
-            final var issueCommand = new IssueCommand(connection);
             response = issueCommand.issue(params);
             String result = response.getCommandResponse().get();
             // remove last newline i.e. \n

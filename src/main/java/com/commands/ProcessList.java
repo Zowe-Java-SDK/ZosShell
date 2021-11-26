@@ -14,18 +14,17 @@ import java.util.List;
 public class ProcessList {
 
     private final TextTerminal<?> terminal;
-    private final ZOSConnection connection;
+    private final GetJobs getJobs;
+    private final GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");
 
     public ProcessList(TextTerminal<?> terminal, ZOSConnection connection) {
         this.terminal = terminal;
-        this.connection = connection;
+        this.getJobs = new GetJobs(connection);
     }
 
     public void ps(String task) {
         List<Job> jobs;
         try {
-            final var getJobs = new GetJobs(connection);
-            GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");
             if (task != null) {
                 getJobParams.prefix(task).build();
             }

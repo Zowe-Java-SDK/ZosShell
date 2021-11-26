@@ -14,18 +14,18 @@ import java.util.List;
 public class Delete {
 
     private final TextTerminal<?> terminal;
-    private final ZOSConnection connection;
+    private final ZosDsn zosDsn;
+    private final ZosDsnList zosDsnList;
+    private final ListParams params = new ListParams.Builder().build();
 
     public Delete(TextTerminal<?> terminal, ZOSConnection connection) {
         this.terminal = terminal;
-        this.connection = connection;
+        this.zosDsn = new ZosDsn(connection);
+        this.zosDsnList = new ZosDsnList(connection);
     }
 
     public void rm(String currDataSet, String param) {
         try {
-            final var zosDsn = new ZosDsn(connection);
-            final var zosDsnList = new ZosDsnList(connection);
-            final var params = new ListParams.Builder().build();
             List<String> members = new ArrayList<>();
 
             if ("*".equals(param)) {

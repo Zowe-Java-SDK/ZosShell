@@ -17,16 +17,15 @@ import java.util.Arrays;
 public class Concatenate {
 
     private final TextTerminal<?> terminal;
-    private final ZOSConnection connection;
+    private final ZosDsnDownload dl;
+    private final DownloadParams dlParams = new DownloadParams.Builder().build();
 
     public Concatenate(TextTerminal<?> terminal, ZOSConnection connection) {
         this.terminal = terminal;
-        this.connection = connection;
+        dl = new ZosDsnDownload(connection);
     }
 
     public void cat(String dataSet, String param) {
-        final var dl = new ZosDsnDownload(connection);
-        final var dlParams = new DownloadParams.Builder().build();
         InputStream inputStream;
         try {
             if (Util.isDataSet(param)) {
