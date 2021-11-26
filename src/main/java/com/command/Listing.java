@@ -16,14 +16,14 @@ public class Listing {
     private final TextTerminal<?> terminal;
     private List<String> members = new ArrayList<>();
     private List<Dataset> dataSets = new ArrayList<>();
-    private ZOSConnection connection;
+    private final ZOSConnection connection;
 
     public Listing(ZOSConnection connection, TextTerminal<?> terminal) {
         this.connection = connection;
         this.terminal = terminal;
     }
 
-    public List<String> lsl(String dataSet, boolean verbose) {
+    public List<String> ls(String dataSet, boolean verbose) {
         try {
             dataSets = getDataSets(dataSet);
             members = getMembers(dataSet);
