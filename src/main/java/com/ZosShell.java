@@ -24,7 +24,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static String currDataSet = "";
     private static final List<ZOSConnection> connections = new ArrayList<>();
     private static ZOSConnection currConnection;
-    private static List<String> currMembers = new ArrayList<>();
     private static TextTerminal<?> terminal;
     private static Commands commands;
     private static History history;
@@ -113,7 +112,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 if (isParamsExceeded(2, params))
                     return;
-                currMembers = new ArrayList<>();
                 currDataSet = commands.cd(currConnection, currDataSet, params[1].toUpperCase());
                 if (currConnection != null)
                     dataSets.put(currConnection.getHost(), currDataSet);
@@ -195,12 +193,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (params.length == 2 && "-l".equalsIgnoreCase(params[1])) {
                     if (!isCurrDataSetSpecified())
                         return;
-                    currMembers = commands.lsl(currConnection, currDataSet);
+                    commands.lsl(currConnection, currDataSet);
                     return;
                 }
                 if (!isCurrDataSetSpecified())
                     return;
-                currMembers = commands.ls(currConnection, currDataSet);
+                commands.ls(currConnection, currDataSet);
                 break;
             case "ps":
                 if (isParamsExceeded(2, params))
