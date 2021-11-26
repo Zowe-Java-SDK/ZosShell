@@ -1,31 +1,10 @@
 package com.command;
 
-import com.Constants;
-import com.utility.Util;
 import core.ZOSConnection;
-import org.apache.commons.io.IOUtils;
 import org.beryx.textio.TextTerminal;
-import utility.UtilIO;
-import zosconsole.ConsoleResponse;
-import zosconsole.IssueCommand;
-import zosconsole.input.IssueParams;
-import zosfiles.ZosDsn;
-import zosfiles.ZosDsnCopy;
-import zosfiles.ZosDsnDownload;
-import zosfiles.ZosDsnList;
-import zosfiles.input.DownloadParams;
-import zosfiles.input.ListParams;
-import zosfiles.response.Dataset;
-import zosjobs.GetJobs;
-import zosjobs.SubmitJobs;
-import zosjobs.input.GetJobParams;
-import zosjobs.response.Job;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Arrays;
+import java.util.List;
 
 public class Commands {
 
@@ -38,264 +17,61 @@ public class Commands {
     }
 
     public void cancel(ZOSConnection connection, String param) {
-        final var params = new IssueParams();
-        params.setCommand("C " + param);
-        ConsoleResponse response;
-        try {
-            final var issueCommand = new IssueCommand(connection);
-            response = issueCommand.issue(params);
-            String result = response.getCommandResponse().get();
-            // remove last newline i.e. \n
-            terminal.printf(result.substring(0, result.length() - 1) + "\n");
-        } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
-                return;
-            }
-            printError(e.getMessage());
-        }
+        Cancel cancel = new Cancel(terminal, connection);
+        cancel.cancel(param);
     }
 
     public void cat(ZOSConnection connection, String dataSet, String param) {
-        final var dl = new ZosDsnDownload(connection);
-        final var dlParams = new DownloadParams.Builder().build();
-        InputStream inputStream;
-        try {
-            if (Util.isDataSet(param)) {
-                inputStream = dl.downloadDsn(String.format("%s", param), dlParams);
-            } else {
-                inputStream = dl.downloadDsn(String.format("%s(%s)", dataSet, param), dlParams);
-            }
-            display(inputStream);
-        } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
-                return;
-            }
-            printError(e.getMessage());
-        }
+        Concatenate concatenate = new Concatenate(terminal, connection);
+        concatenate.cat(dataSet, param);
     }
 
     public String cd(ZOSConnection connection, String currDataSet, String param) {
-        if (Util.isDataSet(param)) {
-            return param;
-        } else if (param.equals("..") && !currDataSet.isEmpty()) {
-            String[] tokens = currDataSet.split("\\.");
-            final var length = tokens.length - 1;
-            if (length == 1) {
-                terminal.printf(Constants.HIGH_QUALIFIER_ERROR + "\n");
-                return currDataSet;
-            }
-
-            var str = new StringBuilder();
-            for (int i = 0; i < length; i++) {
-                str.append(tokens[i]);
-                str.append(".");
-            }
-
-            String dataSet = str.toString();
-            dataSet = dataSet.substring(0, str.length() - 1);
-            return dataSet;
-        } else {
-            final var dataSetName = param;
-            List<Dataset> dsLst;
-            try {
-                final var zosDsnList = new ZosDsnList(connection);
-                final var params = new ListParams.Builder().build();
-                dsLst = zosDsnList.listDsn(currDataSet, params);
-            } catch (Exception e) {
-                if (e.getMessage().contains("Connection refused")) {
-                    terminal.printf(Constants.SEVERE_ERROR + "\n");
-                    return currDataSet;
-                }
-                printError(e.getMessage());
-                return currDataSet;
-            }
-            var findDataSet = currDataSet + "." + dataSetName;
-            boolean found = dsLst.stream().anyMatch(d -> d.getDsname().get().contains(findDataSet));
-            if (found)
-                currDataSet += "." + dataSetName;
-            else terminal.printf(Constants.DATASET_OR_HIGH_QUALIFIER_ERROR + "\n");
-            return currDataSet;
-        }
+        ChangeDir changeDir = new ChangeDir(terminal, connection);
+        return changeDir.cd(currDataSet, param);
     }
 
     public ZOSConnection change(ZOSConnection connection, String[] commands) {
-        var index = Integer.parseInt(commands[1]);
-        if (index-- > connections.size()) {
-            terminal.printf(Constants.NO_CONNECTION + "\n");
-            return connection;
-        }
-        return connections.get(index);
+        ChangeConn changeConn = new ChangeConn(terminal, connections);
+        return changeConn.changeConnection(connection, commands);
+
     }
 
     public void connections(ZOSConnection connection) {
-        if (connection != null) {
-            AtomicInteger i = new AtomicInteger(1);
-            connections.forEach(c ->
-                    terminal.printf(i.getAndIncrement() + " " + "hostname: " + c.getHost() + ", port: " +
-                            c.getZosmfPort() + ", user = " + c.getUser() + "\n")
-            );
-        } else {
-            terminal.printf(Constants.NO_CONNECTION_INFO + "\n");
-        }
+        ChangeConn changeConn = new ChangeConn(terminal, connections);
+        changeConn.displayConnections(connection);
     }
 
     public void copy(ZOSConnection connection, String currDataSet, String[] params) {
-        try {
-            final var zosDsnCopy = new ZosDsnCopy(connection);
-
-            var fromDataSetName = "";
-            var toDataSetName = "";
-            boolean copyAllMembers = false;
-
-            String param1 = params[1].toUpperCase();
-            String param2 = params[2].toUpperCase();
-
-            if (Util.isMember(param1)) {
-                fromDataSetName = currDataSet + "(" + param1 + ")";
-            }
-
-            if (Util.isMember(param2)) {
-                toDataSetName = currDataSet + "(" + param2 + ")";
-            }
-
-            if (".".equals(param1) && ".".equals(param2)) {
-                terminal.printf(Constants.INVALID_COMMAND + "\n");
-                return;
-            }
-
-            if (".".equals(param1)) {
-                fromDataSetName = currDataSet;
-                if (Util.isDataSet(param2))
-                    toDataSetName = param2;
-                else {
-                    terminal.printf("second argument invalid for copy all operation, try again...\n");
-                    return;
-                }
-                copyAllMembers = true;
-            }
-
-            if (".".equals(param2)) {
-                if (Util.isMember(param1)) {
-                    terminal.printf(Constants.COPY_OPS_ITSELF_ERROR + "\n");
-                    return;
-                }
-
-                if (Util.isDataSet(param1)) {
-                    terminal.printf(Constants.COPY_OPS_NO_MEMBER_ERROR + "\n");
-                    return;
-                }
-
-                if (param1.contains(currDataSet)) {
-                    terminal.printf(Constants.COPY_OPS_ITSELF_ERROR + "\n");
-                    return;
-                }
-
-                if (param1.contains("(") && param1.contains(")")) {
-                    String member;
-                    String dataset;
-
-                    int index = param1.indexOf("(");
-                    dataset = param1.substring(0, index);
-                    if (!Util.isDataSet(dataset)) {
-                        terminal.printf(Constants.COPY_OPS_NO_MEMBER_AND_DATASET_ERROR + "\n");
-                        return;
-                    }
-
-                    member = param1.substring(index + 1, param1.length() - 1);
-                    fromDataSetName = param1;
-                    toDataSetName = currDataSet + "(" + member + ")";
-                }
-            }
-
-            if (Util.isMember(param1) && Util.isDataSet(param2)) {
-                fromDataSetName = currDataSet + "(" + param1 + ")";
-                toDataSetName = param2 + "(" + param1 + ")";
-            }
-
-            if (fromDataSetName.isEmpty())
-                fromDataSetName = param1;
-
-            if (toDataSetName.isEmpty())
-                toDataSetName = param2;
-
-            zosDsnCopy.copy(fromDataSetName, toDataSetName, true, copyAllMembers);
-        } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
-                return;
-            }
-            printError(e.getMessage());
-        }
-
+        Copy copy = new Copy(terminal, connection);
+        copy.copy(currDataSet, params);
     }
 
     public void count(ZOSConnection connection, String dataSet, String param) {
-        List<Dataset> ds = new ArrayList<>();
-        List<String> members = new ArrayList<>();
-        try {
-            final var zosDsnList = new ZosDsnList(connection);
-            final var params = new ListParams.Builder().build();
-            if ("members".equalsIgnoreCase(param)) {
-                members = zosDsnList.listDsnMembers(dataSet, params);
-            }
-            if ("datasets".equalsIgnoreCase(param)) {
-                ds = zosDsnList.listDsn(dataSet, params);
-            }
-        } catch (Exception e) {
-            terminal.printf("0" + "\n");
-            return;
-        }
-        terminal.printf(members.size() + ds.size() + "\n");
+        Count count = new Count(terminal, connection);
+        count.count(dataSet, param);
     }
 
     public void get(ZOSConnection connection, String[] params) {
-        String[] output = getOutput(connection, params[1]);
+        GetJobOutput getJobOutput = new GetJobOutput(terminal, connection);
+        String[] output = getJobOutput.getLog(params[1]);
         if (output == null) return;
-        Arrays.stream(output).forEach(l -> terminal.printf(l + "\n"));
+        Arrays.stream(output).forEach(terminal::println);
     }
 
     public void tail(ZOSConnection connection, String[] params) {
-        final int LINES_LIMIT = 25;
-        String[] output = getOutput(connection, params[1]);
-        if (output == null) return;
-        int size = output.length;
-        int lines = 0;
-        if (params.length == 3) {
-            try {
-                lines = Integer.parseInt(params[2]);
-            } catch (NumberFormatException e) {
-                terminal.printf(Constants.INVALID_PARAMETER + "\n");
-                return;
-            }
-        }
-
-        if (lines > 0) {
-            if (lines < size) {
-                for (int i = size - lines; i < size; i++)
-                    terminal.printf(output[i] + "\n");
-            } else {
-                printAll(output, size);
-            }
-        } else {
-            if (size > LINES_LIMIT) {
-                for (int i = size - LINES_LIMIT; i < size; i++)
-                    terminal.printf(output[i] + "\n");
-            } else {
-                printAll(output, size);
-            }
-        }
+        GetJobOutput getJobOutput = new GetJobOutput(terminal, connection);
+        getJobOutput.tail(params);
     }
 
     public List<String> ls(ZOSConnection connection, String dataSet) {
         Listing listing = new Listing(connection, terminal);
-        return listing.lsl(dataSet, false);
+        return listing.ls(dataSet, false);
     }
 
     public List<String> lsl(ZOSConnection connection, String dataSet) {
         Listing listing = new Listing(connection, terminal);
-        return listing.lsl(dataSet, true);
+        return listing.ls(dataSet, true);
     }
 
     public void ps(ZOSConnection connection) {
@@ -303,175 +79,18 @@ public class Commands {
     }
 
     public void ps(ZOSConnection connection, String task) {
-        List<Job> jobs;
-        try {
-            final var getJobs = new GetJobs(connection);
-            GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");
-            if (task != null) {
-                getJobParams.prefix(task).build();
-            }
-            var params = getJobParams.build();
-            jobs = getJobs.getJobsCommon(params);
-        } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
-                return;
-            }
-            printError(e.getMessage());
-            return;
-        }
-        jobs.sort(Comparator.comparing((Job j) -> j.getJobName().get())
-                .thenComparing(j -> j.getStatus().get()).thenComparing(j -> j.getJobId().get()));
-        jobs.forEach(job -> terminal.printf(
-                String.format("%-8s %-8s %-8s\n", job.getJobName().get(), job.getJobId().get(), job.getStatus().get()))
-        );
+        ProcessList processList = new ProcessList(terminal, connection);
+        processList.ps(task);
     }
 
     public void rm(ZOSConnection connection, String currDataSet, String param) {
-        try {
-            final var zosDsn = new ZosDsn(connection);
-            final var zosDsnList = new ZosDsnList(connection);
-            final var params = new ListParams.Builder().build();
-            List<String> members = new ArrayList<>();
-
-            if ("*".equals(param)) {
-                if (currDataSet.isEmpty()) {
-                    terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
-                    return;
-                }
-                try {
-                    members = zosDsnList.listDsnMembers(currDataSet, params);
-                } catch (Exception e) {
-                    printError(e.getMessage());
-                }
-                members.forEach(m -> {
-                    try {
-                        zosDsn.deleteDsn(currDataSet, m);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-                return;
-            }
-
-            if (Util.isMember(param)) {
-                if (currDataSet.isEmpty()) {
-                    terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
-                    return;
-                }
-                try {
-                    members = zosDsnList.listDsnMembers(currDataSet, params);
-                    if (members.stream().noneMatch(param::equalsIgnoreCase)) {
-                        terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
-                        return;
-                    }
-                    zosDsn.deleteDsn(currDataSet, param);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return;
-            }
-
-            if (param.contains("(") && param.contains(")")) {
-                String member;
-                String dataset;
-
-                int index = param.indexOf("(");
-                dataset = param.substring(0, index);
-                if (!Util.isDataSet(dataset)) {
-                    terminal.printf(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR + "\n");
-                    return;
-                }
-
-                member = param.substring(index + 1, param.length() - 1);
-                try {
-                    zosDsn.deleteDsn(dataset, member);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return;
-            }
-
-            if (Util.isDataSet(param)) {
-                zosDsn.deleteDsn(param);
-            }
-        } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
-                return;
-            }
-            printError(e.getMessage());
-        }
+        Delete delete = new Delete(terminal, connection);
+        delete.rm(currDataSet, param);
     }
 
     public void submit(ZOSConnection connection, String dataSet, String param) {
-        Job job = null;
-        try {
-            final var submitJobs = new SubmitJobs(connection);
-            job = submitJobs.submitJob(String.format("%s(%s)", dataSet, param));
-        } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
-                return;
-            }
-            printError(e.getMessage());
-        }
-        if (job != null)
-            terminal.printf("Job Name: " + job.getJobName().orElse("n\\a") +
-                    ", Job Id: " + job.getJobId().orElse("n\\a") + "\n");
-    }
-
-    private String[] getOutput(ZOSConnection connection, String param) {
-        String[] output;
-        try {
-            final var getJobs = new GetJobs(connection);
-            final var jobParams = new GetJobParams.Builder("*").prefix(param).build();
-            output = getJobOutput(getJobs, jobParams);
-        } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
-                return null;
-            }
-            printError(e.getMessage());
-            return null;
-        }
-        return output;
-    }
-
-    private String[] getJobOutput(GetJobs getJobs, GetJobParams jobParams) throws Exception {
-        final var jobs = getJobs.getJobsCommon(jobParams);
-        // select the active one first not found then get the highest job number
-        Optional<Job> job = jobs.stream().filter(j -> "ACTIVE".equalsIgnoreCase(j.getStatus().get())).findAny();
-        final var files = getJobs.getSpoolFilesForJob(job.orElse(jobs.get(0)));
-        var output = getJobs.getSpoolContent(files.get(0)).split("\n");
-        return output;
-    }
-
-    private void display(InputStream inputStream) throws IOException {
-        if (inputStream != null) {
-            var writer = new StringWriter();
-            IOUtils.copy(inputStream, writer, UtilIO.UTF8);
-            String[] content = writer.toString().split("\\n");
-            Arrays.stream(content).forEach(terminal::println);
-        }
-        inputStream.close();
-    }
-
-    private void printError(String message) {
-        if (message.contains("Not Found")) {
-            terminal.printf(Constants.NOT_FOUND + "\n");
-        } else if (message.contains("Connection refused")) {
-            terminal.printf(Constants.SEVERE_ERROR + "\n");
-        } else if (message.contains("dataSetName not specified")) {
-            terminal.printf(Constants.DATASET_NOT_SPECIFIED + "\n");
-        } else {
-            terminal.printf(message + "\n");
-        }
-    }
-
-    private void printAll(String[] output, int size) {
-        for (int i = 0; i < size; i++)
-            terminal.printf(output[i] + "\n");
+        Submit submit = new Submit(terminal, connection);
+        submit.submitJob(dataSet, param);
     }
 
 }

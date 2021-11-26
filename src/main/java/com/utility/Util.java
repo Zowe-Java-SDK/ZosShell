@@ -1,5 +1,8 @@
 package com.utility;
 
+import com.Constants;
+import org.beryx.textio.TextTerminal;
+
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,6 +66,18 @@ public class Util {
         Pattern p = Pattern.compile(PATTERN_STRING);
         Matcher m = p.matcher(memberName);
         return m.matches();
+    }
+
+    public static void printError(TextTerminal<?> terminal, String message) {
+        if (message.contains("Not Found")) {
+            terminal.printf(Constants.NOT_FOUND + "\n");
+        } else if (message.contains("Connection refused")) {
+            terminal.printf(Constants.SEVERE_ERROR + "\n");
+        } else if (message.contains("dataSetName not specified")) {
+            terminal.printf(Constants.DATASET_NOT_SPECIFIED + "\n");
+        } else {
+            terminal.printf(message + "\n");
+        }
     }
 
 }
