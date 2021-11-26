@@ -37,7 +37,7 @@ public class Concatenate {
             display(inputStream);
         } catch (Exception e) {
             if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                terminal.println(Constants.SEVERE_ERROR);
                 return;
             }
             Util.printError(terminal, e.getMessage());

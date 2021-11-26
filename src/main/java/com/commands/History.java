@@ -58,12 +58,12 @@ public class History {
         try {
             num = Integer.parseInt(param);
         } catch (NumberFormatException e) {
-            terminal.printf(Constants.INVALID_NUMBER + "\n");
+            terminal.println(Constants.INVALID_NUMBER);
             return;
         }
 
         if (this.commandLst.isEmpty()) {
-            terminal.printf(Constants.NO_HISTORY + "\n");
+            terminal.println(Constants.NO_HISTORY);
             return;
         }
         int size = commandLst.size();
@@ -72,7 +72,7 @@ public class History {
         else {
             int startIndex = size - num;
             for (int i = startIndex; i < size; i++)
-                terminal.printf(commandLst.get(i) + "\n");
+                terminal.println(commandLst.get(i));
         }
     }
 

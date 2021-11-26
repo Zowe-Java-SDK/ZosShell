@@ -30,7 +30,7 @@ public class Delete {
 
             if ("*".equals(param)) {
                 if (currDataSet.isEmpty()) {
-                    terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
+                    terminal.println(Constants.DELETE_NOTHING_ERROR);
                     return;
                 }
                 try {
@@ -50,13 +50,13 @@ public class Delete {
 
             if (Util.isMember(param)) {
                 if (currDataSet.isEmpty()) {
-                    terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
+                    terminal.println(Constants.DELETE_NOTHING_ERROR);
                     return;
                 }
                 try {
                     members = zosDsnList.listDsnMembers(currDataSet, params);
                     if (members.stream().noneMatch(param::equalsIgnoreCase)) {
-                        terminal.printf(Constants.DELETE_NOTHING_ERROR + "\n");
+                        terminal.println(Constants.DELETE_NOTHING_ERROR);
                         return;
                     }
                     zosDsn.deleteDsn(currDataSet, param);
@@ -73,7 +73,7 @@ public class Delete {
                 int index = param.indexOf("(");
                 dataset = param.substring(0, index);
                 if (!Util.isDataSet(dataset)) {
-                    terminal.printf(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR + "\n");
+                    terminal.println(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR);
                     return;
                 }
 
@@ -91,7 +91,7 @@ public class Delete {
             }
         } catch (Exception e) {
             if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                terminal.println(Constants.SEVERE_ERROR);
                 return;
             }
             Util.printError(terminal, e.getMessage());

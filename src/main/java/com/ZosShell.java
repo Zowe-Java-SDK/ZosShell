@@ -75,7 +75,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 terminal.printf("Are you sure you want to delete y/n");
                 commandLine = textIO.newStringInputReader().withMaxLength(80).read("?");
                 if (!"y".equalsIgnoreCase(commandLine) && !"yes".equalsIgnoreCase(commandLine)) {
-                    terminal.printf("delete canceled\n");
+                    terminal.println("delete canceled");
                     continue;
                 }
             }
@@ -117,7 +117,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 currDataSet = commands.cd(currConnection, currDataSet, params[1].toUpperCase());
                 if (currConnection != null)
                     dataSets.put(currConnection.getHost(), currDataSet);
-                terminal.printf("set to " + currDataSet + "\n");
+                terminal.println("set to " + currDataSet);
                 break;
             case "change":
                 if (isParamsMissing(1, params))
@@ -141,11 +141,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 break;
             case "count":
                 if (params.length == 1) {
-                    terminal.printf(Constants.MISSING_COUNT_PARAM + "\n");
+                    terminal.println(Constants.MISSING_COUNT_PARAM);
                     return;
                 }
                 if (!("members".equalsIgnoreCase(params[1]) || "datasets".equalsIgnoreCase(params[1]))) {
-                    terminal.printf(Constants.MISSING_COUNT_PARAM + "\n");
+                    terminal.println(Constants.MISSING_COUNT_PARAM);
                     return;
                 }
                 if (isParamsExceeded(2, params))
@@ -177,11 +177,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 2 && !"-l".equalsIgnoreCase(params[1])) {
-                    terminal.printf(Constants.INVALID_COMMAND + "\n");
+                    terminal.println(Constants.INVALID_COMMAND);
                     return;
                 }
                 if (params.length == 3 && !"-l".equalsIgnoreCase(params[1])) {
-                    terminal.printf(Constants.INVALID_COMMAND + "\n");
+                    terminal.println(Constants.INVALID_COMMAND);
                     return;
                 }
                 if (params.length == 3 && "-l".equalsIgnoreCase(params[1])) {
@@ -216,7 +216,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 if (!isCurrDataSetSpecified())
                     return;
-                terminal.printf(currDataSet + "\n");
+                terminal.println(currDataSet);
                 break;
             case "rm":
                 if (isParamsMissing(1, params))
@@ -245,10 +245,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 break;
             case "uname":
                 if (currConnection != null) {
-                    terminal.printf(
-                            "hostname: " + currConnection.getHost() + ", port: " + currConnection.getZosmfPort() + "\n");
+                    terminal.println(
+                            "hostname: " + currConnection.getHost() + ", port: " + currConnection.getZosmfPort());
                 } else {
-                    terminal.printf(Constants.NO_INFO + "\n");
+                    terminal.println(Constants.NO_INFO);
                 }
                 break;
             case "v":
@@ -259,21 +259,21 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 for (String key : dataSets.keySet()) {
                     List<String> lst = dataSets.get(key);
-                    lst.forEach(l -> terminal.printf(l.toUpperCase() + " ==> " + key + "\n"));
+                    lst.forEach(l -> terminal.println(l.toUpperCase() + " ==> " + key));
                 }
                 break;
             case "whoami":
                 if (connections != null)
-                    terminal.printf(currConnection.getUser() + "\n");
+                    terminal.println(currConnection.getUser());
                 break;
             default:
-                terminal.printf(Constants.INVALID_COMMAND + "\n");
+                terminal.println(Constants.INVALID_COMMAND);
         }
     }
 
     private static boolean isParamsExceeded(int num, String[] params) {
         if (params.length > num) {
-            terminal.printf(Constants.TOO_MANY_PARAMETERS + "\n");
+            terminal.println(Constants.TOO_MANY_PARAMETERS);
             return true;
         }
         return false;
@@ -281,7 +281,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private static boolean isParamsMissing(int num, String[] params) {
         if (params.length == num) {
-            terminal.printf(Constants.MISSING_PARAMETERS + "\n");
+            terminal.println(Constants.MISSING_PARAMETERS);
             return true;
         }
         return false;
@@ -290,7 +290,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static boolean isCurrDataSetSpecified() {
         if (!currDataSet.isEmpty())
             return true;
-        terminal.printf(Constants.DATASET_NOT_SPECIFIED + "\n");
+        terminal.println(Constants.DATASET_NOT_SPECIFIED);
         return false;
     }
 

@@ -27,10 +27,10 @@ public class Cancel {
             response = issueCommand.issue(params);
             String result = response.getCommandResponse().get();
             // remove last newline i.e. \n
-            terminal.printf(result.substring(0, result.length() - 1) + "\n");
+            terminal.println(result.substring(0, result.length() - 1));
         } catch (Exception e) {
             if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                terminal.println(Constants.SEVERE_ERROR);
                 return;
             }
             Util.printError(terminal, e.getMessage());

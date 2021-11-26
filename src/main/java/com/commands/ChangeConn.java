@@ -20,7 +20,7 @@ public class ChangeConn {
     public ZOSConnection changeConnection(ZOSConnection connection, String[] commands) {
         var index = Integer.parseInt(commands[1]);
         if (index-- > connections.size()) {
-            terminal.printf(Constants.NO_CONNECTION + "\n");
+            terminal.println(Constants.NO_CONNECTION);
             return connection;
         }
         return connections.get(index);
@@ -30,11 +30,11 @@ public class ChangeConn {
         if (connection != null) {
             AtomicInteger i = new AtomicInteger(1);
             connections.forEach(c ->
-                    terminal.printf(i.getAndIncrement() + " " + "hostname: " + c.getHost() + ", port: " +
-                            c.getZosmfPort() + ", user = " + c.getUser() + "\n")
+                    terminal.println(i.getAndIncrement() + " " + "hostname: " + c.getHost() + ", port: " +
+                            c.getZosmfPort() + ", user = " + c.getUser())
             );
         } else {
-            terminal.printf(Constants.NO_CONNECTION_INFO + "\n");
+            terminal.println(Constants.NO_CONNECTION_INFO);
         }
     }
 

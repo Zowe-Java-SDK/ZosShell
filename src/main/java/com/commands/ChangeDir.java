@@ -27,7 +27,7 @@ public class ChangeDir {
             String[] tokens = currDataSet.split("\\.");
             final var length = tokens.length - 1;
             if (length == 1) {
-                terminal.printf(Constants.HIGH_QUALIFIER_ERROR + "\n");
+                terminal.println(Constants.HIGH_QUALIFIER_ERROR);
                 return currDataSet;
             }
 
@@ -49,7 +49,7 @@ public class ChangeDir {
                 dsLst = zosDsnList.listDsn(currDataSet, params);
             } catch (Exception e) {
                 if (e.getMessage().contains("Connection refused")) {
-                    terminal.printf(Constants.SEVERE_ERROR + "\n");
+                    terminal.println(Constants.SEVERE_ERROR);
                     return currDataSet;
                 }
                 Util.printError(terminal, e.getMessage());
@@ -59,7 +59,7 @@ public class ChangeDir {
             boolean found = dsLst.stream().anyMatch(d -> d.getDsname().get().contains(findDataSet));
             if (found)
                 currDataSet += "." + dataSetName;
-            else terminal.printf(Constants.DATASET_OR_HIGH_QUALIFIER_ERROR + "\n");
+            else terminal.println(Constants.DATASET_OR_HIGH_QUALIFIER_ERROR);
             return currDataSet;
         }
     }

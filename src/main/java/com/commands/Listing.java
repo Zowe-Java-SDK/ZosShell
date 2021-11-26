@@ -72,7 +72,7 @@ public class Listing {
         }
 
         Arrays.stream(lines).forEach(line -> {
-            if (line != null) terminal.printf(line + "\n");
+            if (line != null) terminal.println(line);
         });
 
         return members;
@@ -102,7 +102,7 @@ public class Listing {
     private void displayDataSets(List<Dataset> dataSets, String ignoreDataSet) {
         dataSets.forEach(ds -> {
             if (!ds.getDsname().get().equalsIgnoreCase(ignoreDataSet))
-                terminal.printf(ds.getDsname().get() + "\n");
+                terminal.println(ds.getDsname().get());
         });
     }
 

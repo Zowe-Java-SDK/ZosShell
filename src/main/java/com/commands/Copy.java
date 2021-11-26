@@ -36,7 +36,7 @@ public class Copy {
             }
 
             if (".".equals(param1) && ".".equals(param2)) {
-                terminal.printf(Constants.INVALID_COMMAND + "\n");
+                terminal.println(Constants.INVALID_COMMAND);
                 return;
             }
 
@@ -45,7 +45,7 @@ public class Copy {
                 if (Util.isDataSet(param2))
                     toDataSetName = param2;
                 else {
-                    terminal.printf("second argument invalid for copy all operation, try again...\n");
+                    terminal.println("second argument invalid for copy all operation, try again...");
                     return;
                 }
                 copyAllMembers = true;
@@ -53,17 +53,17 @@ public class Copy {
 
             if (".".equals(param2)) {
                 if (Util.isMember(param1)) {
-                    terminal.printf(Constants.COPY_OPS_ITSELF_ERROR + "\n");
+                    terminal.println(Constants.COPY_OPS_ITSELF_ERROR);
                     return;
                 }
 
                 if (Util.isDataSet(param1)) {
-                    terminal.printf(Constants.COPY_OPS_NO_MEMBER_ERROR + "\n");
+                    terminal.println(Constants.COPY_OPS_NO_MEMBER_ERROR);
                     return;
                 }
 
                 if (param1.contains(currDataSet)) {
-                    terminal.printf(Constants.COPY_OPS_ITSELF_ERROR + "\n");
+                    terminal.println(Constants.COPY_OPS_ITSELF_ERROR);
                     return;
                 }
 
@@ -74,7 +74,7 @@ public class Copy {
                     int index = param1.indexOf("(");
                     dataset = param1.substring(0, index);
                     if (!Util.isDataSet(dataset)) {
-                        terminal.printf(Constants.COPY_OPS_NO_MEMBER_AND_DATASET_ERROR + "\n");
+                        terminal.println(Constants.COPY_OPS_NO_MEMBER_AND_DATASET_ERROR);
                         return;
                     }
 
@@ -98,7 +98,7 @@ public class Copy {
             zosDsnCopy.copy(fromDataSetName, toDataSetName, true, copyAllMembers);
         } catch (Exception e) {
             if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                terminal.println(Constants.SEVERE_ERROR);
                 return;
             }
             Util.printError(terminal, e.getMessage());

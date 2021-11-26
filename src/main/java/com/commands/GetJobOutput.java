@@ -30,7 +30,7 @@ public class GetJobOutput {
             output = getJobLog(getJobs, jobParams.prefix(param).build());
         } catch (Exception e) {
             if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                terminal.println(Constants.SEVERE_ERROR);
                 return null;
             }
             Util.printError(terminal, e.getMessage());
@@ -48,7 +48,7 @@ public class GetJobOutput {
             try {
                 lines = Integer.parseInt(params[2]);
             } catch (NumberFormatException e) {
-                terminal.printf(Constants.INVALID_PARAMETER + "\n");
+                terminal.println(Constants.INVALID_PARAMETER);
                 return;
             }
         }
@@ -56,14 +56,14 @@ public class GetJobOutput {
         if (lines > 0) {
             if (lines < size) {
                 for (int i = size - lines; i < size; i++)
-                    terminal.printf(output[i] + "\n");
+                    terminal.println(output[i]);
             } else {
                 printAll(output, size);
             }
         } else {
             if (size > LINES_LIMIT) {
                 for (int i = size - LINES_LIMIT; i < size; i++)
-                    terminal.printf(output[i] + "\n");
+                    terminal.println(output[i]);
             } else {
                 printAll(output, size);
             }
@@ -80,7 +80,7 @@ public class GetJobOutput {
 
     private void printAll(String[] output, int size) {
         for (int i = 0; i < size; i++)
-            terminal.printf(output[i] + "\n");
+            terminal.println(output[i]);
     }
 
 }

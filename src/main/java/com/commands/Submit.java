@@ -25,14 +25,14 @@ public class Submit {
             job = submitJobs.submitJob(String.format("%s(%s)", dataSet, param));
         } catch (Exception e) {
             if (e.getMessage().contains("Connection refused")) {
-                terminal.printf(Constants.SEVERE_ERROR + "\n");
+                terminal.println(Constants.SEVERE_ERROR);
                 return;
             }
             Util.printError(terminal, e.getMessage());
         }
         if (job != null)
-            terminal.printf("Job Name: " + job.getJobName().orElse("n\\a") +
-                    ", Job Id: " + job.getJobId().orElse("n\\a") + "\n");
+            terminal.println("Job Name: " + job.getJobName().orElse("n\\a") +
+                    ", Job Id: " + job.getJobId().orElse("n\\a"));
     }
 
 }

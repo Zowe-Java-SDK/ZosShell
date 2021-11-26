@@ -70,13 +70,13 @@ public class Util {
 
     public static void printError(TextTerminal<?> terminal, String message) {
         if (message.contains("Not Found")) {
-            terminal.printf(Constants.NOT_FOUND + "\n");
+            terminal.println(Constants.NOT_FOUND);
         } else if (message.contains("Connection refused")) {
-            terminal.printf(Constants.SEVERE_ERROR + "\n");
+            terminal.println(Constants.SEVERE_ERROR);
         } else if (message.contains("dataSetName not specified")) {
-            terminal.printf(Constants.DATASET_NOT_SPECIFIED + "\n");
+            terminal.println(Constants.DATASET_NOT_SPECIFIED);
         } else {
-            terminal.printf(message + "\n");
+            terminal.println(message);
         }
     }
 
