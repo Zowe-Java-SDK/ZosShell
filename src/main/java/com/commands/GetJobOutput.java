@@ -13,14 +13,11 @@ import java.util.Optional;
 public class GetJobOutput {
 
     private final TextTerminal<?> terminal;
-    private final ZOSConnection connection;
     private GetJobParams.Builder jobParams = new GetJobParams.Builder("*");
     private GetJobs getJobs;
-    private final int LINES_LIMIT = 25;
 
     public GetJobOutput(TextTerminal<?> terminal, ZOSConnection connection) {
         this.terminal = terminal;
-        this.connection = connection;
         this.getJobs = new GetJobs(connection);
     }
 
@@ -61,6 +58,7 @@ public class GetJobOutput {
                 printAll(output, size);
             }
         } else {
+            int LINES_LIMIT = 25;
             if (size > LINES_LIMIT) {
                 for (int i = size - LINES_LIMIT; i < size; i++)
                     terminal.println(output[i]);

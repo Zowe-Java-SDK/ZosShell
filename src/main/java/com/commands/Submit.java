@@ -10,13 +10,11 @@ import zosjobs.response.Job;
 public class Submit {
 
     private final TextTerminal<?> terminal;
-    private final ZOSConnection connection;
     private SubmitJobs submitJobs;
     private Job job;
 
     public Submit(TextTerminal<?> terminal, ZOSConnection connection) {
         this.terminal = terminal;
-        this.connection = connection;
         this.submitJobs = new SubmitJobs(connection);
     }
 
