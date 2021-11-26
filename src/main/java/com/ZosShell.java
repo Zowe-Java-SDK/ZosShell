@@ -1,8 +1,8 @@
 package com;
 
-import com.command.Commands;
-import com.command.History;
-import com.credential.Credentials;
+import com.commands.Commands;
+import com.commands.History;
+import com.security.Credentials;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.utility.Util;
