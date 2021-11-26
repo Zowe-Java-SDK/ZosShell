@@ -191,12 +191,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 2 && "-l".equalsIgnoreCase(params[1])) {
-                    if (!isCurrDataSetSpecified())
+                    if (isCurrDataSetNotSpecified())
                         return;
                     commands.lsl(currConnection, currDataSet);
                     return;
                 }
-                if (!isCurrDataSetSpecified())
+                if (isCurrDataSetNotSpecified())
                     return;
                 commands.ls(currConnection, currDataSet);
                 break;
@@ -212,7 +212,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             case "pwd":
                 if (isParamsExceeded(1, params))
                     return;
-                if (!isCurrDataSetSpecified())
+                if (isCurrDataSetNotSpecified())
                     return;
                 terminal.println(currDataSet);
                 break;
@@ -229,7 +229,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 if (isParamsExceeded(2, params))
                     return;
-                if (!isCurrDataSetSpecified())
+                if (isCurrDataSetNotSpecified())
                     return;
                 param = params[1];
                 commands.submit(currConnection, currDataSet, param);
@@ -253,7 +253,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             case "visited":
                 if (isParamsExceeded(1, params))
                     return;
-                if (!isCurrDataSetSpecified())
+                if (isCurrDataSetNotSpecified())
                     return;
                 for (String key : dataSets.keySet()) {
                     List<String> lst = dataSets.get(key);
@@ -285,10 +285,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         return false;
     }
 
-    private static boolean isCurrDataSetSpecified() {
-        if (!currDataSet.isEmpty())
+    private static boolean isCurrDataSetNotSpecified() {
+        if (currDataSet.isEmpty()) {
+            terminal.println(Constants.DATASET_NOT_SPECIFIED);
             return true;
-        terminal.println(Constants.DATASET_NOT_SPECIFIED);
+        }
         return false;
     }
 
