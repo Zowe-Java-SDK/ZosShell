@@ -63,13 +63,14 @@ public class Listing {
         int lineIndex = 0;
         for (int i = 0; i < membersSize; ) {
             int count = 1;
-            String line = "";
+            StringBuilder line = new StringBuilder();
             while (count % (numOfColumns + 1) != 0) {
                 if (i >= membersSize) break;
-                line += String.format("%-8s", members.get(i++)) + " ";
+                line.append(String.format("%-8s", members.get(i++)));
+                line.append(" ");
                 count++;
             }
-            lines[lineIndex++] = line;
+            lines[lineIndex++] = line.toString();
         }
 
         Arrays.stream(lines).forEach(line -> {
