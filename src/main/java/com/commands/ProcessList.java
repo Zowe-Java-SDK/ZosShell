@@ -38,11 +38,15 @@ public class ProcessList {
             Util.printError(terminal, e.getMessage());
             return;
         }
-        jobs.sort(Comparator.comparing((Job j) -> j.getJobName().get())
-                .thenComparing(j -> j.getStatus().get()).thenComparing(j -> j.getJobId().get()));
-        jobs.forEach(job -> terminal.printf(
-                String.format("%-8s %-8s %-8s\n", job.getJobName().get(), job.getJobId().get(), job.getStatus().get()))
-        );
+        jobs.sort(Comparator.comparing((Job j) -> j.getJobName().orElse(""))
+                .thenComparing(j -> j.getStatus().orElse(""))
+                .thenComparing(j -> j.getJobId().orElse("")));
+        jobs.forEach(job -> {
+            var jobName = job.getJobName().orElse("");
+            var jobId = job.getJobId().orElse("");
+            var jobStatus = job.getStatus().orElse("");
+            terminal.printf(String.format("%-8s %-8s %-8s\n", jobName, jobId, jobStatus));
+        });
     }
 
 }
