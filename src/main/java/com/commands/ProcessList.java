@@ -41,6 +41,10 @@ public class ProcessList {
         jobs.sort(Comparator.comparing((Job j) -> j.getJobName().orElse(""))
                 .thenComparing(j -> j.getStatus().orElse(""))
                 .thenComparing(j -> j.getJobId().orElse("")));
+        if (jobs.isEmpty()) {
+            terminal.println(Constants.NO_PROCESS_FOUND);
+            return;
+        }
         jobs.forEach(job -> {
             var jobName = job.getJobName().orElse("");
             var jobId = job.getJobId().orElse("");

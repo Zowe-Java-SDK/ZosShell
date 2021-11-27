@@ -1,5 +1,7 @@
 package com;
 
+import java.util.List;
+
 public class Constants {
 
     public static final String APP_TITLE = "ZosShell";
@@ -28,6 +30,7 @@ public class Constants {
     public static final String NO_LISTING =
             "no listing results returned, connection problem or data set may not exist, try again...";
     public static final String NO_MEMBERS = "no members...";
+    public static final String NO_PROCESS_FOUND = "no process found, try again...";
     public static final String NOT_FOUND = "not found...";
     public static final String MISSING_COUNT_PARAM = "specified either \"count members\" or \"count datasets\"";
     public static final String MISSING_PARAMETERS = "missing parameter(s), try again...";
