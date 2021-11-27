@@ -6,6 +6,7 @@ import org.beryx.textio.TextTerminal;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class History {
 
@@ -98,6 +99,12 @@ public class History {
             return null;
         }
         return commandLst.get(index);
+    }
+
+    public String getLastHistoryByValue(String str) {
+        List<String> lst = commandLst.stream().filter(c -> c.startsWith(str.toLowerCase())).collect(Collectors.toList());
+        if (lst.isEmpty()) return null;
+        return lst.get(lst.size() - 1);
     }
 
 }

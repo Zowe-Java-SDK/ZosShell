@@ -94,23 +94,18 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 terminal.println(Constants.MISSING_PARAMETERS);
                 return null;
             }
-            String strNum = cmd.substring(1);
-            boolean isStrNum;
-            int num = 0;
-            try {
-                num = Integer.parseInt(strNum);
-                isStrNum = true;
-            } catch (NumberFormatException nfe) {
-                isStrNum = false;
-            }
+            String str = cmd.substring(1);
+            boolean isStrNum = Util.isStrNum(str);
+            String newCmd;
             if (isStrNum) {
-                String newCmd = history.getHistoryByIndex(num - 1);
-                if (newCmd == null) return null;
-                // set new command from history content
-                command = newCmd.split(" ");
+                int num = Integer.parseInt(str);
+                newCmd = history.getHistoryByIndex(num - 1);
             } else {
-                return null;
+                newCmd = history.getLastHistoryByValue(str);
             }
+            if (newCmd == null) return null;
+            // set new command from history content
+            command = newCmd.split(" ");
         }
         return command;
     }
