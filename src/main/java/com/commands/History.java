@@ -103,7 +103,10 @@ public class History {
 
     public String getLastHistoryByValue(String str) {
         List<String> lst = commandLst.stream().filter(c -> c.startsWith(str.toLowerCase())).collect(Collectors.toList());
-        if (lst.isEmpty()) return null;
+        if (lst.isEmpty()) {
+            terminal.println(Constants.NO_HISTORY);
+            return null;
+        }
         return lst.get(lst.size() - 1);
     }
 

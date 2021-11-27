@@ -34,7 +34,6 @@ public class Commands {
     public ZOSConnection change(ZOSConnection connection, String[] commands) {
         ChangeConn changeConn = new ChangeConn(terminal, connections);
         return changeConn.changeConnection(connection, commands);
-
     }
 
     public void connections(ZOSConnection connection) {
