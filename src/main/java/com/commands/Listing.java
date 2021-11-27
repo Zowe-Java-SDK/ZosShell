@@ -101,7 +101,7 @@ public class Listing {
         dataSets.forEach(ds -> {
             String dsName = ds.getDsname().orElse("");
             if (!dsName.equalsIgnoreCase(ignoreDataSet))
-                terminal.println(ds.getDsname().get());
+                terminal.println(dsName);
         });
     }
 
