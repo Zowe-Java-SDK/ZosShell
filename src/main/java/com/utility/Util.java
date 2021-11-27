@@ -80,4 +80,13 @@ public class Util {
         }
     }
 
+    public static boolean isStrNum(String strNum) {
+        try {
+            Integer.parseInt(strNum);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+
 }
