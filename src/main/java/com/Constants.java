@@ -1,7 +1,5 @@
 package com;
 
-import java.util.List;
-
 public class Constants {
 
     public static final String APP_TITLE = "ZosShell";
