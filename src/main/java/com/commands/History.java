@@ -92,4 +92,12 @@ public class History {
         return newCommand;
     }
 
+    public String getHistoryByIndex(int index) {
+        if (index > commandLst.size() - 1 || commandLst.isEmpty()) {
+            terminal.println(Constants.NO_HISTORY);
+            return null;
+        }
+        return commandLst.get(index);
+    }
+
 }

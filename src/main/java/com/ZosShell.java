@@ -60,16 +60,19 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         terminal = textIO.getTextTerminal();
         commands = new Commands(connections, terminal);
         history = new History(terminal);
-        if (currConnection == null) {
+        if (currConnection == null)
             terminal.println(Constants.NO_CONNECTIONS);
-        } else {
-            terminal.println("Connected to " + currConnection.getHost() + " with user " + currConnection.getUser());
-        }
+        else terminal.println("Connected to " + currConnection.getHost() + " with user " + currConnection.getUser());
+
         String[] command;
         String commandLine = "";
         while (!"end".equalsIgnoreCase(commandLine)) {
             commandLine = textIO.newStringInputReader().withMaxLength(80).read(">");
             command = commandLine.split(" ");
+
+            command = exclamationMark(command);
+            if (command == null) continue;
+
             if ("rm".equals(command[0])) {
                 terminal.printf("Are you sure you want to delete y/n");
                 commandLine = textIO.newStringInputReader().withMaxLength(80).read("?");
@@ -78,11 +81,38 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     continue;
                 }
             }
-
             executeCommand(history.filterCommand(command));
         }
 
         textIO.dispose();
+    }
+
+    private String[] exclamationMark(String[] command) {
+        if (command[0].startsWith("!")) {
+            String cmd = command[0];
+            if (cmd.length() == 1) {
+                terminal.println(Constants.MISSING_PARAMETERS);
+                return null;
+            }
+            String strNum = cmd.substring(1);
+            boolean isStrNum;
+            int num = 0;
+            try {
+                num = Integer.parseInt(strNum);
+                isStrNum = true;
+            } catch (NumberFormatException nfe) {
+                isStrNum = false;
+            }
+            if (isStrNum) {
+                String newCmd = history.getHistoryByIndex(num - 1);
+                if (newCmd == null) return null;
+                // set new command from history content
+                command = newCmd.split(" ");
+            } else {
+                return null;
+            }
+        }
+        return command;
     }
 
     private static void executeCommand(String[] params) {
