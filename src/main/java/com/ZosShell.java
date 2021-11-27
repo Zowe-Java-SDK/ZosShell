@@ -97,12 +97,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             String str = cmd.substring(1);
             boolean isStrNum = Util.isStrNum(str);
             String newCmd;
-            if (isStrNum) {
-                int num = Integer.parseInt(str);
-                newCmd = history.getHistoryByIndex(num - 1);
-            } else {
-                newCmd = history.getLastHistoryByValue(str);
-            }
+            if (isStrNum)
+                newCmd = history.getHistoryByIndex(Integer.parseInt(str) - 1);
+            else newCmd = history.getLastHistoryByValue(str);
             if (newCmd == null) return null;
             // set new command from history content
             command = newCmd.split(" ");
