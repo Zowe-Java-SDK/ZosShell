@@ -6,24 +6,25 @@ This project demonstrates the usage of [Zowe Java SDK](https://github.com/zowe/z
   
 Project provides a UI shell command prompt that allows you to manipulate datasets and its members. The shell performs the following linux commands:  
   
-    cat
+    cat                      - display contents
     cd <arg>                 - where arg is a dataset value or empty
     get <arg>                - where arg is a job name - output job log
-    history <arg>            - where arg is optional and identicates the number to display from bottom 
+    history <arg>            - where arg is optional and identicates the number to display from bottom   
+    !n                       - where n is a number, to execute command nummber n in history list    
     ls <arg>                 - where arg is a dataset value or empty 
     ls -l <arg>              - where arg is a dataset value or empty 
-    ps
+    ps                       - display all processes running
     ps <arg>                 - where arg is a task/job name   
-    pwd   
+    pwd                      - show current working dataset
     rm <arg>                 - where arg is "*", member, dataset, or dataset with member value
     tail <arg1> <arg2>       - where arg1 is job name, arg2 is optional and is line limit - tail job log
-    uname
-    whoami
+    uname                    - show current connected host name
+    whoami                   - show current connected user name
   
 Along with following custom commands:  
     
-    count members  
-    count datasets
+    count members           - return member count in dataset
+    count datasets          - return dataset count in dataset
     cp | copy <arg> arg>    - where arg can be ".", member, dataset or dataset(member)  
     cancel <arg>            - where arg is a task/job name  
     connections             - a list of connection(s)   
