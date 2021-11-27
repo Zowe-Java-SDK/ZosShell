@@ -24,7 +24,11 @@ public class Cancel {
         ConsoleResponse response;
         try {
             response = issueCommand.issue(params);
-            String result = response.getCommandResponse().get();
+            String result = response.getCommandResponse().orElse(null);
+            if (result == null) {
+                terminal.println("no response from cancel command, try again...");
+                return;
+            }
             // remove last newline i.e. \n
             terminal.println(result.substring(0, result.length() - 1));
         } catch (Exception e) {

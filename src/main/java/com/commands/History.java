@@ -40,7 +40,10 @@ public class History {
 
     public void addHistory(String[] params) {
         StringBuilder str = new StringBuilder();
-        Arrays.stream(params).forEach(p -> { str.append(p); str.append(" ");});
+        Arrays.stream(params).forEach(p -> {
+            str.append(p);
+            str.append(" ");
+        });
         String command = str.toString();
         if (!command.startsWith("history")) {
             commandLst.add(str.toString());

@@ -71,7 +71,7 @@ public class GetJobOutput {
     private String[] getJobLog(GetJobs getJobs, GetJobParams jobParams) throws Exception {
         final var jobs = getJobs.getJobsCommon(jobParams);
         // select the active one first not found then get the highest job number
-        Optional<Job> job = jobs.stream().filter(j -> "ACTIVE".equalsIgnoreCase(j.getStatus().get())).findAny();
+        Optional<Job> job = jobs.stream().filter(j -> "ACTIVE".equalsIgnoreCase(j.getStatus().orElse(""))).findAny();
         final var files = getJobs.getSpoolFilesForJob(job.orElse(jobs.get(0)));
         return getJobs.getSpoolContent(files.get(0)).split("\n");
     }
