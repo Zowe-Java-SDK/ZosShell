@@ -49,7 +49,7 @@ public class ProcessList {
             var jobName = job.getJobName().orElse("");
             var jobId = job.getJobId().orElse("");
             var jobStatus = job.getStatus().orElse("");
-            terminal.printf(String.format("%-8s %-8s %-8s\n", jobName, jobId, jobStatus));
+            terminal.println(String.format("%-8s %-8s %-8s", jobName, jobId, jobStatus));
         });
     }
 
