@@ -80,12 +80,12 @@ public class Listing {
         return members;
     }
 
-    private List<Dataset> getDataSets(String dataSet) throws Exception {
-        return zosDsnList.listDsn(dataSet, params);
+    public List<String> getMembers(String dataSet) throws Exception {
+        return zosDsnList.listDsnMembers(dataSet, params);
     }
 
-    private List<String> getMembers(String dataSet) throws Exception {
-        return zosDsnList.listDsnMembers(dataSet, params);
+    private List<Dataset> getDataSets(String dataSet) throws Exception {
+        return zosDsnList.listDsn(dataSet, params);
     }
 
     private void displayListStatus(int membersSize, int dataSetsSize) {

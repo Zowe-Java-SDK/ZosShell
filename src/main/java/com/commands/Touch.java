@@ -10,10 +10,12 @@ public class Touch {
 
     private final TextTerminal<?> terminal;
     private final ZosDsn zosDsn;
+    private final Listing listing;
 
     public Touch(TextTerminal<?> terminal, ZOSConnection connection) {
         this.terminal = terminal;
         this.zosDsn = new ZosDsn(connection);
+        this.listing = new Listing(connection, terminal);
     }
 
     public void touch(String dataSet, String member) {
@@ -26,8 +28,15 @@ public class Touch {
             return;
         }
 
+        // if member already exist skip write, touch will only create a new member
+        boolean foundExistingMember = false;
         try {
-            zosDsn.writeDsn(dataSet, member, "");
+            foundExistingMember = listing.getMembers(dataSet).stream().anyMatch(m -> m.equalsIgnoreCase(member));
+        } catch (Exception ignored) {
+        }
+
+        try {
+            if (!foundExistingMember) zosDsn.writeDsn(dataSet, member, "");
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
