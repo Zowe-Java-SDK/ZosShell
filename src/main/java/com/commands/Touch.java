@@ -30,6 +30,7 @@ public class Touch {
             zosDsn.writeDsn(dataSet, member, "");
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
+            return;
         }
 
         terminal.println(member + " successfully created.");
