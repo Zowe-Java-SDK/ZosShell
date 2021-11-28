@@ -19,6 +19,7 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
     pwd                      - show current working dataset
     rm <arg>                 - where arg is "*", member, dataset, or dataset with member value
     tail <arg1> <arg2>       - where arg1 is job name, arg2 is optional and is line limit - tail job log
+    touch <arg>              - create member arg if it does not already exist
     uname                    - show current connected host name
     whoami                   - show current connected user name
   

@@ -268,6 +268,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             case "touch":
                 if (isParamsMissing(1, params))
                     return;
+                if (isParamsExceeded(2, params))
+                    return;
                 commands.touch(currConnection, currDataSet, params);
                 break;
             case "uname":
