@@ -23,6 +23,7 @@ public class ChangeConn {
             terminal.println(Constants.NO_CONNECTION);
             return connection;
         }
+        terminal.println("Connection changed successfully.");
         return connections.get(index);
     }
 
