@@ -22,7 +22,7 @@ public class Concatenate {
 
     public Concatenate(TextTerminal<?> terminal, ZOSConnection connection) {
         this.terminal = terminal;
-        download = new ZosDsnDownload(connection);
+        this.download = new ZosDsnDownload(connection);
     }
 
     public void cat(String dataSet, String param) {
@@ -47,7 +47,7 @@ public class Concatenate {
         if (inputStream != null) {
             var writer = new StringWriter();
             IOUtils.copy(inputStream, writer, UtilIO.UTF8);
-            String[] content = writer.toString().split("\\n");
+            var content = writer.toString().split("\\n");
             Arrays.stream(content).forEach(terminal::println);
             inputStream.close();
         }

@@ -31,7 +31,7 @@ public class Listing {
         } catch (Exception ignored) {
         }
 
-        int membersSize = members.size();
+        var membersSize = members.size();
         displayListStatus(membersSize, dataSets.size());
         displayDataSets(dataSets, dataSet);
 

@@ -39,8 +39,8 @@ public class GetJobOutput {
     public void tail(String[] params) {
         var output = getLog(params[1]);
         if (output == null) return;
-        int size = output.length;
-        int lines = 0;
+        var size = output.length;
+        var lines = 0;
         if (params.length == 3) {
             try {
                 lines = Integer.parseInt(params[2]);

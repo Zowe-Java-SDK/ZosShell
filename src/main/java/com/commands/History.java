@@ -70,11 +70,11 @@ public class History {
             terminal.println(Constants.NO_HISTORY);
             return;
         }
-        int size = commandLst.size();
+        var size = commandLst.size();
         if (num > size)
             commandLst.forEach(terminal::println);
         else {
-            int startIndex = size - num;
+            var startIndex = size - num;
             for (int i = startIndex; i < size; i++)
                 terminal.println(commandLst.get(i));
         }
@@ -85,7 +85,7 @@ public class History {
             return command;
 
         // remove ">" first parameter, added by listUpCommands or listDownCommands method
-        int newSize = command.length - 1;
+        var newSize = command.length - 1;
         String[] newCommand = new String[newSize];
         for (int i = 1, j = 0; i < command.length; i++, j++) {
             newCommand[j] = command[i];
@@ -102,7 +102,7 @@ public class History {
     }
 
     public String getLastHistoryByValue(String str) {
-        List<String> lst = commandLst.stream().filter(c -> c.startsWith(str.toLowerCase())).collect(Collectors.toList());
+        var lst = commandLst.stream().filter(c -> c.startsWith(str.toLowerCase())).collect(Collectors.toList());
         if (lst.isEmpty()) {
             terminal.println(Constants.NO_HISTORY);
             return null;

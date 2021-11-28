@@ -25,7 +25,7 @@ public class ChangeDir {
         if (Util.isDataSet(param)) {
             return param;
         } else if (param.equals("..") && !currDataSet.isEmpty()) {
-            String[] tokens = currDataSet.split("\\.");
+            var tokens = currDataSet.split("\\.");
             final var length = tokens.length - 1;
             if (length == 1) {
                 terminal.println(Constants.HIGH_QUALIFIER_ERROR);
@@ -38,7 +38,7 @@ public class ChangeDir {
                 str.append(".");
             }
 
-            String dataSet = str.toString();
+            var dataSet = str.toString();
             dataSet = dataSet.substring(0, str.length() - 1);
             return dataSet;
         } else {

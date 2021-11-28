@@ -28,7 +28,7 @@ public class ChangeConn {
 
     public void displayConnections(ZOSConnection connection) {
         if (connection != null) {
-            AtomicInteger i = new AtomicInteger(1);
+            var i = new AtomicInteger(1);
             connections.forEach(c ->
                     terminal.println(i.getAndIncrement() + " " + "hostname: " + c.getHost() + ", port: " +
                             c.getZosmfPort() + ", user = " + c.getUser())

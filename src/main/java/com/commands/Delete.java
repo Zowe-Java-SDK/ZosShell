@@ -70,7 +70,7 @@ public class Delete {
                 String member;
                 String dataset;
 
-                int index = param.indexOf("(");
+                var index = param.indexOf("(");
                 dataset = param.substring(0, index);
                 if (!Util.isDataSet(dataset)) {
                     terminal.println(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR);
