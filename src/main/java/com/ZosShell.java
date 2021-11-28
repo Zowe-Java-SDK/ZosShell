@@ -88,9 +88,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private String[] exclamationMark(String[] command) {
-        if (isParamsExceeded(1, command))
-            return null;
         if (command[0].startsWith("!")) {
+            if (isParamsExceeded(1, command))
+                return null;
             String cmd = command[0];
             if (cmd.length() == 1) {
                 terminal.println(Constants.MISSING_PARAMETERS);
