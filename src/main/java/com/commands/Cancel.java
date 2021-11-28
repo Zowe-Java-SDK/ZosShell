@@ -24,7 +24,7 @@ public class Cancel {
         ConsoleResponse response;
         try {
             response = issueCommand.issue(params);
-            String result = response.getCommandResponse().orElse(null);
+            var result = response.getCommandResponse().orElse(null);
             if (result == null) {
                 terminal.println("no response from cancel command, try again...");
                 return;
