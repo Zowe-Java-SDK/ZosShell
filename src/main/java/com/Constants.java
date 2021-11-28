@@ -18,6 +18,7 @@ public class Constants {
     public static final String INVALID_COMMAND = "invalid command, try again...";
     public static final String INVALID_DATASET = "invalid dataset specified, try again...";
     public static final String INVALID_NUMBER = "specify a number, try again...";
+    public static final String INVALID_MEMBER = "invalid member name format specified, try again...";
     public static final String INVALID_PARAMETER = "invalid parameter, try again...";
     public static final String HIGH_QUALIFIER_ERROR = "cant change to high qualifier level, try again...";
     public static final String NO_CONNECTIONS = "No connection(s) made or defined...";

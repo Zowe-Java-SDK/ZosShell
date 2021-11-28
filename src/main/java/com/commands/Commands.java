@@ -63,6 +63,11 @@ public class Commands {
         getJobOutput.tail(params);
     }
 
+    public void touch(ZOSConnection connection, String currDataSet, String[] params) {
+        var touch = new Touch(terminal, connection);
+        touch.touch(currDataSet, params[1]);
+    }
+
     public List<String> ls(ZOSConnection connection, String dataSet) {
         var listing = new Listing(connection, terminal);
         return listing.ls(dataSet, false);
