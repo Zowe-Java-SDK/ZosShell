@@ -27,31 +27,32 @@ public class Download {
     }
 
     public void download(String dataSet, String param) {
-        String content = getContent(dataSet, param);
         try {
-            Files.write(Paths.get(Constants.PATH_FILE + "\\" + param), content.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String getContent(String dataSet, String param) {
-        InputStream inputStream;
-        try {
-            if (Util.isDataSet(param)) {
-                inputStream = download.downloadDsn(String.format("%s", param), dlParams);
-            } else {
-                inputStream = download.downloadDsn(String.format("%s(%s)", dataSet, param), dlParams);
+            String content = getContent(dataSet, param);
+            if (content == null) {
+                terminal.println(Constants.DOWNLOAD_FAIL);
+                return;
             }
-            return getStreamData(inputStream);
+            String pathAndFileName = Constants.PATH_FILE_DIRECTORY + "\\" + param;
+            Files.write(Paths.get(pathAndFileName), content.getBytes());
+            terminal.println("downloaded to " + pathAndFileName);
         } catch (Exception e) {
             if (e.getMessage().contains("Connection refused")) {
                 terminal.println(Constants.SEVERE_ERROR);
-                return null;
+                return;
             }
             Util.printError(terminal, e.getMessage());
         }
-        return null;
+    }
+
+    public String getContent(String dataSet, String param) throws Exception {
+        InputStream inputStream;
+        if (Util.isDataSet(param)) {
+            inputStream = download.downloadDsn(String.format("%s", param), dlParams);
+        } else {
+            inputStream = download.downloadDsn(String.format("%s(%s)", dataSet, param), dlParams);
+        }
+        return getStreamData(inputStream);
     }
 
     private String getStreamData(InputStream inputStream) throws IOException {
