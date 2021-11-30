@@ -185,6 +185,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 break;
             case "end":
                 break;
+            case "files":
+                if (isParamsExceeded(1, params))
+                    return;
+                commands.files();
+                break;
             case "get":
                 if (isParamsMissing(1, params))
                     return;

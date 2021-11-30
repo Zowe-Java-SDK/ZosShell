@@ -56,6 +56,10 @@ public class Commands {
         download.download(currDataSet, param);
     }
 
+    public void files() {
+        LocalFiles.listFiles(terminal);
+    }
+
     public void get(ZOSConnection connection, String[] params) {
         var getJobOutput = new GetJobOutput(terminal, connection);
         var output = getJobOutput.getLog(params[1]);
