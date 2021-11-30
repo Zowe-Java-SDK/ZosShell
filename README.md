@@ -31,7 +31,8 @@ Along with following custom commands:
     cancel <arg>            - where arg is a task/job name  
     connections             - a list of connection(s)   
     change <arg>            - where arg is a number representing a connection
-    download <arg>          - download member/sequential dataset to your local machine under c:\ZosShell location  
+    files                   - list all files under local c:\ZosShell  
+    download <arg>          - download arg to local c:\ZosShell where arg is member/seq dataset     
     end                     - end session closes shell UI window
     submit <arg>            - where arg is a member name  
     v | visited             - a list of visited datasets  
