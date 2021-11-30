@@ -101,6 +101,11 @@ public class Commands {
         delete.rm(currDataSet, param);
     }
 
+    public void save(ZOSConnection connection, String currDataSet, String[] params) {
+        var save = new Save(terminal, connection);
+        save.save(currDataSet, params[1]);
+    }
+
     public void submit(ZOSConnection connection, String dataSet, String param) {
         var submit = new Submit(terminal, connection);
         submit.submitJob(dataSet, param);
