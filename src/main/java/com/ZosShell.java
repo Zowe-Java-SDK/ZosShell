@@ -261,6 +261,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 param = params[1];
                 commands.rm(currConnection, currDataSet, param);
                 break;
+            case "save":
+                if (isParamsMissing(1, params))
+                    return;
+                if (isParamsExceeded(2, params))
+                    return;
+                commands.save(currConnection, currDataSet, params);
+                break;
             case "submit":
                 if (isParamsMissing(1, params))
                     return;

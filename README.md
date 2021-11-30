@@ -34,6 +34,7 @@ Along with following custom commands:
     files                   - list all files under local c:\ZosShell  
     download <arg>          - download arg to local c:\ZosShell where arg is member/seq dataset     
     end                     - end session closes shell UI window
+    save <arg>              - save arg where arg is a file name from files command to the current pwd
     submit <arg>            - where arg is a member name  
     v | visited             - a list of visited datasets  
   
