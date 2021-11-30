@@ -31,6 +31,8 @@ Along with following custom commands:
     cancel <arg>            - where arg is a task/job name  
     connections             - a list of connection(s)   
     change <arg>            - where arg is a number representing a connection
+    download <arg>          - download member/sequential dataset to your local machine under c:\ZosShell location  
+    end                     - end session closes shell UI window
     submit <arg>            - where arg is a member name  
     v | visited             - a list of visited datasets  
   
@@ -50,7 +52,7 @@ To quit from the command shell UI, you can either press 'X' windows close icon o
     
 ## Build And Execute  
 
-Create a creds.txt under the C:\ drive that contains a list of z/OSMF connections per line with a comma delimiter for
+Create a credentials.txt under the C:\ZosShell drive directory that contains a list of z/OSMF connections per line with a comma delimiter for
 connection values. You can specify drive location by changing the hard coded value in the code.  
   
 Format:  
