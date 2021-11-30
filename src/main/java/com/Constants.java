@@ -33,7 +33,8 @@ public class Constants {
     public static final String NOT_FOUND = "not found...";
     public static final String MISSING_COUNT_PARAM = "specified either \"count members\" or \"count datasets\"";
     public static final String MISSING_PARAMETERS = "missing parameter(s), try again...";
-    public static final String PATH_FILE = "C:\\creds.txt";
+    public static final String PATH_FILE_DIRECTORY = "C:\\ZosShell";
+    public static final String PATH_FILE = PATH_FILE_DIRECTORY + "\\credentials.txt";
     public static final String SEVERE_ERROR = "server error, check connection...";
     public static final String TOO_MANY_PARAMETERS = "too many parameters, try again...";
 

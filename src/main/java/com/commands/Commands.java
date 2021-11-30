@@ -51,6 +51,11 @@ public class Commands {
         count.count(dataSet, param);
     }
 
+    public void download(ZOSConnection currConnection, String currDataSet, String param) {
+        var download = new Download(terminal, currConnection);
+        download.download(currDataSet, param);
+    }
+
     public void get(ZOSConnection connection, String[] params) {
         var getJobOutput = new GetJobOutput(terminal, connection);
         var output = getJobOutput.getLog(params[1]);
