@@ -7,8 +7,6 @@ import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class Commands {
 

@@ -27,5 +27,5 @@ public class Search {
             else terminal.println("no results found in job log for " + jobName);
         });
     }
-    
+
 }

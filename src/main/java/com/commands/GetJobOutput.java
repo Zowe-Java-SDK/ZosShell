@@ -8,7 +8,6 @@ import zosjobs.GetJobs;
 import zosjobs.input.GetJobParams;
 import zosjobs.response.Job;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
