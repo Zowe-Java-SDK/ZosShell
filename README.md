@@ -39,6 +39,8 @@ Along with following custom commands:
     save <arg>               - save arg where arg is a file name from files command to the current pwd
     search <arg>             - search for arg within a job log from the last get command performed  
     submit <arg>             - where arg is a member name  
+    tailall <arg1> <arg2>    - where arg1 is job name, arg2 is optional and is line limit  
+                             - and all the job's combined spool files output is used
     v | visited              - a list of visited datasets  
   
 The following key combinations provide the following functionality within the shell:  
