@@ -65,13 +65,13 @@ public class GetJobOutput {
             if (lines < size) {
                 for (int i = size - lines; i < size; i++)
                     terminal.println(output.get(i));
-            } else output.stream().forEach(terminal::println);
+            } else output.forEach(terminal::println);
         } else {
             int LINES_LIMIT = 25;
             if (size > LINES_LIMIT) {
                 for (int i = size - LINES_LIMIT; i < size; i++)
                     terminal.println(output.get(i));
-            } else output.stream().forEach(terminal::println);
+            } else output.forEach(terminal::println);
         }
     }
 
