@@ -75,7 +75,11 @@ public class Commands {
     }
 
     public void tail(ZOSConnection connection, String[] params) {
-        var getJobOutput = new GetJobOutput(terminal, connection, false);
+        tailAll(connection, params, false);
+    }
+
+    public void tailAll(ZOSConnection connection, String[] params, boolean isAll) {
+        var getJobOutput = new GetJobOutput(terminal, connection, isAll);
         getJobOutput.tail(params);
     }
 

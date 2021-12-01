@@ -59,7 +59,7 @@ public class GetJobOutput {
                 for (int i = size - lines; i < size; i++)
                     terminal.println(output.get(i));
             } else {
-                printAll((String[]) output.toArray(), size);
+                printAll(output, size);
             }
         } else {
             int LINES_LIMIT = 25;
@@ -67,7 +67,7 @@ public class GetJobOutput {
                 for (int i = size - LINES_LIMIT; i < size; i++)
                     terminal.println(output.get(i));
             } else {
-                printAll((String[]) output.toArray(), size);
+                printAll(output, size);
             }
         }
     }
@@ -93,9 +93,9 @@ public class GetJobOutput {
         return results;
     }
 
-    private void printAll(String[] output, int size) {
+    private void printAll(List<String> output, int size) {
         for (int i = 0; i < size; i++)
-            terminal.println(output[i]);
+            terminal.println(output.get(i));
     }
 
 }
