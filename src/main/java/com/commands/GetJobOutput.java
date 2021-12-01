@@ -18,7 +18,7 @@ public class GetJobOutput {
     private final TextTerminal<?> terminal;
     private final GetJobParams.Builder jobParams = new GetJobParams.Builder("*");
     private final GetJobs getJobs;
-    private boolean isAll;
+    private final boolean isAll;
 
     public GetJobOutput(TextTerminal<?> terminal, ZOSConnection connection, boolean isAll) {
         this.terminal = terminal;

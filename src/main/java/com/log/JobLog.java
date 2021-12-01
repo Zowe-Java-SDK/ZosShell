@@ -4,8 +4,8 @@ import java.util.List;
 
 public class JobLog {
 
-    private String jobName;
-    private List<String> output;
+    private final String jobName;
+    private final List<String> output;
 
     public JobLog(String jobName, List<String> output) {
         this.jobName = jobName;
