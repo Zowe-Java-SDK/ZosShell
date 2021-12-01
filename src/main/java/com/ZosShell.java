@@ -112,6 +112,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void executeCommand(String[] params) {
+        if (params.length == 0) return;
         final var command = params[0];
         String param;
         history.addHistory(params);
