@@ -25,9 +25,7 @@ public class Search {
             if (!results.isEmpty())
                 results.forEach(terminal::println);
             else terminal.println("no results found in job log for " + jobName);
-        }, () -> {
-            terminal.println("nothing to search for, try again...");
-        });
+        }, () -> terminal.println("nothing to search for, try again..."));
     }
 
 }
