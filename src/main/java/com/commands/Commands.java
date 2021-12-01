@@ -1,10 +1,11 @@
 package com.commands;
 
-import com.JobLog;
+import com.Constants;
+import com.log.JobLog;
+import com.utility.Util;
 import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,15 +65,36 @@ public class Commands {
     }
 
     public JobLog get(ZOSConnection connection, String[] params) {
-        var getJobOutput = new GetJobOutput(terminal, connection);
-        var output = getJobOutput.getLog(params[1]);
-        if (output == null) return null;
-        Arrays.stream(output).forEach(terminal::println);
+        return getAll(connection, params, false);
+    }
+
+    public JobLog getAll(ZOSConnection connection, String[] params, boolean isAll) {
+        var getJobOutput = new GetJobOutput(terminal, connection, isAll);
+        List<String> output;
+        try {
+            output = getJobOutput.getLog(params[1]);
+        } catch (Exception e) {
+            if (e.getMessage().contains("timeout")) {
+                terminal.println("timeout, log may be too large to display, try again with \"get\" command...");
+                return null;
+            }
+            if (e.getMessage().contains("Connection refused")) {
+                terminal.println(Constants.SEVERE_ERROR);
+                return null;
+            }
+            Util.printError(terminal, e.getMessage());
+            return null;
+        }
+        output.forEach(terminal::println);
         return new JobLog(params[1], output);
     }
 
     public void tail(ZOSConnection connection, String[] params) {
-        var getJobOutput = new GetJobOutput(terminal, connection);
+        tailAll(connection, params, false);
+    }
+
+    public void tailAll(ZOSConnection connection, String[] params, boolean isAll) {
+        var getJobOutput = new GetJobOutput(terminal, connection, isAll);
         getJobOutput.tail(params);
     }
 
@@ -116,9 +138,7 @@ public class Commands {
             var jobName = value.getJobName();
             var jobOutput = value.getOutput();
             terminal.println("searching " + jobName);
-            List<String> results = Arrays.stream(jobOutput)
-                    .filter(line -> line.contains(text))
-                    .collect(Collectors.toList());
+            List<String> results = jobOutput.stream().filter(line -> line.contains(text)).collect(Collectors.toList());
             if (!results.isEmpty())
                 results.forEach(terminal::println);
             else terminal.println("no results found in job log for " + jobName);
