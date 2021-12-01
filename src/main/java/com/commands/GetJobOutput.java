@@ -65,17 +65,13 @@ public class GetJobOutput {
             if (lines < size) {
                 for (int i = size - lines; i < size; i++)
                     terminal.println(output.get(i));
-            } else {
-                printAll(output, size);
-            }
+            } else output.stream().forEach(terminal::println);
         } else {
             int LINES_LIMIT = 25;
             if (size > LINES_LIMIT) {
                 for (int i = size - LINES_LIMIT; i < size; i++)
                     terminal.println(output.get(i));
-            } else {
-                printAll(output, size);
-            }
+            } else output.stream().forEach(terminal::println);
         }
     }
 
@@ -96,11 +92,6 @@ public class GetJobOutput {
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new Exception("timeout");
         }
-    }
-
-    private void printAll(List<String> output, int size) {
-        for (int i = 0; i < size; i++)
-            terminal.println(output.get(i));
     }
 
 }
