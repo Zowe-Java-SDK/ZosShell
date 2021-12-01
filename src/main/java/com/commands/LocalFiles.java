@@ -23,8 +23,8 @@ public class LocalFiles {
     private static List<String> getFiles() {
         return Stream.of(new File(Constants.PATH_FILE_DIRECTORY).listFiles())
                 .filter(file -> !file.isDirectory())
-                .filter(file -> !file.getName().equalsIgnoreCase("credentials.txt"))
                 .map(File::getName)
+                .filter(name -> !name.equalsIgnoreCase("credentials.txt"))
                 .sorted()
                 .collect(Collectors.toList());
     }
