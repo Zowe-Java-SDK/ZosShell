@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 public class LocalFiles {
 
     public static void listFiles(TextTerminal<?> terminal) {
-        List<String> files = getFiles(Constants.PATH_FILE_DIRECTORY);
+        List<String> files = getFiles();
         if (files.isEmpty()) {
             terminal.println(Constants.NO_FILES);
             return;
@@ -20,8 +20,8 @@ public class LocalFiles {
         files.forEach(terminal::println);
     }
 
-    private static List<String> getFiles(String dir) {
-        return Stream.of(new File(dir).listFiles())
+    private static List<String> getFiles() {
+        return Stream.of(new File(Constants.PATH_FILE_DIRECTORY).listFiles())
                 .filter(file -> !file.isDirectory())
                 .filter(file -> !file.getName().equalsIgnoreCase("credentials.txt"))
                 .map(File::getName)
