@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class Search {
 
-    private TextTerminal<?> terminal;
+    private final TextTerminal<?> terminal;
 
     public Search(TextTerminal<?> terminal) {
         this.terminal = terminal;
