@@ -133,16 +133,8 @@ public class Commands {
     }
 
     public void search(JobLog jobLog, String text) {
-        Optional<JobLog> log = Optional.ofNullable(jobLog);
-        log.ifPresent((value) -> {
-            var jobName = value.getJobName();
-            var jobOutput = value.getOutput();
-            terminal.println("searching " + jobName);
-            List<String> results = jobOutput.stream().filter(line -> line.contains(text)).collect(Collectors.toList());
-            if (!results.isEmpty())
-                results.forEach(terminal::println);
-            else terminal.println("no results found in job log for " + jobName);
-        });
+        var search = new Search(terminal);
+        search.search(jobLog, text);
     }
 
     public void submit(ZOSConnection connection, String dataSet, String param) {
