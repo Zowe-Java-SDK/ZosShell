@@ -19,17 +19,35 @@ public class Commands {
     }
 
     public void cancel(ZOSConnection connection, String param) {
-        var cancel = new Cancel(terminal, connection);
+        Cancel cancel;
+        try {
+            cancel = new Cancel(terminal, connection);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
         cancel.cancel(param);
     }
 
     public void cat(ZOSConnection connection, String dataSet, String param) {
-        var concatenate = new Concatenate(terminal, connection);
+        Concatenate concatenate;
+        try {
+            concatenate = new Concatenate(terminal, connection);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
         concatenate.cat(dataSet, param);
     }
 
     public String cd(ZOSConnection connection, String currDataSet, String param) {
-        var changeDir = new ChangeDir(terminal, connection);
+        ChangeDir changeDir;
+        try {
+            changeDir = new ChangeDir(terminal, connection);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return currDataSet;
+        }
         return changeDir.cd(currDataSet, param);
     }
 
@@ -44,17 +62,35 @@ public class Commands {
     }
 
     public void copy(ZOSConnection connection, String currDataSet, String[] params) {
-        var copy = new Copy(terminal, connection);
+        Copy copy;
+        try {
+            copy = new Copy(terminal, connection);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
         copy.copy(currDataSet, params);
     }
 
     public void count(ZOSConnection connection, String dataSet, String param) {
-        var count = new Count(terminal, connection);
+        Count count;
+        try {
+            count = new Count(terminal, connection);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
         count.count(dataSet, param);
     }
 
     public void download(ZOSConnection currConnection, String currDataSet, String param) {
-        var download = new Download(terminal, currConnection);
+        Download download;
+        try {
+            download = new Download(terminal, currConnection);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
         download.download(currDataSet, param);
     }
 
@@ -67,7 +103,13 @@ public class Commands {
     }
 
     public JobLog getAll(ZOSConnection connection, String[] params, boolean isAll) {
-        var getJobOutput = new GetJobOutput(terminal, connection, isAll);
+        GetJobOutput getJobOutput;
+        try {
+            getJobOutput = new GetJobOutput(terminal, connection, isAll);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return null;
+        }
         List<String> output;
         try {
             output = getJobOutput.getLog(params[1]);
@@ -92,12 +134,24 @@ public class Commands {
     }
 
     public void tailAll(ZOSConnection connection, String[] params, boolean isAll) {
-        var getJobOutput = new GetJobOutput(terminal, connection, isAll);
+        GetJobOutput getJobOutput;
+        try {
+            getJobOutput = new GetJobOutput(terminal, connection, isAll);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
         getJobOutput.tail(params);
     }
 
     public void touch(ZOSConnection connection, String currDataSet, String[] params) {
-        var touch = new Touch(terminal, connection);
+        Touch touch;
+        try {
+            touch = new Touch(terminal, connection);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
         touch.touch(currDataSet, params[1]);
     }
 
@@ -116,17 +170,35 @@ public class Commands {
     }
 
     public void ps(ZOSConnection connection, String task) {
-        var processList = new ProcessList(terminal, connection);
+        ProcessList processList;
+        try {
+            processList = new ProcessList(terminal, connection);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
         processList.ps(task);
     }
 
     public void rm(ZOSConnection connection, String currDataSet, String param) {
-        var delete = new Delete(terminal, connection);
+        Delete delete;
+        try {
+            delete = new Delete(terminal, connection);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
         delete.rm(currDataSet, param);
     }
 
     public void save(ZOSConnection connection, String currDataSet, String[] params) {
-        var save = new Save(terminal, connection);
+        Save save;
+        try {
+            save = new Save(terminal, connection);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
         save.save(currDataSet, params[1]);
     }
 

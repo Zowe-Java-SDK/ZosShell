@@ -141,7 +141,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 currDataSet = commands.cd(currConnection, currDataSet, params[1].toUpperCase());
                 if (currConnection != null)
                     dataSets.put(currConnection.getHost(), currDataSet);
-                terminal.println("set to " + currDataSet);
+                if (!currDataSet.isEmpty()) terminal.println("set to " + currDataSet);
                 break;
             case "change":
                 if (isParamsMissing(1, params))
