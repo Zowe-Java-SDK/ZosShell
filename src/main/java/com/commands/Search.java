@@ -17,7 +17,7 @@ public class Search {
 
     public void search(JobLog jobLog, String text) {
         Optional<JobLog> log = Optional.ofNullable(jobLog);
-        log.ifPresent((value) -> {
+        log.ifPresentOrElse((value) -> {
             var jobName = value.getJobName();
             var jobOutput = value.getOutput();
             terminal.println("searching " + jobName);
@@ -25,6 +25,8 @@ public class Search {
             if (!results.isEmpty())
                 results.forEach(terminal::println);
             else terminal.println("no results found in job log for " + jobName);
+        }, () -> {
+            terminal.println("nothing to search for, try again...");
         });
     }
 
