@@ -27,22 +27,30 @@ public class GetJobOutput {
         this.isAll = isAll;
     }
 
-    public List<String> getLog(String param) {
+    public List<String> getLog(String param) throws Exception {
         try {
             return getJobLog(getJobs, jobParams.prefix(param).build());
         } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
-                terminal.println(Constants.SEVERE_ERROR);
-                return null;
-            }
-            Util.printError(terminal, e.getMessage());
-            return null;
+            throw new Exception(e.getMessage());
         }
     }
 
     public void tail(String[] params) {
-        var output = getLog(params[1]);
-        if (output == null) return;
+        List<String> output;
+        try {
+            output = getLog(params[1]);
+        } catch (Exception e) {
+            if (e.getMessage().contains("timeout")) {
+                terminal.println("timeout, log may be too large to display, try again with \"tail\" command...");
+                return;
+            }
+            if (e.getMessage().contains("Connection refused")) {
+                terminal.println(Constants.SEVERE_ERROR);
+                return;
+            }
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
         var size = output.size();
         var lines = 0;
         if (params.length == 3) {
@@ -82,15 +90,13 @@ public class GetJobOutput {
             return Arrays.asList(getJobs.getSpoolContent(files.get(0)).split("\n"));
         }
 
-        List<String> results = new ArrayList<>();
         ExecutorService pool = Executors.newFixedThreadPool(1);
         Future<List<String>> result = pool.submit(new GetAllJobOutput(getJobs, files));
         try {
-            results = result.get(60, TimeUnit.SECONDS);
+            return result.get(60, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            terminal.println("timeout, log may be too large to display, try again with \"get\" command...");
+            throw new Exception("timeout");
         }
-        return results;
     }
 
     private void printAll(List<String> output, int size) {

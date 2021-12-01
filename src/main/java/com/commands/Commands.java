@@ -1,6 +1,8 @@
 package com.commands;
 
+import com.Constants;
 import com.log.JobLog;
+import com.utility.Util;
 import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 
@@ -68,8 +70,21 @@ public class Commands {
 
     public JobLog getAll(ZOSConnection connection, String[] params, boolean isAll) {
         var getJobOutput = new GetJobOutput(terminal, connection, isAll);
-        var output = getJobOutput.getLog(params[1]);
-        if (output == null) return null;
+        List<String> output;
+        try {
+            output = getJobOutput.getLog(params[1]);
+        } catch (Exception e) {
+            if (e.getMessage().contains("timeout")) {
+                terminal.println("timeout, log may be too large to display, try again with \"get\" command...");
+                return null;
+            }
+            if (e.getMessage().contains("Connection refused")) {
+                terminal.println(Constants.SEVERE_ERROR);
+                return null;
+            }
+            Util.printError(terminal, e.getMessage());
+            return null;
+        }
         output.forEach(terminal::println);
         return new JobLog(params[1], output);
     }
