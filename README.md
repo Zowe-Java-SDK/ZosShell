@@ -8,7 +8,6 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
   
     cat                      - display contents
     cd <arg>                 - where arg is a dataset value or empty
-    get <arg>                - where arg is a job name - output job log
     history <arg>            - where arg is optional and identicates the number to display from bottom   
     !n                       - where n is a number, to execute command nummber n in history list   
     !string                  - will execute the last history command starting with that “string”
@@ -24,7 +23,8 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
     whoami                   - show current connected user name
   
 Along with following custom commands:  
-    
+
+    get <arg>                - where arg is a job name - output job log
     count members           - return member count in dataset
     count datasets          - return dataset count in dataset
     cp | copy <arg> arg>    - where arg can be ".", member, dataset or dataset(member)  
@@ -35,6 +35,7 @@ Along with following custom commands:
     download <arg>          - download arg to local c:\ZosShell where arg is member/seq dataset     
     end                     - end session closes shell UI window
     save <arg>              - save arg where arg is a file name from files command to the current pwd
+    search <arg>            - search for arg within a job log from the last get command performed  
     submit <arg>            - where arg is a member name  
     v | visited             - a list of visited datasets  
   

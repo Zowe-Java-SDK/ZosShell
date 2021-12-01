@@ -27,6 +27,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static TextTerminal<?> terminal;
     private static Commands commands;
     private static History history;
+    private static JobLog jobLog;
 
     public static void main(String[] args) {
         Credentials.readCredentials(connections);
@@ -195,7 +196,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 if (isParamsExceeded(2, params))
                     return;
-                commands.get(currConnection, params);
+                jobLog = commands.get(currConnection, params);
                 break;
             case "history":
                 if (isParamsExceeded(2, params))
@@ -267,6 +268,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params))
                     return;
                 commands.save(currConnection, currDataSet, params);
+                break;
+            case "search":
+                if (isParamsMissing(1, params))
+                    return;
+                if (isParamsExceeded(2, params))
+                    return;
+                commands.search(jobLog, params[1]);
                 break;
             case "submit":
                 if (isParamsMissing(1, params))
