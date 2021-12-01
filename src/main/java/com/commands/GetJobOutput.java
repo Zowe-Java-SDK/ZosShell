@@ -8,6 +8,7 @@ import zosjobs.GetJobs;
 import zosjobs.input.GetJobParams;
 import zosjobs.response.Job;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -77,6 +78,10 @@ public class GetJobOutput {
 
     private List<String> getJobLog(GetJobs getJobs, GetJobParams jobParams) throws Exception {
         final var jobs = getJobs.getJobsCommon(jobParams);
+        if (jobs.isEmpty()) {
+            terminal.println(jobParams.getPrefix().orElse("n\\a") + " does not exist, try again...");
+            return new ArrayList<>();
+        }
         // select the active one first not found then get the highest job number
         Optional<Job> job = jobs.stream().filter(j -> "ACTIVE".equalsIgnoreCase(j.getStatus().orElse(""))).findAny();
         final var files = getJobs.getSpoolFilesForJob(job.orElse(jobs.get(0)));
