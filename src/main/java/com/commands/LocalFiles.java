@@ -14,7 +14,9 @@ public class LocalFiles {
         List<String> files = getFiles(Constants.PATH_FILE_DIRECTORY);
         if (files.isEmpty()) {
             terminal.println(Constants.NO_FILES);
+            return;
         }
+        terminal.println(Constants.PATH_FILE_DIRECTORY + ":");
         files.forEach(terminal::println);
     }
 
