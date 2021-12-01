@@ -9,13 +9,13 @@ import java.util.stream.Collectors;
 
 public class Search {
 
-    private static TextTerminal<?> terminal;
+    private TextTerminal<?> terminal;
 
     public Search(TextTerminal<?> terminal) {
         this.terminal = terminal;
     }
 
-    public static void search(JobLog jobLog, String text) {
+    public void search(JobLog jobLog, String text) {
         Optional<JobLog> log = Optional.ofNullable(jobLog);
         log.ifPresent((value) -> {
             var jobName = value.getJobName();
