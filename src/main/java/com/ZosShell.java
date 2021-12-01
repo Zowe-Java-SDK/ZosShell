@@ -4,6 +4,7 @@ import com.commands.Commands;
 import com.commands.History;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import com.log.JobLog;
 import com.security.Credentials;
 import com.utility.Util;
 import core.ZOSConnection;
@@ -197,6 +198,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params))
                     return;
                 jobLog = commands.get(currConnection, params);
+                break;
+            case "getall":
+                if (isParamsMissing(1, params))
+                    return;
+                if (isParamsExceeded(2, params))
+                    return;
+                jobLog = commands.getAll(currConnection, params, true);
                 break;
             case "history":
                 if (isParamsExceeded(2, params))

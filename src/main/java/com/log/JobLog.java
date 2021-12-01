@@ -1,11 +1,13 @@
-package com;
+package com.log;
+
+import java.util.List;
 
 public class JobLog {
 
     private String jobName;
-    private String[] output;
+    private List<String> output;
 
-    public JobLog(String jobName, String[] output) {
+    public JobLog(String jobName, List<String> output) {
         this.jobName = jobName;
         this.output = output;
     }
@@ -14,7 +16,7 @@ public class JobLog {
         return jobName;
     }
 
-    public String[] getOutput() {
+    public List<String> getOutput() {
         return output;
     }
 

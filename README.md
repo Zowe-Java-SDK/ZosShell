@@ -17,27 +17,29 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
     ps <arg>                 - where arg is a task/job name   
     pwd                      - show current working dataset
     rm <arg>                 - where arg is "*", member, dataset, or dataset with member value
-    tail <arg1> <arg2>       - where arg1 is job name, arg2 is optional and is line limit - tail job log
+    tail <arg1> <arg2>       - where arg1 is job name, arg2 is optional and is line limit  
+                             - and only job's JESMSGLG spool output is returned
     touch <arg>              - create member arg if it does not already exist
     uname                    - show current connected host name
     whoami                   - show current connected user name
   
 Along with following custom commands:  
 
-    get <arg>                - where arg is a job name - output job log
-    count members           - return member count in dataset
-    count datasets          - return dataset count in dataset
-    cp | copy <arg> arg>    - where arg can be ".", member, dataset or dataset(member)  
-    cancel <arg>            - where arg is a task/job name  
-    connections             - a list of connection(s)   
-    change <arg>            - where arg is a number representing a connection
-    files                   - list all files under local c:\ZosShell  
-    download <arg>          - download arg to local c:\ZosShell where arg is member/seq dataset     
-    end                     - end session closes shell UI window
-    save <arg>              - save arg where arg is a file name from files command to the current pwd
-    search <arg>            - search for arg within a job log from the last get command performed  
-    submit <arg>            - where arg is a member name  
-    v | visited             - a list of visited datasets  
+    get <arg>                - where arg is a job name - returns jobs's JESMSGLG spool output only
+    getall <arg>             - where arg is a job name - returns all the job's combined spool files output 
+    count members            - return member count in dataset
+    count datasets           - return dataset count in dataset
+    cp | copy <arg> arg>     - where arg can be ".", member, dataset or dataset(member)  
+    cancel <arg>             - where arg is a task/job name  
+    connections              - a list of connection(s)   
+    change <arg>             - where arg is a number representing a connection
+    files                    - list all files under local c:\ZosShell  
+    download <arg>           - download arg to local c:\ZosShell where arg is member/seq dataset     
+    end                      - end session closes shell UI window
+    save <arg>               - save arg where arg is a file name from files command to the current pwd
+    search <arg>             - search for arg within a job log from the last get command performed  
+    submit <arg>             - where arg is a member name  
+    v | visited              - a list of visited datasets  
   
 The following key combinations provide the following functionality within the shell:  
   

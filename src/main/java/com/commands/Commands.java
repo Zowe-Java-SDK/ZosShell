@@ -1,10 +1,9 @@
 package com.commands;
 
-import com.JobLog;
+import com.log.JobLog;
 import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,15 +63,19 @@ public class Commands {
     }
 
     public JobLog get(ZOSConnection connection, String[] params) {
-        var getJobOutput = new GetJobOutput(terminal, connection);
+        return getAll(connection, params, false);
+    }
+
+    public JobLog getAll(ZOSConnection connection, String[] params, boolean isAll) {
+        var getJobOutput = new GetJobOutput(terminal, connection, isAll);
         var output = getJobOutput.getLog(params[1]);
         if (output == null) return null;
-        Arrays.stream(output).forEach(terminal::println);
+        output.forEach(terminal::println);
         return new JobLog(params[1], output);
     }
 
     public void tail(ZOSConnection connection, String[] params) {
-        var getJobOutput = new GetJobOutput(terminal, connection);
+        var getJobOutput = new GetJobOutput(terminal, connection, false);
         getJobOutput.tail(params);
     }
 
@@ -116,9 +119,7 @@ public class Commands {
             var jobName = value.getJobName();
             var jobOutput = value.getOutput();
             terminal.println("searching " + jobName);
-            List<String> results = Arrays.stream(jobOutput)
-                    .filter(line -> line.contains(text))
-                    .collect(Collectors.toList());
+            List<String> results = jobOutput.stream().filter(line -> line.contains(text)).collect(Collectors.toList());
             if (!results.isEmpty())
                 results.forEach(terminal::println);
             else terminal.println("no results found in job log for " + jobName);
