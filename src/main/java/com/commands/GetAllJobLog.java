@@ -24,8 +24,7 @@ public class GetAllJobLog implements Callable<List<String>> {
         files.forEach(file -> {
             try {
                 results.addAll(Arrays.asList(getJobs.getSpoolContent(file).split("\n")));
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ignored) {
             }
         });
         return results;
