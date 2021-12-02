@@ -103,16 +103,16 @@ public class Commands {
     }
 
     public JobLog getAll(ZOSConnection connection, String[] params, boolean isAll) {
-        GetJobOutput getJobOutput;
+        GetJobLog getJobLog;
         try {
-            getJobOutput = new GetJobOutput(terminal, connection, isAll);
+            getJobLog = new GetJobLog(terminal, connection, isAll);
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return null;
         }
         List<String> output;
         try {
-            output = getJobOutput.getLog(params[1]);
+            output = getJobLog.getLog(params[1]);
         } catch (Exception e) {
             if (e.getMessage().contains("timeout")) {
                 terminal.println("timeout, log may be too large to display, try again with \"get\" command...");
@@ -134,14 +134,14 @@ public class Commands {
     }
 
     public void tailAll(ZOSConnection connection, String[] params, boolean isAll) {
-        GetJobOutput getJobOutput;
+        Tail tail;
         try {
-            getJobOutput = new GetJobOutput(terminal, connection, isAll);
+            tail = new Tail(terminal, connection, isAll);
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
         }
-        getJobOutput.tail(params);
+        tail.tail(params);
     }
 
     public void touch(ZOSConnection connection, String currDataSet, String[] params) {
