@@ -207,6 +207,17 @@ public class Commands {
         search.search(jobLog, text);
     }
 
+    public void stop(ZOSConnection connection, String param) {
+        Stop stop;
+        try {
+            stop = new Stop(terminal, connection);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
+        stop.stop(param);
+    }
+
     public void submit(ZOSConnection connection, String dataSet, String param) {
         var submit = new Submit(terminal, connection);
         submit.submitJob(dataSet, param);

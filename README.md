@@ -38,6 +38,7 @@ Along with following custom commands:
     end                      - end session closes shell UI window
     save <arg>               - save arg where arg is a file name from files command to the current pwd
     search <arg>             - search for arg within a job log from the last get command performed  
+    stop <arg>               - where arg is a task/job name  
     submit <arg>             - where arg is a member name  
     tailall <arg1> <arg2>    - where arg1 is job name, arg2 is optional and is line limit (default is 25)     
                              - and all the job's combined spool files output is used
