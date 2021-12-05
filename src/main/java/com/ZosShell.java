@@ -48,11 +48,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerm.registerHandler("UP", t -> {
-            history.listUpCommands();
+            history.listUpCommands(Util.getPrompt(currConnection));
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerm.registerHandler("DOWN", t -> {
-            history.listDownCommands();
+            history.listDownCommands(Util.getPrompt(currConnection));
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
     }
@@ -69,7 +69,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         String[] command;
         String commandLine = "";
         while (!"end".equalsIgnoreCase(commandLine)) {
-            commandLine = textIO.newStringInputReader().withMaxLength(80).read(">");
+            var prompt = Util.getPrompt(currConnection);
+            commandLine = textIO.newStringInputReader().withMaxLength(80).read(prompt);
             command = commandLine.split(" ");
 
             command = exclamationMark(command);
@@ -83,7 +84,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     continue;
                 }
             }
-            executeCommand(history.filterCommand(command));
+            executeCommand(history.filterCommand(prompt, command));
         }
 
         textIO.dispose();

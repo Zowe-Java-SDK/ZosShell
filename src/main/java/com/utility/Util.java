@@ -1,6 +1,7 @@
 package com.utility;
 
 import com.Constants;
+import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 
 import java.util.Locale;
@@ -89,6 +90,10 @@ public class Util {
         } catch (NumberFormatException nfe) {
             return false;
         }
+    }
+
+    public static String getPrompt(ZOSConnection connection) {
+        return connection.getHost().substring(0, connection.getHost().indexOf(".")) + ">";
     }
 
 }

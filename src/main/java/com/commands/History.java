@@ -19,23 +19,23 @@ public class History {
         this.terminal = terminal;
     }
 
-    public void listUpCommands() {
+    public void listUpCommands(String prompt) {
         if (commandLstUpIndex == 0) {
             commandLstUpIndex = commandLst.size();
             return;
         }
         terminal.resetLine();
-        terminal.printf("> " + commandLst.get(commandLstUpIndex - 1));
+        terminal.printf(prompt + " " + commandLst.get(commandLstUpIndex - 1));
         commandLstUpIndex--;
     }
 
-    public void listDownCommands() {
+    public void listDownCommands(String prompt) {
         if (commandLstDownIndex == commandLst.size()) {
             commandLstDownIndex = 0;
             return;
         }
         terminal.resetLine();
-        terminal.printf("> " + commandLst.get(commandLstDownIndex));
+        terminal.printf(prompt + " " + commandLst.get(commandLstDownIndex));
         commandLstDownIndex++;
     }
 
@@ -80,8 +80,8 @@ public class History {
         }
     }
 
-    public String[] filterCommand(String[] command) {
-        if (!">".equals(command[0]))
+    public String[] filterCommand(String prompt, String[] command) {
+        if (!prompt.equals(command[0]))
             return command;
 
         // remove ">" first parameter, added by listUpCommands or listDownCommands method
