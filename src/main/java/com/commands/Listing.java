@@ -58,7 +58,7 @@ public class Listing {
             numOfColumns = 8;
 
         var numOfLines = membersSize / numOfColumns;
-        String[] lines = new String[numOfLines + 1];
+        var lines = new String[numOfLines + 1];
 
         int lineIndex = 0;
         for (int i = 0; i < membersSize; ) {
