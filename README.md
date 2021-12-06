@@ -21,7 +21,8 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
                              - and only job's JESMSGLG spool output is returned 
     touch <arg>              - create member arg if it does not already exist
     uname                    - show current connected host name
-    vi <arg>                 - where arg is a sequential dataset or member name
+    vi <arg>                 - where arg is a sequential dataset or member name, arg will be downloaded 
+                               and displayed doie editing, use save command to save changes  
     whoami                   - show current connected user name
   
 Along with following custom commands:  
