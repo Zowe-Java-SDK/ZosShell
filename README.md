@@ -36,7 +36,7 @@ Along with following custom commands:
     connections              - a list of connection(s)   
     change <arg>             - where arg is a number representing a connection
     files                    - list all files under local c:\ZosShell  
-    download <arg>           - download arg to local c:\ZosShell where arg is memberor sequential dataset     
+    download <arg>           - download arg to local c:\ZosShell where arg is member or sequential dataset     
     end                      - end session closes shell UI window
     save <arg>               - save arg where arg is a file name from files command to the current pwd
     search <arg>             - search for arg within a job log from the last get command performed  
@@ -77,4 +77,3 @@ Change directory to the target directory and execute the following command:
   
     java -jar zosshell-1.0.jar  
   
-
