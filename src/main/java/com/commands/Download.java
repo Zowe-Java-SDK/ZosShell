@@ -26,12 +26,12 @@ public class Download {
         this.download = new ZosDsnDownload(connection);
     }
 
-    public void download(String dataSet, String param) {
+    public boolean download(String dataSet, String param) {
         try {
             String content = getContent(dataSet, param);
             if (content == null) {
                 terminal.println(Constants.DOWNLOAD_FAIL);
-                return;
+                return false;
             }
             String pathAndFileName = Constants.PATH_FILE_DIRECTORY + "\\" + param;
             Files.write(Paths.get(pathAndFileName), content.getBytes());
@@ -39,10 +39,12 @@ public class Download {
         } catch (Exception e) {
             if (e.getMessage().contains("Connection refused")) {
                 terminal.println(Constants.SEVERE_ERROR);
-                return;
+                return false;
             }
             Util.printError(terminal, e.getMessage());
+            return false;
         }
+        return true;
     }
 
     public String getContent(String dataSet, String param) throws Exception {

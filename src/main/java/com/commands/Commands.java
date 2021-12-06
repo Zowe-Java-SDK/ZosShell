@@ -223,4 +223,9 @@ public class Commands {
         submit.submitJob(dataSet, param);
     }
 
+    public void vi(ZOSConnection connection, String dataSet, String[] params) {
+        var vi = new Vi(terminal, connection);
+        vi.vi(dataSet, params[1]);
+    }
+
 }

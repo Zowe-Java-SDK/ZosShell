@@ -344,6 +344,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     lst.forEach(l -> terminal.println(l.toUpperCase() + " ==> " + key));
                 }
                 break;
+            case "vi":
+                if (isParamsMissing(1, params))
+                    return;
+                if (isParamsExceeded(2, params))
+                    return;
+                commands.vi(currConnection, currDataSet, params);
+                break;
             case "whoami":
                 if (connections != null)
                     terminal.println(currConnection.getUser());

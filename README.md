@@ -21,6 +21,7 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
                              - and only job's JESMSGLG spool output is returned 
     touch <arg>              - create member arg if it does not already exist
     uname                    - show current connected host name
+    vi <arg>                 - where arg is a sequential dataset or member name
     whoami                   - show current connected user name
   
 Along with following custom commands:  
@@ -34,7 +35,7 @@ Along with following custom commands:
     connections              - a list of connection(s)   
     change <arg>             - where arg is a number representing a connection
     files                    - list all files under local c:\ZosShell  
-    download <arg>           - download arg to local c:\ZosShell where arg is member/seq dataset     
+    download <arg>           - download arg to local c:\ZosShell where arg is memberor sequential dataset     
     end                      - end session closes shell UI window
     save <arg>               - save arg where arg is a file name from files command to the current pwd
     search <arg>             - search for arg within a job log from the last get command performed  
