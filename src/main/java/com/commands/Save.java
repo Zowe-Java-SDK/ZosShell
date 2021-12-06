@@ -24,7 +24,11 @@ public class Save {
             terminal.println(Constants.INVALID_DATASET);
             return;
         }
-        if (!Util.isMember(member)) {
+
+        var isSequentialDataSet = false;
+        if (Util.isDataSet(member)) {
+            isSequentialDataSet = true;
+        } else if (!Util.isMember(member)) {
             terminal.println(Constants.INVALID_MEMBER);
             return;
         }
@@ -40,9 +44,11 @@ public class Save {
                 sb.append(System.lineSeparator());
                 line = br.readLine();
             }
-            String everything = sb.toString().replaceAll("(\\r)", "");
+            String content = sb.toString().replaceAll("(\\r)", "");
 
-            zosDsn.writeDsn(dataSet, member, everything);
+            if (isSequentialDataSet)
+                zosDsn.writeDsn(member, content);
+            else zosDsn.writeDsn(dataSet, member, content);
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
