@@ -40,7 +40,7 @@ public class Save {
                 sb.append(System.lineSeparator());
                 line = br.readLine();
             }
-            String everything = sb.toString();
+            String everything = sb.toString().replaceAll("(\\r)", "");
 
             zosDsn.writeDsn(dataSet, member, everything);
         } catch (Exception e) {
