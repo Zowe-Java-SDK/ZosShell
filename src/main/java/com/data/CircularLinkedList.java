@@ -14,7 +14,6 @@ public class CircularLinkedList<T> {
 
     public Node head = null;
     public Node tail = null;
-    public Node prev = null;
     public Node currNode = null;
 
     // this function will add the new node at the end of the list.
@@ -26,7 +25,6 @@ public class CircularLinkedList<T> {
             // if list is empty, head, prev and tail would point to new node.
             head = newNode;
             tail = newNode;
-            prev = newNode;
             newNode.next = head;
         } else {
             // tail will point to new node.
