@@ -190,6 +190,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 commands.download(currConnection, currDataSet, param);
                 break;
             case "end":
+                if (isParamsExceeded(1, params))
+                    return;
                 break;
             case "files":
                 if (isParamsExceeded(1, params))
