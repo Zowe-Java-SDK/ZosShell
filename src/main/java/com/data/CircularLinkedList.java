@@ -4,22 +4,22 @@ public class CircularLinkedList<T> {
 
     public class Node<T> {
         final T data;
-        Node next;
-        Node prev;
+        Node<T> next;
+        Node<T> prev;
 
         public Node(T data) {
             this.data = data;
         }
     }
 
-    public Node head = null;
-    public Node tail = null;
-    public Node currNode = null;
+    public Node<T> head = null;
+    public Node<T> tail = null;
+    public Node<T> currNode = null;
 
     // this function will add the new node at the end of the list.
     public void add(T data) {
         // create new node
-        var newNode = new Node(data);
+        Node<T> newNode = new Node<>(data);
         // checks if the list is empty.
         if (head == null) {
             // if list is empty, head, prev and tail would point to new node.
@@ -48,19 +48,19 @@ public class CircularLinkedList<T> {
         } else {
             currNode = currNode.next;
         }
-        return (T) currNode.data;
+        return currNode.data;
     }
 
     public T back() {
         T result;
         if (currNode == null) {
             currNode = this.tail;
-            result = (T) currNode.data;
+            result = currNode.data;
             return result;
         }
 
         currNode = currNode.prev;
-        result = (T) currNode.data;
+        result = currNode.data;
         return result;
     }
 
