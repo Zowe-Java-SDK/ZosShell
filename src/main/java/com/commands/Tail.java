@@ -20,10 +20,10 @@ public class Tail extends JobLog {
             output = getJobLog(params[1]);
         } catch (Exception e) {
             if (e.getMessage().contains("timeout")) {
-                terminal.println("timeout, log may be too large to display, try again with \"tail\" command...");
+                terminal.println(Constants.TAIL_TIMEOUT_MSG);
                 return;
             }
-            if (e.getMessage().contains("Connection refused")) {
+            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
                 terminal.println(Constants.SEVERE_ERROR);
                 return;
             }

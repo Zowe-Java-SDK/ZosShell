@@ -22,7 +22,7 @@ public class Submit {
         try {
             job = submitJobs.submitJob(String.format("%s(%s)", dataSet, param));
         } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
+            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
                 terminal.println(Constants.SEVERE_ERROR);
                 return;
             }

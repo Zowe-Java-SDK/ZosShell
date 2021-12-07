@@ -47,7 +47,7 @@ public class Terminate {
             // remove last newline i.e. \n
             terminal.println(result.substring(0, result.length() - 1));
         } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
+            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
                 terminal.println(Constants.SEVERE_ERROR);
                 return;
             }

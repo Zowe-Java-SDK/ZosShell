@@ -31,7 +31,7 @@ public class ProcessList {
             var params = getJobParams.build();
             jobs = getJobs.getJobsCommon(params);
         } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
+            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
                 terminal.println(Constants.SEVERE_ERROR);
                 return;
             }

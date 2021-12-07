@@ -24,7 +24,7 @@ public class Vi {
             if (success && SystemUtils.IS_OS_WINDOWS)
                 rs.exec("notepad " + Constants.PATH_FILE_DIRECTORY + "\\" + param);
             if (!SystemUtils.IS_OS_WINDOWS) {
-                terminal.println("this command is only supported on windows at the moment...");
+                terminal.println(Constants.WINDOWS_ERROR_MSG);
             }
         } catch (IOException e) {
             terminal.println(e.getMessage());

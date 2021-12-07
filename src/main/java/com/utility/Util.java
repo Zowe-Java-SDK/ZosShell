@@ -73,7 +73,7 @@ public class Util {
             var index = message.indexOf("Not Found");
             var msg = message.substring(index);
             terminal.println(msg);
-        } else if (message.contains("Connection refused")) {
+        } else if (message.contains(Constants.CONNECTION_REFUSED)) {
             terminal.println(Constants.SEVERE_ERROR);
         } else if (message.contains("dataSetName not specified")) {
             terminal.println(Constants.DATASET_NOT_SPECIFIED);

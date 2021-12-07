@@ -103,7 +103,7 @@ public class Delete {
                 if (failed(response)) return;
             }
         } catch (Exception e) {
-            if (e.getMessage().contains("Connection refused")) {
+            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
                 terminal.println(Constants.SEVERE_ERROR);
                 return;
             }
