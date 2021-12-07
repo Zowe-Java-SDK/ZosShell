@@ -42,6 +42,7 @@ public class History {
         if (!command.startsWith("history")) {
             commandLst.add(str.toString());
         }
+        currCommandIndex = 0;
     }
 
     public void displayHistory() {
