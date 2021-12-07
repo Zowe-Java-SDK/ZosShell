@@ -153,6 +153,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 currConnection = commands.change(currConnection, params);
                 break;
             case "connections":
+                if (isParamsExceeded(1, params))
+                    return;
                 commands.connections(currConnection);
                 break;
             case "cp":
