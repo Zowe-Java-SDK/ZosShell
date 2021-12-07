@@ -33,18 +33,18 @@ public class Save {
             return;
         }
 
-        String fileName = Constants.PATH_FILE_DIRECTORY + "\\" + member;
+        var fileName = Constants.PATH_FILE_DIRECTORY + "\\" + member;
 
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
+            var sb = new StringBuilder();
+            var line = br.readLine();
 
             while (line != null) {
                 sb.append(line);
                 sb.append(System.lineSeparator());
                 line = br.readLine();
             }
-            String content = sb.toString().replaceAll("(\\r)", "");
+            var content = sb.toString().replaceAll("(\\r)", "");
 
             if (isSequentialDataSet)
                 zosDsn.writeDsn(member, content);

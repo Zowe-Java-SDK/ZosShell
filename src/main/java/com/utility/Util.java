@@ -5,7 +5,6 @@ import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 
 import java.util.Locale;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Util {
@@ -17,7 +16,7 @@ public class Util {
 
         // Check that the dataset contains more than one segment
         // This could be valid for additionalTests
-        String[] segments = dataSetName.split("\\.");
+        var segments = dataSetName.split("\\.");
         if (segments.length < 2) {
             return false;
         }
@@ -40,12 +39,12 @@ public class Util {
         // Each segment cannot be more than 8 characters
         // Each segment's first letter is a letter or #, @, $.
         // The remaining seven characters in a segment can be letters, numbers, and #, @, $, -
-        for (String segment : segments) {
+        for (var segment : segments) {
             if (segment.length() > 8) {
                 return false;
             }
-            Pattern p = Pattern.compile(PATTERN_STRING);
-            Matcher m = p.matcher(segment);
+            var p = Pattern.compile(PATTERN_STRING);
+            var m = p.matcher(segment);
             if (!m.matches()) {
                 return false;
             }
@@ -64,15 +63,15 @@ public class Util {
         if (memberName.length() > 8) {
             return false;
         }
-        Pattern p = Pattern.compile(PATTERN_STRING);
-        Matcher m = p.matcher(memberName);
+        var p = Pattern.compile(PATTERN_STRING);
+        var m = p.matcher(memberName);
         return m.matches();
     }
 
     public static void printError(TextTerminal<?> terminal, String message) {
         if (message.contains("Not Found")) {
             var index = message.indexOf("Not Found");
-            String msg = message.substring(index);
+            var msg = message.substring(index);
             terminal.println(msg);
         } else if (message.contains("Connection refused")) {
             terminal.println(Constants.SEVERE_ERROR);
