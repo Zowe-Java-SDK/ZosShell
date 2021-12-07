@@ -1,6 +1,7 @@
 package com.commands;
 
 import com.Constants;
+import com.data.CircularLinkedList;
 import org.beryx.textio.TextTerminal;
 
 import java.util.Arrays;
@@ -12,24 +13,20 @@ public class History {
 
     private final TextTerminal<?> terminal;
     private final List<String> commandLst = new LinkedList<>();
-    private int currCommandIndex = 0;
+    private final CircularLinkedList<String> circularLinkedList = new CircularLinkedList<>();
 
     public History(TextTerminal<?> terminal) {
         this.terminal = terminal;
     }
 
     public void listUpCommands(String prompt) {
-        var index = (currCommandIndex == 0) ? currCommandIndex = commandLst.size() :  currCommandIndex;
         terminal.resetLine();
-        terminal.printf(prompt + " " + commandLst.get(index - 1));
-        currCommandIndex--;
+        terminal.printf(prompt + " " + circularLinkedList.back());
     }
 
     public void listDownCommands(String prompt) {
-        var index = (currCommandIndex == commandLst.size()) ? currCommandIndex = 0 :  currCommandIndex;
         terminal.resetLine();
-        terminal.printf(prompt + " " + commandLst.get(index));
-        currCommandIndex++;
+        terminal.printf(prompt + " " + circularLinkedList.forward());
     }
 
     public void addHistory(String[] params) {
@@ -40,9 +37,11 @@ public class History {
         });
         String command = str.toString();
         if (!command.startsWith("history")) {
-            commandLst.add(str.toString());
+            commandLst.add(command);
+            circularLinkedList.add(command);
         }
-        currCommandIndex = 0;
+        // reset the currNode pointer used to handle history scrolling..
+        circularLinkedList.currNode = null;
     }
 
     public void displayHistory() {
