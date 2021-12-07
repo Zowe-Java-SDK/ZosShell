@@ -96,4 +96,8 @@ public class Util {
         return connection.getHost().substring(0, connection.getHost().indexOf(".")) + ">";
     }
 
+    public static boolean isHttpError(int statusCode) {
+        return !((statusCode >= 200 && statusCode <= 299) || (statusCode >= 100 && statusCode <= 199));
+    }
+
 }

@@ -93,14 +93,21 @@ public class Copy {
             if (toDataSetName.isEmpty())
                 toDataSetName = param2;
 
-            zosDsnCopy.copy(fromDataSetName, toDataSetName, true, copyAllMembers);
+            var response = zosDsnCopy.copy(fromDataSetName, toDataSetName, true, copyAllMembers);
+            var code = response.getStatusCode().orElse(-1);
+            if (Util.isHttpError(code)) {
+                terminal.println("copy operation failed with http code + " + code + ", try again...");
+                return;
+            }
         } catch (Exception e) {
             if (e.getMessage().contains("Connection refused")) {
                 terminal.println(Constants.SEVERE_ERROR);
                 return;
             }
             Util.printError(terminal, e.getMessage());
+            return;
         }
+        terminal.println("copy operation succeeded...");
     }
 
 }

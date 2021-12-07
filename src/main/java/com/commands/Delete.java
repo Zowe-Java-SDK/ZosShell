@@ -4,12 +4,14 @@ import com.Constants;
 import com.utility.Util;
 import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
+import rest.Response;
 import zosfiles.ZosDsn;
 import zosfiles.ZosDsnList;
 import zosfiles.input.ListParams;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Delete {
 
@@ -38,13 +40,19 @@ public class Delete {
                 } catch (Exception e) {
                     Util.printError(terminal, e.getMessage());
                 }
+                AtomicBoolean success = new AtomicBoolean(true);
                 members.forEach(m -> {
                     try {
-                        zosDsn.deleteDsn(currDataSet, m);
+                        Response response = zosDsn.deleteDsn(currDataSet, m);
+                        if (failed(response)) {
+                            success.set(false);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
+                if (success.get())
+                    terminal.println("delete succeeded...");
                 return;
             }
 
@@ -59,10 +67,12 @@ public class Delete {
                         terminal.println(Constants.DELETE_NOTHING_ERROR);
                         return;
                     }
-                    zosDsn.deleteDsn(currDataSet, param);
+                    Response response = zosDsn.deleteDsn(currDataSet, param);
+                    if (failed(response)) return;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                terminal.println(param + " successfully deleted...");
                 return;
             }
 
@@ -79,15 +89,18 @@ public class Delete {
 
                 member = param.substring(index + 1, param.length() - 1);
                 try {
-                    zosDsn.deleteDsn(dataset, member);
+                    Response response = zosDsn.deleteDsn(dataset, member);
+                    if (failed(response)) return;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                terminal.println(param + " successfully deleted...");
                 return;
             }
 
             if (Util.isDataSet(param)) {
-                zosDsn.deleteDsn(param);
+                Response response = zosDsn.deleteDsn(param);
+                if (failed(response)) return;
             }
         } catch (Exception e) {
             if (e.getMessage().contains("Connection refused")) {
@@ -95,7 +108,18 @@ public class Delete {
                 return;
             }
             Util.printError(terminal, e.getMessage());
+            return;
         }
+        terminal.println(param + " successfully deleted...");
+    }
+
+    private boolean failed(Response response) {
+        var code = response.getStatusCode().orElse(-1);
+        if (Util.isHttpError(code)) {
+            terminal.println("delete operation failed with http code + " + code + ", try again...");
+            return true;
+        }
+        return false;
     }
 
 }
