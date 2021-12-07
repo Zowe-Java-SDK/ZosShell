@@ -12,31 +12,24 @@ public class History {
 
     private final TextTerminal<?> terminal;
     private final List<String> commandLst = new LinkedList<>();
-    private static int commandLstUpIndex = 0;
-    private static int commandLstDownIndex = 0;
+    private int currCommandIndex = 0;
 
     public History(TextTerminal<?> terminal) {
         this.terminal = terminal;
     }
 
     public void listUpCommands(String prompt) {
-        if (commandLstUpIndex == 0) {
-            commandLstUpIndex = commandLst.size();
-            return;
-        }
+        var index = (currCommandIndex == 0) ? currCommandIndex = commandLst.size() :  currCommandIndex;
         terminal.resetLine();
-        terminal.printf(prompt + " " + commandLst.get(commandLstUpIndex - 1));
-        commandLstUpIndex--;
+        terminal.printf(prompt + " " + commandLst.get(index - 1));
+        currCommandIndex--;
     }
 
     public void listDownCommands(String prompt) {
-        if (commandLstDownIndex == commandLst.size()) {
-            commandLstDownIndex = 0;
-            return;
-        }
+        var index = (currCommandIndex == commandLst.size()) ? currCommandIndex = 0 :  currCommandIndex;
         terminal.resetLine();
-        terminal.printf(prompt + " " + commandLst.get(commandLstDownIndex));
-        commandLstDownIndex++;
+        terminal.printf(prompt + " " + commandLst.get(index));
+        currCommandIndex++;
     }
 
     public void addHistory(String[] params) {
@@ -48,8 +41,6 @@ public class History {
         String command = str.toString();
         if (!command.startsWith("history")) {
             commandLst.add(str.toString());
-            commandLstUpIndex = commandLst.size();
-            commandLstDownIndex = 0;
         }
     }
 
