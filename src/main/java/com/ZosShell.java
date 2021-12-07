@@ -94,13 +94,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         if (command[0].startsWith("!")) {
             if (isParamsExceeded(1, command))
                 return null;
-            String cmd = command[0];
+            var cmd = command[0];
             if (cmd.length() == 1) {
                 terminal.println(Constants.MISSING_PARAMETERS);
                 return null;
             }
-            String str = cmd.substring(1);
-            boolean isStrNum = Util.isStrNum(str);
+            var str = cmd.substring(1);
+            var isStrNum = Util.isStrNum(str);
             String newCmd;
             if (isStrNum)
                 newCmd = history.getHistoryByIndex(Integer.parseInt(str) - 1);

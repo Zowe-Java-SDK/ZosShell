@@ -20,7 +20,7 @@ public class CircularLinkedList<T> {
     // this function will add the new node at the end of the list.
     public void add(T data) {
         // create new node
-        Node newNode = new Node(data);
+        var newNode = new Node(data);
         // checks if the list is empty.
         if (head == null) {
             // if list is empty, head, prev and tail would point to new node.
@@ -32,7 +32,7 @@ public class CircularLinkedList<T> {
             // tail will point to new node.
             tail.next = newNode;
             // hold a temp reference to current tail node
-            Node temp = tail;
+            var temp = tail;
             // new node will become new tail.
             tail = newNode;
             // since, it is circular linked list tail will point to head.

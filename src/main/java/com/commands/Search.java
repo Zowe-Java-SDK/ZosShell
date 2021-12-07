@@ -16,7 +16,7 @@ public class Search {
     }
 
     public void search(JobLog jobLog, String text) {
-        Optional<JobLog> log = Optional.ofNullable(jobLog);
+        var log = Optional.ofNullable(jobLog);
         log.ifPresentOrElse((value) -> {
             var jobName = value.getJobName();
             var jobOutput = value.getOutput();

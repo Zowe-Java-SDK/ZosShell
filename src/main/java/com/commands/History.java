@@ -30,12 +30,12 @@ public class History {
     }
 
     public void addHistory(String[] params) {
-        StringBuilder str = new StringBuilder();
+        var str = new StringBuilder();
         Arrays.stream(params).forEach(p -> {
             str.append(p);
             str.append(" ");
         });
-        String command = str.toString();
+        var command = str.toString();
         if (!command.startsWith("history")) {
             commandLst.add(command);
             circularLinkedList.add(command);
@@ -77,7 +77,7 @@ public class History {
 
         // remove ">" first parameter, added by listUpCommands or listDownCommands method
         var newSize = command.length - 1;
-        String[] newCommand = new String[newSize];
+        var newCommand = new String[newSize];
         for (int i = 1, j = 0; i < command.length; i++, j++) {
             newCommand[j] = command[i];
         }
