@@ -2,7 +2,7 @@ package com.data;
 
 public class CircularLinkedList<T> {
 
-    public class Node<T> {
+    public static class Node<T> {
         final T data;
         Node<T> next;
         Node<T> prev;
