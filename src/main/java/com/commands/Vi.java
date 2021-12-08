@@ -21,7 +21,7 @@ public class Vi {
         var success = download.download(dataSet, param);
         try {
             if (success && SystemUtils.IS_OS_WINDOWS)
-                rs.exec("notepad " + Constants.PATH_FILE_DIRECTORY + "\\" + param);
+                rs.exec("notepad " + Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\" + param);
             if (!SystemUtils.IS_OS_WINDOWS) {
                 terminal.println(Constants.WINDOWS_ERROR_MSG);
             }

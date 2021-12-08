@@ -3,6 +3,7 @@ package com.commands;
 import com.Constants;
 import com.utility.Util;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;
 import utility.UtilIO;
 import zosfiles.ZosDsnDownload;
@@ -32,7 +33,11 @@ public class Download {
                 terminal.println(Constants.DOWNLOAD_FAIL);
                 return false;
             }
-            String pathAndFileName = Constants.PATH_FILE_DIRECTORY + "\\" + param;
+            if (!SystemUtils.IS_OS_WINDOWS) {
+                terminal.println(Constants.WINDOWS_ERROR_MSG);
+                return false;
+            }
+            String pathAndFileName = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\" + param;
             Files.write(Paths.get(pathAndFileName), content.getBytes());
             terminal.println("downloaded to " + pathAndFileName);
         } catch (Exception e) {

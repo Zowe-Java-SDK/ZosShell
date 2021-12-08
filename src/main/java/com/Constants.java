@@ -28,7 +28,7 @@ public class Constants {
     public static final String NO_CONNECTIONS = "No connection(s) made or defined...";
     public static final String NO_CONNECTION_INFO = "no info, check connection settings...";
     public static final String NO_CONNECTION = "no connection to change too...";
-    public static final String NO_FILES = "no files within " + Constants.PATH_FILE_DIRECTORY + ", try again...";
+    public static final String NO_FILES = "no files within " + Constants.PATH_FILE_DIRECTORY_WINDOWS + ", try again...";
     public static final String NO_HISTORY = "no history, try again...";
     public static final String NO_INFO = "no info...";
     public static final String NO_LISTING =
@@ -37,8 +37,8 @@ public class Constants {
     public static final String NO_PROCESS_FOUND = "no process found, try again...";
     public static final String MISSING_COUNT_PARAM = "specified either \"count members\" or \"count datasets\"";
     public static final String MISSING_PARAMETERS = "missing parameter(s), try again...";
-    public static final String PATH_FILE_DIRECTORY = "C:\\ZosShell";
-    public static final String PATH_FILE = PATH_FILE_DIRECTORY + "\\credentials.txt";
+    public static final String PATH_FILE_DIRECTORY_WINDOWS = "C:\\ZosShell";
+    public static final String PATH_FILE = PATH_FILE_DIRECTORY_WINDOWS + "\\credentials.txt";
     public static final String SEVERE_ERROR = "server error, check connection...";
     public static final String TAIL_TIMEOUT_MSG =
             "timeout, log may be too large to display, try again with \"tail\" command...";
