@@ -2,7 +2,6 @@ package com.commands;
 
 import com.Constants;
 import com.utility.Util;
-import core.ZOSConnection;
 import org.apache.commons.io.IOUtils;
 import org.beryx.textio.TextTerminal;
 import utility.UtilIO;
@@ -20,9 +19,9 @@ public class Concatenate {
     private final ZosDsnDownload download;
     private final DownloadParams dlParams = new DownloadParams.Builder().build();
 
-    public Concatenate(TextTerminal<?> terminal, ZOSConnection connection) {
+    public Concatenate(TextTerminal<?> terminal, ZosDsnDownload download) {
         this.terminal = terminal;
-        this.download = new ZosDsnDownload(connection);
+        this.download = download;
     }
 
     public void cat(String dataSet, String param) {

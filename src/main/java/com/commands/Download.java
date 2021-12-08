@@ -2,7 +2,6 @@ package com.commands;
 
 import com.Constants;
 import com.utility.Util;
-import core.ZOSConnection;
 import org.apache.commons.io.IOUtils;
 import org.beryx.textio.TextTerminal;
 import utility.UtilIO;
@@ -21,9 +20,9 @@ public class Download {
     private final ZosDsnDownload download;
     private final DownloadParams dlParams = new DownloadParams.Builder().build();
 
-    public Download(TextTerminal<?> terminal, ZOSConnection connection) {
+    public Download(TextTerminal<?> terminal, ZosDsnDownload download) {
         this.terminal = terminal;
-        this.download = new ZosDsnDownload(connection);
+        this.download = download;
     }
 
     public boolean download(String dataSet, String param) {

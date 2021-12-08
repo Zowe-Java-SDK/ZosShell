@@ -2,7 +2,6 @@ package com.commands;
 
 import com.Constants;
 import com.utility.Util;
-import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 import zosfiles.ZosDsnCopy;
 
@@ -11,9 +10,9 @@ public class Copy {
     private final TextTerminal<?> terminal;
     private final ZosDsnCopy zosDsnCopy;
 
-    public Copy(TextTerminal<?> terminal, ZOSConnection connection) {
+    public Copy(TextTerminal<?> terminal, ZosDsnCopy zosDsnCopy) {
         this.terminal = terminal;
-        this.zosDsnCopy = new ZosDsnCopy(connection);
+        this.zosDsnCopy = zosDsnCopy;
     }
 
     public void copy(String currDataSet, String[] params) {

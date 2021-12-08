@@ -2,7 +2,6 @@ package com.commands;
 
 import com.Constants;
 import com.utility.Util;
-import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 import zosjobs.SubmitJobs;
 import zosjobs.response.Job;
@@ -13,9 +12,9 @@ public class Submit {
     private final SubmitJobs submitJobs;
     private Job job;
 
-    public Submit(TextTerminal<?> terminal, ZOSConnection connection) {
+    public Submit(TextTerminal<?> terminal, SubmitJobs submitJobs) {
         this.terminal = terminal;
-        this.submitJobs = new SubmitJobs(connection);
+        this.submitJobs = submitJobs;
     }
 
     public void submitJob(String dataSet, String param) {

@@ -2,7 +2,6 @@ package com.commands;
 
 import com.Constants;
 import com.utility.Util;
-import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 import zosconsole.ConsoleResponse;
 import zosconsole.IssueCommand;
@@ -18,9 +17,9 @@ public class Terminate {
         CANCEL
     }
 
-    public Terminate(TextTerminal<?> terminal, ZOSConnection connection) {
+    public Terminate(TextTerminal<?> terminal, IssueCommand issueCommand) {
         this.terminal = terminal;
-        this.issueCommand = new IssueCommand(connection);
+        this.issueCommand = issueCommand;
     }
 
     public void kill(Type type, String param) {

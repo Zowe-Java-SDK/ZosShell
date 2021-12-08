@@ -2,7 +2,6 @@ package com.commands;
 
 import com.Constants;
 import com.utility.Util;
-import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 import zosfiles.ZosDsn;
 
@@ -14,9 +13,9 @@ public class Save {
     private final TextTerminal<?> terminal;
     private final ZosDsn zosDsn;
 
-    public Save(TextTerminal<?> terminal, ZOSConnection connection) {
+    public Save(TextTerminal<?> terminal, ZosDsn zosDsn) {
         this.terminal = terminal;
-        this.zosDsn = new ZosDsn(connection);
+        this.zosDsn = zosDsn;
     }
 
     public void save(String dataSet, String member) {
@@ -56,5 +55,6 @@ public class Save {
 
         terminal.println(member + " successfully saved.");
     }
+    
 }
 

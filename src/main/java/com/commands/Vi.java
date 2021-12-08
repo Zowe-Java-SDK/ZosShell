@@ -1,7 +1,6 @@
 package com.commands;
 
 import com.Constants;
-import core.ZOSConnection;
 import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;
 
@@ -13,9 +12,9 @@ public class Vi {
     private final Download download;
     private final Runtime rs = Runtime.getRuntime();
 
-    public Vi(TextTerminal<?> terminal, ZOSConnection connection) {
+    public Vi(TextTerminal<?> terminal, Download download) {
         this.terminal = terminal;
-        this.download = new Download(terminal, connection);
+        this.download = download;
     }
 
     public void vi(String dataSet, String param) {

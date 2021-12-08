@@ -1,7 +1,6 @@
 package com.commands;
 
 import com.Constants;
-import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 import zosfiles.ZosDsnList;
 import zosfiles.input.ListParams;
@@ -19,9 +18,9 @@ public class Listing {
     private final ZosDsnList zosDsnList;
     private final ListParams params = new ListParams.Builder().build();
 
-    public Listing(ZOSConnection connection, TextTerminal<?> terminal) {
+    public Listing(TextTerminal<?> terminal, ZosDsnList zosDsnList) {
         this.terminal = terminal;
-        this.zosDsnList = new ZosDsnList(connection);
+        this.zosDsnList = zosDsnList;
     }
 
     public List<String> ls(String dataSet, boolean verbose) {
