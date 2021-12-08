@@ -28,7 +28,7 @@ public class Touch {
         }
 
         // if member already exist skip write, touch will only create a new member
-        boolean foundExistingMember = false;
+        var foundExistingMember = false;
         try {
             foundExistingMember = listing.getMembers(dataSet).stream().anyMatch(m -> m.equalsIgnoreCase(member));
         } catch (Exception ignored) {

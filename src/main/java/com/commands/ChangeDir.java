@@ -53,7 +53,7 @@ public class ChangeDir {
                 return currDataSet;
             }
             var findDataSet = currDataSet + "." + param;
-            boolean found = dsLst.stream().anyMatch(d -> d.getDsname().orElse("").contains(findDataSet));
+            var found = dsLst.stream().anyMatch(d -> d.getDsname().orElse("").contains(findDataSet));
             if (found)
                 currDataSet += "." + param;
             else terminal.println(Constants.DATASET_OR_HIGH_QUALIFIER_ERROR);

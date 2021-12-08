@@ -34,10 +34,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         Credentials.readCredentials(connections);
         if (!connections.isEmpty())
             currConnection = connections.get(0);
-        SwingTextTerminal mainTerm = new SwingTextTerminal();
+        var mainTerm = new SwingTextTerminal();
         mainTerm.init();
         setTerminalProperties(mainTerm);
-        TextIO mainTextIO = new TextIO(mainTerm);
+        var mainTextIO = new TextIO(mainTerm);
         new ZosShell().accept(mainTextIO, null);
     }
 

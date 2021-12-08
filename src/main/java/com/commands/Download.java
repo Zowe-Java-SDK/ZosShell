@@ -27,7 +27,7 @@ public class Download {
 
     public boolean download(String dataSet, String param) {
         try {
-            String content = getContent(dataSet, param);
+            var content = getContent(dataSet, param);
             if (content == null) {
                 terminal.println(Constants.DOWNLOAD_FAIL);
                 return false;

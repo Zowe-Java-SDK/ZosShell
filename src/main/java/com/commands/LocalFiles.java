@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public class LocalFiles {
 
     public static void listFiles(TextTerminal<?> terminal) {
-        List<String> files = getFiles();
+        var files = getFiles();
         if (files.isEmpty()) {
             terminal.println(Constants.NO_FILES);
             return;
@@ -22,7 +22,7 @@ public class LocalFiles {
     }
 
     private static List<String> getFiles() {
-        Optional<File[]> files = Optional.ofNullable(new File(Constants.PATH_FILE_DIRECTORY).listFiles());
+        var files = Optional.ofNullable(new File(Constants.PATH_FILE_DIRECTORY).listFiles());
         return Stream.of(files.orElse(new File[]{}))
                 .filter(file -> !file.isDirectory())
                 .map(File::getName)

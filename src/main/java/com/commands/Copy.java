@@ -21,8 +21,8 @@ public class Copy {
             var toDataSetName = "";
             var copyAllMembers = false;
 
-            String param1 = params[1].toUpperCase();
-            String param2 = params[2].toUpperCase();
+            var param1 = params[1].toUpperCase();
+            var param2 = params[2].toUpperCase();
 
             if (Util.isMember(param1)) {
                 fromDataSetName = currDataSet + "(" + param1 + ")";
