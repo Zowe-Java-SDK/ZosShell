@@ -39,7 +39,7 @@ public class Delete {
                 } catch (Exception e) {
                     Util.printError(terminal, e.getMessage());
                 }
-                AtomicBoolean success = new AtomicBoolean(true);
+                var success = new AtomicBoolean(true);
                 members.forEach(m -> {
                     try {
                         Response response = zosDsn.deleteDsn(currDataSet, m);
@@ -88,7 +88,7 @@ public class Delete {
 
                 member = param.substring(index + 1, param.length() - 1);
                 try {
-                    Response response = zosDsn.deleteDsn(dataset, member);
+                    var response = zosDsn.deleteDsn(dataset, member);
                     if (failed(response)) return;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -98,7 +98,7 @@ public class Delete {
             }
 
             if (Util.isDataSet(param)) {
-                Response response = zosDsn.deleteDsn(param);
+                var response = zosDsn.deleteDsn(param);
                 if (failed(response)) return;
             }
         } catch (Exception e) {
