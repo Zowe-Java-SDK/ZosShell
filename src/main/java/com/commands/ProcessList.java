@@ -2,7 +2,6 @@ package com.commands;
 
 import com.Constants;
 import com.utility.Util;
-import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 import zosjobs.GetJobs;
 import zosjobs.input.GetJobParams;
@@ -17,9 +16,9 @@ public class ProcessList {
     private final GetJobs getJobs;
     private final GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");
 
-    public ProcessList(TextTerminal<?> terminal, ZOSConnection connection) {
+    public ProcessList(TextTerminal<?> terminal, GetJobs getJobs) {
         this.terminal = terminal;
-        this.getJobs = new GetJobs(connection);
+        this.getJobs = getJobs;
     }
 
     public void ps(String task) {

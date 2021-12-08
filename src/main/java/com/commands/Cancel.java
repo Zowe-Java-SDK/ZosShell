@@ -1,12 +1,12 @@
 package com.commands;
 
-import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
+import zosconsole.IssueCommand;
 
 public class Cancel extends Terminate {
 
-    public Cancel(TextTerminal<?> terminal, ZOSConnection connection) {
-        super(terminal, connection);
+    public Cancel(TextTerminal<?> terminal, IssueCommand issueCommand) {
+        super(terminal, issueCommand);
     }
 
     public void cancel(String param) {

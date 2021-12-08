@@ -5,6 +5,13 @@ import com.log.JobLog;
 import com.utility.Util;
 import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
+import zosconsole.IssueCommand;
+import zosfiles.ZosDsn;
+import zosfiles.ZosDsnCopy;
+import zosfiles.ZosDsnDownload;
+import zosfiles.ZosDsnList;
+import zosjobs.GetJobs;
+import zosjobs.SubmitJobs;
 
 import java.util.List;
 
@@ -21,7 +28,7 @@ public class Commands {
     public void cancel(ZOSConnection connection, String param) {
         Cancel cancel;
         try {
-            cancel = new Cancel(terminal, connection);
+            cancel = new Cancel(terminal, new IssueCommand(connection));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
@@ -32,7 +39,7 @@ public class Commands {
     public void cat(ZOSConnection connection, String dataSet, String param) {
         Concatenate concatenate;
         try {
-            concatenate = new Concatenate(terminal, connection);
+            concatenate = new Concatenate(terminal, new ZosDsnDownload(connection));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
@@ -43,7 +50,7 @@ public class Commands {
     public String cd(ZOSConnection connection, String currDataSet, String param) {
         ChangeDir changeDir;
         try {
-            changeDir = new ChangeDir(terminal, connection);
+            changeDir = new ChangeDir(terminal, new ZosDsnList(connection));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return currDataSet;
@@ -64,7 +71,7 @@ public class Commands {
     public void copy(ZOSConnection connection, String currDataSet, String[] params) {
         Copy copy;
         try {
-            copy = new Copy(terminal, connection);
+            copy = new Copy(terminal, new ZosDsnCopy(connection));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
@@ -75,7 +82,7 @@ public class Commands {
     public void count(ZOSConnection connection, String dataSet, String param) {
         Count count;
         try {
-            count = new Count(terminal, connection);
+            count = new Count(terminal, new ZosDsnList(connection));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
@@ -83,10 +90,10 @@ public class Commands {
         count.count(dataSet, param);
     }
 
-    public void download(ZOSConnection currConnection, String currDataSet, String param) {
+    public void download(ZOSConnection connection, String currDataSet, String param) {
         Download download;
         try {
-            download = new Download(terminal, currConnection);
+            download = new Download(terminal, new ZosDsnDownload(connection));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
@@ -105,7 +112,7 @@ public class Commands {
     public JobLog getAll(ZOSConnection connection, String[] params, boolean isAll) {
         GetJobLog getJobLog;
         try {
-            getJobLog = new GetJobLog(terminal, connection, isAll);
+            getJobLog = new GetJobLog(terminal, new GetJobs(connection), isAll);
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return null;
@@ -129,39 +136,13 @@ public class Commands {
         return new JobLog(params[1], output);
     }
 
-    public void tail(ZOSConnection connection, String[] params) {
-        tailAll(connection, params, false);
-    }
-
-    public void tailAll(ZOSConnection connection, String[] params, boolean isAll) {
-        Tail tail;
-        try {
-            tail = new Tail(terminal, connection, isAll);
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
-        }
-        tail.tail(params);
-    }
-
-    public void touch(ZOSConnection connection, String currDataSet, String[] params) {
-        Touch touch;
-        try {
-            touch = new Touch(terminal, connection);
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
-        }
-        touch.touch(currDataSet, params[1]);
-    }
-
     public List<String> ls(ZOSConnection connection, String dataSet) {
-        var listing = new Listing(connection, terminal);
+        var listing = new Listing(terminal, new ZosDsnList(connection));
         return listing.ls(dataSet, false);
     }
 
     public List<String> lsl(ZOSConnection connection, String dataSet) {
-        var listing = new Listing(connection, terminal);
+        var listing = new Listing(terminal, new ZosDsnList(connection));
         return listing.ls(dataSet, true);
     }
 
@@ -172,7 +153,7 @@ public class Commands {
     public void ps(ZOSConnection connection, String task) {
         ProcessList processList;
         try {
-            processList = new ProcessList(terminal, connection);
+            processList = new ProcessList(terminal, new GetJobs(connection));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
@@ -183,7 +164,7 @@ public class Commands {
     public void rm(ZOSConnection connection, String currDataSet, String param) {
         Delete delete;
         try {
-            delete = new Delete(terminal, connection);
+            delete = new Delete(terminal, new ZosDsn(connection), new ZosDsnList(connection));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
@@ -194,7 +175,7 @@ public class Commands {
     public void save(ZOSConnection connection, String currDataSet, String[] params) {
         Save save;
         try {
-            save = new Save(terminal, connection);
+            save = new Save(terminal, new ZosDsn(connection));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
@@ -210,7 +191,7 @@ public class Commands {
     public void stop(ZOSConnection connection, String param) {
         Stop stop;
         try {
-            stop = new Stop(terminal, connection);
+            stop = new Stop(terminal, new IssueCommand(connection));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
@@ -219,12 +200,38 @@ public class Commands {
     }
 
     public void submit(ZOSConnection connection, String dataSet, String param) {
-        var submit = new Submit(terminal, connection);
+        var submit = new Submit(terminal, new SubmitJobs(connection));
         submit.submitJob(dataSet, param);
     }
 
+    public void tail(ZOSConnection connection, String[] params) {
+        tailAll(connection, params, false);
+    }
+
+    public void tailAll(ZOSConnection connection, String[] params, boolean isAll) {
+        Tail tail;
+        try {
+            tail = new Tail(terminal, new GetJobs(connection), isAll);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
+        tail.tail(params);
+    }
+
+    public void touch(ZOSConnection connection, String currDataSet, String[] params) {
+        Touch touch;
+        try {
+            touch = new Touch(terminal, new ZosDsn(connection), new Listing(terminal, new ZosDsnList(connection)));
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
+        touch.touch(currDataSet, params[1]);
+    }
+
     public void vi(ZOSConnection connection, String dataSet, String[] params) {
-        var vi = new Vi(terminal, connection);
+        var vi = new Vi(terminal, new Download(terminal, new ZosDsnDownload(connection)));
         vi.vi(dataSet, params[1]);
     }
 

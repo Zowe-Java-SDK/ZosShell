@@ -1,6 +1,5 @@
 package com.commands;
 
-import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 import zosfiles.ZosDsnList;
 import zosfiles.input.ListParams;
@@ -15,9 +14,9 @@ public class Count {
     private final ZosDsnList zosDsnList;
     private final ListParams params = new ListParams.Builder().build();
 
-    public Count(TextTerminal<?> terminal, ZOSConnection connection) {
+    public Count(TextTerminal<?> terminal, ZosDsnList zosDsnList) {
         this.terminal = terminal;
-        this.zosDsnList = new ZosDsnList(connection);
+        this.zosDsnList = zosDsnList;
     }
 
     public void count(String dataSet, String param) {

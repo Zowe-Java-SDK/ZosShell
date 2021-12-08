@@ -1,12 +1,12 @@
 package com.commands;
 
-import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
+import zosconsole.IssueCommand;
 
 public class Stop extends Terminate {
 
-    public Stop(TextTerminal<?> terminal, ZOSConnection connection) {
-        super(terminal, connection);
+    public Stop(TextTerminal<?> terminal, IssueCommand issueCommand) {
+        super(terminal, issueCommand);
     }
 
     public void stop(String param) {

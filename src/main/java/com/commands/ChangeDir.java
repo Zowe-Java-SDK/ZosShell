@@ -2,7 +2,6 @@ package com.commands;
 
 import com.Constants;
 import com.utility.Util;
-import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 import zosfiles.ZosDsnList;
 import zosfiles.input.ListParams;
@@ -16,9 +15,9 @@ public class ChangeDir {
     private final ZosDsnList zosDsnList;
     private final ListParams params = new ListParams.Builder().build();
 
-    public ChangeDir(TextTerminal<?> terminal, ZOSConnection connection) {
+    public ChangeDir(TextTerminal<?> terminal, ZosDsnList zosDsnList) {
         this.terminal = terminal;
-        this.zosDsnList = new ZosDsnList(connection);
+        this.zosDsnList = zosDsnList;
     }
 
     public String cd(String currDataSet, String param) {

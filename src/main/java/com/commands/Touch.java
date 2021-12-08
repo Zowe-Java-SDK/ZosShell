@@ -2,7 +2,6 @@ package com.commands;
 
 import com.Constants;
 import com.utility.Util;
-import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 import zosfiles.ZosDsn;
 
@@ -12,10 +11,10 @@ public class Touch {
     private final ZosDsn zosDsn;
     private final Listing listing;
 
-    public Touch(TextTerminal<?> terminal, ZOSConnection connection) {
+    public Touch(TextTerminal<?> terminal, ZosDsn zosDsn, Listing listing) {
         this.terminal = terminal;
-        this.zosDsn = new ZosDsn(connection);
-        this.listing = new Listing(connection, terminal);
+        this.zosDsn = zosDsn;
+        this.listing = listing;
     }
 
     public void touch(String dataSet, String member) {

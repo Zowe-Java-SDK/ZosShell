@@ -2,7 +2,6 @@ package com.commands;
 
 import com.Constants;
 import com.utility.Util;
-import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 import rest.Response;
 import zosfiles.ZosDsn;
@@ -20,10 +19,10 @@ public class Delete {
     private final ZosDsnList zosDsnList;
     private final ListParams params = new ListParams.Builder().build();
 
-    public Delete(TextTerminal<?> terminal, ZOSConnection connection) {
+    public Delete(TextTerminal<?> terminal, ZosDsn zosDsn, ZosDsnList zosDsnList) {
         this.terminal = terminal;
-        this.zosDsn = new ZosDsn(connection);
-        this.zosDsnList = new ZosDsnList(connection);
+        this.zosDsn = zosDsn;
+        this.zosDsnList = zosDsnList;
     }
 
     public void rm(String currDataSet, String param) {

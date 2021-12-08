@@ -2,7 +2,6 @@ package com.commands;
 
 import com.Constants;
 import com.utility.Util;
-import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 import zosjobs.GetJobs;
 
@@ -10,8 +9,8 @@ import java.util.List;
 
 public class Tail extends JobLog {
 
-    public Tail(TextTerminal<?> terminal, ZOSConnection connection, boolean isAll) {
-        super(terminal, new GetJobs(connection), isAll);
+    public Tail(TextTerminal<?> terminal, GetJobs getJobs, boolean isAll) {
+        super(terminal, getJobs, isAll);
     }
 
     public void tail(String[] params) {
