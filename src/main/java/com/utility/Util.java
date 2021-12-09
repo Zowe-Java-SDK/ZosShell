@@ -92,7 +92,14 @@ public class Util {
     }
 
     public static String getPrompt(ZOSConnection connection) {
-        return connection.getHost().substring(0, connection.getHost().indexOf(".")) + ">";
+        var prompt = ">";
+        if (connection == null)
+            return prompt;
+        var periodIndex = connection.getHost().indexOf(".");
+        if (periodIndex != -1)
+            return connection.getHost().substring(0, connection.getHost().indexOf(".")) + prompt;
+        else
+            return connection.getHost() + prompt;
     }
 
     public static boolean isHttpError(int statusCode) {
