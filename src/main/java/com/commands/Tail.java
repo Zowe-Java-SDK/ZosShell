@@ -53,7 +53,7 @@ public class Tail extends JobLog {
     }
 
     private void display(int lines, int size, List<String> output) {
-        for (int i = size - lines; i < size; i++)
+        for (var i = size - lines; i < size; i++)
             terminal.println(output.get(i));
     }
 
