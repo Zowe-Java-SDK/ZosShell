@@ -19,7 +19,6 @@ public class CircularLinkedList<T> {
     public Node<T> tail = null;
     public Node<T> currNode = null;
 
-
     // this function will add the new node at the end of the list.
     public void add(T data) {
         // create new node

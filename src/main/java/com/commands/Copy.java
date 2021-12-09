@@ -68,7 +68,7 @@ public class Copy {
                     String member;
                     String dataset;
 
-                    int index = param1.indexOf("(");
+                    var index = param1.indexOf("(");
                     dataset = param1.substring(0, index);
                     if (!Util.isDataSet(dataset)) {
                         terminal.println(Constants.COPY_OPS_NO_MEMBER_AND_DATASET_ERROR);

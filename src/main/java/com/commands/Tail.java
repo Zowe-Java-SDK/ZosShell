@@ -42,13 +42,13 @@ public class Tail extends JobLog {
 
         if (lines > 0) {
             if (lines < size) {
-                for (int i = size - lines; i < size; i++)
+                for (var i = size - lines; i < size; i++)
                     terminal.println(output.get(i));
             } else output.forEach(terminal::println);
         } else {
-            int LINES_LIMIT = 25;
+            var LINES_LIMIT = 25;
             if (size > LINES_LIMIT) {
-                for (int i = size - LINES_LIMIT; i < size; i++)
+                for (var i = size - LINES_LIMIT; i < size; i++)
                     terminal.println(output.get(i));
             } else output.forEach(terminal::println);
         }
