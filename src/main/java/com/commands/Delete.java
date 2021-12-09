@@ -30,10 +30,7 @@ public class Delete {
             List<String> members = new ArrayList<>();
 
             if ("*".equals(param)) {
-                if (currDataSet.isEmpty()) {
-                    terminal.println(Constants.DELETE_NOTHING_ERROR);
-                    return;
-                }
+                if (isCurrDataSetEmpty(currDataSet)) return;
                 try {
                     members = zosDsnList.listDsnMembers(currDataSet, params);
                 } catch (Exception e) {
@@ -56,10 +53,7 @@ public class Delete {
             }
 
             if (Util.isMember(param)) {
-                if (currDataSet.isEmpty()) {
-                    terminal.println(Constants.DELETE_NOTHING_ERROR);
-                    return;
-                }
+                if (isCurrDataSetEmpty(currDataSet)) return;
                 try {
                     members = zosDsnList.listDsnMembers(currDataSet, params);
                     if (members.stream().noneMatch(param::equalsIgnoreCase)) {
@@ -110,6 +104,14 @@ public class Delete {
             return;
         }
         terminal.println(param + " successfully deleted...");
+    }
+
+    private boolean isCurrDataSetEmpty(String currDataSet) {
+        if (currDataSet.isEmpty()) {
+            terminal.println(Constants.DELETE_NOTHING_ERROR);
+            return true;
+        }
+        return false;
     }
 
     private boolean failed(Response response) {
