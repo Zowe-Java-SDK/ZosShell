@@ -32,7 +32,7 @@ public class ChangeDir {
             }
 
             var str = new StringBuilder();
-            for (int i = 0; i < length; i++) {
+            for (var i = 0; i < length; i++) {
                 str.append(tokens[i]);
                 str.append(".");
             }

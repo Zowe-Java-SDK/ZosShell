@@ -41,7 +41,7 @@ public class Listing {
 
         if (membersSize == 0)
             return members;
-        int numOfColumns = 0;
+        var numOfColumns = 0;
 
         if (membersSize < 100)
             numOfColumns = 3;
@@ -60,7 +60,7 @@ public class Listing {
         var lines = new String[numOfLines + 1];
 
         int lineIndex = 0;
-        for (int i = 0; i < membersSize; ) {
+        for (var i = 0; i < membersSize; ) {
             int count = 1;
             StringBuilder line = new StringBuilder();
             while (count % (numOfColumns + 1) != 0) {

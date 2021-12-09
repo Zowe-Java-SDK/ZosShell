@@ -68,7 +68,7 @@ public class History {
             commandLst.forEach(terminal::println);
         else {
             var startIndex = size - num;
-            for (int i = startIndex; i < size; i++)
+            for (var i = startIndex; i < size; i++)
                 terminal.println(commandLst.get(i));
         }
     }
