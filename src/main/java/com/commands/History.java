@@ -37,6 +37,8 @@ public class History {
         });
         var command = str.toString();
         if (!command.startsWith("history")) {
+            if (commandLst.size() == Constants.HISTORY_SIZE)
+                commandLst.remove(0);
             commandLst.add(command);
             circularLinkedList.add(command);
         }

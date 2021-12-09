@@ -19,6 +19,7 @@ public class Constants {
     public static final String DOWNLOAD_FAIL = "download failed, try again...";
     public static final String GET_TIMEOUT_MSG =
             "timeout, log may be too large to display, try again with \"get\" command...";
+    public static final int HISTORY_SIZE = 10;
     public static final String INVALID_COMMAND = "invalid command, try again...";
     public static final String INVALID_DATASET = "invalid dataset specified, try again...";
     public static final String INVALID_NUMBER = "specify a number, try again...";
