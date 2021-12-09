@@ -66,7 +66,7 @@ public class Delete {
                         terminal.println(Constants.DELETE_NOTHING_ERROR);
                         return;
                     }
-                    Response response = zosDsn.deleteDsn(currDataSet, param);
+                    var response = zosDsn.deleteDsn(currDataSet, param);
                     if (failed(response)) return;
                 } catch (Exception e) {
                     e.printStackTrace();
