@@ -60,8 +60,7 @@ public class Delete {
                         terminal.println(Constants.DELETE_NOTHING_ERROR);
                         return;
                     }
-                    var response = zosDsn.deleteDsn(currDataSet, param);
-                    if (failed(response)) return;
+                    if (performDeleteCheckFailedResponse(currDataSet, param)) return;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -92,8 +91,7 @@ public class Delete {
             }
 
             if (Util.isDataSet(param)) {
-                var response = zosDsn.deleteDsn(param);
-                if (failed(response)) return;
+                if (performDeleteCheckFailedResponse(currDataSet, param)) return;
             }
         } catch (Exception e) {
             if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
@@ -104,6 +102,11 @@ public class Delete {
             return;
         }
         terminal.println(param + " successfully deleted...");
+    }
+
+    private boolean performDeleteCheckFailedResponse(String currDataSet, String param) throws Exception {
+        var response = zosDsn.deleteDsn(currDataSet, param);
+        return failed(response);
     }
 
     private boolean isCurrDataSetEmpty(String currDataSet) {
