@@ -41,17 +41,20 @@ public class Tail extends JobLog {
         }
 
         if (lines > 0) {
-            if (lines < size) {
-                for (int i = size - lines; i < size; i++)
-                    terminal.println(output.get(i));
-            } else output.forEach(terminal::println);
+            if (lines < size)
+                display(lines, size, output);
+            else output.forEach(terminal::println);
         } else {
             int LINES_LIMIT = 25;
-            if (size > LINES_LIMIT) {
-                for (int i = size - LINES_LIMIT; i < size; i++)
-                    terminal.println(output.get(i));
-            } else output.forEach(terminal::println);
+            if (size > LINES_LIMIT)
+                display(LINES_LIMIT, size, output);
+            else output.forEach(terminal::println);
         }
+    }
+
+    private void display(int lines, int size, List<String> output) {
+        for (int i = size - lines; i < size; i++)
+            terminal.println(output.get(i));
     }
 
 }
