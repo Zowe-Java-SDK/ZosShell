@@ -36,18 +36,8 @@ public class Util {
             return false;
         }
 
-        // Each segment cannot be more than 8 characters
-        // Each segment's first letter is a letter or #, @, $.
-        // The remaining seven characters in a segment can be letters, numbers, and #, @, $, -
         for (var segment : segments) {
-            if (segment.length() > 8) {
-                return false;
-            }
-            var p = Pattern.compile(PATTERN_STRING);
-            var m = p.matcher(segment);
-            if (!m.matches()) {
-                return false;
-            }
+            if (!isSegment(segment)) return false;
         }
 
         return true;
@@ -55,17 +45,7 @@ public class Util {
 
     public static boolean isMember(String memberName) {
         memberName = memberName.toUpperCase(Locale.ROOT);
-
-        // A member name cannot be longer than eight characters.
-        // The first member character must be either a letter or one of the following three special characters: #, @, $.
-        // The remaining seven characters can be letters, numbers, or one of the following special characters: #, @, or $.
-        // A PDS member name cannot contain a hyphen (-).
-        if (memberName.length() > 8) {
-            return false;
-        }
-        var p = Pattern.compile(PATTERN_STRING);
-        var m = p.matcher(memberName);
-        return m.matches();
+        return isSegment(memberName);
     }
 
     public static void printError(TextTerminal<?> terminal, String message) {
@@ -104,6 +84,19 @@ public class Util {
 
     public static boolean isHttpError(int statusCode) {
         return !((statusCode >= 200 && statusCode <= 299) || (statusCode >= 100 && statusCode <= 199));
+    }
+
+    private static boolean isSegment(String segment) {
+        // Each segment cannot be more than 8 characters
+        // Each segment's first letter is a letter or #, @, $.
+        // The remaining seven characters in a segment can be letters, numbers, and #, @, $, -
+        // A PDS member name cannot start with a hyphen (-).
+        if (segment.length() > 8) {
+            return false;
+        }
+        var p = Pattern.compile(PATTERN_STRING);
+        var m = p.matcher(segment);
+        return m.matches();
     }
 
 }
