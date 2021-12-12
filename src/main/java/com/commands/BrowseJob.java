@@ -5,15 +5,15 @@ import zosjobs.GetJobs;
 
 import java.util.List;
 
-public class GetJobLog extends JobLog {
+public class BrowseJob extends JobLog {
 
-    public GetJobLog(TextTerminal<?> terminal, GetJobs getJobs, boolean isAll) {
+    public BrowseJob(TextTerminal<?> terminal, GetJobs getJobs, boolean isAll) {
         super(terminal, getJobs, isAll);
     }
 
-    public List<String> getLog(String param) throws Exception {
+    public List<String> browseJob(String param) throws Exception {
         try {
-            return getJobLog(param);
+            return browseJobLog(param);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

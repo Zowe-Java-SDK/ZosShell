@@ -2,9 +2,9 @@ package com;
 
 import com.commands.Commands;
 import com.commands.History;
+import com.data.JobOutput;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import com.log.JobLog;
 import com.security.Credentials;
 import com.utility.Util;
 import core.ZOSConnection;
@@ -28,7 +28,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static TextTerminal<?> terminal;
     private static Commands commands;
     private static History history;
-    private static JobLog jobLog;
+    private static JobOutput jobOutput;
 
     public static void main(String[] args) {
         Credentials.readCredentials(connections);
@@ -198,19 +198,19 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 commands.files();
                 break;
-            case "get":
+            case "browse":
                 if (isParamsMissing(1, params))
                     return;
                 if (isParamsExceeded(2, params))
                     return;
-                jobLog = commands.get(currConnection, params);
+                jobOutput = commands.browse(currConnection, params);
                 break;
-            case "getall":
+            case "browseall":
                 if (isParamsMissing(1, params))
                     return;
                 if (isParamsExceeded(2, params))
                     return;
-                jobLog = commands.getAll(currConnection, params, true);
+                jobOutput = commands.browseAll(currConnection, params, true);
                 break;
             case "history":
                 if (isParamsExceeded(2, params))
@@ -288,7 +288,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 if (isParamsExceeded(2, params))
                     return;
-                commands.search(jobLog, params[1]);
+                commands.search(jobOutput, params[1]);
                 break;
             case "stop":
                 if (isParamsMissing(1, params))

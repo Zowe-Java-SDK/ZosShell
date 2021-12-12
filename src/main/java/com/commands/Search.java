@@ -1,6 +1,6 @@
 package com.commands;
 
-import com.log.JobLog;
+import com.data.JobOutput;
 import org.beryx.textio.TextTerminal;
 
 import java.util.List;
@@ -15,8 +15,8 @@ public class Search {
         this.terminal = terminal;
     }
 
-    public void search(JobLog jobLog, String text) {
-        var log = Optional.ofNullable(jobLog);
+    public void search(JobOutput job, String text) {
+        var log = Optional.ofNullable(job);
         log.ifPresentOrElse((value) -> {
             var jobName = value.getJobName();
             var jobOutput = value.getOutput();

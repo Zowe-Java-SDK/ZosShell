@@ -16,7 +16,7 @@ public class Tail extends JobLog {
     public void tail(String[] params) {
         List<String> output;
         try {
-            output = getJobLog(params[1]);
+            output = browseJobLog(params[1]);
         } catch (Exception e) {
             if (e.getMessage().contains("timeout")) {
                 terminal.println(Constants.TAIL_TIMEOUT_MSG);

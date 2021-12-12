@@ -1,13 +1,13 @@
-package com.log;
+package com.data;
 
 import java.util.List;
 
-public class JobLog {
+public class JobOutput {
 
     private final String jobName;
     private final List<String> output;
 
-    public JobLog(String jobName, List<String> output) {
+    public JobOutput(String jobName, List<String> output) {
         this.jobName = jobName;
         this.output = output;
     }
