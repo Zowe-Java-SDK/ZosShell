@@ -76,7 +76,7 @@ public class CircularLinkedList<T> {
         var temp = tail;
         // new node will become new tail.
         tail = newNode;
-        // since, it is circular linked list tail will point to new head.
+        // circular tail will point to new head.
         tail.next = head;
         // link to previous tail node
         tail.prev = temp;

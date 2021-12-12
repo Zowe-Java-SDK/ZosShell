@@ -18,7 +18,7 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
     pwd                      - show current working dataset
     rm <arg>                 - where arg is "*", member, dataset, or dataset with member value
     tail <arg1> <arg2>       - where arg1 is job name, arg2 is optional and is line limit (default is 25)    
-                             - and only job's JESMSGLG spool output is returned 
+                               and only job's JESMSGLG spool output is returned 
     touch <arg>              - create member arg if it does not already exist
     uname                    - show current connected host name
     vi <arg>                 - where arg is a sequential dataset or member name, arg will be downloaded 
@@ -43,7 +43,7 @@ Along with following custom commands:
     stop <arg>               - where arg is a task/job name  
     submit <arg>             - where arg is a member name  
     tailall <arg1> <arg2>    - where arg1 is job name, arg2 is optional and is line limit (default is 25)     
-                             - and all the job's combined spool files output is used
+                               and all the job's combined spool files output is used
     v | visited              - a list of visited datasets  
   
 The following key combinations provide the following functionality within the shell:  
