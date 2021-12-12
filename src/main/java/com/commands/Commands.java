@@ -39,7 +39,7 @@ public class Commands {
     public void cat(ZOSConnection connection, String dataSet, String param) {
         Concatenate concatenate;
         try {
-            concatenate = new Concatenate(terminal, new ZosDsnDownload(connection));
+            concatenate = new Concatenate(terminal, new Download(terminal, new ZosDsnDownload(connection)));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;

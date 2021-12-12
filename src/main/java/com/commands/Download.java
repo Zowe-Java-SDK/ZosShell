@@ -52,13 +52,18 @@ public class Download {
     }
 
     public String getContent(String dataSet, String param) throws Exception {
+        InputStream inputStream = getInputStream(dataSet, param);
+        return getStreamData(inputStream);
+    }
+
+    public InputStream getInputStream(String dataSet, String param) throws Exception {
         InputStream inputStream;
         if (Util.isDataSet(param)) {
             inputStream = download.downloadDsn(String.format("%s", param), dlParams);
         } else {
             inputStream = download.downloadDsn(String.format("%s(%s)", dataSet, param), dlParams);
         }
-        return getStreamData(inputStream);
+        return inputStream;
     }
 
     private String getStreamData(InputStream inputStream) throws IOException {

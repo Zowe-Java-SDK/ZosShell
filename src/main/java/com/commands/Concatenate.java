@@ -5,7 +5,6 @@ import com.utility.Util;
 import org.apache.commons.io.IOUtils;
 import org.beryx.textio.TextTerminal;
 import utility.UtilIO;
-import zosfiles.ZosDsnDownload;
 import zosfiles.input.DownloadParams;
 
 import java.io.IOException;
@@ -16,10 +15,10 @@ import java.util.Arrays;
 public class Concatenate {
 
     private final TextTerminal<?> terminal;
-    private final ZosDsnDownload download;
+    private final Download download;
     private final DownloadParams dlParams = new DownloadParams.Builder().build();
 
-    public Concatenate(TextTerminal<?> terminal, ZosDsnDownload download) {
+    public Concatenate(TextTerminal<?> terminal, Download download) {
         this.terminal = terminal;
         this.download = download;
     }
@@ -27,11 +26,7 @@ public class Concatenate {
     public void cat(String dataSet, String param) {
         InputStream inputStream;
         try {
-            if (Util.isDataSet(param)) {
-                inputStream = download.downloadDsn(String.format("%s", param), dlParams);
-            } else {
-                inputStream = download.downloadDsn(String.format("%s(%s)", dataSet, param), dlParams);
-            }
+            inputStream = download.getInputStream(dataSet, param);
             display(inputStream);
         } catch (Exception e) {
             if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
