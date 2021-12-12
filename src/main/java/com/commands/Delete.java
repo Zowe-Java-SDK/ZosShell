@@ -1,6 +1,7 @@
 package com.commands;
 
 import com.Constants;
+import com.data.DataSetMember;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
 import rest.Response;
@@ -69,19 +70,14 @@ public class Delete {
             }
 
             if (param.contains("(") && param.contains(")")) {
-                String member;
-                String dataset;
-
-                var index = param.indexOf("(");
-                dataset = param.substring(0, index);
-                if (!Util.isDataSet(dataset)) {
+                DataSetMember dataSetMember = Util.getMemberFromDataSet(param);
+                if (dataSetMember == null) {
                     terminal.println(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR);
                     return;
                 }
 
-                member = param.substring(index + 1, param.length() - 1);
                 try {
-                    var response = zosDsn.deleteDsn(dataset, member);
+                    var response = zosDsn.deleteDsn(dataSetMember.getDataSet(), dataSetMember.getMember());
                     if (failed(response)) return;
                 } catch (Exception e) {
                     e.printStackTrace();

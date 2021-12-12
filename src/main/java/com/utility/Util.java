@@ -1,6 +1,7 @@
 package com.utility;
 
 import com.Constants;
+import com.data.DataSetMember;
 import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 
@@ -84,6 +85,20 @@ public class Util {
 
     public static boolean isHttpError(int statusCode) {
         return !((statusCode >= 200 && statusCode <= 299) || (statusCode >= 100 && statusCode <= 199));
+    }
+
+    public static DataSetMember getMemberFromDataSet(String param) {
+        String member;
+        String dataset;
+
+        var index = param.indexOf("(");
+        dataset = param.substring(0, index);
+        if (!Util.isDataSet(dataset)) {
+            return null;
+        }
+
+        member = param.substring(index + 1, param.length() - 1);
+        return new DataSetMember(dataset, member);
     }
 
     private static boolean isSegment(String segment) {

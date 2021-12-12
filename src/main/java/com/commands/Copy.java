@@ -1,6 +1,7 @@
 package com.commands;
 
 import com.Constants;
+import com.data.DataSetMember;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
 import zosfiles.ZosDsnCopy;
@@ -65,19 +66,14 @@ public class Copy {
                 }
 
                 if (param1.contains("(") && param1.contains(")")) {
-                    String member;
-                    String dataset;
-
-                    var index = param1.indexOf("(");
-                    dataset = param1.substring(0, index);
-                    if (!Util.isDataSet(dataset)) {
+                    DataSetMember dataSetMember = Util.getMemberFromDataSet(param1);
+                    if (dataSetMember == null) {
                         terminal.println(Constants.COPY_OPS_NO_MEMBER_AND_DATASET_ERROR);
                         return;
                     }
 
-                    member = param1.substring(index + 1, param1.length() - 1);
                     fromDataSetName = param1;
-                    toDataSetName = currDataSet + "(" + member + ")";
+                    toDataSetName = currDataSet + "(" + dataSetMember.getMember() + ")";
                 }
             }
 
