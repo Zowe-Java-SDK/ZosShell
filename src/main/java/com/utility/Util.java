@@ -105,7 +105,6 @@ public class Util {
         // Each segment cannot be more than 8 characters
         // Each segment's first letter is a letter or #, @, $.
         // The remaining seven characters in a segment can be letters, numbers, and #, @, $, -
-        // A PDS member name cannot start with a hyphen (-).
         if (segment.length() > 8) {
             return false;
         }
