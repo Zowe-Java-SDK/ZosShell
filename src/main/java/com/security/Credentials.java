@@ -14,7 +14,7 @@ public class Credentials {
     public static void readCredentials(List<ZOSConnection> connections) {
         var file = new File(Constants.PATH_FILE);
         try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            var br = new BufferedReader(new FileReader(file));
 
             String str;
             while ((str = br.readLine()) != null) {

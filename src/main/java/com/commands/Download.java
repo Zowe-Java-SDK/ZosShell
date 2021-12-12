@@ -37,7 +37,7 @@ public class Download {
                 terminal.println(Constants.WINDOWS_ERROR_MSG);
                 return false;
             }
-            String pathAndFileName = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\" + param;
+            var pathAndFileName = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\" + param;
             Files.write(Paths.get(pathAndFileName), content.getBytes());
             terminal.println("downloaded to " + pathAndFileName);
         } catch (Exception e) {
@@ -52,7 +52,7 @@ public class Download {
     }
 
     public String getContent(String dataSet, String param) throws Exception {
-        InputStream inputStream = getInputStream(dataSet, param);
+        var inputStream = getInputStream(dataSet, param);
         return getStreamData(inputStream);
     }
 

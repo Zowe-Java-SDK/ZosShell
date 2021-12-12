@@ -98,7 +98,7 @@ public class Listing {
 
     private void displayDataSets(List<Dataset> dataSets, String ignoreDataSet) {
         dataSets.forEach(ds -> {
-            String dsName = ds.getDsname().orElse("");
+            var dsName = ds.getDsname().orElse("");
             if (!dsName.equalsIgnoreCase(ignoreDataSet))
                 terminal.println(dsName);
         });

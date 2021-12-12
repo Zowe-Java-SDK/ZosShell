@@ -5,7 +5,6 @@ import com.utility.Util;
 import org.apache.commons.io.IOUtils;
 import org.beryx.textio.TextTerminal;
 import utility.UtilIO;
-import zosfiles.input.DownloadParams;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +15,6 @@ public class Concatenate {
 
     private final TextTerminal<?> terminal;
     private final Download download;
-    private final DownloadParams dlParams = new DownloadParams.Builder().build();
 
     public Concatenate(TextTerminal<?> terminal, Download download) {
         this.terminal = terminal;
