@@ -8,12 +8,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class GetAllJobLog implements Callable<List<String>> {
+public class BrowseJobAll implements Callable<List<String>> {
 
     private final GetJobs getJobs;
     private final List<JobFile> files;
 
-    public GetAllJobLog(GetJobs getJobs, List<JobFile> files) {
+    public BrowseJobAll(GetJobs getJobs, List<JobFile> files) {
         this.getJobs = getJobs;
         this.files = files;
     }

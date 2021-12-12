@@ -27,8 +27,8 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
   
 Along with following custom commands:  
 
-    get <arg>                - where arg is a job name - returns jobs's JESMSGLG spool output only
-    getall <arg>             - where arg is a job name - returns all the job's combined spool files output 
+    browse <arg>             - where arg is a job name - display jobs's JESMSGLG spool output 
+    browseall <arg>          - where arg is a job name - display all the job's combined spool files output 
     count members            - return member count in dataset
     count datasets           - return dataset count in dataset
     cp | copy <arg> arg>     - where arg can be ".", member, dataset or dataset(member)  

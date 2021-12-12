@@ -2,8 +2,8 @@ package com.data;
 
 public class DataSetMember {
 
-    private String dataSet;
-    private String member;
+    private final String dataSet;
+    private final String member;
 
     public DataSetMember(String dataSet, String member) {
         this.dataSet = dataSet;

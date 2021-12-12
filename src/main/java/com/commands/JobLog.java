@@ -24,7 +24,7 @@ public class JobLog {
         this.isAll = isAll;
     }
 
-    protected List<String> getJobLog(String param) throws Exception {
+    protected List<String> browseJobLog(String param) throws Exception {
         var jobParams = new GetJobParams.Builder("*").prefix(param).build();
         final var jobs = getJobs.getJobsCommon(jobParams);
         if (jobs.isEmpty()) {
@@ -40,7 +40,7 @@ public class JobLog {
         }
 
         var pool = Executors.newFixedThreadPool(1);
-        var result = pool.submit(new GetAllJobLog(getJobs, files));
+        var result = pool.submit(new BrowseJobAll(getJobs, files));
         try {
             return result.get(60, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {

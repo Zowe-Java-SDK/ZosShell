@@ -1,7 +1,7 @@
 package com.commands;
 
 import com.Constants;
-import com.log.JobLog;
+import com.data.JobOutput;
 import com.utility.Util;
 import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
@@ -105,21 +105,21 @@ public class Commands {
         LocalFiles.listFiles(terminal);
     }
 
-    public JobLog get(ZOSConnection connection, String[] params) {
-        return getAll(connection, params, false);
+    public JobOutput browse(ZOSConnection connection, String[] params) {
+        return browseAll(connection, params, false);
     }
 
-    public JobLog getAll(ZOSConnection connection, String[] params, boolean isAll) {
-        GetJobLog getJobLog;
+    public JobOutput browseAll(ZOSConnection connection, String[] params, boolean isAll) {
+        BrowseJob browseJob;
         try {
-            getJobLog = new GetJobLog(terminal, new GetJobs(connection), isAll);
+            browseJob = new BrowseJob(terminal, new GetJobs(connection), isAll);
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return null;
         }
         List<String> output;
         try {
-            output = getJobLog.getLog(params[1]);
+            output = browseJob.browseJob(params[1]);
         } catch (Exception e) {
             if (e.getMessage().contains("timeout")) {
                 terminal.println(Constants.GET_TIMEOUT_MSG);
@@ -133,7 +133,7 @@ public class Commands {
             return null;
         }
         output.forEach(terminal::println);
-        return new JobLog(params[1], output);
+        return new JobOutput(params[1], output);
     }
 
     public List<String> ls(ZOSConnection connection, String dataSet) {
@@ -183,9 +183,9 @@ public class Commands {
         save.save(currDataSet, params[1]);
     }
 
-    public void search(JobLog jobLog, String text) {
+    public void search(JobOutput job, String text) {
         var search = new Search(terminal);
-        search.search(jobLog, text);
+        search.search(job, text);
     }
 
     public void stop(ZOSConnection connection, String param) {
