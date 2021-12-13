@@ -2,6 +2,7 @@ package com.commands;
 
 import com.Constants;
 import com.data.CircularLinkedList;
+import com.google.common.base.Strings;
 import org.beryx.textio.TextTerminal;
 
 import java.util.Arrays;
@@ -47,7 +48,7 @@ public class History {
     }
 
     public void displayHistory() {
-        commandLst.forEach(terminal::println);
+        displayAll();
     }
 
     public void displayHistory(String param) {
@@ -65,11 +66,14 @@ public class History {
         }
         var size = commandLst.size();
         if (num > size)
-            commandLst.forEach(terminal::println);
+            displayAll();
         else {
             var startIndex = size - num;
-            for (var i = startIndex; i < size; i++)
-                terminal.println(commandLst.get(i));
+            for (var i = startIndex; i < size; i++) {
+                var orderNum = Strings.padStart(String.valueOf(i + 1), 4, ' ');
+                var historyRow = orderNum + " ==> " + commandLst.get(i);
+                terminal.println(historyRow);
+            }
         }
     }
 
@@ -101,6 +105,14 @@ public class History {
             return null;
         }
         return lst.get(lst.size() - 1);
+    }
+
+    private void displayAll() {
+        for (int i = 0; i < commandLst.size(); i++) {
+            var orderNum = Strings.padStart(String.valueOf(i + 1), 4, ' ');
+            var historyRow = orderNum + " ==> " + commandLst.get(i);
+            terminal.println(historyRow);
+        }
     }
 
 }
