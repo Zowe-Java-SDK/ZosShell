@@ -2,6 +2,7 @@ package com.commands;
 
 import com.Constants;
 import com.data.JobOutput;
+import com.utility.Help;
 import com.utility.Util;
 import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
@@ -141,6 +142,10 @@ public class Commands {
 
     public void files() {
         LocalFiles.listFiles(terminal);
+    }
+
+    public void help() {
+        Help.displayHelp(terminal);
     }
 
     public List<String> ls(ZOSConnection connection, String dataSet) {
