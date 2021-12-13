@@ -42,7 +42,7 @@ public class JobLog {
         var pool = Executors.newFixedThreadPool(1);
         var result = pool.submit(new BrowseJobAll(getJobs, files));
         try {
-            return result.get(60, TimeUnit.SECONDS);
+            return result.get(10, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new Exception("timeout");
         }
