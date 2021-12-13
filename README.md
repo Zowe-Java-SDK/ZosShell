@@ -6,45 +6,46 @@ This project demonstrates the usage of [Zowe Java SDK](https://github.com/zowe/z
   
 Project provides a UI shell command prompt that allows you to manipulate datasets and its members. The shell performs the following linux commands:  
   
-    cat                      - display contents
-    cd <arg>                 - where arg is a dataset value or empty
-    history <arg>            - where arg is optional and identicates the number to display from bottom   
-    !n                       - where n is a number, to execute command nummber n in history list   
-    !string                  - will execute the last history command starting with that “string”
-    ls <arg>                 - where arg is a dataset value or empty 
-    ls -l <arg>              - where arg is a dataset value or empty 
-    ps                       - display all processes running
-    ps <arg>                 - where arg is a task/job name   
-    pwd                      - show current working dataset
-    rm <arg>                 - where arg is "*", member, dataset, or dataset with member value
-    tail <arg1> <arg2>       - where arg1 is job name, arg2 is optional and is line limit (default is 25)    
-                               and only job's JESMSGLG spool output is returned 
-    touch <arg>              - create member arg if it does not already exist
-    uname                    - show current connected host name
-    vi <arg>                 - where arg is a sequential dataset or member name, arg will be downloaded 
-                               and displayed for editing, use save command to save changes  
-    whoami                   - show current connected user name
+    cat                     - display contents
+    cd <arg>                - where arg is a dataset value or empty
+    history <arg>           - where arg is optional and identicates the number to display from bottom   
+    !n                      - where n is a number, to execute command nummber n in history list   
+    !string                 - will execute the last history command starting with that “string”
+    ls <arg>                - where arg is a dataset value or empty 
+    ls -l <arg>             - where arg is a dataset value or empty 
+    ps                      - display all processes running
+    ps <arg>                - where arg is a task/job name   
+    pwd                     - show current working dataset
+    rm <arg>                - where arg is "*", member, dataset, or dataset with member value
+    touch <arg>             - create member arg if it does not already exist
+    uname                   - show current connected host name
+    vi <arg>                - where arg is a sequential dataset or member name, arg will be downloaded 
+                              and displayed for editing, use save command to save changes  
+    whoami                  - show current connected user name
   
 Along with following custom commands:  
 
-    browse <arg>             - where arg is a job name - display jobs's JESMSGLG spool output 
-    browseall <arg>          - where arg is a job name - display all the job's combined spool files output 
-    count members            - return member count in dataset
-    count datasets           - return dataset count in dataset
-    cp | copy <arg> arg>     - where arg can be ".", member, dataset or dataset(member)  
-    cancel <arg>             - where arg is a task/job name  
-    connections              - a list of connection(s)   
-    change <arg>             - where arg is a number representing a connection
-    files                    - list all files under local c:\ZosShell  
-    download <arg>           - download arg to local c:\ZosShell where arg is member or sequential dataset     
-    end                      - end session closes shell UI window
-    save <arg>               - save arg where arg is a file name from files command to the current pwd
-    search <arg>             - search for arg within a job log from the last get command performed  
-    stop <arg>               - where arg is a task/job name  
-    submit <arg>             - where arg is a member name  
-    tailall <arg1> <arg2>    - where arg1 is job name, arg2 is optional and is line limit (default is 25)     
-                               and all the job's combined spool files output is used
-    v | visited              - a list of visited datasets  
+    browsejob <arg1> <arg2>       - where arg1 is a job name and arg2 is optional
+                                    if arg2 not specified, display job's JESMSGLG spool output
+                                    if arg2 is equal to "all", display all job's spool output
+    count members                 - return member count in dataset
+    count datasets                - return dataset count in dataset
+    cp | copy <arg> arg>          - where arg can be ".", member, dataset or dataset(member)  
+    cancel <arg>                  - where arg is a task/job name  
+    connections                   - a list of connection(s)   
+    change <arg>                  - where arg is a number representing a connection
+    files                         - list all files under local c:\ZosShell  
+    download <arg>                - download arg to local c:\ZosShell where arg is member or sequential dataset     
+    end                           - end session closes shell UI window
+    save <arg>                    - save arg where arg is a file name from files command to the current pwd
+    search <arg>                  - search for arg within a job log from the last browse command performed  
+    stop <arg>                    - where arg is a task/job name  
+    submit <arg>                  - where arg is a member name  
+    tailjob <arg1> <arg2> <arg3>  - where arg1 is job name and arg2 and arg3 are optional
+                                    use arg2 to specify either line limit or "all" value 
+                                    if "all" is specified, display output from all of job's spool content
+                                    line limit is 25 by default if not specified in arg2
+    v | visited                   - a list of visited datasets  
   
 The following key combinations provide the following functionality within the shell:  
   

@@ -25,6 +25,44 @@ public class Commands {
         this.terminal = terminal;
     }
 
+    public JobOutput browse(ZOSConnection connection, String[] params) {
+        if (params.length == 3) {
+            if (!"all".equalsIgnoreCase(params[2])) {
+                terminal.println(Constants.INVALID_PARAMETER);
+                return null;
+            }
+            return browseAll(connection, params, true);
+        }
+        return browseAll(connection, params, false);
+    }
+
+    private JobOutput browseAll(ZOSConnection connection, String[] params, boolean isAll) {
+        BrowseJob browseJob;
+        try {
+            browseJob = new BrowseJob(terminal, new GetJobs(connection), isAll);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return null;
+        }
+        List<String> output;
+        try {
+            output = browseJob.browseJob(params[1]);
+        } catch (Exception e) {
+            if (e.getMessage().contains("timeout")) {
+                terminal.println(Constants.BROWSE_TIMEOUT_MSG);
+                return null;
+            }
+            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
+                terminal.println(Constants.SEVERE_ERROR);
+                return null;
+            }
+            Util.printError(terminal, e.getMessage());
+            return null;
+        }
+        output.forEach(terminal::println);
+        return new JobOutput(params[1], output);
+    }
+
     public void cancel(ZOSConnection connection, String param) {
         Cancel cancel;
         try {
@@ -105,37 +143,6 @@ public class Commands {
         LocalFiles.listFiles(terminal);
     }
 
-    public JobOutput browse(ZOSConnection connection, String[] params) {
-        return browseAll(connection, params, false);
-    }
-
-    public JobOutput browseAll(ZOSConnection connection, String[] params, boolean isAll) {
-        BrowseJob browseJob;
-        try {
-            browseJob = new BrowseJob(terminal, new GetJobs(connection), isAll);
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return null;
-        }
-        List<String> output;
-        try {
-            output = browseJob.browseJob(params[1]);
-        } catch (Exception e) {
-            if (e.getMessage().contains("timeout")) {
-                terminal.println(Constants.BROWSE_TIMEOUT_MSG);
-                return null;
-            }
-            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
-                terminal.println(Constants.SEVERE_ERROR);
-                return null;
-            }
-            Util.printError(terminal, e.getMessage());
-            return null;
-        }
-        output.forEach(terminal::println);
-        return new JobOutput(params[1], output);
-    }
-
     public List<String> ls(ZOSConnection connection, String dataSet) {
         var listing = new Listing(terminal, new ZosDsnList(connection));
         return listing.ls(dataSet, false);
@@ -204,11 +211,37 @@ public class Commands {
         submit.submitJob(dataSet, param);
     }
 
-    public void tail(ZOSConnection connection, String[] params) {
+    public void tailjob(ZOSConnection connection, String[] params) {
+        if (params.length == 4) {
+            if (!"all".equalsIgnoreCase(params[3])) {
+                terminal.println(Constants.INVALID_PARAMETER);
+                return;
+            }
+            try {
+                Integer.parseInt(params[2]);
+            } catch (NumberFormatException e) {
+                terminal.println(Constants.INVALID_PARAMETER);
+                return;
+            }
+            tailAll(connection, params, true);
+            return;
+        }
+        if (params.length == 3) {
+            if ("all".equalsIgnoreCase(params[2])) {
+                tailAll(connection, params, true);
+                return;
+            }
+            try {
+                Integer.parseInt(params[2]);
+            } catch (NumberFormatException e) {
+                terminal.println(Constants.INVALID_PARAMETER);
+                return;
+            }
+        }
         tailAll(connection, params, false);
     }
 
-    public void tailAll(ZOSConnection connection, String[] params, boolean isAll) {
+    private void tailAll(ZOSConnection connection, String[] params, boolean isAll) {
         Tail tail;
         try {
             tail = new Tail(terminal, new GetJobs(connection), isAll);

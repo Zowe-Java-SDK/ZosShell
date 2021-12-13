@@ -198,19 +198,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 commands.files();
                 break;
-            case "browse":
+            case "browsejob":
                 if (isParamsMissing(1, params))
                     return;
-                if (isParamsExceeded(2, params))
+                if (isParamsExceeded(3, params))
                     return;
                 jobOutput = commands.browse(currConnection, params);
-                break;
-            case "browseall":
-                if (isParamsMissing(1, params))
-                    return;
-                if (isParamsExceeded(2, params))
-                    return;
-                jobOutput = commands.browseAll(currConnection, params, true);
                 break;
             case "history":
                 if (isParamsExceeded(2, params))
@@ -308,19 +301,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 param = params[1];
                 commands.submit(currConnection, currDataSet, param);
                 break;
-            case "tail":
+            case "tailjob":
                 if (isParamsMissing(1, params))
                     return;
-                if (isParamsExceeded(3, params))
+                if (isParamsExceeded(4, params))
                     return;
-                commands.tail(currConnection, params);
-                break;
-            case "tailall":
-                if (isParamsMissing(1, params))
-                    return;
-                if (isParamsExceeded(3, params))
-                    return;
-                commands.tailAll(currConnection, params, true);
+                commands.tailjob(currConnection, params);
                 break;
             case "touch":
                 if (isParamsMissing(1, params))

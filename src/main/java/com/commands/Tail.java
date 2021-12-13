@@ -32,6 +32,16 @@ public class Tail extends JobLog {
         var size = output.size();
         var lines = 0;
         if (params.length == 3) {
+            if (!"all".equalsIgnoreCase(params[2])) {
+                try {
+                    lines = Integer.parseInt(params[2]);
+                } catch (NumberFormatException e) {
+                    terminal.println(Constants.INVALID_PARAMETER);
+                    return;
+                }
+            }
+        }
+        if (params.length == 4) {
             try {
                 lines = Integer.parseInt(params[2]);
             } catch (NumberFormatException e) {
