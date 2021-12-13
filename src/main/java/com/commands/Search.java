@@ -20,7 +20,7 @@ public class Search {
         log.ifPresentOrElse((value) -> {
             var jobName = value.getJobName();
             var jobOutput = value.getOutput();
-            terminal.println("searching " + jobName);
+            terminal.println("searching " + jobName.toUpperCase());
             List<String> results = jobOutput.stream().filter(line -> line.contains(text)).collect(Collectors.toList());
             if (!results.isEmpty())
                 results.forEach(terminal::println);
