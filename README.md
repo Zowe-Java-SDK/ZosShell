@@ -28,15 +28,15 @@ Along with following custom commands:
     browsejob <arg1> <arg2>       - where arg1 is a job name and arg2 is optional
                                     if arg2 not specified, display job's JESMSGLG spool output
                                     if arg2 is equal to "all", display all job's spool output
+    cancel <arg>                  - where arg is a task/job name  
+    change <arg>                  - where arg is a number representing a connection
+    connections                   - a list of connection(s)   
     count members                 - return member count in dataset
     count datasets                - return dataset count in dataset
-    cp | copy <arg> arg>          - where arg can be ".", member, dataset or dataset(member)  
-    cancel <arg>                  - where arg is a task/job name  
-    connections                   - a list of connection(s)   
-    change <arg>                  - where arg is a number representing a connection
-    files                         - list all files under local c:\ZosShell  
-    download <arg>                - download arg to local c:\ZosShell where arg is member or sequential dataset     
+    cp | copy <arg> arg>          - where arg can be ".", member, dataset or dataset(member)
+    download <arg>                - download arg to local c:\ZosShell where arg is member or sequential dataset
     end                           - end session closes shell UI window
+    files                         - list all files under local c:\ZosShell
     save <arg>                    - save arg where arg is a file name from files command to the current pwd
     search <arg>                  - search for arg within a job log from the last browse command performed  
     stop <arg>                    - where arg is a task/job name  
