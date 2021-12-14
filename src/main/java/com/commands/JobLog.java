@@ -38,12 +38,13 @@ public class JobLog {
         Predicate<Job> isActive = j -> "ACTIVE".equalsIgnoreCase(j.getStatus().orElse(""));
         Predicate<Job> isInput = j -> "INPUT".equalsIgnoreCase(j.getStatus().orElse(""));
 
-        var job = jobs.stream().filter(isActive.or(isInput)).findAny();
+        var jobStillRunning = jobs.stream().filter(isActive.or(isInput)).findAny();
+        var job = jobStillRunning.orElse(jobs.get(0));
         final List<JobFile> files;
         try {
-            files = getJobs.getSpoolFilesForJob(job.orElse(jobs.get(0)));
+            files = getJobs.getSpoolFilesForJob(job);
         } catch (Exception e) {
-            var msg = "error retrieving spool content for job id " + job.get().getJobId().orElse("n\\a");
+            var msg = "error retrieving spool content for job id " + job.getJobId().orElse("n\\a");
             terminal.println(msg);
             throw new Exception(e);
         }

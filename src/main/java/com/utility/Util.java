@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 public class Util {
 
+    @SuppressWarnings("Annotator")
     private static final String PATTERN_STRING = "[A-Z#@\\$]{1}[A-Z0-9#@\\$\\-]{1,7}";
 
     public static boolean isDataSet(String dataSetName) {
