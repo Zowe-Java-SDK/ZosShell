@@ -3,6 +3,8 @@ package com.commands;
 import org.beryx.textio.TextTerminal;
 import zosjobs.GetJobs;
 import zosjobs.input.GetJobParams;
+import zosjobs.input.JobFile;
+import zosjobs.response.Job;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +13,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Predicate;
 
 public class JobLog {
 
@@ -31,9 +34,19 @@ public class JobLog {
             terminal.println(jobParams.getPrefix().orElse("n\\a") + " does not exist, try again...");
             return new ArrayList<>();
         }
-        // select the active one first not found then get the highest job number
-        var job = jobs.stream().filter(j -> "ACTIVE".equalsIgnoreCase(j.getStatus().orElse(""))).findAny();
-        final var files = getJobs.getSpoolFilesForJob(job.orElse(jobs.get(0)));
+        // select the active or input one first not found then get the highest job number
+        Predicate<Job> isActive = j -> "ACTIVE".equalsIgnoreCase(j.getStatus().orElse(""));
+        Predicate<Job> isInput = j -> "INPUT".equalsIgnoreCase(j.getStatus().orElse(""));
+
+        var job = jobs.stream().filter(isActive.or(isInput)).findAny();
+        final List<JobFile> files;
+        try {
+            files = getJobs.getSpoolFilesForJob(job.orElse(jobs.get(0)));
+        } catch (Exception e) {
+            var msg = "error retrieving spool content for job id " + job.get().getJobId().orElse("n\\a");
+            terminal.println(msg);
+            throw new Exception(e);
+        }
 
         if (!isAll) {
             return Arrays.asList(getJobs.getSpoolContent(files.get(0)).split("\n"));
