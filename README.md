@@ -37,7 +37,7 @@ Along with following custom commands:
     cp | copy <arg> arg>          - where arg can be ".", member, dataset or dataset(member)
     download <arg>                - download arg to local c:\ZosShell\pwd where arg is member or sequential dataset
     end                           - end session closes shell UI window
-    files                         - list all files under local c:\ZosShell
+    files                         - list all files under local pwd drive value
     save <arg>                    - save arg where arg is a file name from files command to the current pwd
     search <arg>                  - search for arg within a job log from the last browse command performed  
     stop <arg>                    - where arg is a task/job name  

@@ -20,7 +20,7 @@ public class Help {
             "cp | copy <arg> arg>    - where arg can be \".\", member, dataset or dataset(member)",
             "download <arg>          - download arg to local c:\\ZosShell\\pwd where arg is member or sequential dataset",
             "end                     - end session closes shell UI window",
-            "files                   - list all files under local c:\\ZosShell",
+            "files                   - list all files under local pwd drive value",
             "h | help                - list commands",
             "history <arg>           - where arg is optional and indicates the number to display from bottom",
             "!n                      - where n is a number, to execute command number n in history list",

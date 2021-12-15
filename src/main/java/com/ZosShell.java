@@ -203,7 +203,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             case "files":
                 if (isParamsExceeded(1, params))
                     return;
-                commands.files();
+                commands.files(currDataSet);
                 break;
             case "h":
             case "help":

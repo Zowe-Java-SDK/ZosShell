@@ -185,8 +185,8 @@ public class Commands {
         return results;
     }
 
-    public void files() {
-        LocalFiles.listFiles(terminal);
+    public void files(String dataSet) {
+        LocalFiles.listFiles(terminal, dataSet);
     }
 
     public void help() {

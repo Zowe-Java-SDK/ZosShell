@@ -13,22 +13,27 @@ import java.util.stream.Stream;
 
 public class LocalFiles {
 
-    public static void listFiles(TextTerminal<?> terminal) {
-        var files = getFiles();
+    public static void listFiles(TextTerminal<?> terminal, String dataSet) {
+        var files = getFiles(terminal, dataSet);
         if (files.isEmpty()) {
             terminal.println(Constants.NO_FILES);
             return;
         }
-        terminal.println(Constants.PATH_FILE_DIRECTORY_WINDOWS + ":");
         files.forEach(terminal::println);
     }
 
-    private static List<String> getFiles() {
+    private static List<String> getFiles(TextTerminal<?> terminal, String dataSet) {
         if (!SystemUtils.IS_OS_WINDOWS)
             return new ArrayList<>();
-        var files = Optional.ofNullable(new File(Constants.PATH_FILE_DIRECTORY_WINDOWS).listFiles());
+        String path;
+        if (dataSet == null | dataSet.isEmpty()) {
+            path = Constants.PATH_FILE_DIRECTORY_WINDOWS;
+        } else {
+            path = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\" + dataSet;
+        }
+        terminal.println(path + ":");
+        var files = Optional.ofNullable(new File(path).listFiles());
         return Stream.of(files.orElse(new File[]{}))
-                .filter(file -> !file.isDirectory())
                 .map(File::getName)
                 .filter(name -> !name.equalsIgnoreCase("credentials.txt"))
                 .sorted()
