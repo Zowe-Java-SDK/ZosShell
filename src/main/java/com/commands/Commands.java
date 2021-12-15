@@ -81,7 +81,7 @@ public class Commands {
     public void cat(ZOSConnection connection, String dataSet, String param) {
         Concatenate concatenate;
         try {
-            concatenate = new Concatenate(terminal, new Download(terminal, new ZosDsnDownload(connection)));
+            concatenate = new Concatenate(terminal, new Download(new ZosDsnDownload(connection)));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
@@ -147,7 +147,7 @@ public class Commands {
         }
         Download download;
         try {
-            download = new Download(terminal, new ZosDsnDownload(connection));
+            download = new Download(new ZosDsnDownload(connection));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
@@ -172,7 +172,7 @@ public class Commands {
 
         for (String member : members) {
             futures.add(pool.submit(
-                    new FutureDownload(terminal, new ZosDsnDownload(connection), dataSet, member)));
+                    new FutureDownload(new ZosDsnDownload(connection), dataSet, member)));
         }
 
         for (int i = 0; i < size; i++) {
@@ -314,7 +314,7 @@ public class Commands {
     }
 
     public void vi(ZOSConnection connection, String dataSet, String[] params) {
-        var vi = new Vi(terminal, new Download(terminal, new ZosDsnDownload(connection)));
+        var vi = new Vi(terminal, new Download(new ZosDsnDownload(connection)));
         vi.vi(dataSet, params[1]);
     }
 

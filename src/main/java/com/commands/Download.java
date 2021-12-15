@@ -6,7 +6,6 @@ import com.google.common.base.Strings;
 import com.utility.Util;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.SystemUtils;
-import org.beryx.textio.TextTerminal;
 import utility.UtilIO;
 import zosfiles.ZosDsnDownload;
 import zosfiles.input.DownloadParams;
@@ -19,13 +18,11 @@ import java.nio.file.Paths;
 
 public class Download {
 
-    private final TextTerminal<?> terminal;
     private final ZosDsnDownload download;
     private final DownloadParams dlParams = new DownloadParams.Builder().build();
     public static final String DIRECTORY_PATH = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\";
 
-    public Download(TextTerminal<?> terminal, ZosDsnDownload download) {
-        this.terminal = terminal;
+    public Download(ZosDsnDownload download) {
         this.download = download;
     }
 

@@ -1,7 +1,6 @@
 package com.commands;
 
 import com.dto.DownloadStatus;
-import org.beryx.textio.TextTerminal;
 import zosfiles.ZosDsnDownload;
 
 import java.util.concurrent.Callable;
@@ -11,8 +10,8 @@ public class FutureDownload extends Download implements Callable<DownloadStatus>
     private final String dataSet;
     private final String member;
 
-    public FutureDownload(TextTerminal<?> terminal, ZosDsnDownload download, String dataSet, String member) {
-        super(terminal, download);
+    public FutureDownload(ZosDsnDownload download, String dataSet, String member) {
+        super(download);
         this.dataSet = dataSet;
         this.member = member;
     }
