@@ -1,6 +1,7 @@
 package com.commands;
 
 import com.Constants;
+import com.dto.DownloadStatus;
 import com.google.common.base.Strings;
 import com.utility.Util;
 import org.apache.commons.io.IOUtils;

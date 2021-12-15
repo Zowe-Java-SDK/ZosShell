@@ -1,6 +1,6 @@
 package com.commands;
 
-import com.data.JobOutput;
+import com.dto.JobOutput;
 import org.beryx.textio.TextTerminal;
 
 import java.util.List;

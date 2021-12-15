@@ -1,6 +1,7 @@
 package com.commands;
 
 import com.Constants;
+import com.dto.DownloadStatus;
 import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;
 

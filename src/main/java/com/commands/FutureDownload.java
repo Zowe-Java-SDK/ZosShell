@@ -1,5 +1,6 @@
 package com.commands;
 
+import com.dto.DownloadStatus;
 import org.beryx.textio.TextTerminal;
 import zosfiles.ZosDsnDownload;
 

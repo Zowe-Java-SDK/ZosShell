@@ -1,7 +1,8 @@
 package com.commands;
 
 import com.Constants;
-import com.data.JobOutput;
+import com.dto.DownloadStatus;
+import com.dto.JobOutput;
 import com.utility.Help;
 import com.utility.Util;
 import core.ZOSConnection;

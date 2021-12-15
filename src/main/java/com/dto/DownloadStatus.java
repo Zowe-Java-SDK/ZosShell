@@ -1,4 +1,4 @@
-package com.commands;
+package com.dto;
 
 public class DownloadStatus {
 

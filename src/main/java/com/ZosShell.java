@@ -2,7 +2,7 @@ package com;
 
 import com.commands.Commands;
 import com.commands.History;
-import com.data.JobOutput;
+import com.dto.JobOutput;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.security.Credentials;

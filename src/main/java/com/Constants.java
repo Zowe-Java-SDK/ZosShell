@@ -4,8 +4,7 @@ public class Constants {
 
     public static final String APP_TITLE = "ZosShell";
     public static final String ARROW = " ==> ";
-    public static final String BROWSE_TIMEOUT_MSG =
-            "timeout, log may be too large to display, try again...";
+    public static final String BROWSE_TIMEOUT_MSG = "timeout, log may be too large to display, try again...";
     public static final CharSequence CONNECTION_REFUSED = "Connection refused";
     public static final String COPY_OPS_ITSELF_ERROR =
             "first argument invalid for copy operation, cant copy from same location, try again...";
