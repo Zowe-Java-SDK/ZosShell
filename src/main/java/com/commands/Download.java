@@ -1,6 +1,7 @@
 package com.commands;
 
 import com.Constants;
+import com.google.common.base.Strings;
 import com.utility.Util;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -20,40 +21,32 @@ public class Download {
     private final TextTerminal<?> terminal;
     private final ZosDsnDownload download;
     private final DownloadParams dlParams = new DownloadParams.Builder().build();
+    public static final String DIRECTORY_PATH = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\";
 
     public Download(TextTerminal<?> terminal, ZosDsnDownload download) {
         this.terminal = terminal;
         this.download = download;
     }
 
-    public boolean download(String dataSet, String param) {
+    public DownloadStatus download(String dataSet, String member) {
+        var message = Strings.padStart(member, 8, ' ') + Constants.ARROW;
         try {
-            var content = getContent(dataSet, param);
+            var content = getContent(dataSet, member);
             if (content == null) {
-                terminal.println(Constants.DOWNLOAD_FAIL);
-                return false;
+                return new DownloadStatus(message + Constants.DOWNLOAD_FAIL, false);
             }
             if (!SystemUtils.IS_OS_WINDOWS) {
-                terminal.println(Constants.WINDOWS_ERROR_MSG);
-                return false;
+                return new DownloadStatus(message + Constants.WINDOWS_ERROR_MSG, false);
             }
-            var pathAndFileName = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\" + param;
-            Files.write(Paths.get(pathAndFileName), content.getBytes());
-            terminal.println("downloaded to " + pathAndFileName);
+            var directoryPath = DIRECTORY_PATH + dataSet;
+            var fileNamePath = directoryPath + "\\" + member;
+            message = writeFile(message, content, directoryPath, fileNamePath);
         } catch (Exception e) {
-            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
-                terminal.println(Constants.SEVERE_ERROR);
-                return false;
-            }
-            Util.printError(terminal, e.getMessage());
-            return false;
+            if (e.getMessage().contains(Constants.CONNECTION_REFUSED))
+                return new DownloadStatus(message + Constants.CONNECTION_REFUSED, false);
+            return new DownloadStatus(message + e.getMessage(), false);
         }
-        return true;
-    }
-
-    public String getContent(String dataSet, String param) throws Exception {
-        var inputStream = getInputStream(dataSet, param);
-        return getStreamData(inputStream);
+        return new DownloadStatus(message, true);
     }
 
     public InputStream getInputStream(String dataSet, String param) throws Exception {
@@ -66,7 +59,12 @@ public class Download {
         return inputStream;
     }
 
-    private String getStreamData(InputStream inputStream) throws IOException {
+    protected String getContent(String dataSet, String param) throws Exception {
+        var inputStream = getInputStream(dataSet, param);
+        return getStreamData(inputStream);
+    }
+
+    protected String getStreamData(InputStream inputStream) throws IOException {
         if (inputStream != null) {
             var writer = new StringWriter();
             IOUtils.copy(inputStream, writer, UtilIO.UTF8);
@@ -75,6 +73,14 @@ public class Download {
             return content;
         }
         return null;
+    }
+
+    protected String writeFile(String message, String content, String directoryPath, String fileNamePath)
+            throws IOException {
+        Files.createDirectories(Paths.get(directoryPath));
+        Files.write(Paths.get(fileNamePath), content.getBytes());
+        message += "downloaded to " + fileNamePath;
+        return message;
     }
 
 }

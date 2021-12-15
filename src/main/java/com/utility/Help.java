@@ -18,7 +18,7 @@ public class Help {
             "count members           - return member count in dataset",
             "count datasets          - return dataset count in dataset",
             "cp | copy <arg> arg>    - where arg can be \".\", member, dataset or dataset(member)",
-            "download <arg>          - download arg to local c:\\ZosShell where arg is member or sequential dataset",
+            "download <arg>          - download arg to local c:\\ZosShell\\pwd where arg is member or sequential dataset",
             "end                     - end session closes shell UI window",
             "files                   - list all files under local c:\\ZosShell",
             "h | help                - list commands",

@@ -71,7 +71,7 @@ public class History {
             var startIndex = size - num;
             for (var i = startIndex; i < size; i++) {
                 var orderNum = Strings.padStart(String.valueOf(i + 1), 4, ' ');
-                var historyRow = orderNum + " ==> " + commandLst.get(i);
+                var historyRow = orderNum + Constants.ARROW + commandLst.get(i);
                 terminal.println(historyRow);
             }
         }
@@ -110,7 +110,7 @@ public class History {
     private void displayAll() {
         for (int i = 0; i < commandLst.size(); i++) {
             var orderNum = Strings.padStart(String.valueOf(i + 1), 4, ' ');
-            var historyRow = orderNum + " ==> " + commandLst.get(i);
+            var historyRow = orderNum + Constants.ARROW + commandLst.get(i);
             terminal.println(historyRow);
         }
     }

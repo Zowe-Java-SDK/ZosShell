@@ -3,6 +3,7 @@ package com;
 public class Constants {
 
     public static final String APP_TITLE = "ZosShell";
+    public static final String ARROW = " ==> ";
     public static final String BROWSE_TIMEOUT_MSG =
             "timeout, log may be too large to display, try again...";
     public static final CharSequence CONNECTION_REFUSED = "Connection refused";
@@ -42,6 +43,7 @@ public class Constants {
     public static final String PATH_FILE = PATH_FILE_DIRECTORY_WINDOWS + "\\credentials.txt";
     public static final String SEVERE_ERROR = "server error, check connection...";
     public static final String TOO_MANY_PARAMETERS = "too many parameters, try again...";
+    public static final Object WINDOWS_EDITOR_NAME = "notepad";
     public static final String WINDOWS_ERROR_MSG = "this command is only supported on windows at the moment...";
 
 }

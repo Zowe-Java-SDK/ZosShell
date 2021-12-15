@@ -17,18 +17,28 @@ public class Vi {
         this.download = download;
     }
 
-    public void vi(String dataSet, String param) {
-        var success = download.download(dataSet, param);
+    public void vi(String dataSet, String member) {
+        DownloadStatus result = download.download(dataSet, member);
         try {
-            if (success && SystemUtils.IS_OS_WINDOWS)
-                rs.exec("notepad " + Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\" + param);
+            if (result.isStatus() && SystemUtils.IS_OS_WINDOWS) {
+                var pathFile = Download.DIRECTORY_PATH + dataSet + "//" + member;
+                var editor = Constants.WINDOWS_EDITOR_NAME;
+                rs.exec(editor + " " + pathFile);
+            }
             if (!SystemUtils.IS_OS_WINDOWS) {
-                terminal.println(Constants.WINDOWS_ERROR_MSG);
+                result = new DownloadStatus(Constants.WINDOWS_ERROR_MSG, false);
             }
         } catch (IOException e) {
-            terminal.println(e.getMessage());
+            result = new DownloadStatus(e.getMessage(), false);
         }
-        if (!success) terminal.println("cannot open " + param + ", try again...");
+        if (!result.isStatus()) {
+            final var message = result.getMessage();
+            var index = message.indexOf(Constants.ARROW) + Constants.ARROW.length();
+            terminal.println(result.getMessage().substring(index));
+            terminal.println("cannot open " + member + ", try again...");
+        } else {
+            terminal.println("opening in editor...");
+        }
     }
 
 }

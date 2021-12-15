@@ -14,7 +14,9 @@ import zosfiles.ZosDsnList;
 import zosjobs.GetJobs;
 import zosjobs.SubmitJobs;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 
 public class Commands {
 
@@ -130,6 +132,18 @@ public class Commands {
     }
 
     public void download(ZOSConnection connection, String currDataSet, String param) {
+        if ("*".equals(param)) {
+            var listing = new Listing(terminal, new ZosDsnList(connection));
+            final List<String> members;
+            try {
+                members = listing.getMembers(currDataSet);
+            } catch (Exception e) {
+                Util.printError(terminal, e.getMessage());
+                return;
+            }
+            multipleDownload(connection, currDataSet, members).forEach(i -> terminal.println(i.getMessage()));
+            return;
+        }
         Download download;
         try {
             download = new Download(terminal, new ZosDsnDownload(connection));
@@ -137,7 +151,37 @@ public class Commands {
             Util.printError(terminal, e.getMessage());
             return;
         }
-        download.download(currDataSet, param);
+        DownloadStatus result = download.download(currDataSet, param);
+
+        if (!result.isStatus()) {
+            var message = result.getMessage();
+            var index = message.indexOf(Constants.ARROW) + Constants.ARROW.length();
+            terminal.println(result.getMessage().substring(index));
+            terminal.println("cannot open " + param + ", try again...");
+        } else {
+            terminal.println(result.getMessage());
+        }
+    }
+
+    private List<DownloadStatus> multipleDownload(ZOSConnection connection, String dataSet, List<String> members) {
+        int size = members.size();
+        final var pool = Executors.newFixedThreadPool(members.size());
+        List<DownloadStatus> results = new ArrayList<>();
+        List<Future> futures = new ArrayList<>();
+
+        for (int i = 0; i < size; i++) {
+            futures.add(pool.submit(
+                    new FutureDownload(terminal, new ZosDsnDownload(connection), dataSet, members.get(i))));
+        }
+
+        for (int i = 0; i < size; i++) {
+            try {
+                results.add((DownloadStatus) futures.get(i).get(10, TimeUnit.SECONDS));
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                results.add(new DownloadStatus("timeout", false));
+            }
+        }
+        return results;
     }
 
     public void files() {
