@@ -2,8 +2,8 @@ package com.dto;
 
 public class DownloadStatus {
 
-    private String message;
-    private boolean status;
+    private final String message;
+    private final boolean status;
 
     public DownloadStatus(String message, boolean status) {
         this.message = message;

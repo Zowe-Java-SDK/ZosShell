@@ -8,8 +8,8 @@ import java.util.concurrent.Callable;
 
 public class FutureDownload extends Download implements Callable<DownloadStatus> {
 
-    private String dataSet;
-    private String member;
+    private final String dataSet;
+    private final String member;
 
     public FutureDownload(TextTerminal<?> terminal, ZosDsnDownload download, String dataSet, String member) {
         super(terminal, download);
