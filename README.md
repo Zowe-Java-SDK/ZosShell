@@ -35,7 +35,7 @@ Along with following custom commands:
     count members                 - return member count in dataset
     count datasets                - return dataset count in dataset
     cp | copy <arg> arg>          - where arg can be ".", member, dataset or dataset(member)
-    download <arg>                - download arg to local c:\ZosShell where arg is member or sequential dataset
+    download <arg>                - download arg to local c:\ZosShell\pwd where arg is member or sequential dataset
     end                           - end session closes shell UI window
     files                         - list all files under local c:\ZosShell
     save <arg>                    - save arg where arg is a file name from files command to the current pwd
