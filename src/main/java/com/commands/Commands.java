@@ -170,9 +170,9 @@ public class Commands {
         List<DownloadStatus> results = new ArrayList<>();
         List<Future> futures = new ArrayList<>();
 
-        for (int i = 0; i < size; i++) {
+        for (String member : members) {
             futures.add(pool.submit(
-                    new FutureDownload(terminal, new ZosDsnDownload(connection), dataSet, members.get(i))));
+                    new FutureDownload(terminal, new ZosDsnDownload(connection), dataSet, member)));
         }
 
         for (int i = 0; i < size; i++) {
