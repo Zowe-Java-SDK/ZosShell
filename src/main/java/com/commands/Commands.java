@@ -168,7 +168,7 @@ public class Commands {
         int size = members.size();
         final var pool = Executors.newFixedThreadPool(members.size());
         List<DownloadStatus> results = new ArrayList<>();
-        List<Future> futures = new ArrayList<>();
+        List<Future<DownloadStatus>> futures = new ArrayList<>();
 
         for (String member : members) {
             futures.add(pool.submit(
@@ -177,7 +177,7 @@ public class Commands {
 
         for (int i = 0; i < size; i++) {
             try {
-                results.add((DownloadStatus) futures.get(i).get(10, TimeUnit.SECONDS));
+                results.add(futures.get(i).get(10, TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 results.add(new DownloadStatus("timeout", false));
             }
