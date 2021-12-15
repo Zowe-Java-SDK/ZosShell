@@ -26,7 +26,7 @@ public class LocalFiles {
         if (!SystemUtils.IS_OS_WINDOWS)
             return new ArrayList<>();
         String path;
-        if (dataSet == null | dataSet.isEmpty()) {
+        if (dataSet == null || dataSet.isEmpty()) {
             path = Constants.PATH_FILE_DIRECTORY_WINDOWS;
         } else {
             path = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\" + dataSet;
