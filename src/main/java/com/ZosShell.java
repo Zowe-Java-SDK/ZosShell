@@ -3,6 +3,7 @@ package com;
 import com.commands.Commands;
 import com.commands.History;
 import com.dto.JobOutput;
+import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.security.Credentials;
@@ -23,6 +24,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private static final ListMultimap<String, String> dataSets = ArrayListMultimap.create();
     private static String currDataSet = "";
+    private static int currDataSetMax = 0;
     private static final List<ZOSConnection> connections = new ArrayList<>();
     private static ZOSConnection currConnection;
     private static TextTerminal<?> terminal;
@@ -148,6 +150,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params))
                     return;
                 currDataSet = commands.cd(currConnection, currDataSet, params[1].toUpperCase());
+                if (currDataSet.length() > currDataSetMax)
+                    currDataSetMax = currDataSet.length();
                 if (currConnection != null && !currDataSet.isEmpty())
                     dataSets.put(currConnection.getHost(), currDataSet);
                 if (!currDataSet.isEmpty()) terminal.println("set to " + currDataSet);
@@ -338,7 +342,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 for (String key : dataSets.keySet()) {
                     List<String> lst = dataSets.get(key);
-                    lst.forEach(l -> terminal.println(l.toUpperCase() + Constants.ARROW + key));
+                    lst.forEach(l -> terminal.println(
+                            Strings.padStart(l.toUpperCase(), currDataSetMax, ' ') + Constants.ARROW + key));
                 }
                 break;
             case "vi":
