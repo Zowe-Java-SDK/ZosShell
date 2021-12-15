@@ -32,7 +32,7 @@ public class Save {
             return;
         }
 
-        var fileName = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\" + member;
+        var fileName = Download.DIRECTORY_PATH + dataSet + "\\" + member;
 
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             var sb = new StringBuilder();

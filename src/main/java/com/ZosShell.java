@@ -119,6 +119,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         history.addHistory(params);
 
         switch (command.toLowerCase()) {
+            case "browsejob":
+                if (isParamsMissing(1, params))
+                    return;
+                if (isParamsExceeded(3, params))
+                    return;
+                jobOutput = commands.browse(currConnection, params);
+                break;
             case "cancel":
                 if (isParamsMissing(1, params))
                     return;
@@ -197,13 +204,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(1, params))
                     return;
                 commands.files();
-                break;
-            case "browsejob":
-                if (isParamsMissing(1, params))
-                    return;
-                if (isParamsExceeded(3, params))
-                    return;
-                jobOutput = commands.browse(currConnection, params);
                 break;
             case "h":
             case "help":
@@ -338,7 +338,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 for (String key : dataSets.keySet()) {
                     List<String> lst = dataSets.get(key);
-                    lst.forEach(l -> terminal.println(l.toUpperCase() + " ==> " + key));
+                    lst.forEach(l -> terminal.println(l.toUpperCase() + Constants.ARROW + key));
                 }
                 break;
             case "vi":
