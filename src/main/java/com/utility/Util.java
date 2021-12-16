@@ -1,7 +1,7 @@
 package com.utility;
 
 import com.Constants;
-import com.data.DataSetMember;
+import com.dto.DataSetMember;
 import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
 

@@ -1,4 +1,4 @@
-package com.data;
+package com.dto;
 
 public class DataSetMember {
 

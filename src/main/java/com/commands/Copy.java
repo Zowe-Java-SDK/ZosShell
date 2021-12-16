@@ -1,7 +1,7 @@
 package com.commands;
 
 import com.Constants;
-import com.data.DataSetMember;
+import com.dto.DataSetMember;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
 import zosfiles.ZosDsnCopy;
