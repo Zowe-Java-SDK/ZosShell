@@ -193,14 +193,14 @@ public class Commands {
         Help.displayHelp(terminal);
     }
 
-    public List<String> ls(ZOSConnection connection, String dataSet) {
+    public void ls(ZOSConnection connection, String dataSet) {
         var listing = new Listing(terminal, new ZosDsnList(connection));
-        return listing.ls(dataSet, false);
+        listing.ls(dataSet, false);
     }
 
-    public List<String> lsl(ZOSConnection connection, String dataSet) {
+    public void lsl(ZOSConnection connection, String dataSet) {
         var listing = new Listing(terminal, new ZosDsnList(connection));
-        return listing.ls(dataSet, true);
+        listing.ls(dataSet, true);
     }
 
     public void ps(ZOSConnection connection) {
