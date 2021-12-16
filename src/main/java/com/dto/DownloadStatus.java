@@ -18,4 +18,12 @@ public class DownloadStatus {
         return status;
     }
 
+    @Override
+    public String toString() {
+        return "DownloadStatus{" +
+                "message='" + message + '\'' +
+                ", status=" + status +
+                '}';
+    }
+
 }

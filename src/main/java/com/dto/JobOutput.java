@@ -20,4 +20,12 @@ public class JobOutput {
         return output;
     }
 
+    @Override
+    public String toString() {
+        return "JobOutput{" +
+                "jobName='" + jobName + '\'' +
+                ", output=" + output +
+                '}';
+    }
+
 }
