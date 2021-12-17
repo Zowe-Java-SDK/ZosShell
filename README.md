@@ -1,14 +1,20 @@
 # ZosShell
 
+##Demo GIF shows most of the common functionality:
+
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/main-demo.gif)
 
+##Demo GIF shows delete functionality:
+
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/download-demo.gif)
+
+##Demo GIF shows vi (editing a member and saving it back to the mainframe) functionality:
 
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/save-demo.gif)
   
 This project demonstrates the usage of [Zowe Java SDK](https://github.com/zowe/zowe-client-java-sdk).
   
-Project provides a UI shell command prompt that allows you to manipulate datasets and its members. The shell performs the following linux commands:  
+Project provides a UI shell command prompt that allows you to manipulate datasets and its members. The shell performs the following linux like commands:  
   
     cat                     - display contents
     cd <arg>                - where arg is a dataset value or empty
@@ -36,8 +42,8 @@ Along with following custom commands:
     cancel <arg>                  - where arg is a task/job name  
     change <arg>                  - where arg is a number representing a connection
     connections                   - a list of connection(s)   
-    count members                 - return member count in dataset
-    count datasets                - return dataset count in dataset
+    count members                 - return member count in current pwd dataset
+    count datasets                - return dataset count in current pwd dataset
     cp | copy <arg> arg>          - where arg can be ".", member, dataset or dataset(member)
     download <arg>                - download arg to local c:\ZosShell\pwd where arg is member or sequential dataset
     end                           - end session closes shell UI window
