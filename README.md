@@ -1,6 +1,10 @@
 # ZosShell
 
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demo.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/main-demo.gif)
+
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/download-demo.gif)
+
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/save-demo.gif)
   
 This project demonstrates the usage of [Zowe Java SDK](https://github.com/zowe/zowe-client-java-sdk).
   
