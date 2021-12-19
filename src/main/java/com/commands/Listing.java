@@ -75,8 +75,6 @@ public class Listing {
         Arrays.stream(lines).forEach(line -> {
             if (line != null) terminal.println(line);
         });
-
-        return;
     }
 
     public List<String> getMembers(String dataSet) throws Exception {
