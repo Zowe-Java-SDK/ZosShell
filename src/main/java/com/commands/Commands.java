@@ -132,8 +132,8 @@ public class Commands {
         count.count(dataSet, param);
     }
 
-    public void download(ZOSConnection connection, String currDataSet, String param) {
-        if ("*".equals(param)) {
+    public void download(ZOSConnection connection, String currDataSet, String member) {
+        if ("*".equals(member)) {
             var listing = new Listing(terminal, new ZosDsnList(connection));
             final List<String> members;
             try {
@@ -152,13 +152,11 @@ public class Commands {
             Util.printError(terminal, e.getMessage());
             return;
         }
-        DownloadStatus result = download.download(currDataSet, param);
+        DownloadStatus result = download.download(currDataSet, member);
 
         if (!result.isStatus()) {
-            var message = result.getMessage();
-            var index = message.indexOf(Constants.ARROW) + Constants.ARROW.length();
-            terminal.println(result.getMessage().substring(index));
-            terminal.println("cannot open " + param + ", try again...");
+            terminal.println(Util.getMsgAfterArrow(result.getMessage()));
+            terminal.println("cannot open " + member + ", try again...");
         } else {
             terminal.println(result.getMessage());
         }
