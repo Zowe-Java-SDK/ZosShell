@@ -23,7 +23,7 @@ public class Listing {
         this.zosDsnList = zosDsnList;
     }
 
-    public List<String> ls(String dataSet, boolean verbose) {
+    public void ls(String dataSet, boolean verbose) {
         try {
             dataSets = getDataSets(dataSet);
             members = getMembers(dataSet);
@@ -36,11 +36,11 @@ public class Listing {
 
         if (!verbose) {
             displayMembers(members);
-            return members;
+            return;
         }
 
         if (membersSize == 0)
-            return members;
+            return;
         var numOfColumns = 0;
 
         if (membersSize < 100)
@@ -76,7 +76,7 @@ public class Listing {
             if (line != null) terminal.println(line);
         });
 
-        return members;
+        return;
     }
 
     public List<String> getMembers(String dataSet) throws Exception {
