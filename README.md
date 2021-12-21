@@ -2,7 +2,7 @@
 
 ## Demo shows most of the common commands functionality:
 
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/main-demo.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/maindemo.gif)
 
 ## Demo shows download (downloading member(s) from a z/OS instance to your local PC drive) functionality:
 
