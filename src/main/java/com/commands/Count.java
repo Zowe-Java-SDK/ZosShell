@@ -30,10 +30,10 @@ public class Count {
                 ds = zosDsnList.listDsn(dataSet, params);
             }
         } catch (Exception e) {
-            terminal.printf("0" + "\n");
+            terminal.println("0");
             return;
         }
-        terminal.println(members.size() + (ds.size() >= 1 ? ds.size() - 1 : ds.size()) + "\n");
+        terminal.println(String.valueOf(members.size() + (ds.size() >= 1 ? ds.size() - 1 : ds.size())));
     }
 
 }
