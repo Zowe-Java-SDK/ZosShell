@@ -10,7 +10,7 @@
 
 ## Demo shows vi (editing a member and saving it back to the z/OS instance) functionality:
 
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/save-demo.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/savedemo.gif)
   
 This project demonstrates the usage of [Zowe Java SDK](https://github.com/zowe/zowe-client-java-sdk).
   
