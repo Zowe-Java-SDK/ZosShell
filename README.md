@@ -70,7 +70,7 @@ To quit from the command shell UI, you can either press 'X' windows close icon o
 ## Requirements  
   
     Java 11 to execute and build the target jar file.   
-    z/OSMF installed on your backend mainframe instance.  
+    z/OSMF installed on your backend z/OS instance.  
     
 ## Build And Execute  
 
