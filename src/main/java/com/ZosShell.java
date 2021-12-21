@@ -152,8 +152,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 currDataSet = commands.cd(currConnection, currDataSet, params[1].toUpperCase());
                 if (currDataSet.length() > currDataSetMax)
                     currDataSetMax = currDataSet.length();
-                if (currConnection != null && !currDataSet.isEmpty())
-                    dataSets.put(currConnection.getHost(), currDataSet);
+                addVisited();
                 if (!currDataSet.isEmpty()) terminal.println("set to " + currDataSet);
                 break;
             case "change":
@@ -250,11 +249,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     if (isCurrDataSetNotSpecified())
                         return;
                     commands.lsl(currConnection, currDataSet);
+                    addVisited();
                     return;
                 }
                 if (isCurrDataSetNotSpecified())
                     return;
                 commands.ls(currConnection, currDataSet);
+                addVisited();
                 break;
             case "ps":
                 if (isParamsExceeded(2, params))
@@ -360,6 +361,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             default:
                 terminal.println(Constants.INVALID_COMMAND);
         }
+    }
+
+    private static void addVisited() {
+        // if hostname and dataset not in datasets multimap add it
+        if (currConnection == null && currDataSet.isEmpty())
+            return;
+        if (!dataSets.containsEntry(currConnection.getHost(), currDataSet))
+            dataSets.put(currConnection.getHost(), currDataSet);
     }
 
     private static boolean isParamsExceeded(int num, String[] params) {
