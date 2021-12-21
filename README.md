@@ -1,14 +1,14 @@
 # ZosShell
 
-## Demo GIF shows most of the common functionality:
+## Demo shows most of the common commands functionality:
 
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/main-demo.gif)
 
-## Demo GIF shows download (downloading member(s) from mainframe to your local PC drive) functionality:
+## Demo shows download (downloading member(s) from a z/OS instance to your local PC drive) functionality:
 
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/download-demo.gif)
 
-## Demo GIF shows vi (editing a member and saving it back to the mainframe) functionality:
+## Demo shows vi (editing a member and saving it back to the z/OS instance) functionality:
 
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/save-demo.gif)
   

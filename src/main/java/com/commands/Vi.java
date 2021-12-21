@@ -2,6 +2,7 @@ package com.commands;
 
 import com.Constants;
 import com.dto.DownloadStatus;
+import com.utility.Util;
 import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;
 
@@ -33,9 +34,7 @@ public class Vi {
             result = new DownloadStatus(e.getMessage(), false);
         }
         if (!result.isStatus()) {
-            final var message = result.getMessage();
-            var index = message.indexOf(Constants.ARROW) + Constants.ARROW.length();
-            terminal.println(result.getMessage().substring(index));
+            terminal.println(Util.getMsgAfterArrow(result.getMessage()));
             terminal.println("cannot open " + member + ", try again...");
         } else {
             terminal.println("opening in editor...");

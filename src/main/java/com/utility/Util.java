@@ -114,4 +114,9 @@ public class Util {
         return m.matches();
     }
 
+    public static String getMsgAfterArrow(String msg) {
+        var index = msg.indexOf(Constants.ARROW) + Constants.ARROW.length();
+        return msg.substring(index);
+    }
+
 }
