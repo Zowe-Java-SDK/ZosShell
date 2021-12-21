@@ -172,7 +172,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             case "copy":
                 if (isParamsMissing(1, params))
                     return;
-                if (params.length < 3)
+                if (isParamsMissing(2, params))
                     return;
                 if (isParamsExceeded(3, params))
                     return;
