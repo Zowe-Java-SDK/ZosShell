@@ -33,7 +33,7 @@ public class Count {
             terminal.printf("0" + "\n");
             return;
         }
-        terminal.println(members.size() + ds.size() + "\n");
+        terminal.println(members.size() + ds.size() - 1 + "\n");
     }
 
 }
