@@ -6,7 +6,7 @@
 
 ## Demo shows download (downloading member(s) from a z/OS instance to your local PC drive) functionality:
 
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/download-demo.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/downloaddemo.gif)
 
 ## Demo shows vi (editing a member and saving it back to the z/OS instance) functionality:
 
