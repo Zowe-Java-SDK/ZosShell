@@ -2,15 +2,15 @@
 
 ## Demo shows most of the common commands functionality:
 
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/maindemo.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/main-demo.gif)
 
 ## Demo shows download (downloading member(s) from a z/OS instance to your local PC drive) functionality:
 
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/downloaddemo.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/download-demo.gif)
 
 ## Demo shows vi (editing a member and saving it back to the z/OS instance) functionality:
 
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/savedemo.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/save-demo.gif)
   
 This project demonstrates the usage of [Zowe Java SDK](https://github.com/zowe/zowe-client-java-sdk).
   
