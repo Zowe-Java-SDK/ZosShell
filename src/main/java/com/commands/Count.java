@@ -7,6 +7,7 @@ import zosfiles.response.Dataset;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Count {
 
@@ -20,6 +21,7 @@ public class Count {
     }
 
     public void count(String dataSet, String param) {
+        AtomicInteger dataSetCount = new AtomicInteger();
         List<Dataset> ds = new ArrayList<>();
         List<String> members = new ArrayList<>();
         try {
@@ -29,11 +31,15 @@ public class Count {
             if ("datasets".equalsIgnoreCase(param)) {
                 ds = zosDsnList.listDsn(dataSet, params);
             }
+            ds.forEach(item -> {
+                if (!item.getDsname().orElse("n\\a").equalsIgnoreCase(dataSet))
+                    dataSetCount.getAndIncrement();
+            });
         } catch (Exception e) {
             terminal.println("0");
             return;
         }
-        terminal.println(String.valueOf(members.size() + (ds.size() >= 1 ? ds.size() - 1 : ds.size())));
+        terminal.println(String.valueOf(members.size() + dataSetCount.get()));
     }
 
 }
