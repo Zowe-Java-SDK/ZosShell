@@ -53,7 +53,7 @@ public class Save {
             return;
         }
 
-        terminal.println(member + " successfully saved.");
+        terminal.println(member + " successfully saved...");
     }
 
 }

@@ -20,11 +20,11 @@ public class Search {
         log.ifPresentOrElse((value) -> {
             var jobName = value.getJobName();
             var jobOutput = value.getOutput();
-            terminal.println("searching " + jobName.toUpperCase());
+            terminal.println("searching " + jobName.toUpperCase() + "...");
             List<String> results = jobOutput.stream().filter(line -> line.contains(text)).collect(Collectors.toList());
             if (!results.isEmpty())
                 results.forEach(terminal::println);
-            else terminal.println("no results found in job log for " + jobName);
+            else terminal.println("no results found in job log for " + jobName + "...");
         }, () -> terminal.println("nothing to search for, try again..."));
     }
 
