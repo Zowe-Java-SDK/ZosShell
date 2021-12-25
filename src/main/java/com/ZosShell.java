@@ -365,7 +365,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private static void addVisited() {
         // if hostname and dataset not in datasets multimap add it
-        if (currConnection == null && currDataSet.isEmpty())
+        if (currConnection == null || currConnection.getHost() == null && currDataSet.isEmpty())
             return;
         if (!dataSets.containsEntry(currConnection.getHost(), currDataSet))
             dataSets.put(currConnection.getHost(), currDataSet);
