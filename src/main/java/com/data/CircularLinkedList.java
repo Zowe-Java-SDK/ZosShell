@@ -27,10 +27,6 @@ public class CircularLinkedList<T> {
         if (size == Constants.HISTORY_SIZE) {
             // set the new head pointer
             head = head.next;
-            // remove head node as we reach the limit
-            Node<T> removeNode = head;
-            // remove head
-            removeNode = null;
             setTail(newNode);
             return;
         }
