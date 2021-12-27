@@ -34,7 +34,7 @@ public class JobLog {
             terminal.println(jobParams.getPrefix().orElse("n\\a") + " does not exist, try again...");
             return new ArrayList<>();
         }
-        // select the active or input one first not found then get the highest job number
+        // select the active or input one first; if not found then get the highest job number
         Predicate<Job> isActive = j -> "ACTIVE".equalsIgnoreCase(j.getStatus().orElse(""));
         Predicate<Job> isInput = j -> "INPUT".equalsIgnoreCase(j.getStatus().orElse(""));
 
