@@ -2,9 +2,9 @@ package com.commands;
 
 import com.Constants;
 import org.beryx.textio.TextTerminal;
-import zosfiles.ZosDsnList;
-import zosfiles.input.ListParams;
-import zosfiles.response.Dataset;
+import zowe.client.sdk.zosfiles.ZosDsnList;
+import zowe.client.sdk.zosfiles.input.ListParams;
+import zowe.client.sdk.zosfiles.response.Dataset;
 
 import java.util.ArrayList;
 import java.util.Arrays;

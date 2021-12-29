@@ -2,8 +2,8 @@ package com.utility;
 
 import com.Constants;
 import com.dto.DataSetMember;
-import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
+import zowe.client.sdk.core.ZOSConnection;
 
 import java.util.Locale;
 import java.util.regex.Pattern;

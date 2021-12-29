@@ -1,7 +1,7 @@
 package com.commands;
 
 import com.dto.DownloadStatus;
-import zosfiles.ZosDsnDownload;
+import zowe.client.sdk.zosfiles.ZosDsnDownload;
 
 import java.util.concurrent.Callable;
 

@@ -1,7 +1,7 @@
 package com.commands;
 
-import zosjobs.GetJobs;
-import zosjobs.input.JobFile;
+import zowe.client.sdk.zosjobs.GetJobs;
+import zowe.client.sdk.zosjobs.input.JobFile;
 
 import java.util.ArrayList;
 import java.util.Arrays;

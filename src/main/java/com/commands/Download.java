@@ -6,9 +6,9 @@ import com.google.common.base.Strings;
 import com.utility.Util;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.SystemUtils;
-import utility.UtilIO;
-import zosfiles.ZosDsnDownload;
-import zosfiles.input.DownloadParams;
+import zowe.client.sdk.utility.UtilIO;
+import zowe.client.sdk.zosfiles.ZosDsnDownload;
+import zowe.client.sdk.zosfiles.input.DownloadParams;
 
 import java.io.IOException;
 import java.io.InputStream;

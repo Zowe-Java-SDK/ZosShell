@@ -4,7 +4,7 @@ import com.Constants;
 import com.utility.Util;
 import org.apache.commons.io.IOUtils;
 import org.beryx.textio.TextTerminal;
-import utility.UtilIO;
+import zowe.client.sdk.utility.UtilIO;
 
 import java.io.IOException;
 import java.io.InputStream;

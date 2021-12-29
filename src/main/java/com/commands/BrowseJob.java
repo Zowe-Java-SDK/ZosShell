@@ -1,7 +1,7 @@
 package com.commands;
 
 import org.beryx.textio.TextTerminal;
-import zosjobs.GetJobs;
+import zowe.client.sdk.zosjobs.GetJobs;
 
 import java.util.List;
 

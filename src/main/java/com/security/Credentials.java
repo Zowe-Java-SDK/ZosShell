@@ -1,7 +1,7 @@
 package com.security;
 
 import com.Constants;
-import core.ZOSConnection;
+import zowe.client.sdk.core.ZOSConnection;
 
 import java.io.BufferedReader;
 import java.io.File;

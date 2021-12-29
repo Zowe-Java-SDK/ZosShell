@@ -3,7 +3,7 @@ package com.commands;
 import com.Constants;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
-import zosfiles.ZosDsn;
+import zowe.client.sdk.zosfiles.ZosDsn;
 
 public class Touch {
 

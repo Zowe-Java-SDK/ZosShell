@@ -1,7 +1,7 @@
 package com.commands;
 
 import org.beryx.textio.TextTerminal;
-import zosconsole.IssueCommand;
+import zowe.client.sdk.zosconsole.IssueCommand;
 
 public class Cancel extends Terminate {
 

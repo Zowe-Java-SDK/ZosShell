@@ -3,9 +3,9 @@ package com.commands;
 import com.Constants;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
-import zosjobs.GetJobs;
-import zosjobs.input.GetJobParams;
-import zosjobs.response.Job;
+import zowe.client.sdk.zosjobs.GetJobs;
+import zowe.client.sdk.zosjobs.input.GetJobParams;
+import zowe.client.sdk.zosjobs.response.Job;
 
 import java.util.Comparator;
 import java.util.List;

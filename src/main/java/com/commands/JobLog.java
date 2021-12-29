@@ -1,10 +1,10 @@
 package com.commands;
 
 import org.beryx.textio.TextTerminal;
-import zosjobs.GetJobs;
-import zosjobs.input.GetJobParams;
-import zosjobs.input.JobFile;
-import zosjobs.response.Job;
+import zowe.client.sdk.zosjobs.GetJobs;
+import zowe.client.sdk.zosjobs.input.GetJobParams;
+import zowe.client.sdk.zosjobs.input.JobFile;
+import zowe.client.sdk.zosjobs.response.Job;
 
 import java.util.ArrayList;
 import java.util.Arrays;

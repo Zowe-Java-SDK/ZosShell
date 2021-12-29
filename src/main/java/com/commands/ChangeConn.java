@@ -1,8 +1,8 @@
 package com.commands;
 
 import com.Constants;
-import core.ZOSConnection;
 import org.beryx.textio.TextTerminal;
+import zowe.client.sdk.core.ZOSConnection;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;

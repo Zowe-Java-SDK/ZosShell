@@ -4,10 +4,10 @@ import com.Constants;
 import com.dto.DataSetMember;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
-import rest.Response;
-import zosfiles.ZosDsn;
-import zosfiles.ZosDsnList;
-import zosfiles.input.ListParams;
+import zowe.client.sdk.rest.Response;
+import zowe.client.sdk.zosfiles.ZosDsn;
+import zowe.client.sdk.zosfiles.ZosDsnList;
+import zowe.client.sdk.zosfiles.input.ListParams;
 
 import java.util.ArrayList;
 import java.util.List;

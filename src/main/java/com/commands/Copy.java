@@ -4,7 +4,7 @@ import com.Constants;
 import com.dto.DataSetMember;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
-import zosfiles.ZosDsnCopy;
+import zowe.client.sdk.zosfiles.ZosDsnCopy;
 
 public class Copy {
 

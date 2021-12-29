@@ -3,9 +3,9 @@ package com.commands;
 import com.Constants;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
-import zosconsole.ConsoleResponse;
-import zosconsole.IssueCommand;
-import zosconsole.input.IssueParams;
+import zowe.client.sdk.zosconsole.ConsoleResponse;
+import zowe.client.sdk.zosconsole.IssueCommand;
+import zowe.client.sdk.zosconsole.input.IssueParams;
 
 public class Terminate {
 

@@ -8,13 +8,13 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.security.Credentials;
 import com.utility.Util;
-import core.ZOSConnection;
 import org.beryx.textio.ReadHandlerData;
 import org.beryx.textio.ReadInterruptionStrategy;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.beryx.textio.swing.SwingTextTerminal;
 import org.beryx.textio.web.RunnerData;
+import zowe.client.sdk.core.ZOSConnection;
 
 import java.util.ArrayList;
 import java.util.List;

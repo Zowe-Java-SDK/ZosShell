@@ -3,8 +3,8 @@ package com.commands;
 import com.Constants;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
-import zosjobs.SubmitJobs;
-import zosjobs.response.Job;
+import zowe.client.sdk.zosjobs.SubmitJobs;
+import zowe.client.sdk.zosjobs.response.Job;
 
 public class Submit {
 

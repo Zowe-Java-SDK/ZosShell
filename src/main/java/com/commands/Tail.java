@@ -3,7 +3,7 @@ package com.commands;
 import com.Constants;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
-import zosjobs.GetJobs;
+import zowe.client.sdk.zosjobs.GetJobs;
 
 import java.util.List;
 
