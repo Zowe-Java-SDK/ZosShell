@@ -71,6 +71,7 @@ To quit from the command shell UI, you can either press 'X' windows close icon o
   
     Java 11 to execute and build the target jar file.   
     z/OSMF installed on your backend z/OS instance.  
+    Maven  
     
 ## Build And Execute  
 
