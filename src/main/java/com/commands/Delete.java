@@ -12,6 +12,7 @@ import zowe.client.sdk.zosfiles.input.ListParams;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class Delete {
 
@@ -30,13 +31,28 @@ public class Delete {
         try {
             List<String> members = new ArrayList<>();
 
-            if ("*".equals(param)) {
-                if (isCurrDataSetEmpty(currDataSet)) return;
+            if (param.contains("*")) {
+                String lookForStr = "";
+
+                if (param.length() > 1) {
+                    int index = param.indexOf('*');
+                    lookForStr = param.substring(0, index).toUpperCase();
+                }
+
+                if (isCurrDataSetEmpty(currDataSet)) {
+                    return;
+                }
                 try {
                     members = zosDsnList.listDsnMembers(currDataSet, params);
                 } catch (Exception e) {
                     Util.printError(terminal, e.getMessage());
                 }
+
+                if (!lookForStr.isEmpty()) {
+                    String finalLookForStr = lookForStr;
+                    members = members.stream().filter(i -> i.contains(finalLookForStr)).collect(Collectors.toList());
+                }
+
                 var success = new AtomicBoolean(true);
                 members.forEach(m -> {
                     try {
@@ -48,23 +64,29 @@ public class Delete {
                         e.printStackTrace();
                     }
                 });
-                if (success.get()) {
+                if (success.get() && !members.isEmpty()) {
                     terminal.println("delete succeeded...");
-                } else {
+                } else if (!members.isEmpty()) {
                     terminal.println("some deletions did not succeed...");
+                } else {
+                    terminal.println(Constants.DELETE_NOTHING_ERROR);
                 }
                 return;
             }
 
             if (Util.isMember(param)) {
-                if (isCurrDataSetEmpty(currDataSet)) return;
+                if (isCurrDataSetEmpty(currDataSet)) {
+                    return;
+                }
                 try {
                     members = zosDsnList.listDsnMembers(currDataSet, params);
                     if (members.stream().noneMatch(param::equalsIgnoreCase)) {
                         terminal.println(Constants.DELETE_NOTHING_ERROR);
                         return;
                     }
-                    if (performDeleteCheckFailedResponse(currDataSet, param)) return;
+                    if (performDeleteCheckFailedResponse(currDataSet, param)) {
+                        return;
+                    }
                 } catch (Exception e) {
                     Util.printError(terminal, e.getMessage());
                     return;
@@ -82,7 +104,9 @@ public class Delete {
 
                 try {
                     var response = zosDsn.deleteDsn(dataSetMember.getDataSet(), dataSetMember.getMember());
-                    if (failed(response)) return;
+                    if (failed(response)) {
+                        return;
+                    }
                 } catch (Exception e) {
                     Util.printError(terminal, e.getMessage());
                     return;
@@ -92,14 +116,12 @@ public class Delete {
             }
 
             if (Util.isDataSet(param)) {
-                if (performDeleteCheckFailedResponse(currDataSet, param)) return;
+                if (performDeleteCheckFailedResponse(currDataSet, param)) {
+                    return;
+                }
             }
         } catch (Exception e) {
-            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
-                terminal.println(Constants.SEVERE_ERROR);
-            } else {
-                Util.printError(terminal, e.getMessage());
-            }
+            terminal.println(e.getMessage());
             return;
         }
 
