@@ -97,7 +97,8 @@ public class Delete {
             Util.printError(terminal, e.getMessage());
             return;
         }
-        terminal.println(param + " successfully deleted...");
+
+        terminal.println(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR);
     }
 
     private boolean performDeleteCheckFailedResponse(String currDataSet, String param) throws Exception {
