@@ -7,16 +7,16 @@ public class Constants {
     public static final String BROWSE_TIMEOUT_MSG = "timeout, log may be too large to display, try again...";
     public static final CharSequence CONNECTION_REFUSED = "Connection refused";
     public static final String COPY_OPS_ITSELF_ERROR =
-            "first argument invalid for copy operation, cant copy from same location, try again...";
+            "first argument invalid for cp operation, cant copy from same location, try again...";
     public static final String COPY_OPS_NO_MEMBER_ERROR =
-            "first argument invalid for copy operation, specified a member, try again...";
+            "first argument invalid for cp operation, specified a member, try again...";
     public static final String COPY_OPS_NO_MEMBER_AND_DATASET_ERROR =
-            "first argument invalid for copy operation, specified valid dataset and member, try again...";
+            "first argument invalid for cp operation, specified valid dataset or member or or dataset(member), try again...";
     public static final String DATASET_OR_HIGH_QUALIFIER_ERROR =
             "invalid dataset or cant change to high qualifier level, try again...";
     public static final String DATASET_NOT_SPECIFIED = "no dataset specified, try again...";
     public static final String DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR =
-            "first argument invalid for delete operation, specified valid dataset and member, try again...";
+            "first argument invalid for rm operation, specified valid dataset or member or dataset(member), try again...";
     public static final String DELETE_NOTHING_ERROR = "nothing to delete, try again...";
     public static final String DOWNLOAD_FAIL = "download failed, try again...";
     public static final int HISTORY_SIZE = 200;

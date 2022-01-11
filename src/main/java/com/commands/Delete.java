@@ -48,8 +48,11 @@ public class Delete {
                         e.printStackTrace();
                     }
                 });
-                if (success.get())
+                if (success.get()) {
                     terminal.println("delete succeeded...");
+                } else {
+                    terminal.println("some deletions did not succeed...");
+                }
                 return;
             }
 
@@ -63,7 +66,8 @@ public class Delete {
                     }
                     if (performDeleteCheckFailedResponse(currDataSet, param)) return;
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Util.printError(terminal, e.getMessage());
+                    return;
                 }
                 terminal.println(param + " successfully deleted...");
                 return;
@@ -80,7 +84,8 @@ public class Delete {
                     var response = zosDsn.deleteDsn(dataSetMember.getDataSet(), dataSetMember.getMember());
                     if (failed(response)) return;
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Util.printError(terminal, e.getMessage());
+                    return;
                 }
                 terminal.println(param + " successfully deleted...");
                 return;
@@ -92,9 +97,9 @@ public class Delete {
         } catch (Exception e) {
             if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
                 terminal.println(Constants.SEVERE_ERROR);
-                return;
+            } else {
+                Util.printError(terminal, e.getMessage());
             }
-            Util.printError(terminal, e.getMessage());
             return;
         }
 
