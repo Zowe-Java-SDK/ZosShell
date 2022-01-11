@@ -51,14 +51,18 @@ public class Tail extends JobLog {
         }
 
         if (lines > 0) {
-            if (lines < size)
+            if (lines < size) {
                 display(lines, size, output);
-            else output.forEach(terminal::println);
+            } else {
+                output.forEach(terminal::println);
+            }
         } else {
             int LINES_LIMIT = 25;
-            if (size > LINES_LIMIT)
+            if (size > LINES_LIMIT) {
                 display(LINES_LIMIT, size, output);
-            else output.forEach(terminal::println);
+            } else {
+                output.forEach(terminal::println);
+            }
         }
     }
 

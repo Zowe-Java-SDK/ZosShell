@@ -32,8 +32,9 @@ public class Count {
                 ds = zosDsnList.listDsn(dataSet, params);
             }
             ds.forEach(item -> {
-                if (!item.getDsname().orElse("n\\a").equalsIgnoreCase(dataSet))
+                if (!item.getDsname().orElse("n\\a").equalsIgnoreCase(dataSet)) {
                     dataSetCount.getAndIncrement();
+                }
             });
         } catch (Exception e) {
             terminal.println("0");

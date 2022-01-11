@@ -39,13 +39,14 @@ public class Listing {
             return;
         }
 
-        if (membersSize == 0)
+        if (membersSize == 0) {
             return;
+        }
         var numOfColumns = 0;
 
-        if (membersSize < 100)
+        if (membersSize < 100) {
             numOfColumns = 3;
-        else if (membersSize > 100 && membersSize < 300) {
+        } else if (membersSize > 100 && membersSize < 300) {
             numOfColumns = 4;
         } else if (membersSize > 300 && membersSize < 500) {
             numOfColumns = 5;
@@ -53,8 +54,9 @@ public class Listing {
             numOfColumns = 6;
         } else if (membersSize > 700 && membersSize < 900) {
             numOfColumns = 7;
-        } else if (membersSize >= 1000)
+        } else if (membersSize >= 1000) {
             numOfColumns = 8;
+        }
 
         var numOfLines = membersSize / numOfColumns;
         var lines = new String[numOfLines + 1];
@@ -64,7 +66,9 @@ public class Listing {
             int count = 1;
             StringBuilder line = new StringBuilder();
             while (count % (numOfColumns + 1) != 0) {
-                if (i >= membersSize) break;
+                if (i >= membersSize) {
+                    break;
+                }
                 line.append(String.format("%-8s", members.get(i++)));
                 line.append(" ");
                 count++;
@@ -73,7 +77,9 @@ public class Listing {
         }
 
         Arrays.stream(lines).forEach(line -> {
-            if (line != null) terminal.println(line);
+            if (line != null) {
+                terminal.println(line);
+            }
         });
     }
 
@@ -97,8 +103,9 @@ public class Listing {
     private void displayDataSets(List<Dataset> dataSets, String ignoreDataSet) {
         dataSets.forEach(ds -> {
             var dsName = ds.getDsname().orElse("");
-            if (!dsName.equalsIgnoreCase(ignoreDataSet))
+            if (!dsName.equalsIgnoreCase(ignoreDataSet)) {
                 terminal.println(dsName);
+            }
         });
     }
 

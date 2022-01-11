@@ -23,8 +23,9 @@ public class LocalFiles {
     }
 
     private static List<String> getFiles(TextTerminal<?> terminal, String dataSet) {
-        if (!SystemUtils.IS_OS_WINDOWS)
+        if (!SystemUtils.IS_OS_WINDOWS) {
             return new ArrayList<>();
+        }
         String path;
         if (dataSet == null || dataSet.isEmpty()) {
             path = Constants.PATH_FILE_DIRECTORY_WINDOWS;

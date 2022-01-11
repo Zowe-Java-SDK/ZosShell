@@ -27,9 +27,10 @@ public class Submit {
             }
             Util.printError(terminal, e.getMessage());
         }
-        if (job != null)
+        if (job != null) {
             terminal.println("Job Name: " + job.getJobName().orElse("n\\a") +
                     ", Job Id: " + job.getJobId().orElse("n\\a"));
+        }
     }
 
 }

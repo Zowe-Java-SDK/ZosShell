@@ -45,9 +45,11 @@ public class Save {
             }
             var content = sb.toString().replaceAll("(\\r)", "");
 
-            if (isSequentialDataSet)
+            if (isSequentialDataSet) {
                 zosDsn.writeDsn(member, content);
-            else zosDsn.writeDsn(dataSet, member, content);
+            } else {
+                zosDsn.writeDsn(dataSet, member, content);
+            }
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;

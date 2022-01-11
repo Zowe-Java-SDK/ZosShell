@@ -40,9 +40,9 @@ public class Copy {
 
             if (".".equals(param1)) {
                 fromDataSetName = currDataSet;
-                if (Util.isDataSet(param2))
+                if (Util.isDataSet(param2)) {
                     toDataSetName = param2;
-                else {
+                } else {
                     terminal.println("second argument invalid for copy all operation, try again...");
                     return;
                 }
@@ -82,11 +82,13 @@ public class Copy {
                 toDataSetName = param2 + "(" + param1 + ")";
             }
 
-            if (fromDataSetName.isEmpty())
+            if (fromDataSetName.isEmpty()) {
                 fromDataSetName = param1;
+            }
 
-            if (toDataSetName.isEmpty())
+            if (toDataSetName.isEmpty()) {
                 toDataSetName = param2;
+            }
 
             var response = zosDsnCopy.copy(fromDataSetName, toDataSetName, true, copyAllMembers);
             var code = response.getStatusCode().orElse(-1);

@@ -38,8 +38,9 @@ public class History {
         });
         var command = str.toString();
         if (!command.startsWith("history")) {
-            if (commandLst.size() == Constants.HISTORY_SIZE)
+            if (commandLst.size() == Constants.HISTORY_SIZE) {
                 commandLst.remove(0);
+            }
             commandLst.add(command);
             circularLinkedList.add(command);
         }
@@ -65,9 +66,9 @@ public class History {
             return;
         }
         var size = commandLst.size();
-        if (num > size)
+        if (num > size) {
             displayAll();
-        else {
+        } else {
             var startIndex = size - num;
             for (var i = startIndex; i < size; i++) {
                 display(i);
@@ -76,8 +77,9 @@ public class History {
     }
 
     public String[] filterCommand(String prompt, String[] command) {
-        if (!prompt.equals(command[0]))
+        if (!prompt.equals(command[0])) {
             return command;
+        }
 
         // remove ">" first parameter, added by listUpCommands or listDownCommands method
         var newSize = command.length - 1;

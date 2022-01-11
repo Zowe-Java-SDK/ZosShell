@@ -40,8 +40,9 @@ public class Download {
             var fileNamePath = directoryPath + "\\" + member;
             message = writeFile(message, content, directoryPath, fileNamePath);
         } catch (Exception e) {
-            if (e.getMessage().contains(Constants.CONNECTION_REFUSED))
+            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
                 return new DownloadStatus(message + Constants.CONNECTION_REFUSED, false);
+            }
             return new DownloadStatus(message + e.getMessage(), false);
         }
         return new DownloadStatus(message, true);

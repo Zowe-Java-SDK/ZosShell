@@ -35,8 +35,9 @@ public class Touch {
         }
 
         try {
-            if (!foundExistingMember) zosDsn.writeDsn(dataSet, member, "");
-            else {
+            if (!foundExistingMember) {
+                zosDsn.writeDsn(dataSet, member, "");
+            } else {
                 terminal.println(member + " already exists.");
                 return;
             }
