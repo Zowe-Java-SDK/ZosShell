@@ -61,6 +61,7 @@ public class Delete {
                             success.set(false);
                         }
                     } catch (Exception e) {
+                        success.set(false);
                         e.printStackTrace();
                     }
                 });
