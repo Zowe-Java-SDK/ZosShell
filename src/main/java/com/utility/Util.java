@@ -39,7 +39,9 @@ public class Util {
         }
 
         for (var segment : segments) {
-            if (!isSegment(segment)) return false;
+            if (!isSegment(segment)) {
+                return false;
+            }
         }
 
         return true;
@@ -75,13 +77,15 @@ public class Util {
 
     public static String getPrompt(ZOSConnection connection) {
         var prompt = ">";
-        if (connection == null)
+        if (connection == null) {
             return prompt;
+        }
         var periodIndex = connection.getHost().indexOf(".");
-        if (periodIndex != -1)
+        if (periodIndex != -1) {
             return connection.getHost().substring(0, connection.getHost().indexOf(".")) + prompt;
-        else
+        } else {
             return connection.getHost() + prompt;
+        }
     }
 
     public static boolean isHttpError(int statusCode) {

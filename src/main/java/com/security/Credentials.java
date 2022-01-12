@@ -19,8 +19,9 @@ public class Credentials {
             String str;
             while ((str = br.readLine()) != null) {
                 var line = str.split(",");
-                if (line.length < 4)
+                if (line.length < 4) {
                     continue;
+                }
                 var connection = new ZOSConnection(line[0], line[1], line[2], line[3]);
                 connections.add(connection);
             }

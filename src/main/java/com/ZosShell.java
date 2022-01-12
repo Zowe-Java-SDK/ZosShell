@@ -34,8 +34,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     public static void main(String[] args) {
         Credentials.readCredentials(connections);
-        if (!connections.isEmpty())
+        if (!connections.isEmpty()) {
             currConnection = connections.get(0);
+        }
         var mainTerm = new SwingTextTerminal();
         mainTerm.init();
         setTerminalProperties(mainTerm);
@@ -64,9 +65,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         terminal = textIO.getTextTerminal();
         commands = new Commands(connections, terminal);
         history = new History(terminal);
-        if (currConnection == null)
+        if (currConnection == null) {
             terminal.println(Constants.NO_CONNECTIONS);
-        else terminal.println("Connected to " + currConnection.getHost() + " with user " + currConnection.getUser());
+        } else {
+            terminal.println("Connected to " + currConnection.getHost() + " with user " + currConnection.getUser());
+        }
 
         String[] command;
         String commandLine = "";
@@ -76,7 +79,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             command = commandLine.split(" ");
 
             command = exclamationMark(command);
-            if (command == null) continue;
+            if (command == null) {
+                continue;
+            }
 
             if ("rm".equals(command[0])) {
                 terminal.printf("Are you sure you want to delete y/n");
@@ -94,8 +99,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private String[] exclamationMark(String[] command) {
         if (command[0].startsWith("!")) {
-            if (isParamsExceeded(1, command))
+            if (isParamsExceeded(1, command)) {
                 return null;
+            }
             var cmd = command[0];
             if (cmd.length() == 1) {
                 terminal.println(Constants.MISSING_PARAMETERS);
@@ -104,10 +110,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             var str = cmd.substring(1);
             var isStrNum = Util.isStrNum(str);
             String newCmd;
-            if (isStrNum)
+            if (isStrNum) {
                 newCmd = history.getHistoryByIndex(Integer.parseInt(str) - 1);
-            else newCmd = history.getLastHistoryByValue(str);
-            if (newCmd == null) return null;
+            } else {
+                newCmd = history.getLastHistoryByValue(str);
+            }
+            if (newCmd == null) {
+                return null;
+            }
             // set new command from history content
             command = newCmd.split(" ");
         }
@@ -115,66 +125,85 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void executeCommand(String[] params) {
-        if (params.length == 0) return;
+        if (params.length == 0) {
+            return;
+        }
         final var command = params[0];
         String param;
         history.addHistory(params);
 
         switch (command.toLowerCase()) {
             case "browsejob":
-                if (isParamsMissing(1, params))
+                if (isParamsMissing(1, params)) {
                     return;
-                if (isParamsExceeded(3, params))
+                }
+                if (isParamsExceeded(3, params)) {
                     return;
+                }
                 jobOutput = commands.browse(currConnection, params);
                 break;
             case "cancel":
-                if (isParamsMissing(1, params))
+                if (isParamsMissing(1, params)) {
                     return;
-                if (isParamsExceeded(2, params))
+                }
+                if (isParamsExceeded(2, params)) {
                     return;
+                }
                 param = params[1];
                 commands.cancel(currConnection, param);
                 break;
             case "cat":
-                if (isParamsMissing(1, params))
+                if (isParamsMissing(1, params)) {
                     return;
-                if (isParamsExceeded(2, params))
+                }
+                if (isParamsExceeded(2, params)) {
                     return;
+                }
                 param = params[1];
                 commands.cat(currConnection, currDataSet, param);
                 break;
             case "cd":
-                if (isParamsMissing(1, params))
+                if (isParamsMissing(1, params)) {
                     return;
-                if (isParamsExceeded(2, params))
+                }
+                if (isParamsExceeded(2, params)) {
                     return;
+                }
                 currDataSet = commands.cd(currConnection, currDataSet, params[1].toUpperCase());
-                if (currDataSet.length() > currDataSetMax)
+                if (currDataSet.length() > currDataSetMax) {
                     currDataSetMax = currDataSet.length();
+                }
                 addVisited();
-                if (!currDataSet.isEmpty()) terminal.println("set to " + currDataSet);
+                if (!currDataSet.isEmpty()) {
+                    terminal.println("set to " + currDataSet);
+                }
                 break;
             case "change":
-                if (isParamsMissing(1, params))
+                if (isParamsMissing(1, params)) {
                     return;
-                if (isParamsExceeded(2, params))
+                }
+                if (isParamsExceeded(2, params)) {
                     return;
+                }
                 currConnection = commands.change(currConnection, params);
                 break;
             case "connections":
-                if (isParamsExceeded(1, params))
+                if (isParamsExceeded(1, params)) {
                     return;
+                }
                 commands.connections(currConnection);
                 break;
             case "cp":
             case "copy":
-                if (isParamsMissing(1, params))
+                if (isParamsMissing(1, params)) {
                     return;
-                if (isParamsMissing(2, params))
+                }
+                if (isParamsMissing(2, params)) {
                     return;
-                if (isParamsExceeded(3, params))
+                }
+                if (isParamsExceeded(3, params)) {
                     return;
+                }
                 commands.copy(currConnection, currDataSet, params);
                 break;
             case "count":
@@ -186,45 +215,56 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     terminal.println(Constants.MISSING_COUNT_PARAM);
                     return;
                 }
-                if (isParamsExceeded(2, params))
+                if (isParamsExceeded(2, params)) {
                     return;
+                }
                 param = params[1];
                 commands.count(currConnection, currDataSet, param);
                 break;
             case "download":
-                if (isParamsMissing(1, params))
+                if (isParamsMissing(1, params)) {
                     return;
-                if (isParamsExceeded(2, params))
+                }
+                if (isParamsExceeded(2, params)) {
                     return;
+                }
                 param = params[1];
                 commands.download(currConnection, currDataSet, param);
                 break;
             case "end":
-                if (isParamsExceeded(1, params))
+                if (isParamsExceeded(1, params)) {
                     return;
+                }
                 break;
             case "files":
-                if (isParamsExceeded(1, params))
+                if (isParamsExceeded(1, params)) {
                     return;
+                }
                 commands.files(currDataSet);
                 break;
             case "h":
             case "help":
-                if (isParamsExceeded(1, params))
+                if (isParamsExceeded(1, params)) {
                     return;
-                if (params.length == 1)
+                }
+                if (params.length == 1) {
                     commands.help();
+                }
                 break;
             case "history":
-                if (isParamsExceeded(2, params))
+                if (isParamsExceeded(2, params)) {
                     return;
-                if (params.length == 1)
+                }
+                if (params.length == 1) {
                     history.displayHistory();
-                else history.displayHistory(params[1]);
+                } else {
+                    history.displayHistory(params[1]);
+                }
                 break;
             case "ls":
-                if (isParamsExceeded(3, params))
+                if (isParamsExceeded(3, params)) {
                     return;
+                }
                 if (params.length == 2 && Util.isDataSet(params[1])) {
                     commands.ls(currConnection, params[1]);
                     return;
@@ -246,20 +286,23 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 2 && "-l".equalsIgnoreCase(params[1])) {
-                    if (isCurrDataSetNotSpecified())
+                    if (isCurrDataSetNotSpecified()) {
                         return;
+                    }
                     commands.lsl(currConnection, currDataSet);
                     addVisited();
                     return;
                 }
-                if (isCurrDataSetNotSpecified())
+                if (isCurrDataSetNotSpecified()) {
                     return;
+                }
                 commands.ls(currConnection, currDataSet);
                 addVisited();
                 break;
             case "ps":
-                if (isParamsExceeded(2, params))
+                if (isParamsExceeded(2, params)) {
                     return;
+                }
                 if (params.length > 1) {
                     commands.ps(currConnection, params[1]);
                 } else {
@@ -267,64 +310,81 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 break;
             case "pwd":
-                if (isParamsExceeded(1, params))
+                if (isParamsExceeded(1, params)) {
                     return;
-                if (isCurrDataSetNotSpecified())
+                }
+                if (isCurrDataSetNotSpecified()) {
                     return;
+                }
                 terminal.println(currDataSet);
                 break;
             case "rm":
-                if (isParamsMissing(1, params))
+                if (isParamsMissing(1, params)) {
                     return;
-                if (isParamsExceeded(2, params))
+                }
+                if (isParamsExceeded(2, params)) {
                     return;
+                }
                 param = params[1];
                 commands.rm(currConnection, currDataSet, param);
                 break;
             case "save":
-                if (isParamsMissing(1, params))
+                if (isParamsMissing(1, params)) {
                     return;
-                if (isParamsExceeded(2, params))
+                }
+                if (isParamsExceeded(2, params)) {
                     return;
+                }
                 commands.save(currConnection, currDataSet, params);
                 break;
             case "search":
-                if (isParamsMissing(1, params))
+                if (isParamsMissing(1, params)) {
                     return;
-                if (isParamsExceeded(2, params))
+                }
+                if (isParamsExceeded(2, params)) {
                     return;
+                }
                 commands.search(jobOutput, params[1]);
                 break;
             case "stop":
-                if (isParamsMissing(1, params))
+                if (isParamsMissing(1, params)) {
                     return;
-                if (isParamsExceeded(2, params))
+                }
+                if (isParamsExceeded(2, params)) {
                     return;
+                }
                 param = params[1];
                 commands.stop(currConnection, param);
                 break;
             case "submit":
-                if (isParamsMissing(1, params))
+                if (isParamsMissing(1, params)) {
                     return;
-                if (isParamsExceeded(2, params))
+                }
+                if (isParamsExceeded(2, params)) {
                     return;
-                if (isCurrDataSetNotSpecified())
+                }
+                if (isCurrDataSetNotSpecified()) {
                     return;
+                }
                 param = params[1];
                 commands.submit(currConnection, currDataSet, param);
                 break;
             case "tailjob":
-                if (isParamsMissing(1, params))
+                if (isParamsMissing(1, params)) {
                     return;
-                if (isParamsExceeded(4, params))
+                }
+                if (isParamsExceeded(4, params)) {
                     return;
+                }
                 commands.tailjob(currConnection, params);
                 break;
             case "touch":
-                if (isParamsMissing(1, params))
+                if (isParamsMissing(1, params)) {
                     return;
-                if (isParamsExceeded(2, params))
+                }
+                if (isParamsExceeded(2, params)) {
                     return;
+                }
                 commands.touch(currConnection, currDataSet, params);
                 break;
             case "uname":
@@ -337,10 +397,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 break;
             case "v":
             case "visited":
-                if (isParamsExceeded(1, params))
+                if (isParamsExceeded(1, params)) {
                     return;
-                if (isCurrDataSetNotSpecified())
+                }
+                if (isCurrDataSetNotSpecified()) {
                     return;
+                }
                 for (String key : dataSets.keySet()) {
                     List<String> lst = dataSets.get(key);
                     lst.forEach(l -> terminal.println(
@@ -348,15 +410,18 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 break;
             case "vi":
-                if (isParamsMissing(1, params))
+                if (isParamsMissing(1, params)) {
                     return;
-                if (isParamsExceeded(2, params))
+                }
+                if (isParamsExceeded(2, params)) {
                     return;
+                }
                 commands.vi(currConnection, currDataSet, params);
                 break;
             case "whoami":
-                if (connections != null)
+                if (connections != null) {
                     terminal.println(currConnection.getUser());
+                }
                 break;
             default:
                 terminal.println(Constants.INVALID_COMMAND);
@@ -365,10 +430,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private static void addVisited() {
         // if hostname and dataset not in datasets multimap add it
-        if (currConnection == null || currConnection.getHost() == null && currDataSet.isEmpty())
+        if (currConnection == null || currConnection.getHost() == null && currDataSet.isEmpty()) {
             return;
-        if (!dataSets.containsEntry(currConnection.getHost(), currDataSet))
+        }
+        if (!dataSets.containsEntry(currConnection.getHost(), currDataSet)) {
             dataSets.put(currConnection.getHost(), currDataSet);
+        }
     }
 
     private static boolean isParamsExceeded(int num, String[] params) {
