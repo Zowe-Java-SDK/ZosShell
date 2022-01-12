@@ -19,10 +19,6 @@ public class FutureDownload extends Download implements Callable<ResponseStatus>
 
     @Override
     public ResponseStatus call() {
-        return this.futureDownload(dataSet, member);
-    }
-
-    public ResponseStatus futureDownload(String dataSet, String member) {
         return this.download(dataSet, member);
     }
 

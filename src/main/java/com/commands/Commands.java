@@ -3,6 +3,7 @@ package com.commands;
 import com.Constants;
 import com.dto.JobOutput;
 import com.dto.ResponseStatus;
+import com.future.FutureCopy;
 import com.future.FutureDownload;
 import com.utility.Help;
 import com.utility.Util;
@@ -112,14 +113,23 @@ public class Commands {
     }
 
     public void copy(ZOSConnection connection, String currDataSet, String[] params) {
+        if ("*".equals(params[1])) {
+            final List<String> members = Util.getMembers(terminal, connection, currDataSet);
+            if (members.isEmpty()) {
+                return;
+            }
+            multipleCopy(connection, currDataSet, params[2], members).forEach(i -> terminal.println(i.getMessage()));
+            return;
+        }
         Copy copy;
         try {
-            copy = new Copy(terminal, new ZosDsnCopy(connection));
+            copy = new Copy(new ZosDsnCopy(connection));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
         }
-        copy.copy(currDataSet, params);
+        ResponseStatus responseStatus = copy.copy(currDataSet, params);
+        terminal.println(responseStatus.getMessage());
     }
 
     public void count(ZOSConnection connection, String dataSet, String param) {
@@ -135,12 +145,8 @@ public class Commands {
 
     public void download(ZOSConnection connection, String currDataSet, String member) {
         if ("*".equals(member)) {
-            var listing = new Listing(terminal, new ZosDsnList(connection));
-            final List<String> members;
-            try {
-                members = listing.getMembers(currDataSet);
-            } catch (Exception e) {
-                Util.printError(terminal, e.getMessage());
+            final List<String> members = Util.getMembers(terminal, connection, currDataSet);
+            if (members.isEmpty()) {
                 return;
             }
             multipleDownload(connection, currDataSet, members).forEach(i -> terminal.println(i.getMessage()));
@@ -164,19 +170,38 @@ public class Commands {
     }
 
     private List<ResponseStatus> multipleDownload(ZOSConnection connection, String dataSet, List<String> members) {
-        int size = members.size();
         final var pool = Executors.newFixedThreadPool(members.size());
-        List<ResponseStatus> results = new ArrayList<>();
         List<Future<ResponseStatus>> futures = new ArrayList<>();
 
-        for (String member : members) {
-            futures.add(pool.submit(
-                    new FutureDownload(new ZosDsnDownload(connection), dataSet, member)));
+        for (var member : members) {
+            futures.add(pool.submit(new FutureDownload(new ZosDsnDownload(connection), dataSet, member)));
         }
 
-        for (int i = 0; i < size; i++) {
+        return getFutureResults(futures);
+    }
+
+    private List<ResponseStatus> multipleCopy(ZOSConnection connection, String fromDataSetName, String toDataSetName,
+                                              List<String> members) {
+        if (!Util.isDataSet(toDataSetName)) {
+            terminal.println(Constants.INVALID_DATASET);
+            return new ArrayList<>();
+        }
+
+        final var pool = Executors.newFixedThreadPool(members.size());
+        List<Future<ResponseStatus>> futures = new ArrayList<>();
+
+        for (var member : members) {
+            futures.add(pool.submit(new FutureCopy(new ZosDsnCopy(connection), fromDataSetName, toDataSetName, member)));
+        }
+
+        return getFutureResults(futures);
+    }
+
+    private List<ResponseStatus> getFutureResults(List<Future<ResponseStatus>> futures) {
+        List<ResponseStatus> results = new ArrayList<>();
+        for (var future : futures) {
             try {
-                results.add(futures.get(i).get(10, TimeUnit.SECONDS));
+                results.add(future.get(10, TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 results.add(new ResponseStatus("timeout", false));
             }

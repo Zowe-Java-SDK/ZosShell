@@ -1,10 +1,14 @@
 package com.utility;
 
 import com.Constants;
+import com.commands.Listing;
 import com.dto.DataSetMember;
 import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.core.ZOSConnection;
+import zowe.client.sdk.zosfiles.ZosDsnList;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -104,6 +108,18 @@ public class Util {
 
         member = param.substring(index + 1, param.length() - 1);
         return new DataSetMember(dataset, member);
+    }
+
+    public static List<String> getMembers(TextTerminal<?> terminal, ZOSConnection connection, String dataSet) {
+        var listing = new Listing(terminal, new ZosDsnList(connection));
+        final List<String> members;
+        try {
+            members = listing.getMembers(dataSet);
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return new ArrayList<>();
+        }
+        return members;
     }
 
     private static boolean isSegment(String segment) {
