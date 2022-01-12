@@ -2,7 +2,7 @@ package com.dto;
 
 public class ResponseStatus {
 
-    private final String message;
+    private String message;
     private final boolean status;
 
     public ResponseStatus(String message, boolean status) {
@@ -12,6 +12,10 @@ public class ResponseStatus {
 
     public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public boolean isStatus() {
