@@ -128,7 +128,7 @@ public class Commands {
             Util.printError(terminal, e.getMessage());
             return;
         }
-        ResponseStatus responseStatus = copy.copy(currDataSet, params);
+        var responseStatus = copy.copy(currDataSet, params);
         terminal.println(responseStatus.getMessage());
     }
 
@@ -159,7 +159,7 @@ public class Commands {
             Util.printError(terminal, e.getMessage());
             return;
         }
-        ResponseStatus result = download.download(currDataSet, member);
+        var result = download.download(currDataSet, member);
 
         if (!result.isStatus()) {
             terminal.println(Util.getMsgAfterArrow(result.getMessage()));
@@ -171,7 +171,7 @@ public class Commands {
 
     private List<ResponseStatus> multipleDownload(ZOSConnection connection, String dataSet, List<String> members) {
         final var pool = Executors.newFixedThreadPool(members.size());
-        List<Future<ResponseStatus>> futures = new ArrayList<>();
+        var futures = new ArrayList<Future<ResponseStatus>>();
 
         for (var member : members) {
             futures.add(pool.submit(new FutureDownload(new ZosDsnDownload(connection), dataSet, member)));
@@ -188,7 +188,7 @@ public class Commands {
         }
 
         final var pool = Executors.newFixedThreadPool(members.size());
-        List<Future<ResponseStatus>> futures = new ArrayList<>();
+        var futures = new ArrayList<Future<ResponseStatus>>();
 
         for (var member : members) {
             futures.add(pool.submit(new FutureCopy(new ZosDsnCopy(connection), fromDataSetName, toDataSetName, member)));
@@ -198,7 +198,7 @@ public class Commands {
     }
 
     private List<ResponseStatus> getFutureResults(List<Future<ResponseStatus>> futures) {
-        List<ResponseStatus> results = new ArrayList<>();
+        var results = new ArrayList<ResponseStatus>();
         for (var future : futures) {
             try {
                 results.add(future.get(Constants.FUTURE_TIMEOUT_VALUE, TimeUnit.SECONDS));
