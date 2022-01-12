@@ -1,7 +1,7 @@
 package com.commands;
 
 import com.Constants;
-import com.dto.DownloadStatus;
+import com.dto.ResponseStatus;
 import com.google.common.base.Strings;
 import com.utility.Util;
 import org.apache.commons.io.IOUtils;
@@ -26,26 +26,31 @@ public class Download {
         this.download = download;
     }
 
-    public DownloadStatus download(String dataSet, String member) {
+    public ResponseStatus download(String dataSet, String member) {
         var message = Strings.padStart(member, 8, ' ') + Constants.ARROW;
         try {
             var content = getContent(dataSet, member);
             if (content == null) {
-                return new DownloadStatus(message + Constants.DOWNLOAD_FAIL, false);
+                return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
             }
             if (!SystemUtils.IS_OS_WINDOWS) {
-                return new DownloadStatus(message + Constants.WINDOWS_ERROR_MSG, false);
+                return new ResponseStatus(message + Constants.WINDOWS_ERROR_MSG, false);
             }
             var directoryPath = DIRECTORY_PATH + dataSet;
             var fileNamePath = directoryPath + "\\" + member;
             message = writeFile(message, content, directoryPath, fileNamePath);
         } catch (Exception e) {
             if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
-                return new DownloadStatus(message + Constants.CONNECTION_REFUSED, false);
+                return new ResponseStatus(message + Constants.CONNECTION_REFUSED, false);
             }
-            return new DownloadStatus(message + e.getMessage(), false);
+            return new ResponseStatus(message + e.getMessage(), false);
         }
-        return new DownloadStatus(message, true);
+        return new ResponseStatus(message, true);
+    }
+
+    protected String getContent(String dataSet, String param) throws Exception {
+        var inputStream = getInputStream(dataSet, param);
+        return getStreamData(inputStream);
     }
 
     public InputStream getInputStream(String dataSet, String param) throws Exception {
@@ -56,11 +61,6 @@ public class Download {
             inputStream = download.downloadDsn(String.format("%s(%s)", dataSet, param), dlParams);
         }
         return inputStream;
-    }
-
-    protected String getContent(String dataSet, String param) throws Exception {
-        var inputStream = getInputStream(dataSet, param);
-        return getStreamData(inputStream);
     }
 
     protected String getStreamData(InputStream inputStream) throws IOException {

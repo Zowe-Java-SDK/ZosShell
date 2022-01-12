@@ -1,11 +1,12 @@
-package com.commands;
+package com.future;
 
-import com.dto.DownloadStatus;
+import com.commands.Download;
+import com.dto.ResponseStatus;
 import zowe.client.sdk.zosfiles.ZosDsnDownload;
 
 import java.util.concurrent.Callable;
 
-public class FutureDownload extends Download implements Callable<DownloadStatus> {
+public class FutureDownload extends Download implements Callable<ResponseStatus> {
 
     private final String dataSet;
     private final String member;
@@ -17,11 +18,11 @@ public class FutureDownload extends Download implements Callable<DownloadStatus>
     }
 
     @Override
-    public DownloadStatus call() {
+    public ResponseStatus call() {
         return this.futureDownload(dataSet, member);
     }
 
-    public DownloadStatus futureDownload(String dataSet, String member) {
+    public ResponseStatus futureDownload(String dataSet, String member) {
         return this.download(dataSet, member);
     }
 

@@ -1,11 +1,11 @@
 package com.dto;
 
-public class DownloadStatus {
+public class ResponseStatus {
 
     private final String message;
     private final boolean status;
 
-    public DownloadStatus(String message, boolean status) {
+    public ResponseStatus(String message, boolean status) {
         this.message = message;
         this.status = status;
     }
@@ -20,7 +20,7 @@ public class DownloadStatus {
 
     @Override
     public String toString() {
-        return "DownloadStatus{" +
+        return "ResponseStatus{" +
                 "message='" + message + '\'' +
                 ", status=" + status +
                 '}';

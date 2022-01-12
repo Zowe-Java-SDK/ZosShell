@@ -1,8 +1,9 @@
 package com.commands;
 
 import com.Constants;
-import com.dto.DownloadStatus;
 import com.dto.JobOutput;
+import com.dto.ResponseStatus;
+import com.future.FutureDownload;
 import com.utility.Help;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
@@ -152,7 +153,7 @@ public class Commands {
             Util.printError(terminal, e.getMessage());
             return;
         }
-        DownloadStatus result = download.download(currDataSet, member);
+        ResponseStatus result = download.download(currDataSet, member);
 
         if (!result.isStatus()) {
             terminal.println(Util.getMsgAfterArrow(result.getMessage()));
@@ -162,11 +163,11 @@ public class Commands {
         }
     }
 
-    private List<DownloadStatus> multipleDownload(ZOSConnection connection, String dataSet, List<String> members) {
+    private List<ResponseStatus> multipleDownload(ZOSConnection connection, String dataSet, List<String> members) {
         int size = members.size();
         final var pool = Executors.newFixedThreadPool(members.size());
-        List<DownloadStatus> results = new ArrayList<>();
-        List<Future<DownloadStatus>> futures = new ArrayList<>();
+        List<ResponseStatus> results = new ArrayList<>();
+        List<Future<ResponseStatus>> futures = new ArrayList<>();
 
         for (String member : members) {
             futures.add(pool.submit(
@@ -177,7 +178,7 @@ public class Commands {
             try {
                 results.add(futures.get(i).get(10, TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                results.add(new DownloadStatus("timeout", false));
+                results.add(new ResponseStatus("timeout", false));
             }
         }
         return results;

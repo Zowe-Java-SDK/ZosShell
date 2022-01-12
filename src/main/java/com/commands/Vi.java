@@ -1,7 +1,7 @@
 package com.commands;
 
 import com.Constants;
-import com.dto.DownloadStatus;
+import com.dto.ResponseStatus;
 import com.utility.Util;
 import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;
@@ -20,7 +20,7 @@ public class Vi {
     }
 
     public void vi(String dataSet, String member) {
-        DownloadStatus result = download.download(dataSet, member);
+        ResponseStatus result = download.download(dataSet, member);
         try {
             if (result.isStatus() && SystemUtils.IS_OS_WINDOWS) {
                 var pathFile = Download.DIRECTORY_PATH + dataSet + "//" + member;
@@ -28,10 +28,10 @@ public class Vi {
                 rs.exec(editor + " " + pathFile);
             }
             if (!SystemUtils.IS_OS_WINDOWS) {
-                result = new DownloadStatus(Constants.WINDOWS_ERROR_MSG, false);
+                result = new ResponseStatus(Constants.WINDOWS_ERROR_MSG, false);
             }
         } catch (IOException e) {
-            result = new DownloadStatus(e.getMessage(), false);
+            result = new ResponseStatus(e.getMessage(), false);
         }
         if (!result.isStatus()) {
             terminal.println(Util.getMsgAfterArrow(result.getMessage()));
