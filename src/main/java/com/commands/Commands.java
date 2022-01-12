@@ -201,7 +201,7 @@ public class Commands {
         List<ResponseStatus> results = new ArrayList<>();
         for (var future : futures) {
             try {
-                results.add(future.get(10, TimeUnit.SECONDS));
+                results.add(future.get(Constants.FUTURE_TIMEOUT_VALUE, TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 results.add(new ResponseStatus("timeout", false));
             }

@@ -19,6 +19,7 @@ public class Constants {
             "first argument invalid for rm operation, specified valid dataset or member or dataset(member), try again...";
     public static final String DELETE_NOTHING_ERROR = "nothing to delete, try again...";
     public static final String DOWNLOAD_FAIL = "download failed, try again...";
+    public static final long FUTURE_TIMEOUT_VALUE = 10;
     public static final int HISTORY_SIZE = 200;
     public static final String INVALID_COMMAND = "invalid command, try again...";
     public static final String INVALID_DATASET = "invalid dataset specified, try again...";
@@ -41,6 +42,7 @@ public class Constants {
     public static final String PATH_FILE_DIRECTORY_WINDOWS = "C:\\ZosShell";
     public static final String PATH_FILE = PATH_FILE_DIRECTORY_WINDOWS + "\\credentials.txt";
     public static final String SEVERE_ERROR = "server error, check connection...";
+    public static final int STRING_PAD_LENGTH = 8;
     public static final String TOO_MANY_PARAMETERS = "too many parameters, try again...";
     public static final Object WINDOWS_EDITOR_NAME = "notepad";
     public static final String WINDOWS_ERROR_MSG = "this command is only supported on windows at the moment...";
