@@ -81,11 +81,7 @@ public class Copy {
             toDataSetName = param2;
         }
         try {
-            var response = zosDsnCopy.copy(fromDataSetName, toDataSetName, true, copyAllMembers);
-            var code = response.getStatusCode().orElse(-1);
-            if (Util.isHttpError(code)) {
-                return new ResponseStatus("copy operation failed with http code + " + code + ", try again...", false);
-            }
+            zosDsnCopy.copy(fromDataSetName, toDataSetName, true, copyAllMembers);
         } catch (Exception e) {
             if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
                 return new ResponseStatus(Constants.SEVERE_ERROR, false);
