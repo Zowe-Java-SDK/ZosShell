@@ -27,7 +27,7 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
     ps                      - display all processes running
     ps <arg>                - where arg is a task/job name   
     pwd                     - show current working dataset
-    rm <arg>                - where arg is "*", member, dataset, or dataset with member value
+    rm <arg>                - where arg is "*", member, member with wildcard "*", dataset, or dataset with member value
     touch <arg>             - create member arg if it does not already exist
     uname                   - show current connected host name
     vi <arg>                - where arg is a sequential dataset or member name, arg will be downloaded 
@@ -44,7 +44,7 @@ Along with following custom commands:
     connections                   - a list of connection(s)   
     count members                 - return member count in current pwd dataset
     count datasets                - return dataset count in current pwd dataset
-    cp | copy <arg> arg>          - where arg can be ".", member, dataset or dataset(member)
+    cp | copy <arg> arg>          - where arg can be ".", "*", member, dataset or dataset(member)
     download <arg>                - download arg to local c:\ZosShell\pwd where arg is member or sequential dataset
     end                           - end session closes shell UI window
     files                         - list all files under local pwd drive value
