@@ -63,6 +63,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     @Override
     public void accept(TextIO textIO, RunnerData runnerData) {
         terminal = textIO.getTextTerminal();
+        terminal.getProperties().setPromptColor("white");
+        terminal.getProperties().setInputColor("white");
         commands = new Commands(connections, terminal);
         history = new History(terminal);
         if (currConnection == null) {
