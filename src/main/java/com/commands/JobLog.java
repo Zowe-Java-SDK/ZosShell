@@ -1,5 +1,7 @@
 package com.commands;
 
+import com.Constants;
+import com.future.FutureBrowseJob;
 import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.zosjobs.GetJobs;
 import zowe.client.sdk.zosjobs.input.GetJobParams;
@@ -7,7 +9,6 @@ import zowe.client.sdk.zosjobs.input.JobFile;
 import zowe.client.sdk.zosjobs.response.Job;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -49,14 +50,11 @@ public class JobLog {
             throw new Exception(e);
         }
 
-        if (!isAll) {
-            return Arrays.asList(getJobs.getSpoolContent(files.get(0)).split("\n"));
-        }
-
         var pool = Executors.newFixedThreadPool(1);
-        var result = pool.submit(new BrowseJobAll(getJobs, files));
+        var result = isAll ? pool.submit(new FutureBrowseJob(getJobs, files)) :
+                pool.submit(new FutureBrowseJob(getJobs, List.of(files.get(0))));
         try {
-            return result.get(10, TimeUnit.SECONDS);
+            return result.get(Constants.FUTURE_TIMEOUT_VALUE, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             throw new Exception("timeout");
         }

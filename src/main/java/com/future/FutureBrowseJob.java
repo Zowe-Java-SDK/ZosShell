@@ -1,4 +1,4 @@
-package com.commands;
+package com.future;
 
 import zowe.client.sdk.zosjobs.GetJobs;
 import zowe.client.sdk.zosjobs.input.JobFile;
@@ -8,12 +8,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class BrowseJobAll implements Callable<List<String>> {
+public class FutureBrowseJob implements Callable<List<String>> {
 
     private final GetJobs getJobs;
     private final List<JobFile> files;
 
-    public BrowseJobAll(GetJobs getJobs, List<JobFile> files) {
+    public FutureBrowseJob(GetJobs getJobs, List<JobFile> files) {
         this.getJobs = getJobs;
         this.files = files;
     }
