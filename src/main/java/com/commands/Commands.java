@@ -107,6 +107,11 @@ public class Commands {
         return changeConn.changeConnection(connection, commands);
     }
 
+    public void color(String param) {
+        var color = new Color(terminal);
+        color.color(param);
+    }
+
     public void connections(ZOSConnection connection) {
         var changeConn = new ChangeConn(terminal, connections);
         changeConn.displayConnections(connection);

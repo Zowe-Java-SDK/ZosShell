@@ -41,6 +41,7 @@ Along with following custom commands:
                                     if arg2 is equal to "all", display all job's spool output
     cancel <arg>                  - where arg is a task/job name  
     change <arg>                  - where arg is a number representing a connection
+    color <arg>                   - change color of prompt an text, arg i.e. blue, yellow, cyan etc..
     connections                   - a list of connection(s)   
     count members                 - return member count in current pwd dataset
     count datasets                - return dataset count in current pwd dataset
