@@ -8,7 +8,6 @@ import zowe.client.sdk.zosjobs.input.GetJobParams;
 import zowe.client.sdk.zosjobs.input.JobFile;
 import zowe.client.sdk.zosjobs.response.Job;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -28,12 +27,12 @@ public class JobLog {
         this.isAll = isAll;
     }
 
-    protected List<String> browseJobLog(String param) throws Exception {
+    protected StringBuilder browseJobLog(String param) throws Exception {
         var jobParams = new GetJobParams.Builder("*").prefix(param).build();
         final var jobs = getJobs.getJobsCommon(jobParams);
         if (jobs.isEmpty()) {
             terminal.println(jobParams.getPrefix().orElse("n\\a") + " does not exist, try again...");
-            return new ArrayList<>();
+            return new StringBuilder();
         }
         // select the active or input one first; if not found then get the highest job number
         Predicate<Job> isActive = j -> "ACTIVE".equalsIgnoreCase(j.getStatus().orElse(""));

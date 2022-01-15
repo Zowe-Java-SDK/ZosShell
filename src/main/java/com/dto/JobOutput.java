@@ -1,13 +1,11 @@
 package com.dto;
 
-import java.util.List;
-
 public class JobOutput {
 
     private final String jobName;
-    private final List<String> output;
+    private final StringBuilder output;
 
-    public JobOutput(String jobName, List<String> output) {
+    public JobOutput(String jobName, StringBuilder output) {
         this.jobName = jobName;
         this.output = output;
     }
@@ -16,16 +14,14 @@ public class JobOutput {
         return jobName;
     }
 
-    public List<String> getOutput() {
+    public StringBuilder getOutput() {
         return output;
     }
 
     @Override
     public String toString() {
         return "JobOutput{" +
-                "jobName='" + jobName + '\'' +
-                ", output=" + output +
-                '}';
+                "jobName='" + jobName + '\'' + '}';
     }
 
 }
