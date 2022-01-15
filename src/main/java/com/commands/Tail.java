@@ -5,6 +5,7 @@ import com.utility.Util;
 import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.zosjobs.GetJobs;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Tail extends JobLog {
@@ -14,9 +15,9 @@ public class Tail extends JobLog {
     }
 
     public void tail(String[] params) {
-        List<String> output;
+        StringBuilder result;
         try {
-            output = browseJobLog(params[1]);
+            result = browseJobLog(params[1]);
         } catch (Exception e) {
             if (e.getMessage().contains("timeout")) {
                 terminal.println(Constants.BROWSE_TIMEOUT_MSG);
@@ -29,6 +30,8 @@ public class Tail extends JobLog {
             Util.printError(terminal, e.getMessage());
             return;
         }
+        List<String> output = Arrays.asList(result.toString().split("\n"));
+
         var size = output.size();
         var lines = 0;
         if (params.length == 3) {
