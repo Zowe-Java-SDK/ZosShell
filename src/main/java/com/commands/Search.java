@@ -23,7 +23,7 @@ public class Search {
             var jobOutput = value.getOutput();
             terminal.println("searching " + jobName.toUpperCase() + "...");
             List<String> results = Arrays.stream(jobOutput.toString().split("\n"))
-                    .filter(line -> line.contains(text)).collect(Collectors.toList());
+                    .filter(line -> line.contains(text.toUpperCase())).collect(Collectors.toList());
             if (!results.isEmpty()) {
                 results.forEach(terminal::println);
             } else {
