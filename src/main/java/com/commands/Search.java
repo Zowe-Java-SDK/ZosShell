@@ -5,6 +5,7 @@ import org.beryx.textio.TextTerminal;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class Search {
             var jobOutput = value.getOutput();
             terminal.println("searching " + jobName.toUpperCase() + "...");
             List<String> results = Arrays.stream(jobOutput.toString().split("\n"))
-                    .filter(line -> line.contains(text)).collect(Collectors.toList());
+                    .filter(line -> line.contains(text.toLowerCase())).collect(Collectors.toList());
             if (!results.isEmpty()) {
                 results.forEach(terminal::println);
             } else {
