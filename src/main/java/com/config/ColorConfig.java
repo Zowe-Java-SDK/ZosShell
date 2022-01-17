@@ -17,7 +17,6 @@ public class ColorConfig {
             var br = new BufferedReader(new FileReader(file));
             str = br.readLine().split(",");
         } catch (IOException ignored) {
-
         }
         if (str != null) {
             terminal.getProperties().setPromptColor(str[0]);

@@ -105,11 +105,9 @@ Format:
     colornameornumbervalue,colornameornumbervalue  
   
 Examples:  
+  
     white,white  
     white,blue  
     white,449  
     black,white  
-
-
-
   
