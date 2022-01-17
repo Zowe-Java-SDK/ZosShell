@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,10 +34,12 @@ public class LocalFiles {
             path = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\" + dataSet;
         }
         terminal.println(path + ":");
+        Predicate<String> isCredentials = name -> !name.equalsIgnoreCase("credentials.txt");
+        Predicate<String> isColors = name -> !name.equalsIgnoreCase("colors.txt");
         var files = Optional.ofNullable(new File(path).listFiles());
         return Stream.of(files.orElse(new File[]{}))
                 .map(File::getName)
-                .filter(name -> !name.equalsIgnoreCase("credentials.txt"))
+                .filter(isCredentials.and(isColors))
                 .sorted()
                 .collect(Collectors.toList());
     }

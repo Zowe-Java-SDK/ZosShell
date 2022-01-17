@@ -1,4 +1,4 @@
-package com.security;
+package com.config;
 
 import com.Constants;
 import zowe.client.sdk.core.ZOSConnection;
@@ -12,7 +12,7 @@ import java.util.List;
 public class Credentials {
 
     public static void readCredentials(List<ZOSConnection> connections) {
-        var file = new File(Constants.PATH_FILE);
+        var file = new File(Constants.SECURITY_CONFIG_PATH_FILE);
         try {
             var br = new BufferedReader(new FileReader(file));
 

@@ -76,8 +76,8 @@ To quit from the command shell UI, you can either press 'X' windows close icon o
     
 ## Build And Execute  
 
-Create a credentials.txt under the C:\ZosShell drive directory that contains a list of z/OSMF connections per line with a comma delimiter for
-connection values. You can specify drive location by changing the hard coded value in the code.  
+Create a credentials.txt file under C:\ZosShell drive\directory location that contains a list of z/OSMF connections per line with a comma delimiter for
+connection values. You can change the drive\directory location by changing the hard coded value in the code.    
   
 Format:  
     
@@ -90,4 +90,22 @@ At the root directory prompt, execute the following maven command:
 Change directory to the target directory and execute the following command:  
   
     java -jar zosshell-1.0.jar  
+
+### Terminal color configuration
+
+Create a colors.txt file under C:\ZosShell drive\directory location that contains one line of two comma delimiter values to control the color scheme.  
+First value will control the color of the text and prompt. Second value will control the color of the background panel.  
+  
+Format:  
+  
+    colornameornumbervalue,colornameornumbervalue  
+  
+Examples:  
+    white,white  
+    white,blue  
+    white,449  
+    black,white  
+
+
+
   

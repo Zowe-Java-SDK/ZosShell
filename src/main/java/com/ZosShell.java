@@ -2,11 +2,12 @@ package com;
 
 import com.commands.Commands;
 import com.commands.History;
+import com.config.ColorConfig;
+import com.config.Credentials;
 import com.dto.JobOutput;
 import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import com.security.Credentials;
 import com.utility.Util;
 import org.beryx.textio.ReadHandlerData;
 import org.beryx.textio.ReadInterruptionStrategy;
@@ -63,8 +64,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     @Override
     public void accept(TextIO textIO, RunnerData runnerData) {
         terminal = textIO.getTextTerminal();
-        terminal.getProperties().setPromptColor("white");
-        terminal.getProperties().setInputColor("white");
+        ColorConfig.readConfig(terminal);
         commands = new Commands(connections, terminal);
         history = new History(terminal);
         if (currConnection == null) {
