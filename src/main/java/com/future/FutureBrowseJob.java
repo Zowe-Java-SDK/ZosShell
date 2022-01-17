@@ -22,7 +22,7 @@ public class FutureBrowseJob implements Callable<StringBuilder> {
         StringBuilder str = new StringBuilder();
         files.forEach(file -> {
             try {
-                str.append(Arrays.asList(getJobs.getSpoolContent(file)));
+                str.append(List.of(getJobs.getSpoolContent(file)));
             } catch (Exception ignored) {
             }
         });

@@ -22,8 +22,8 @@ public class Search {
             var jobName = value.getJobName();
             var jobOutput = value.getOutput();
             terminal.println("searching " + jobName.toUpperCase() + "...");
-            List<String> results = Arrays.asList(jobOutput.toString().split("\n"))
-                    .stream().filter(line -> line.contains(text)).collect(Collectors.toList());
+            List<String> results = Arrays.stream(jobOutput.toString().split("\n"))
+                    .filter(line -> line.contains(text)).collect(Collectors.toList());
             if (!results.isEmpty()) {
                 results.forEach(terminal::println);
             } else {
