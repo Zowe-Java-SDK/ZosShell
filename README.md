@@ -89,8 +89,12 @@ At the root directory prompt, execute the following maven command:
   
 Change directory to the target directory and execute the following command:  
   
-    java -jar zosshell-1.0.jar  
-
+    java -jar zosshell-1.0.jar   
+  
+If you are planning to browse large job output you may want to set the JVM memory usage higher than the default, i.e.  
+  
+    java -jar -Xmx2G zosshell-1.0.jar   
+  
 ### Terminal color configuration
 
 Create a colors.txt file under C:\ZosShell drive\directory location that contains one line of two comma delimiter values to control the color scheme.  
