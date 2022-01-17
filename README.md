@@ -97,7 +97,8 @@ If you are planning to browse large job output you may want to set the JVM memor
   
 ### Terminal color configuration
 
-Create a colors.txt file under C:\ZosShell drive\directory location that contains one line of two comma delimiter values to control the color scheme.  
+Create a colors.txt file under C:\ZosShell drive\directory location that contains one line of two comma delimiter values to control the color scheme.    
+  
 First value will control the color of the text and prompt. Second value will control the color of the background panel.  
   
 Format:  
