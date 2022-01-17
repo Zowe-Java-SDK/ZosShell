@@ -3,7 +3,6 @@ package com.future;
 import zowe.client.sdk.zosjobs.GetJobs;
 import zowe.client.sdk.zosjobs.input.JobFile;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
