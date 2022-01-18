@@ -14,21 +14,21 @@ public class Tail extends JobLog {
         super(terminal, getJobs, isAll);
     }
 
-    public void tail(String[] params) {
+    public StringBuilder tail(String[] params) {
         StringBuilder result;
         try {
             result = browseJobLog(params[1]);
         } catch (Exception e) {
             if (e.getMessage().contains("timeout")) {
                 terminal.println(Constants.BROWSE_TIMEOUT_MSG);
-                return;
+                return null;
             }
             if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
                 terminal.println(Constants.SEVERE_ERROR);
-                return;
+                return null;
             }
             Util.printError(terminal, e.getMessage());
-            return;
+            return null;
         }
         List<String> output = Arrays.asList(result.toString().split("\n"));
 
@@ -40,7 +40,7 @@ public class Tail extends JobLog {
                     lines = Integer.parseInt(params[2]);
                 } catch (NumberFormatException e) {
                     terminal.println(Constants.INVALID_PARAMETER);
-                    return;
+                    return null;
                 }
             }
         }
@@ -49,29 +49,42 @@ public class Tail extends JobLog {
                 lines = Integer.parseInt(params[2]);
             } catch (NumberFormatException e) {
                 terminal.println(Constants.INVALID_PARAMETER);
-                return;
+                return null;
             }
         }
 
         if (lines > 0) {
             if (lines < size) {
-                display(lines, size, output);
+                return display(lines, size, output);
             } else {
-                output.forEach(terminal::println);
+                return displayAll(output);
             }
         } else {
             int LINES_LIMIT = 25;
             if (size > LINES_LIMIT) {
-                display(LINES_LIMIT, size, output);
+                return display(LINES_LIMIT, size, output);
             } else {
-                output.forEach(terminal::println);
+                return displayAll(output);
             }
         }
     }
 
-    private void display(int lines, int size, List<String> output) {
-        for (var i = size - lines; i < size; i++)
+    private StringBuilder displayAll(List<String> output) {
+        StringBuilder stringBuilder = new StringBuilder();
+        output.forEach(line -> {
+            terminal.println(line);
+            stringBuilder.append(line + "\n");
+        });
+        return stringBuilder;
+    }
+
+    private StringBuilder display(int lines, int size, List<String> output) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (var i = size - lines; i < size; i++) {
             terminal.println(output.get(i));
+            stringBuilder.append(output.get(i) + "\n");
+        }
+        return stringBuilder;
     }
 
 }

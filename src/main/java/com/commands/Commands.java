@@ -290,45 +290,43 @@ public class Commands {
         submit.submitJob(dataSet, param);
     }
 
-    public void tailjob(ZOSConnection connection, String[] params) {
+    public JobOutput tailjob(ZOSConnection connection, String[] params) {
         if (params.length == 4) {
             if (!"all".equalsIgnoreCase(params[3])) {
                 terminal.println(Constants.INVALID_PARAMETER);
-                return;
+                return null;
             }
             try {
                 Integer.parseInt(params[2]);
             } catch (NumberFormatException e) {
                 terminal.println(Constants.INVALID_PARAMETER);
-                return;
+                return null;
             }
-            tailAll(connection, params, true);
-            return;
+            return new JobOutput(params[1], tailAll(connection, params, true));
         }
         if (params.length == 3) {
             if ("all".equalsIgnoreCase(params[2])) {
-                tailAll(connection, params, true);
-                return;
+                return new JobOutput(params[1], tailAll(connection, params, true));
             }
             try {
                 Integer.parseInt(params[2]);
             } catch (NumberFormatException e) {
                 terminal.println(Constants.INVALID_PARAMETER);
-                return;
+                return null;
             }
         }
-        tailAll(connection, params, false);
+        return new JobOutput(params[1], tailAll(connection, params, false));
     }
 
-    private void tailAll(ZOSConnection connection, String[] params, boolean isAll) {
+    private StringBuilder tailAll(ZOSConnection connection, String[] params, boolean isAll) {
         Tail tail;
         try {
             tail = new Tail(terminal, new GetJobs(connection), isAll);
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
-            return;
+            return null;
         }
-        tail.tail(params);
+        return tail.tail(params);
     }
 
     public void touch(ZOSConnection connection, String currDataSet, String[] params) {
