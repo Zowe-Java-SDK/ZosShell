@@ -73,7 +73,7 @@ public class Tail extends JobLog {
         StringBuilder stringBuilder = new StringBuilder();
         output.forEach(line -> {
             terminal.println(line);
-            stringBuilder.append(line + "\n");
+            stringBuilder.append(line).append("\n");
         });
         return stringBuilder;
     }
@@ -82,7 +82,7 @@ public class Tail extends JobLog {
         StringBuilder stringBuilder = new StringBuilder();
         for (var i = size - lines; i < size; i++) {
             terminal.println(output.get(i));
-            stringBuilder.append(output.get(i) + "\n");
+            stringBuilder.append(output.get(i)).append("\n");
         }
         return stringBuilder;
     }
