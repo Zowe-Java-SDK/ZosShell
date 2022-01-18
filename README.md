@@ -50,7 +50,7 @@ Along with following custom commands:
     end                           - end session closes shell UI window
     files                         - list all files under local pwd drive value
     save <arg>                    - save arg where arg is a file name from files command to the current pwd
-    search <arg>                  - search for arg within a job log from the last browse command performed  
+    search <arg>                  - search for arg within a job log from the last browsejob or tailjob command output  
     stop <arg>                    - where arg is a task/job name  
     submit <arg>                  - where arg is a member name  
     tailjob <arg1> <arg2> <arg3>  - where arg1 is job name and arg2 and arg3 are optional

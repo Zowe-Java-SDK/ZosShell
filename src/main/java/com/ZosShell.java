@@ -387,7 +387,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(4, params)) {
                     return;
                 }
-                commands.tailjob(currConnection, params);
+                JobOutput tailJobOutput = commands.tailjob(currConnection, params);
+                if (tailJobOutput != null) {
+                    jobOutput = tailJobOutput;
+                }
                 break;
             case "touch":
                 if (isParamsMissing(1, params)) {
