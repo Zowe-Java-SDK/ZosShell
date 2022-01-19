@@ -111,6 +111,6 @@ Example:
   
     449,white
 
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/color.png)    
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/color.gif)    
   
   
