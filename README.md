@@ -107,7 +107,7 @@ Format:
   
     colornameornumbervalue,colornameornumbervalue  
   
-Examples:  
+Example:  
   
     449,white
 
