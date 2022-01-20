@@ -70,10 +70,10 @@ To quit from the command shell UI, you can either press 'X' windows close icon o
   
 ## Requirements  
   
-    Java 11 to execute and build the target jar file.   
-    z/OSMF installed on your backend z/OS instance.  
-    Maven  
-    
+    Java 11+ 
+    Maven
+    z/OSMF installed on your backend z/OS instance.
+              
 ## Build And Execute  
 
 Create a credentials.txt file under C:\ZosShell drive\directory location that contains a list of z/OSMF connections per line with a comma delimiter for
@@ -95,8 +95,10 @@ If you are planning to browse large job output you may want to set the JVM memor
   
     java -jar -Xmx2G zosshell-1.0.jar   
   
-### Terminal color configuration
-
+### Terminal color configuration (optional)
+  
+By default, the terminal will display its text in green on a black background. If you want to change those settings, follow the instructions bellow.  
+  
 Create a colors.txt file under C:\ZosShell drive\directory location that contains one line of two comma delimiter values to control the color scheme.    
   
 First value will control the color of the text and prompt. Second value will control the color of the background panel.  
@@ -105,10 +107,10 @@ Format:
   
     colornameornumbervalue,colornameornumbervalue  
   
-Examples:  
+Example:  
   
-    white,white  
-    white,blue  
-    white,449  
-    black,white  
+    449,white
+
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/color.gif)    
+  
   
