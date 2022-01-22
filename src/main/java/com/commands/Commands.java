@@ -181,7 +181,7 @@ public class Commands {
         for (var member : members) {
             futures.add(pool.submit(new FutureDownload(new ZosDsnDownload(connection), dataSet, member)));
         }
-
+        pool.shutdown();
         return getFutureResults(futures);
     }
 
@@ -198,7 +198,7 @@ public class Commands {
         for (var member : members) {
             futures.add(pool.submit(new FutureCopy(new ZosDsnCopy(connection), fromDataSetName, toDataSetName, member)));
         }
-
+        pool.shutdown();
         return getFutureResults(futures);
     }
 

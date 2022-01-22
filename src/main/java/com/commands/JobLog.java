@@ -53,8 +53,10 @@ public class JobLog {
         var result = isAll ? pool.submit(new FutureBrowseJob(getJobs, files)) :
                 pool.submit(new FutureBrowseJob(getJobs, List.of(files.get(0))));
         try {
+            pool.shutdown();
             return result.get(Constants.FUTURE_TIMEOUT_VALUE, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            pool.shutdown();
             throw new Exception("timeout");
         }
     }
