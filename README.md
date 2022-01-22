@@ -12,7 +12,7 @@
 
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/save-demo.gif)
   
-This project demonstrates the usage of [Zowe Java SDK](https://github.com/zowe/zowe-client-java-sdk).
+This project demonstrates the usage of [Zowe Java Client SDK](https://github.com/zowe/zowe-client-java-sdk).
   
 Project provides a UI shell command prompt that allows you to manipulate datasets and its members. The shell performs the following linux like commands:  
   
@@ -76,7 +76,7 @@ To quit from the command shell UI, you can either press 'X' windows close icon o
               
 ## Build And Execute  
 
-Create a credentials.txt file under C:\ZosShell drive\directory location that contains a list of z/OSMF connections per line with a comma delimiter for
+Create a credentials.txt file under "C:\ZosShell" drive\directory location that contains a list of z/OSMF connections per line with a comma delimiter for
 connection values. You can change the drive\directory location by changing the hard coded value in the code.    
   
 Format:  
@@ -99,7 +99,7 @@ If you are planning to browse large job output you may want to set the JVM memor
   
 By default, the terminal will display its text in green on a black background. If you want to change those settings, follow the instructions bellow.  
   
-Create a colors.txt file under C:\ZosShell drive\directory location that contains one line of two comma delimiter values to control the color scheme.    
+Create a colors.txt file under "C:\ZosShell" drive\directory location that contains one line of two comma delimiter values to control the color scheme.    
   
 First value will control the color of the text and prompt. Second value will control the color of the background panel.  
   
