@@ -12,7 +12,7 @@
 
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/save-demo.gif)
   
-This project demonstrates the usage of [Zowe Java Client SDK](https://github.com/zowe/zowe-client-java-sdk).
+This project demonstrates the usage of [Zowe Client Java SDK](https://github.com/zowe/zowe-client-java-sdk).
   
 Project provides a UI shell command prompt that allows you to manipulate datasets and its members. The shell performs the following linux like commands:  
   
