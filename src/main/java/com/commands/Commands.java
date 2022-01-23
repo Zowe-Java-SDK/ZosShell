@@ -181,8 +181,10 @@ public class Commands {
         for (var member : members) {
             futures.add(pool.submit(new FutureDownload(new ZosDsnDownload(connection), dataSet, member)));
         }
-        pool.shutdown();
-        return getFutureResults(futures);
+
+        var result = getFutureResults(futures);
+        pool.shutdownNow();
+        return result;
     }
 
     private List<ResponseStatus> multipleCopy(ZOSConnection connection, String fromDataSetName, String toDataSetName,
@@ -198,8 +200,10 @@ public class Commands {
         for (var member : members) {
             futures.add(pool.submit(new FutureCopy(new ZosDsnCopy(connection), fromDataSetName, toDataSetName, member)));
         }
-        pool.shutdown();
-        return getFutureResults(futures);
+
+        var result = getFutureResults(futures);
+        pool.shutdownNow();
+        return result;
     }
 
     private List<ResponseStatus> getFutureResults(List<Future<ResponseStatus>> futures) {

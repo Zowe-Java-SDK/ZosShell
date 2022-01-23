@@ -50,13 +50,14 @@ public class JobLog {
         }
 
         var pool = Executors.newFixedThreadPool(1);
-        var result = isAll ? pool.submit(new FutureBrowseJob(getJobs, files)) :
+        var submit = isAll ? pool.submit(new FutureBrowseJob(getJobs, files)) :
                 pool.submit(new FutureBrowseJob(getJobs, List.of(files.get(0))));
         try {
-            pool.shutdown();
-            return result.get(Constants.FUTURE_TIMEOUT_VALUE, TimeUnit.SECONDS);
+            StringBuilder result = submit.get(Constants.FUTURE_TIMEOUT_VALUE, TimeUnit.SECONDS);
+            pool.shutdownNow();
+            return result;
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            pool.shutdown();
+            pool.shutdownNow();
             throw new Exception("timeout");
         }
     }
