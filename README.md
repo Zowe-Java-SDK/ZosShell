@@ -112,5 +112,14 @@ Example:
     449,white
 
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/color.gif)    
+
+## Trouble Shooting
+    
+Log4j logging is set up and configuration is located under src/main/resources/log4j2.xml  
+    
+It is configured to produce output logging while application is running under c:\ZosShell\logs directory.  
+      
+You are free to change configuration accordingly for your needs.  
+    
   
   
