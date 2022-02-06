@@ -272,6 +272,20 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     history.displayHistory(params[1]);
                 }
                 break;
+            case "mvs":
+                if (isParamsMissing(1, params)) {
+                    return;
+                }
+                var mvsCommandCandidate = "";
+                for (int i = 1; i < params.length; i++)
+                    mvsCommandCandidate += params[i];
+                var count = mvsCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
+                if (count == 2) {
+                    commands.mvsCommand(currConnection, mvsCommandCandidate);
+                } else {
+                    terminal.println("invalid command, please use double quotes around the command string and try again...");
+                }
+                break;
             case "ls":
                 if (isParamsExceeded(3, params)) {
                     return;

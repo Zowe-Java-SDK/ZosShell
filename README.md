@@ -47,6 +47,7 @@ Along with following custom commands:
     count datasets                - return dataset count in current pwd dataset
     cp | copy <arg> arg>          - where arg can be ".", "*", member, dataset or dataset(member)
     download <arg>                - download arg to local c:\ZosShell\pwd where arg is member or sequential dataset
+    mvs arg                       - execute a mvs command where agr is a command string within double quotes
     end                           - end session closes shell UI window
     files                         - list all files under local pwd drive value
     save <arg>                    - save arg where arg is a file name from files command to the current pwd
