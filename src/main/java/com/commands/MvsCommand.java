@@ -5,7 +5,6 @@ import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.zosconsole.IssueCommand;
 import zowe.client.sdk.zosconsole.input.IssueParams;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MvsCommand {
@@ -19,8 +18,8 @@ public class MvsCommand {
     }
 
     public void executeCommand(String command) {
-        Pattern p = Pattern.compile("\"([^\"]*)\"");
-        Matcher m = p.matcher(command);
+        var p = Pattern.compile("\"([^\"]*)\"");
+        var m = p.matcher(command);
         try {
             while (m.find()) {
                 command = m.group(1);
