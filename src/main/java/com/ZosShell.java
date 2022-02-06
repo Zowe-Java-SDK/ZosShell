@@ -272,20 +272,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     history.displayHistory(params[1]);
                 }
                 break;
-            case "mvs":
-                if (isParamsMissing(1, params)) {
-                    return;
-                }
-                StringBuilder mvsCommandCandidate = new StringBuilder();
-                for (int i = 1; i < params.length; i++)
-                    mvsCommandCandidate.append(params[i]);
-                var count = mvsCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
-                if (count == 2) {
-                    commands.mvsCommand(currConnection, mvsCommandCandidate.toString());
-                } else {
-                    terminal.println(Constants.MVS_INVALID_COMMAND_MSG);
-                }
-                break;
             case "ls":
                 if (isParamsExceeded(3, params)) {
                     return;
@@ -323,6 +309,20 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 commands.ls(currConnection, currDataSet);
                 addVisited();
+                break;
+            case "mvs":
+                if (isParamsMissing(1, params)) {
+                    return;
+                }
+                StringBuilder mvsCommandCandidate = new StringBuilder();
+                for (int i = 1; i < params.length; i++)
+                    mvsCommandCandidate.append(params[i]);
+                var count = mvsCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
+                if (count == 2) {
+                    commands.mvsCommand(currConnection, mvsCommandCandidate.toString());
+                } else {
+                    terminal.println(Constants.MVS_INVALID_COMMAND_MSG);
+                }
                 break;
             case "ps":
                 if (isParamsExceeded(2, params)) {
