@@ -34,12 +34,12 @@ public class LocalFiles {
             path = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\" + dataSet;
         }
         terminal.println(path + ":");
-        Predicate<String> isCredentials = name -> !name.equalsIgnoreCase("credentials.txt");
-        Predicate<String> isColors = name -> !name.equalsIgnoreCase("colors.txt");
+        Predicate<String> isNotCredentials = name -> !name.equalsIgnoreCase("credentials.txt");
+        Predicate<String> isNotColors = name -> !name.equalsIgnoreCase("colors.txt");
         var files = Optional.ofNullable(new File(path).listFiles());
         return Stream.of(files.orElse(new File[]{}))
                 .map(File::getName)
-                .filter(isCredentials.and(isColors))
+                .filter(isNotCredentials.and(isNotColors))
                 .sorted()
                 .collect(Collectors.toList());
     }
