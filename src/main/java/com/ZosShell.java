@@ -276,12 +276,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                var mvsCommandCandidate = "";
+                StringBuilder mvsCommandCandidate = new StringBuilder();
                 for (int i = 1; i < params.length; i++)
-                    mvsCommandCandidate += params[i];
+                    mvsCommandCandidate.append(params[i]);
                 var count = mvsCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (count == 2) {
-                    commands.mvsCommand(currConnection, mvsCommandCandidate);
+                    commands.mvsCommand(currConnection, mvsCommandCandidate.toString());
                 } else {
                     terminal.println(Constants.MVS_INVALID_COMMAND_MSG);
                 }
