@@ -283,7 +283,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (count == 2) {
                     commands.mvsCommand(currConnection, mvsCommandCandidate);
                 } else {
-                    terminal.println("invalid command, please use double quotes around the command string and try again...");
+                    terminal.println(Constants.MVS_INVALID_COMMAND_MSG);
                 }
                 break;
             case "ls":

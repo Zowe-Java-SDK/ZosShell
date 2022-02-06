@@ -1,5 +1,6 @@
 package com.commands;
 
+import com.Constants;
 import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.zosconsole.IssueCommand;
 import zowe.client.sdk.zosconsole.input.IssueParams;
@@ -29,10 +30,10 @@ public class MvsCommand {
             issueCommand.issue(params);
         } catch (Exception e) {
             terminal.println(e.getMessage());
-            terminal.println("error executing command, try again...");
+            terminal.println(Constants.MVS_EXECUTION_ERROR_MSG);
             return;
         }
-        terminal.println("mvs command executed...");
+        terminal.println(Constants.MVS_EXECUTION_SUCCESS_MSG);
     }
 
 }
