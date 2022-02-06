@@ -226,6 +226,11 @@ public class Commands {
         Help.displayHelp(terminal);
     }
 
+    public void mvsCommand(ZOSConnection connection, String command) {
+        var mvsCommand = new MvsCommand(terminal, new IssueCommand(connection));
+        mvsCommand.executeCommand(command);
+    }
+
     public void ls(ZOSConnection connection, String dataSet) {
         var listing = new Listing(terminal, new ZosDsnList(connection));
         listing.ls(dataSet, false);
