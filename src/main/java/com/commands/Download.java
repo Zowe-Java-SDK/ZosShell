@@ -34,7 +34,7 @@ public class Download {
                 return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
             }
             if (!SystemUtils.IS_OS_WINDOWS) {
-                return new ResponseStatus(message + Constants.WINDOWS_ERROR_MSG, false);
+                return new ResponseStatus(message + Constants.WINDOWS_ERROR, false);
             }
             var directoryPath = DIRECTORY_PATH + dataSet;
             var fileNamePath = directoryPath + "\\" + member;

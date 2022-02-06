@@ -33,7 +33,7 @@ public class MvsCommand {
             terminal.println(Constants.MVS_EXECUTION_ERROR_MSG);
             return;
         }
-        terminal.println(Constants.MVS_EXECUTION_SUCCESS_MSG);
+        terminal.println(Constants.MVS_EXECUTION_SUCCESS);
     }
 
 }

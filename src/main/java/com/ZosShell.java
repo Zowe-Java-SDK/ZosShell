@@ -321,7 +321,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (count == 2) {
                     commands.mvsCommand(currConnection, mvsCommandCandidate.toString());
                 } else {
-                    terminal.println(Constants.MVS_INVALID_COMMAND_MSG);
+                    terminal.println(Constants.MVS_INVALID_COMMAND);
                 }
                 break;
             case "ps":

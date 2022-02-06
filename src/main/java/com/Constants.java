@@ -4,7 +4,7 @@ public class Constants {
 
     public static final String APP_TITLE = "ZosShell";
     public static final String ARROW = " ==> ";
-    public static final String BROWSE_TIMEOUT_MSG = "timeout, log may be too large to display, try again...";
+    public static final String BROWSE_TIMEOUT = "timeout, log may be too large to display, try again...";
     public static final CharSequence CONNECTION_REFUSED = "Connection refused";
     public static final String COPY_OPS_ITSELF_ERROR =
             "first argument invalid for cp operation, cant copy from same location, try again...";
@@ -40,8 +40,8 @@ public class Constants {
     public static final String MISSING_COUNT_PARAM = "specified either \"count members\" or \"count datasets\"";
     public static final String MISSING_PARAMETERS = "missing parameter(s), try again...";
     public static final String MVS_EXECUTION_ERROR_MSG = "error executing command, try again...";
-    public static final String MVS_EXECUTION_SUCCESS_MSG = "mvs command executed...";
-    public static final String MVS_INVALID_COMMAND_MSG =
+    public static final String MVS_EXECUTION_SUCCESS = "mvs command executed...";
+    public static final String MVS_INVALID_COMMAND =
             "invalid command, please use double quotes around the command string and try again...";
     public static final String PATH_FILE_DIRECTORY_WINDOWS = "C:\\ZosShell";
     public static final String SECURITY_CONFIG_PATH_FILE = PATH_FILE_DIRECTORY_WINDOWS + "\\credentials.txt";
@@ -50,6 +50,6 @@ public class Constants {
     public static final int STRING_PAD_LENGTH = 8;
     public static final String TOO_MANY_PARAMETERS = "too many parameters, try again...";
     public static final Object WINDOWS_EDITOR_NAME = "notepad";
-    public static final String WINDOWS_ERROR_MSG = "this command is only supported on windows at the moment...";
+    public static final String WINDOWS_ERROR = "this command is only supported on windows at the moment...";
 
 }

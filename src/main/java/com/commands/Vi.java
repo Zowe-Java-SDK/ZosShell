@@ -28,7 +28,7 @@ public class Vi {
                 rs.exec(editor + " " + pathFile);
             }
             if (!SystemUtils.IS_OS_WINDOWS) {
-                result = new ResponseStatus(Constants.WINDOWS_ERROR_MSG, false);
+                result = new ResponseStatus(Constants.WINDOWS_ERROR, false);
             }
         } catch (IOException e) {
             result = new ResponseStatus(e.getMessage(), false);

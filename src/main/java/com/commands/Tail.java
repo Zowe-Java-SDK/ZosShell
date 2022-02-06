@@ -20,7 +20,7 @@ public class Tail extends JobLog {
             result = browseJobLog(params[1]);
         } catch (Exception e) {
             if (e.getMessage().contains("timeout")) {
-                terminal.println(Constants.BROWSE_TIMEOUT_MSG);
+                terminal.println(Constants.BROWSE_TIMEOUT);
                 return null;
             }
             if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
