@@ -41,8 +41,10 @@ public class Constants {
     public static final String MISSING_PARAMETERS = "missing parameter(s), try again...";
     public static final String MVS_EXECUTION_ERROR_MSG = "error executing command, try again...";
     public static final String MVS_EXECUTION_SUCCESS = "mvs command executed...";
+    public static final String MVS_EXTRA_TEXT_INVALID_COMMAND =
+            "invalid command, remove extra text beyond second double quote and try again...";
     public static final String MVS_INVALID_COMMAND =
-            "invalid command, please use double quotes around the command string and try again...";
+            "invalid command, please use two double quotes only around the command string and try again...";
     public static final String PATH_FILE_DIRECTORY_WINDOWS = "C:\\ZosShell";
     public static final String SECURITY_CONFIG_PATH_FILE = PATH_FILE_DIRECTORY_WINDOWS + "\\credentials.txt";
     public static final String COLOR_CONFIG_PATH_FILE = PATH_FILE_DIRECTORY_WINDOWS + "\\colors.txt";

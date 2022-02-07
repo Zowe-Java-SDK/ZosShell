@@ -318,8 +318,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 for (int i = 1; i < params.length; i++)
                     mvsCommandCandidate.append(params[i]);
                 var count = mvsCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
-                if (count == 2) {
+                if (count == 2 && mvsCommandCandidate.charAt(mvsCommandCandidate.length() - 1) == '\"') {
                     commands.mvsCommand(currConnection, mvsCommandCandidate.toString());
+                } else if (count == 2) {
+                    terminal.println(Constants.MVS_EXTRA_TEXT_INVALID_COMMAND);
                 } else {
                     terminal.println(Constants.MVS_INVALID_COMMAND);
                 }
