@@ -112,7 +112,7 @@ Example:
   
     449,white
 
-![Demo](https://github.com/frankgiordano/ZosShell/blob/demos/master/color.gif)    
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/color.gif)    
 
 ## Trouble Shooting
     
