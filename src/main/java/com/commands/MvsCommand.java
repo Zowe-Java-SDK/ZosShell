@@ -2,6 +2,7 @@ package com.commands;
 
 import com.Constants;
 import org.beryx.textio.TextTerminal;
+import zowe.client.sdk.zosconsole.ConsoleResponse;
 import zowe.client.sdk.zosconsole.IssueCommand;
 import zowe.client.sdk.zosconsole.input.IssueParams;
 
@@ -20,19 +21,21 @@ public class MvsCommand {
     public void executeCommand(String command) {
         var p = Pattern.compile("\"([^\"]*)\"");
         var m = p.matcher(command);
+        ConsoleResponse response;
         try {
             while (m.find()) {
                 command = m.group(1);
             }
             var params = new IssueParams();
             params.setCommand(command);
-            issueCommand.issue(params);
+            response = issueCommand.issue(params);
         } catch (Exception e) {
             terminal.println(e.getMessage());
             terminal.println(Constants.MVS_EXECUTION_ERROR_MSG);
             return;
         }
         terminal.println(Constants.MVS_EXECUTION_SUCCESS);
+        terminal.println(response.getCommandResponse().orElse("no response"));
     }
 
 }
