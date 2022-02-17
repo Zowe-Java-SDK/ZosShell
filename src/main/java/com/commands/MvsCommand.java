@@ -1,7 +1,9 @@
 package com.commands;
 
 import com.Constants;
+import com.config.MvsConsoles;
 import org.beryx.textio.TextTerminal;
+import zowe.client.sdk.core.ZOSConnection;
 import zowe.client.sdk.zosconsole.ConsoleResponse;
 import zowe.client.sdk.zosconsole.IssueCommand;
 import zowe.client.sdk.zosconsole.input.IssueParams;
@@ -11,31 +13,55 @@ import java.util.regex.Pattern;
 public class MvsCommand {
 
     private final TextTerminal<?> terminal;
-    private final IssueCommand issueCommand;
+    private IssueCommand issueCommand;
+    private final ZOSConnection connection;
+    private final MvsConsoles mvsConsoles = new MvsConsoles();
 
-    public MvsCommand(TextTerminal<?> terminal, IssueCommand issueCommand) {
+    public MvsCommand(TextTerminal<?> terminal, ZOSConnection connection) {
         this.terminal = terminal;
-        this.issueCommand = issueCommand;
+        this.connection = connection;
+        this.issueCommand = new IssueCommand(connection);
     }
 
     public void executeCommand(String command) {
         var p = Pattern.compile("\"([^\"]*)\"");
         var m = p.matcher(command);
-        ConsoleResponse response;
+        while (m.find()) {
+            command = m.group(1);
+        }
+
+        ConsoleResponse response = null;
+        var params = new IssueParams();
+        params.setCommand(command);
+        var mvsConsoleName = mvsConsoles.getConsoleName(connection.getHost());
+        if (mvsConsoleName != null) {
+            params.setConsoleName(mvsConsoleName);
+        }
         try {
-            while (m.find()) {
-                command = m.group(1);
+            response = execute(params);
+        } catch (Exception ignored) {
+        }
+
+        if (response == null) {
+            params.setConsoleName(null);
+            try {
+                response = execute(params);
+            } catch (Exception ignored) {
             }
-            var params = new IssueParams();
-            params.setCommand(command);
-            response = issueCommand.issue(params);
-        } catch (Exception e) {
-            terminal.println(e.getMessage());
+        }
+
+        if (response == null) {
             terminal.println(Constants.MVS_EXECUTION_ERROR_MSG);
             return;
         }
         terminal.println(Constants.MVS_EXECUTION_SUCCESS);
         terminal.println(response.getCommandResponse().orElse("no response"));
+    }
+
+    private ConsoleResponse execute(IssueParams params) throws Exception {
+        ConsoleResponse response;
+        response = issueCommand.issue(params);
+        return response;
     }
 
 }

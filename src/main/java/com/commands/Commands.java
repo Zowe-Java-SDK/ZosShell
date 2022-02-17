@@ -237,7 +237,7 @@ public class Commands {
     }
 
     public void mvsCommand(ZOSConnection connection, String command) {
-        var mvsCommand = new MvsCommand(terminal, new IssueCommand(connection));
+        var mvsCommand = new MvsCommand(terminal, connection);
         mvsCommand.executeCommand(command);
     }
 

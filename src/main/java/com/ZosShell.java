@@ -317,8 +317,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 StringBuilder mvsCommandCandidate = new StringBuilder();
                 for (int i = 1; i < params.length; i++) {
                     mvsCommandCandidate.append(params[i]);
-                    if (i != params.length - 1)
+                    if (i != params.length - 1) {
                         mvsCommandCandidate.append(" ");
+                    }
                 }
                 var count = mvsCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (count == 2 && mvsCommandCandidate.charAt(mvsCommandCandidate.length() - 1) == '\"') {

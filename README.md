@@ -82,8 +82,10 @@ connection values. You can change the drive\directory location by changing the h
   
 Format:  
     
-    hostname,zomsfportnumber,username,password  
-    
+    hostname,zomsfportnumber,username,password,mvsconsolename  
+  
+NOTE: "mvsconsolename" is optional and not needed. If you find trouble executing the mvs command, then your zosmf instance may be using a console name other than the default. If so, you can specify it here for the app to use when executing mvs command.   
+        
 At the root directory prompt, execute the following maven command:  
   
     mvn clean install  
