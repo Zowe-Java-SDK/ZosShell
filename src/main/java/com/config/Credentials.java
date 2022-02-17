@@ -18,11 +18,11 @@ public class Credentials {
 
             String str;
             while ((str = br.readLine()) != null) {
-                var line = str.split(",");
-                if (line.length < 4) {
+                var items = str.split(",");
+                if (items.length < 4) {
                     continue;
                 }
-                var connection = new ZOSConnection(line[0], line[1], line[2], line[3]);
+                var connection = new ZOSConnection(items[0], items[1], items[2], items[3]);
                 connections.add(connection);
             }
         } catch (IOException ignored) {
