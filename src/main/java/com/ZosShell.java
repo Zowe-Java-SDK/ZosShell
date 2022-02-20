@@ -64,6 +64,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     @Override
     public void accept(TextIO textIO, RunnerData runnerData) {
         terminal = textIO.getTextTerminal();
+        terminal.setBookmark("top");
         ColorConfig.readConfig(terminal);
         commands = new Commands(connections, terminal);
         history = new History(terminal);
@@ -188,6 +189,16 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 currConnection = commands.change(currConnection, params);
+                break;
+            case "clearlog":
+                if (jobOutput != null) {
+                    jobOutput.getOutput().setLength(0);
+                    jobOutput = null;
+                    System.gc();
+                }
+                break;
+            case "clear":
+                terminal.resetToBookmark("top");
                 break;
             case "color":
                 if (isParamsMissing(1, params)) {
