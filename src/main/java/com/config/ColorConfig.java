@@ -13,8 +13,7 @@ public class ColorConfig {
     public static void readConfig(TextTerminal<?> terminal) {
         var file = new File(Constants.COLOR_CONFIG_PATH_FILE);
         String[] str = null;
-        try {
-            var br = new BufferedReader(new FileReader(file));
+        try (var br = new BufferedReader(new FileReader(file))) {
             str = br.readLine().split(",");
         } catch (IOException ignored) {
         }

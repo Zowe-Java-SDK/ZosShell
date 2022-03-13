@@ -19,9 +19,7 @@ public class MvsConsoles {
 
     public void setup() {
         var file = new File(Constants.SECURITY_CONFIG_PATH_FILE);
-        try {
-            var br = new BufferedReader(new FileReader(file));
-
+        try (var br = new BufferedReader(new FileReader(file))) {
             String str;
             while ((str = br.readLine()) != null) {
                 var items = str.split(",");
