@@ -48,7 +48,7 @@ Along with following custom commands:
     count members                 - return member count in current pwd dataset
     count datasets                - return dataset count in current pwd dataset
     cp | copy <arg> <arg>         - where arg can be ".", "*", member, dataset or dataset(member)
-    download <arg1> <arg>         - download arg1 to local c:\ZosShell\pwd where arg1 is member or sequential dataset  
+    download <arg1> <arg2>        - download arg1 to local c:\ZosShell\pwd where arg1 is member or sequential dataset  
                                     and arg2 is optional and only accepts "-b" for binary download      
     mvs <arg>                     - execute a mvs command where arg is a command string within double quotes
     end                           - end session closes shell UI window
