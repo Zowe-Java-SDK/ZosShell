@@ -4,41 +4,59 @@ import com.Constants;
 import com.dto.ResponseStatus;
 import com.google.common.base.Strings;
 import com.utility.Util;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.SystemUtils;
 import zowe.client.sdk.utility.UtilIO;
 import zowe.client.sdk.zosfiles.ZosDsnDownload;
 import zowe.client.sdk.zosfiles.input.DownloadParams;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Download {
 
-    private final ZosDsnDownload download;
-    private final DownloadParams dlParams = new DownloadParams.Builder().build();
     public static final String DIRECTORY_PATH = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\";
+    private final ZosDsnDownload download;
+    private DownloadParams dlParams;
+    private final boolean isBinary;
 
-    public Download(ZosDsnDownload download) {
+    public Download(ZosDsnDownload download, boolean isBinary) {
         this.download = download;
+        this.isBinary = isBinary;
     }
 
     public ResponseStatus download(String dataSet, String member) {
         var message = Strings.padStart(member, 8, ' ') + Constants.ARROW;
+
+        if (!SystemUtils.IS_OS_WINDOWS) {
+            return new ResponseStatus(message + Constants.WINDOWS_ERROR, false);
+        }
+
+        var directoryPath = DIRECTORY_PATH + dataSet;
+        var fileNamePath = directoryPath + "\\" + member;
+
         try {
-            var content = getContent(dataSet, member);
-            if (content == null) {
-                return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
+            String textContent;
+            InputStream binaryContent;
+
+            if (!isBinary) {
+                dlParams = new DownloadParams.Builder().build();
+                textContent = getTextContent(dataSet, member);
+                if (textContent == null) {
+                    return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
+                }
+                writeTextFile(textContent, directoryPath, fileNamePath);
+            } else {
+                dlParams = new DownloadParams.Builder().binary(true).build();
+                binaryContent = getBinaryContent(dataSet, member);
+                if (binaryContent == null) {
+                    return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
+                }
+                writeBinaryFile(binaryContent, directoryPath, fileNamePath);
             }
-            if (!SystemUtils.IS_OS_WINDOWS) {
-                return new ResponseStatus(message + Constants.WINDOWS_ERROR, false);
-            }
-            var directoryPath = DIRECTORY_PATH + dataSet;
-            var fileNamePath = directoryPath + "\\" + member;
-            message = writeFile(message, content, directoryPath, fileNamePath);
+            message += "downloaded to " + fileNamePath;
         } catch (Exception e) {
             if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
                 return new ResponseStatus(message + Constants.CONNECTION_REFUSED, false);
@@ -48,13 +66,25 @@ public class Download {
         return new ResponseStatus(message, true);
     }
 
-    protected String getContent(String dataSet, String param) throws Exception {
+    private void writeBinaryFile(InputStream input, String directoryPath, String fileNamePath) throws IOException {
+        Files.createDirectories(Paths.get(directoryPath));
+        FileUtils.copyInputStreamToFile(input, new File(fileNamePath));
+    }
+
+    private String getTextContent(String dataSet, String param) throws Exception {
         var inputStream = getInputStream(dataSet, param);
-        return getStreamData(inputStream);
+        return getTextStreamData(inputStream);
+    }
+
+    private InputStream getBinaryContent(String dataSet, String param) throws Exception {
+        return getInputStream(dataSet, param);
     }
 
     public InputStream getInputStream(String dataSet, String param) throws Exception {
         InputStream inputStream;
+        if (dlParams == null) {
+            dlParams = new DownloadParams.Builder().build();
+        }
         if (Util.isDataSet(param)) {
             inputStream = download.downloadDsn(String.format("%s", param), dlParams);
         } else {
@@ -63,7 +93,7 @@ public class Download {
         return inputStream;
     }
 
-    protected String getStreamData(InputStream inputStream) throws IOException {
+    private String getTextStreamData(InputStream inputStream) throws IOException {
         if (inputStream != null) {
             var writer = new StringWriter();
             IOUtils.copy(inputStream, writer, UtilIO.UTF8);
@@ -74,12 +104,9 @@ public class Download {
         return null;
     }
 
-    protected String writeFile(String message, String content, String directoryPath, String fileNamePath)
-            throws IOException {
+    protected void writeTextFile(String content, String directoryPath, String fileNamePath) throws IOException {
         Files.createDirectories(Paths.get(directoryPath));
         Files.write(Paths.get(fileNamePath), content.getBytes());
-        message += "downloaded to " + fileNamePath;
-        return message;
     }
 
 }
