@@ -83,7 +83,7 @@ public class Commands {
     public void cat(ZOSConnection connection, String dataSet, String param) {
         Concatenate concatenate;
         try {
-            concatenate = new Concatenate(terminal, new Download(new ZosDsnDownload(connection)));
+            concatenate = new Concatenate(terminal, new Download(new ZosDsnDownload(connection), false));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
@@ -148,18 +148,18 @@ public class Commands {
         count.count(dataSet, param);
     }
 
-    public void download(ZOSConnection connection, String currDataSet, String member) {
+    public void download(ZOSConnection connection, String currDataSet, String member, boolean isBinary) {
         if ("*".equals(member)) {
             final List<String> members = Util.getMembers(terminal, connection, currDataSet);
             if (members.isEmpty()) {
                 return;
             }
-            multipleDownload(connection, currDataSet, members).forEach(i -> terminal.println(i.getMessage()));
+            multipleDownload(connection, currDataSet, members, isBinary).forEach(i -> terminal.println(i.getMessage()));
             return;
         }
         Download download;
         try {
-            download = new Download(new ZosDsnDownload(connection));
+            download = new Download(new ZosDsnDownload(connection), isBinary);
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;
@@ -174,12 +174,12 @@ public class Commands {
         }
     }
 
-    private List<ResponseStatus> multipleDownload(ZOSConnection connection, String dataSet, List<String> members) {
+    private List<ResponseStatus> multipleDownload(ZOSConnection connection, String dataSet, List<String> members, boolean isBinary) {
         final var pool = Executors.newFixedThreadPool(members.size());
         var futures = new ArrayList<Future<ResponseStatus>>();
 
         for (var member : members) {
-            futures.add(pool.submit(new FutureDownload(new ZosDsnDownload(connection), dataSet, member)));
+            futures.add(pool.submit(new FutureDownload(new ZosDsnDownload(connection), dataSet, member, isBinary)));
         }
 
         var result = getFutureResults(futures);
@@ -350,7 +350,7 @@ public class Commands {
     }
 
     public void vi(ZOSConnection connection, String dataSet, String[] params) {
-        var vi = new Vi(terminal, new Download(new ZosDsnDownload(connection)));
+        var vi = new Vi(terminal, new Download(new ZosDsnDownload(connection), false));
         vi.vi(dataSet, params[1]);
     }
 

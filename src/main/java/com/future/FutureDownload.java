@@ -11,8 +11,8 @@ public class FutureDownload extends Download implements Callable<ResponseStatus>
     private final String dataSet;
     private final String member;
 
-    public FutureDownload(ZosDsnDownload download, String dataSet, String member) {
-        super(download);
+    public FutureDownload(ZosDsnDownload download, String dataSet, String member, boolean isBinary) {
+        super(download, isBinary);
         this.dataSet = dataSet;
         this.member = member;
     }
