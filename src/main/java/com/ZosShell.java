@@ -464,7 +464,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 commands.vi(currConnection, currDataSet, params);
                 break;
             case "whoami":
-                if (connections != null) {
+                if (connections != null && currConnection != null) {
                     terminal.println(currConnection.getUser());
                 }
                 break;
