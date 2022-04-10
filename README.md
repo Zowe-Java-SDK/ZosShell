@@ -1,4 +1,6 @@
-# ZosShell
+# ZosShell  
+
+Are you a newbie to z/OS? Do you find the verbosity of ISPF or Zowe CLI time consuming. Try this little app!  
 
 ## Demo shows most of the common commands functionality:
 
