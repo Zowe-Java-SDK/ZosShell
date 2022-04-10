@@ -247,11 +247,20 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                if (isParamsExceeded(2, params)) {
+                if (isParamsExceeded(3, params)) {
                     return;
                 }
                 param = params[1];
-                commands.download(currConnection, currDataSet, param);
+                boolean isBinary = false;
+                if (params.length == 3) {
+                    if (params[2].equalsIgnoreCase("-b")) {
+                        isBinary = true;
+                    } else {
+                        terminal.println(Constants.INVALID_PARAMETER);
+                        return;
+                    }
+                }
+                commands.download(currConnection, currDataSet, param, isBinary);
                 break;
             case "end":
                 if (isParamsExceeded(1, params)) {
