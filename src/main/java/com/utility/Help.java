@@ -47,7 +47,7 @@ public class Help {
             "vi <arg>                - where arg is a sequential dataset or member name, arg will be downloaded",
             "                          and displayed for editing, use save command to save changes",
             "v | visited             - a list of visited datasets",
-            "whoami                  - show current connected user name)");
+            "whoami                  - show current connected user name");
 
     public static void displayHelp(TextTerminal<?> terminal) {
         HELP.forEach(terminal::println);
