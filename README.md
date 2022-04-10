@@ -25,6 +25,7 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
     history <arg>           - where arg is optional and indicates the number to display from bottom   
     !n                      - where n is a number, to execute command number n in history list   
     !string                 - will execute the last history command starting with that “string”
+    !!                      - will execute the last history command
     ls <arg>                - where arg is a dataset value or empty 
     ls -l <arg>             - where arg is a dataset value or empty 
     ps                      - display all processes running

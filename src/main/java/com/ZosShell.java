@@ -113,7 +113,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             var str = cmd.substring(1);
             var isStrNum = Util.isStrNum(str);
             String newCmd;
-            if (isStrNum) {
+            if ("!".equals(str)) {
+                newCmd = history.getLastHistory();
+            } else if (isStrNum) {
                 newCmd = history.getHistoryByIndex(Integer.parseInt(str) - 1);
             } else {
                 newCmd = history.getLastHistoryByValue(str);

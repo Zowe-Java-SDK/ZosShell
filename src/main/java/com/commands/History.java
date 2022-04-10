@@ -98,6 +98,14 @@ public class History {
         return commandLst.get(index);
     }
 
+    public String getLastHistory() {
+        if (commandLst.isEmpty()) {
+            terminal.println(Constants.NO_HISTORY);
+            return null;
+        }
+        return commandLst.get(commandLst.size() - 1);
+    }
+
     public String getLastHistoryByValue(String str) {
         var lst = commandLst.stream().filter(c -> c.startsWith(str.toLowerCase())).collect(Collectors.toList());
         if (lst.isEmpty()) {
