@@ -1,7 +1,9 @@
 # ZosShell  
 
-Are you a newbie to z/OS? Do you find the verbosity of ISPF or Zowe CLI time consuming. Try this little app!  
+Are you a newbie to z/OS? Do you find the verbosity of ISPF or Zowe CLI time-consuming? Try this little app!  
 
+This app provides a client Linux like shell to manipulate members and datasets on your z/OS backend.     
+    
 ## Demo shows most of the common commands functionality:
 
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/main-demo.gif)
