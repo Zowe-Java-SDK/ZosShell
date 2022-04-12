@@ -2,6 +2,7 @@ package com.commands;
 
 import com.Constants;
 import com.config.MvsConsoles;
+import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.core.ZOSConnection;
 import zowe.client.sdk.zosconsole.ConsoleResponse;
@@ -13,7 +14,7 @@ import java.util.regex.Pattern;
 public class MvsCommand {
 
     private final TextTerminal<?> terminal;
-    private IssueCommand issueCommand;
+    private final IssueCommand issueCommand;
     private final ZOSConnection connection;
     private final MvsConsoles mvsConsoles = new MvsConsoles();
 
@@ -24,6 +25,11 @@ public class MvsCommand {
     }
 
     public void executeCommand(String command) {
+        if (!SystemUtils.IS_OS_WINDOWS && !SystemUtils.IS_OS_MAC_OSX) {
+            terminal.println(Constants.OS_ERROR);
+            return;
+        }
+
         var p = Pattern.compile("\"([^\"]*)\"");
         var m = p.matcher(command);
         while (m.find()) {

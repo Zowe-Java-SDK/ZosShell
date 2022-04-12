@@ -2,6 +2,7 @@ package com.commands;
 
 import com.Constants;
 import com.utility.Util;
+import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.zosfiles.ZosDsn;
 
@@ -32,7 +33,15 @@ public class Save {
             return;
         }
 
-        var fileName = Download.DIRECTORY_PATH + dataSet + "\\" + member;
+        String fileName;
+        if (SystemUtils.IS_OS_WINDOWS) {
+            fileName = Download.DIRECTORY_PATH_WINDOWS + dataSet + "\\" + member;
+        } else if (SystemUtils.IS_OS_MAC_OSX) {
+            fileName = Download.DIRECTORY_PATH_MAC + dataSet + "/" + member;
+        } else {
+            terminal.println(Constants.OS_ERROR);
+            return;
+        }
 
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             var sb = new StringBuilder();

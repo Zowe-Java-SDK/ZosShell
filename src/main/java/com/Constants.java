@@ -11,7 +11,7 @@ public class Constants {
     public static final String COPY_OPS_NO_MEMBER_ERROR =
             "first argument invalid for cp operation, specified a member, try again...";
     public static final String COPY_OPS_NO_MEMBER_AND_DATASET_ERROR =
-            "first argument invalid for cp operation, specified valid dataset or member or or dataset(member), try again...";
+            "first argument invalid for cp operation, specified valid dataset or member or dataset(member), try again...";
     public static final String DATASET_OR_HIGH_QUALIFIER_ERROR =
             "invalid dataset or cant change to high qualifier level, try again...";
     public static final String DATASET_NOT_SPECIFIED = "no dataset specified, try again...";
@@ -37,6 +37,7 @@ public class Constants {
             "no listing results returned, connection problem or data set may not exist, try again...";
     public static final String NO_MEMBERS = "no members...";
     public static final String NO_PROCESS_FOUND = "no process found, try again...";
+    public static final String MAC_EDITOR_NAME = "open -a TextEdit";
     public static final String MISSING_COUNT_PARAM = "specified either \"count members\" or \"count datasets\"";
     public static final String MISSING_PARAMETERS = "missing parameter(s), try again...";
     public static final String MVS_EXECUTION_ERROR_MSG = "error executing command, try again...";
@@ -45,13 +46,16 @@ public class Constants {
             "invalid command, remove extra text beyond second double quote and try again...";
     public static final String MVS_INVALID_COMMAND =
             "invalid command, please use two double quotes only around the command string and try again...";
+    public static final String PATH_FILE_DIRECTORY_MAC = "/ZosShell";
     public static final String PATH_FILE_DIRECTORY_WINDOWS = "C:\\ZosShell";
-    public static final String SECURITY_CONFIG_PATH_FILE = PATH_FILE_DIRECTORY_WINDOWS + "\\credentials.txt";
-    public static final String COLOR_CONFIG_PATH_FILE = PATH_FILE_DIRECTORY_WINDOWS + "\\colors.txt";
+    public static final String SECURITY_CONFIG_PATH_FILE_MAC = PATH_FILE_DIRECTORY_MAC + "/credentials.txt";
+    public static final String SECURITY_CONFIG_PATH_FILE_WINDOWS = PATH_FILE_DIRECTORY_WINDOWS + "\\credentials.txt";
+    public static final String COLOR_CONFIG_PATH_FILE_MAC = PATH_FILE_DIRECTORY_MAC + "/colors.txt";
+    public static final String COLOR_CONFIG_PATH_FILE_WINDOWS = PATH_FILE_DIRECTORY_WINDOWS + "\\colors.txt";
     public static final String SEVERE_ERROR = "server error, check connection...";
     public static final int STRING_PAD_LENGTH = 8;
     public static final String TOO_MANY_PARAMETERS = "too many parameters, try again...";
-    public static final Object WINDOWS_EDITOR_NAME = "notepad";
-    public static final String WINDOWS_ERROR = "this command is only supported on windows at the moment...";
+    public static final String WINDOWS_EDITOR_NAME = "notepad";
+    public static final String OS_ERROR = "command is only supported on Windows and Mac OSX...";
 
 }

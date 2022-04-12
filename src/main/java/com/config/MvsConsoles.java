@@ -1,6 +1,7 @@
 package com.config;
 
 import com.Constants;
+import org.apache.commons.lang3.SystemUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,18 +9,24 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class MvsConsoles {
 
-    private Map<String, String> consoles = new HashMap<>();
+    private final Map<String, String> consoles = new HashMap<>();
 
     public MvsConsoles() {
         setup();
     }
 
     public void setup() {
-        var file = new File(Constants.SECURITY_CONFIG_PATH_FILE);
-        try (var br = new BufferedReader(new FileReader(file))) {
+        File file = null;
+        if (SystemUtils.IS_OS_WINDOWS) {
+            file = new File(Constants.SECURITY_CONFIG_PATH_FILE_WINDOWS);
+        } else if (SystemUtils.IS_OS_MAC) {
+            file = new File(Constants.SECURITY_CONFIG_PATH_FILE_MAC);
+        }
+        try (var br = new BufferedReader(new FileReader(Objects.requireNonNull(file)))) {
             String str;
             while ((str = br.readLine()) != null) {
                 var items = str.split(",");
@@ -27,7 +34,7 @@ public class MvsConsoles {
                     consoles.put(items[0], items[4]);
                 }
             }
-        } catch (IOException ignored) {
+        } catch (IOException | NullPointerException ignored) {
         }
     }
 
