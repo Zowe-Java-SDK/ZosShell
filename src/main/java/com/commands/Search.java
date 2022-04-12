@@ -29,7 +29,7 @@ public class Search {
             } else {
                 terminal.println("no results found in job log for " + jobName + "...");
             }
-        }, () -> terminal.println("nothing to search for, try again..."));
+        }, () -> terminal.println("nothing to search for, perform browsejob command first, try again..."));
     }
 
 }
