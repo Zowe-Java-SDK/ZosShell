@@ -50,7 +50,7 @@ public class Commands {
             Util.printError(terminal, e.getMessage());
             return null;
         }
-        StringBuilder output = new StringBuilder();
+        StringBuilder output;
         try {
             output = browseJob.browseJob(params[1]);
         } catch (Exception e) {
