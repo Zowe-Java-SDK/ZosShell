@@ -22,13 +22,17 @@ public class Vi {
     public void vi(String dataSet, String member) {
         ResponseStatus result = download.download(dataSet, member);
         try {
-            if (result.isStatus() && SystemUtils.IS_OS_WINDOWS) {
-                var pathFile = Download.DIRECTORY_PATH + dataSet + "//" + member;
-                var editor = Constants.WINDOWS_EDITOR_NAME;
-                rs.exec(editor + " " + pathFile);
-            }
-            if (!SystemUtils.IS_OS_WINDOWS) {
-                result = new ResponseStatus(Constants.WINDOWS_ERROR, false);
+            if (result.isStatus()) {
+                String pathFile = null;
+                String editorName = null;
+                if (SystemUtils.IS_OS_WINDOWS) {
+                    pathFile = Download.DIRECTORY_PATH_WINDOWS + dataSet + "\\" + member;
+                    editorName = Constants.WINDOWS_EDITOR_NAME;
+                } else if (SystemUtils.IS_OS_MAC_OSX) {
+                    pathFile = Download.DIRECTORY_PATH_MAC + dataSet + "/" + member;
+                    editorName = Constants.MAC_EDITOR_NAME;
+                }
+                rs.exec(editorName + " " + pathFile);
             }
         } catch (IOException e) {
             result = new ResponseStatus(e.getMessage(), false);

@@ -20,7 +20,8 @@ import java.nio.file.Paths;
 
 public class Download {
 
-    public static final String DIRECTORY_PATH = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\";
+    public static final String DIRECTORY_PATH_WINDOWS = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\";
+    public static final String DIRECTORY_PATH_MAC = Constants.PATH_FILE_DIRECTORY_MAC + "/";
     private final ZosDsnDownload download;
     private DownloadParams dlParams;
     private final boolean isBinary;
@@ -33,12 +34,19 @@ public class Download {
     public ResponseStatus download(String dataSet, String member) {
         var message = Strings.padStart(member, 8, ' ') + Constants.ARROW;
 
-        if (!SystemUtils.IS_OS_WINDOWS) {
-            return new ResponseStatus(message + Constants.WINDOWS_ERROR, false);
+        if (!SystemUtils.IS_OS_WINDOWS && !SystemUtils.IS_OS_MAC_OSX) {
+            return new ResponseStatus(message + Constants.OS_ERROR, false);
         }
 
-        var directoryPath = DIRECTORY_PATH + dataSet;
-        var fileNamePath = directoryPath + "\\" + member;
+        String directoryPath;
+        String fileNamePath;
+        if (SystemUtils.IS_OS_WINDOWS) {
+            directoryPath = DIRECTORY_PATH_WINDOWS + dataSet;
+            fileNamePath = directoryPath + "\\" + member;
+        } else {
+            directoryPath = DIRECTORY_PATH_MAC + dataSet;
+            fileNamePath = directoryPath + "/" + member;
+        }
 
         try {
             String textContent;
