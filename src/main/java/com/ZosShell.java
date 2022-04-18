@@ -32,7 +32,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static Commands commands;
     private static History history;
     private static JobOutput jobOutput;
-    private final static SwingTextTerminal mainTerminal = new SwingTextTerminal();
+    private static final SwingTextTerminal mainTerminal = new SwingTextTerminal();
 
     public static void main(String[] args) {
         Credentials.readCredentials(connections);
