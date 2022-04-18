@@ -79,19 +79,6 @@ public class Util {
         }
     }
 
-    public static String getPrompt(ZOSConnection connection) {
-        var prompt = ">";
-        if (connection == null) {
-            return prompt;
-        }
-        var periodIndex = connection.getHost().indexOf(".");
-        if (periodIndex != -1) {
-            return connection.getHost().substring(0, connection.getHost().indexOf(".")) + prompt;
-        } else {
-            return connection.getHost() + prompt;
-        }
-    }
-
     public static boolean isHttpError(int statusCode) {
         return !((statusCode >= 200 && statusCode <= 299) || (statusCode >= 100 && statusCode <= 199));
     }
@@ -137,6 +124,10 @@ public class Util {
     public static String getMsgAfterArrow(String msg) {
         var index = msg.indexOf(Constants.ARROW) + Constants.ARROW.length();
         return msg.substring(index);
+    }
+
+    public static String getPrompt() {
+        return Constants.DEFAULT_PROMPT;
     }
 
 }

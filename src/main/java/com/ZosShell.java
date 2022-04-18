@@ -32,31 +32,31 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static Commands commands;
     private static History history;
     private static JobOutput jobOutput;
+    private final static SwingTextTerminal mainTerminal = new SwingTextTerminal();
 
     public static void main(String[] args) {
         Credentials.readCredentials(connections);
         if (!connections.isEmpty()) {
             currConnection = connections.get(0);
         }
-        var mainTerm = new SwingTextTerminal();
-        mainTerm.init();
-        setTerminalProperties(mainTerm);
-        var mainTextIO = new TextIO(mainTerm);
+        mainTerminal.init();
+        setTerminalProperties();
+        var mainTextIO = new TextIO(mainTerminal);
         new ZosShell().accept(mainTextIO, null);
     }
 
-    private static void setTerminalProperties(SwingTextTerminal mainTerm) {
-        mainTerm.setPaneTitle(Constants.APP_TITLE);
-        mainTerm.registerHandler("ctrl C", t -> {
+    private static void setTerminalProperties() {
+        mainTerminal.setPaneTitle(Constants.APP_TITLE + " - CONNECTED TO " + currConnection.getHost().toUpperCase());
+        mainTerminal.registerHandler("ctrl C", t -> {
             t.getTextPane().copy();
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
-        mainTerm.registerHandler("UP", t -> {
-            history.listUpCommands(Util.getPrompt(currConnection));
+        mainTerminal.registerHandler("UP", t -> {
+            history.listUpCommands(Util.getPrompt());
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
-        mainTerm.registerHandler("DOWN", t -> {
-            history.listDownCommands(Util.getPrompt(currConnection));
+        mainTerminal.registerHandler("DOWN", t -> {
+            history.listDownCommands(Util.getPrompt());
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
     }
@@ -77,8 +77,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         String[] command;
         String commandLine = "";
         while (!"end".equalsIgnoreCase(commandLine)) {
-            var prompt = Util.getPrompt(currConnection);
-            commandLine = textIO.newStringInputReader().withMaxLength(80).read(prompt);
+            commandLine = textIO.newStringInputReader().withMaxLength(80).read(Util.getPrompt());
             command = commandLine.split(" ");
 
             command = exclamationMark(command);
@@ -94,7 +93,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     continue;
                 }
             }
-            executeCommand(history.filterCommand(prompt, command));
+            executeCommand(history.filterCommand(Util.getPrompt(), command));
         }
 
         textIO.dispose();
@@ -191,6 +190,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 currConnection = commands.change(currConnection, params);
+                mainTerminal.setPaneTitle(Constants.APP_TITLE + " - CONNECTED TO " +
+                        currConnection.getHost().toUpperCase());
                 break;
             case "clearlog":
                 if (jobOutput != null) {
