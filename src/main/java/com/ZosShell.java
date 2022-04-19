@@ -46,7 +46,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void setTerminalProperties() {
-        mainTerminal.setPaneTitle(Constants.APP_TITLE + " - CONNECTED TO " + currConnection.getHost().toUpperCase());
+        mainTerminal.setPaneTitle(Constants.APP_TITLE + " - " + currConnection.getHost().toUpperCase());
         mainTerminal.registerHandler("ctrl C", t -> {
             t.getTextPane().copy();
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
@@ -190,8 +190,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 currConnection = commands.change(currConnection, params);
-                mainTerminal.setPaneTitle(Constants.APP_TITLE + " - CONNECTED TO " +
-                        currConnection.getHost().toUpperCase());
+                mainTerminal.setPaneTitle(Constants.APP_TITLE + " - " + currConnection.getHost().toUpperCase());
                 break;
             case "clearlog":
                 if (jobOutput != null) {
