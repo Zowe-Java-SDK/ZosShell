@@ -25,6 +25,7 @@ public class Help {
             "files                   - list all files under local pwd drive value",
             "h | help                - list commands",
             "history <arg>           - where arg is optional and indicates the number to display from bottom",
+            "hostname                - display current hostname connection",
             "!n                      - where n is a number, to execute command number n in history list",
             "!string                 - will execute the last history command starting with that \"string\"",
             "!!                      - will execute the last history command",
