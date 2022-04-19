@@ -17,6 +17,7 @@ public class Constants {
     public static final String DATASET_NOT_SPECIFIED = "no dataset specified, try again...";
     public static final String DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR =
             "first argument invalid for rm operation, specified valid dataset or member or dataset(member), try again...";
+    public static final String DEFAULT_PROMPT = ">";
     public static final String DELETE_NOTHING_ERROR = "nothing to delete, try again...";
     public static final String DOWNLOAD_FAIL = "download failed, try again...";
     public static final long FUTURE_TIMEOUT_VALUE = 10;

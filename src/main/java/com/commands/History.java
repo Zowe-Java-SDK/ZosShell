@@ -3,8 +3,10 @@ package com.commands;
 import com.Constants;
 import com.data.CircularLinkedList;
 import com.google.common.base.Strings;
+import com.utility.Util;
 import org.beryx.textio.TextTerminal;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,12 +83,25 @@ public class History {
             return command;
         }
 
-        // remove ">" first parameter, added by listUpCommands or listDownCommands method
-        var newSize = command.length - 1;
-        var newCommand = new String[newSize];
-        for (int i = 1, j = 0; i < command.length; i++, j++) {
-            newCommand[j] = command[i];
+        List<String> list = new ArrayList<>(Arrays.asList(command));
+        // remove multiple spaces entered by end user and nulls
+        list.removeAll(Arrays.asList("", null));
+
+        String[] newCommand;
+        if (list.get(0).equals(Util.getPrompt())) {
+            newCommand = new String[list.size() - 1];
+            // remove prompt before sending new command
+            for (int i = 1, j = 0; i < list.size(); i++, j++) {
+                newCommand[j] = list.get(i);
+            }
+        } else {
+            // prompt not seen maybe removed by end user when scrolling through history
+            newCommand = new String[list.size()];
+            for (int i = 0; i < list.size(); i++) {
+                newCommand[i] = list.get(i);
+            }
         }
+
         return newCommand;
     }
 
