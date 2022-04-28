@@ -18,4 +18,12 @@ public class Member {
         return zosDsnList.listDsnMembers(dataSet, params);
     }
 
+    @Override
+    public String toString() {
+        return "Member{" +
+                "zosDsnList=" + zosDsnList +
+                ", params=" + params +
+                '}';
+    }
+    
 }
