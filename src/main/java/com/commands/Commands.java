@@ -303,7 +303,7 @@ public class Commands {
         submit.submitJob(dataSet, param);
     }
 
-    public JobOutput tailjob(ZOSConnection connection, String[] params) {
+    public JobOutput tailJob(ZOSConnection connection, String[] params) {
         if (params.length == 4) {
             if (!"all".equalsIgnoreCase(params[3])) {
                 terminal.println(Constants.INVALID_PARAMETER);
