@@ -1,6 +1,7 @@
 package com.commands;
 
 import com.Constants;
+import com.dto.Member;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.zosfiles.ZosDsn;
@@ -9,12 +10,12 @@ public class Touch {
 
     private final TextTerminal<?> terminal;
     private final ZosDsn zosDsn;
-    private final Listing listing;
+    private final Member members;
 
-    public Touch(TextTerminal<?> terminal, ZosDsn zosDsn, Listing listing) {
+    public Touch(TextTerminal<?> terminal, ZosDsn zosDsn, Member members) {
         this.terminal = terminal;
         this.zosDsn = zosDsn;
-        this.listing = listing;
+        this.members = members;
     }
 
     public void touch(String dataSet, String member) {
@@ -30,7 +31,7 @@ public class Touch {
         // if member already exist skip write, touch will only create a new member
         var foundExistingMember = false;
         try {
-            foundExistingMember = listing.getMembers(dataSet).stream().anyMatch(m -> m.equalsIgnoreCase(member));
+            foundExistingMember = members.getMembers(dataSet).stream().anyMatch(m -> m.equalsIgnoreCase(member));
         } catch (Exception ignored) {
         }
 

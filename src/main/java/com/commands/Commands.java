@@ -2,12 +2,14 @@ package com.commands;
 
 import com.Constants;
 import com.dto.JobOutput;
+import com.dto.Member;
 import com.dto.ResponseStatus;
 import com.future.FutureCopy;
 import com.future.FutureDownload;
 import com.utility.Help;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
+import org.beryx.textio.swing.SwingTextTerminal;
 import zowe.client.sdk.core.ZOSConnection;
 import zowe.client.sdk.zosconsole.IssueCommand;
 import zowe.client.sdk.zosfiles.ZosDsn;
@@ -25,10 +27,12 @@ public class Commands {
 
     private final List<ZOSConnection> connections;
     private final TextTerminal<?> terminal;
+    private final SwingTextTerminal mainTerminal;
 
-    public Commands(List<ZOSConnection> connections, TextTerminal<?> terminal) {
+    public Commands(List<ZOSConnection> connections, TextTerminal<?> terminal, SwingTextTerminal mainTerminal) {
         this.connections = connections;
         this.terminal = terminal;
+        this.mainTerminal = mainTerminal;
     }
 
     public JobOutput browse(ZOSConnection connection, String[] params) {
@@ -227,12 +231,12 @@ public class Commands {
     }
 
     public void ls(ZOSConnection connection, String dataSet) {
-        var listing = new Listing(terminal, new ZosDsnList(connection));
+        var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal);
         listing.ls(dataSet, false);
     }
 
     public void lsl(ZOSConnection connection, String dataSet) {
-        var listing = new Listing(terminal, new ZosDsnList(connection));
+        var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal);
         listing.ls(dataSet, true);
     }
 
@@ -341,7 +345,7 @@ public class Commands {
     public void touch(ZOSConnection connection, String currDataSet, String[] params) {
         Touch touch;
         try {
-            touch = new Touch(terminal, new ZosDsn(connection), new Listing(terminal, new ZosDsnList(connection)));
+            touch = new Touch(terminal, new ZosDsn(connection), new Member(new ZosDsnList(connection)));
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return;

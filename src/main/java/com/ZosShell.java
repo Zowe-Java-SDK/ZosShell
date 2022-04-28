@@ -66,7 +66,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         terminal = textIO.getTextTerminal();
         terminal.setBookmark("top");
         ColorConfig.readConfig(terminal);
-        commands = new Commands(connections, terminal);
+        commands = new Commands(connections, terminal, mainTerminal);
         history = new History(terminal);
         if (currConnection == null) {
             terminal.println(Constants.NO_CONNECTIONS);

@@ -3,6 +3,7 @@ package com.utility;
 import com.Constants;
 import com.commands.Listing;
 import com.dto.DataSetMember;
+import com.dto.Member;
 import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.core.ZOSConnection;
 import zowe.client.sdk.zosfiles.ZosDsnList;
@@ -98,10 +99,10 @@ public class Util {
     }
 
     public static List<String> getMembers(TextTerminal<?> terminal, ZOSConnection connection, String dataSet) {
-        var listing = new Listing(terminal, new ZosDsnList(connection));
+        var member = new Member(new ZosDsnList(connection));
         final List<String> members;
         try {
-            members = listing.getMembers(dataSet);
+            members = member.getMembers(dataSet);
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return new ArrayList<>();

@@ -2,6 +2,7 @@ package com.commands;
 
 import com.Constants;
 import org.beryx.textio.TextTerminal;
+import org.beryx.textio.swing.SwingTextTerminal;
 import zowe.client.sdk.zosfiles.ZosDsnList;
 import zowe.client.sdk.zosfiles.input.ListParams;
 import zowe.client.sdk.zosfiles.response.Dataset;
@@ -17,10 +18,12 @@ public class Listing {
     private List<Dataset> dataSets = new ArrayList<>();
     private final ZosDsnList zosDsnList;
     private final ListParams params = new ListParams.Builder().build();
+    private final SwingTextTerminal mainTerminal;
 
-    public Listing(TextTerminal<?> terminal, ZosDsnList zosDsnList) {
+    public Listing(TextTerminal<?> terminal, ZosDsnList zosDsnList, SwingTextTerminal mainTerminal) {
         this.terminal = terminal;
         this.zosDsnList = zosDsnList;
+        this.mainTerminal = mainTerminal;
     }
 
     public void ls(String dataSet, boolean verbose) {
@@ -39,23 +42,39 @@ public class Listing {
             return;
         }
 
+        final var screenWidth = mainTerminal.getTextPane().getWidth();
+
         if (membersSize == 0) {
             return;
         }
-        var numOfColumns = 0;
+        var numOfColumns = 3;
 
-        if (membersSize < 100) {
+        if (screenWidth < 350) {
             numOfColumns = 3;
-        } else if (membersSize > 100 && membersSize < 300) {
+        } else if (screenWidth > 350 && screenWidth < 450) {
             numOfColumns = 4;
-        } else if (membersSize > 300 && membersSize < 500) {
+        } else if (screenWidth > 450 && screenWidth < 550) {
             numOfColumns = 5;
-        } else if (membersSize > 500 && membersSize < 700) {
+        } else if (screenWidth > 550 && screenWidth < 650) {
             numOfColumns = 6;
-        } else if (membersSize > 700 && membersSize < 900) {
+        } else if (screenWidth > 650 && screenWidth < 750) {
             numOfColumns = 7;
-        } else if (membersSize >= 1000) {
+        } else if (screenWidth > 750 && screenWidth < 850) {
             numOfColumns = 8;
+        } else if (screenWidth > 850 && screenWidth < 950) {
+            numOfColumns = 9;
+        } else if (screenWidth > 950 && screenWidth < 1050) {
+            numOfColumns = 10;
+        } else if (screenWidth > 1050 && screenWidth < 1150) {
+            numOfColumns = 12;
+        } else if (screenWidth > 1200 && screenWidth < 1500) {
+            numOfColumns = 14;
+        } else if (screenWidth > 1500 && screenWidth < 2000) {
+            numOfColumns = 16;
+        } else if (screenWidth > 2000 && screenWidth < 2500) {
+            numOfColumns = 20;
+        } else if (screenWidth > 2500) {
+            numOfColumns = 22;
         }
 
         var numOfLines = membersSize / numOfColumns;
@@ -83,7 +102,7 @@ public class Listing {
         });
     }
 
-    public List<String> getMembers(String dataSet) throws Exception {
+    private List<String> getMembers(String dataSet) throws Exception {
         return zosDsnList.listDsnMembers(dataSet, params);
     }
 
