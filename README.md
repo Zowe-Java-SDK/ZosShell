@@ -56,6 +56,9 @@ Along with following custom commands:
     cp | copy <arg> <arg>         - where arg can be ".", "*", member, dataset or dataset(member)
     download <arg1> <arg2>        - download arg1 to local c:\ZosShell\pwd where arg1 is member or sequential dataset  
                                     and arg2 is optional and only accepts "-b" for binary download      
+    downloadjob <arg1> <arg2>     - download the latest job log where <arg1> is job name
+                                    if arg2 not specified, download job's JESMSGLG spool output
+                                    if arg2 is equal to "all", download all job's spool output
     mvs <arg>                     - execute a mvs command where arg is a command string within double quotes
     end                           - end session closes shell UI window
     files                         - list all files under local pwd drive value

@@ -3,10 +3,10 @@ package com.commands;
 import com.Constants;
 import com.dto.ResponseStatus;
 import com.google.common.base.Strings;
+import com.utility.DirectorySetup;
 import com.utility.Util;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.SystemUtils;
 import zowe.client.sdk.utility.UtilIO;
 import zowe.client.sdk.zosfiles.ZosDsnDownload;
 import zowe.client.sdk.zosfiles.input.DownloadParams;
@@ -34,18 +34,11 @@ public class Download {
     public ResponseStatus download(String dataSet, String member) {
         var message = Strings.padStart(member, 8, ' ') + Constants.ARROW;
 
-        if (!SystemUtils.IS_OS_WINDOWS && !SystemUtils.IS_OS_MAC_OSX) {
+        DirectorySetup dirSetup = new DirectorySetup();
+        try {
+            dirSetup.initialize(dataSet, member);
+        } catch (Exception e) {
             return new ResponseStatus(message + Constants.OS_ERROR, false);
-        }
-
-        String directoryPath;
-        String fileNamePath;
-        if (SystemUtils.IS_OS_WINDOWS) {
-            directoryPath = DIRECTORY_PATH_WINDOWS + dataSet;
-            fileNamePath = directoryPath + "\\" + member;
-        } else {
-            directoryPath = DIRECTORY_PATH_MAC + dataSet;
-            fileNamePath = directoryPath + "/" + member;
         }
 
         try {
@@ -58,16 +51,16 @@ public class Download {
                 if (textContent == null) {
                     return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
                 }
-                writeTextFile(textContent, directoryPath, fileNamePath);
+                Util.writeTextFile(textContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
             } else {
                 dlParams = new DownloadParams.Builder().binary(true).build();
                 binaryContent = getBinaryContent(dataSet, member);
                 if (binaryContent == null) {
                     return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
                 }
-                writeBinaryFile(binaryContent, directoryPath, fileNamePath);
+                writeBinaryFile(binaryContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
             }
-            message += "downloaded to " + fileNamePath;
+            message += "downloaded to " + dirSetup.getFileNamePath();
         } catch (Exception e) {
             if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
                 return new ResponseStatus(message + Constants.CONNECTION_REFUSED, false);
@@ -113,11 +106,6 @@ public class Download {
             return content;
         }
         return null;
-    }
-
-    protected void writeTextFile(String content, String directoryPath, String fileNamePath) throws IOException {
-        Files.createDirectories(Paths.get(directoryPath));
-        Files.write(Paths.get(fileNamePath), content.getBytes());
     }
 
 }

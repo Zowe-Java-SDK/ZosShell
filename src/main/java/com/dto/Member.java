@@ -25,5 +25,5 @@ public class Member {
                 ", params=" + params +
                 '}';
     }
-    
+
 }

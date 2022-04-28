@@ -8,6 +8,7 @@ import zowe.client.sdk.zosjobs.input.GetJobParams;
 import zowe.client.sdk.zosjobs.input.JobFile;
 import zowe.client.sdk.zosjobs.response.Job;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -19,6 +20,7 @@ public class JobLog {
 
     protected final TextTerminal<?> terminal;
     protected final GetJobs getJobs;
+    protected List<Job> jobs = new ArrayList<>();
     private final boolean isAll;
 
     public JobLog(TextTerminal<?> terminal, GetJobs getJobs, boolean isAll) {
@@ -29,7 +31,7 @@ public class JobLog {
 
     protected StringBuilder browseJobLog(String param) throws Exception {
         var jobParams = new GetJobParams.Builder("*").prefix(param).build();
-        final var jobs = getJobs.getJobsCommon(jobParams);
+        jobs = getJobs.getJobsCommon(jobParams);
         if (jobs.isEmpty()) {
             terminal.println(jobParams.getPrefix().orElse("n\\a") + " does not exist, try again...");
             return new StringBuilder();

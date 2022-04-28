@@ -178,6 +178,11 @@ public class Commands {
         }
     }
 
+    public void downloadJob(ZOSConnection currConnection, String param, boolean isAll) {
+        DownloadJob downloadJob = new DownloadJob(terminal, new GetJobs(currConnection), isAll);
+        downloadJob.download(param);
+    }
+
     private List<ResponseStatus> multipleDownload(ZOSConnection connection, String dataSet, List<String> members, boolean isBinary) {
         final var pool = Executors.newFixedThreadPool(members.size());
         var futures = new ArrayList<Future<ResponseStatus>>();

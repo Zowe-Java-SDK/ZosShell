@@ -7,6 +7,9 @@ import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.core.ZOSConnection;
 import zowe.client.sdk.zosfiles.ZosDsnList;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -128,6 +131,11 @@ public class Util {
 
     public static String getPrompt() {
         return Constants.DEFAULT_PROMPT;
+    }
+
+    public static void writeTextFile(String content, String directoryPath, String fileNamePath) throws IOException {
+        Files.createDirectories(Paths.get(directoryPath));
+        Files.write(Paths.get(fileNamePath), content.getBytes());
     }
 
 }
