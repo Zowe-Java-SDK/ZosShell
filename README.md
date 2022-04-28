@@ -129,7 +129,7 @@ Example:
     
 Log4j logging is set up and configuration is located under src/main/resources/log4j2.xml  
     
-It is configured to produce output logging while application is running under c:\ZosShell\logs directory.  
+It is configured to produce output logging while application is running under the running directory where the application was kicked off.
       
 You are free to change configuration accordingly for your needs.  
     

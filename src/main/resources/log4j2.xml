@@ -8,8 +8,8 @@
             <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss} %-5p [%c{1}] - %m%n"/>
         </Console>
 
-        <RollingFile name="FileLog" fileName="c:\ZosShell\logs\application-${date:yyyyMMdd}.log"
-                     filePattern="c:\ZosShell\logs\application-${date:yyyyMMdd}.log.%i">
+        <RollingFile name="FileLog" fileName="zosshell-${date:yyyyMMdd}.log"
+                     filePattern="zosshell-${date:yyyyMMdd}.log.%i">
             <PatternLayout>
                 <pattern>%d{yyy-MM-dd HH:mm:ss.SSS} %-5p [%c] - %m%n</pattern>
             </PatternLayout>
