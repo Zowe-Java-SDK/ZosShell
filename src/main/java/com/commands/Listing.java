@@ -49,9 +49,7 @@ public class Listing {
         }
         var numOfColumns = 3;
 
-        if (screenWidth < 350) {
-            numOfColumns = 3;
-        } else if (screenWidth > 350 && screenWidth < 450) {
+        if (screenWidth > 350 && screenWidth < 450) {
             numOfColumns = 4;
         } else if (screenWidth > 450 && screenWidth < 550) {
             numOfColumns = 5;
