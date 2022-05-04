@@ -5,8 +5,8 @@ import org.apache.commons.lang3.SystemUtils;
 
 public class DirectorySetup {
 
-    public static final String DIRECTORY_PATH_WINDOWS = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\";
-    public static final String DIRECTORY_PATH_MAC = Constants.PATH_FILE_DIRECTORY_MAC + "/";
+    private static final String DIRECTORY_PATH_WINDOWS = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\";
+    private static final String DIRECTORY_PATH_MAC = Constants.PATH_FILE_DIRECTORY_MAC + "/";
     private String directoryPath;
     private String fileNamePath;
 
@@ -28,6 +28,14 @@ public class DirectorySetup {
 
     public String getFileNamePath() {
         return fileNamePath;
+    }
+
+    @Override
+    public String toString() {
+        return "DirectorySetup{" +
+                "directoryPath='" + directoryPath + '\'' +
+                ", fileNamePath='" + fileNamePath + '\'' +
+                '}';
     }
 
 }
