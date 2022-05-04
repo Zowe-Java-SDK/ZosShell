@@ -23,9 +23,9 @@ public class FutureCopy extends Copy implements Callable<ResponseStatus> {
 
     @Override
     public ResponseStatus call() {
-        var params = new String[]{"cp", member, toDataSetName};
+        final var params = new String[]{"cp", member, toDataSetName};
         var message = Strings.padStart(member, Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW;
-        var response = this.copy(fromDataSetName, params);
+        final var response = this.copy(fromDataSetName, params);
         var responseMsg = response.getMessage();
         if (responseMsg.contains("Http error")) {
             var index = responseMsg.indexOf(".");
