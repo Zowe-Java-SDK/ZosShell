@@ -26,7 +26,7 @@ public class Listing {
         this.mainTerminal = mainTerminal;
     }
 
-    public void ls(String dataSet, boolean verbose) {
+    public void ls(String dataSet, boolean isColumnView) {
         try {
             dataSets = getDataSets(dataSet);
             members = getMembers(dataSet);
@@ -37,7 +37,7 @@ public class Listing {
         displayListStatus(membersSize, dataSets.size());
         displayDataSets(dataSets, dataSet);
 
-        if (!verbose) {
+        if (!isColumnView) {
             displayMembers(members);
             return;
         }

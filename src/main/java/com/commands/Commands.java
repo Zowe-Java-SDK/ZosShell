@@ -237,12 +237,12 @@ public class Commands {
 
     public void ls(ZOSConnection connection, String dataSet) {
         var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal);
-        listing.ls(dataSet, false);
+        listing.ls(dataSet, true);
     }
 
     public void lsl(ZOSConnection connection, String dataSet) {
         var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal);
-        listing.ls(dataSet, true);
+        listing.ls(dataSet, false);
     }
 
     public void mvsCommand(ZOSConnection connection, String command) {
