@@ -71,7 +71,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         if (currConnection == null) {
             terminal.println(Constants.NO_CONNECTIONS);
         } else {
-            terminal.println("Connected to " + currConnection.getHost() + " with user " + currConnection.getUser());
+            terminal.println("Connected to " + currConnection.getHost() + " with user " + currConnection.getUser() + ".");
         }
 
         String[] command;

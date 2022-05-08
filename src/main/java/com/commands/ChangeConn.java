@@ -23,8 +23,9 @@ public class ChangeConn {
             terminal.println(Constants.NO_CONNECTION);
             return connection;
         }
-        terminal.println("Connection changed successfully.");
-        return connections.get(index);
+        final var newConnection = connections.get(index);
+        terminal.println("Connected to " + newConnection.getHost() + " with user " + newConnection.getUser() + ".");
+        return newConnection;
     }
 
     public void displayConnections(ZOSConnection connection) {
