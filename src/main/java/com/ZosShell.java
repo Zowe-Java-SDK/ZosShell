@@ -18,6 +18,7 @@ import org.beryx.textio.web.RunnerData;
 import zowe.client.sdk.core.ZOSConnection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -79,6 +80,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         while (!"end".equalsIgnoreCase(commandLine)) {
             commandLine = textIO.newStringInputReader().withMaxLength(80).read(Util.getPrompt());
             command = commandLine.split(" ");
+            if (Arrays.stream(command).anyMatch(String::isEmpty)) {
+                command = Util.stripEmptyStrings(command);
+            }
 
             command = exclamationMark(command);
             if (command == null) {

@@ -10,9 +10,7 @@ import zowe.client.sdk.zosfiles.ZosDsnList;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Util {
@@ -136,6 +134,13 @@ public class Util {
     public static void writeTextFile(String content, String directoryPath, String fileNamePath) throws IOException {
         Files.createDirectories(Paths.get(directoryPath));
         Files.write(Paths.get(fileNamePath), content.getBytes());
+    }
+
+    public static String[] stripEmptyStrings(String[] command) {
+        List<String> list = new ArrayList<>(Arrays.asList(command));
+        list.removeAll(Collections.singleton(""));
+        command = list.toArray(new String[list.size()]);
+        return command;
     }
 
 }
