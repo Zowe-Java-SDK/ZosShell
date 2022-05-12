@@ -6,10 +6,7 @@ import com.google.common.base.Strings;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class History {
@@ -43,8 +40,12 @@ public class History {
             if (commandLst.size() == Constants.HISTORY_SIZE) {
                 commandLst.remove(0);
             }
-            commandLst.add(command);
-            circularLinkedList.add(command);
+            if ( (!commandLst.isEmpty() && !getLastHistory().equals(command)) || commandLst.isEmpty()) {
+                commandLst.add(command);
+                circularLinkedList.add(command);
+            } else {
+                return;
+            }
         }
         // reset the currNode pointer used to handle history scrolling..
         circularLinkedList.currNode = null;
