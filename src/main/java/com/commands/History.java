@@ -44,7 +44,7 @@ public class History {
             if (commandLst.size() == Constants.HISTORY_SIZE) {
                 commandLst.remove(0);
             }
-            if ((!commandLst.isEmpty() && !getLastHistory().equals(command)) || commandLst.isEmpty()) {
+            if (commandLst.isEmpty() || !getLastHistory().equals(command)) {
                 commandLst.add(command);
                 circularLinkedList.add(command);
             } else {
