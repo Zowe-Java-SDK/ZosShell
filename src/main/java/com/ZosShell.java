@@ -47,7 +47,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void setTerminalProperties() {
-        mainTerminal.setPaneTitle(Constants.APP_TITLE + " - " + currConnection.getHost().toUpperCase());
+        var title = "";
+        if (currConnection != null) {
+            title = " - " + currConnection.getHost().toUpperCase();
+        }
+        mainTerminal.setPaneTitle(Constants.APP_TITLE + title);
         mainTerminal.registerHandler("ctrl C", t -> {
             t.getTextPane().copy();
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
