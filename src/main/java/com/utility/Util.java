@@ -23,7 +23,7 @@ public class Util {
 
         // Check that the dataset contains more than one segment
         // This could be valid for additionalTests
-        var segments = dataSetName.split("\\.");
+        final var segments = dataSetName.split("\\.");
         if (segments.length < 2) {
             return false;
         }
@@ -43,7 +43,7 @@ public class Util {
             return false;
         }
 
-        for (var segment : segments) {
+        for (final var segment : segments) {
             if (!isSegment(segment)) {
                 return false;
             }
@@ -53,14 +53,13 @@ public class Util {
     }
 
     public static boolean isMember(String memberName) {
-        memberName = memberName.toUpperCase(Locale.ROOT);
-        return isSegment(memberName);
+        return isSegment(memberName.toUpperCase(Locale.ROOT));
     }
 
     public static void printError(TextTerminal<?> terminal, String message) {
         if (message.contains("Not Found")) {
-            var index = message.indexOf("Not Found");
-            var msg = message.substring(index);
+            final var index = message.indexOf("Not Found");
+            final var msg = message.substring(index);
             terminal.println(msg);
         } else if (message.contains(Constants.CONNECTION_REFUSED)) {
             terminal.println(Constants.SEVERE_ERROR);
@@ -85,21 +84,18 @@ public class Util {
     }
 
     public static DataSetMember getMemberFromDataSet(String param) {
-        String member;
-        String dataset;
-
-        var index = param.indexOf("(");
-        dataset = param.substring(0, index);
+        final var index = param.indexOf("(");
+        final var dataset = param.substring(0, index);
         if (!Util.isDataSet(dataset)) {
             return null;
         }
 
-        member = param.substring(index + 1, param.length() - 1);
+        final var member = param.substring(index + 1, param.length() - 1);
         return new DataSetMember(dataset, member);
     }
 
     public static List<String> getMembers(TextTerminal<?> terminal, ZOSConnection connection, String dataSet) {
-        var member = new Member(new ZosDsnList(connection));
+        final var member = new Member(new ZosDsnList(connection));
         final List<String> members;
         try {
             members = member.getMembers(dataSet);
@@ -117,13 +113,13 @@ public class Util {
         if (segment.length() > 8) {
             return false;
         }
-        var p = Pattern.compile(PATTERN_STRING);
-        var m = p.matcher(segment);
+        final var p = Pattern.compile(PATTERN_STRING);
+        final var m = p.matcher(segment);
         return m.matches();
     }
 
     public static String getMsgAfterArrow(String msg) {
-        var index = msg.indexOf(Constants.ARROW) + Constants.ARROW.length();
+        final var index = msg.indexOf(Constants.ARROW) + Constants.ARROW.length();
         return msg.substring(index);
     }
 
@@ -137,7 +133,7 @@ public class Util {
     }
 
     public static String[] stripEmptyStrings(String[] command) {
-        List<String> list = new ArrayList<>(Arrays.asList(command));
+        final var list = new ArrayList<>(Arrays.asList(command));
         list.removeAll(Collections.singleton(""));
         command = list.toArray(new String[list.size()]);
         return command;

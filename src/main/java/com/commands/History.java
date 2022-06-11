@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class History {
 
@@ -43,7 +44,7 @@ public class History {
             if (commandLst.size() == Constants.HISTORY_SIZE) {
                 commandLst.remove(0);
             }
-            if ((!commandLst.isEmpty() && !getLastHistory().equals(command)) || commandLst.isEmpty()) {
+            if (commandLst.isEmpty() || !getLastHistory().equals(command)) {
                 commandLst.add(command);
                 circularLinkedList.add(command);
             } else {
@@ -135,9 +136,7 @@ public class History {
     }
 
     private void displayAll() {
-        for (int i = 0; i < commandLst.size(); i++) {
-            display(i);
-        }
+        IntStream.range(0, commandLst.size()).forEach(this::display);
     }
 
     private void display(int i) {
