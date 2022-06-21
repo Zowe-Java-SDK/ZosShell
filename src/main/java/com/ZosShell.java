@@ -108,28 +108,42 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private String[] exclamationMark(String[] command) {
-        if (command[0].startsWith("!")) {
-            if (isParamsExceeded(1, command)) {
-                return null;
+        if ((command[0].equals(">") && command[1].startsWith("!")) || command[0].startsWith("!")) {
+            StringBuilder str = new StringBuilder();
+            if (">".equals(command[0])) {
+                for (int i = 1; i < command.length; i++) {
+                    str.append(command[i]);
+                    if (i + 1 != command.length) {
+                        str.append(" ");
+                    }
+                }
+            } else {
+                for (int i = 0; i < command.length; i++) {
+                    str.append(command[i]);
+                    if (i + 1 != command.length) {
+                        str.append(" ");
+                    }
+                }
             }
-            var cmd = command[0];
+
+            var cmd = str.toString();
             if (cmd.length() == 1) {
                 terminal.println(Constants.MISSING_PARAMETERS);
                 return null;
             }
-            var str = cmd.substring(1);
-            var isStrNum = Util.isStrNum(str);
+
+            var subStr = cmd.substring(1);
+            var isStrNum = Util.isStrNum(subStr);
+
             String newCmd;
-            if ("!".equals(str)) {
+            if ("!".equals(subStr)) {
                 newCmd = history.getLastHistory();
             } else if (isStrNum) {
-                newCmd = history.getHistoryByIndex(Integer.parseInt(str) - 1);
+                newCmd = history.getHistoryByIndex(Integer.parseInt(subStr) - 1);
             } else {
-                newCmd = history.getLastHistoryByValue(str);
+                newCmd = history.getLastHistoryByValue(subStr);
             }
-            if (newCmd == null) {
-                return null;
-            }
+
             // set new command from history content
             command = newCmd.split(" ");
         }
