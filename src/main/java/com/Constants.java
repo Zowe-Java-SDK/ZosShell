@@ -24,6 +24,7 @@ public class Constants {
     public static final int HISTORY_SIZE = 200;
     public static final String INVALID_COMMAND = "invalid command, try again...";
     public static final String INVALID_DATASET = "invalid dataset specified, try again...";
+    public static final String INVALID_DATASET_AND_MEMBER = "invalid dataset or member specified, try again...";
     public static final String INVALID_NUMBER = "specify a number, try again...";
     public static final String INVALID_MEMBER = "invalid member name format specified, try again...";
     public static final String INVALID_PARAMETER = "invalid parameter, try again...";

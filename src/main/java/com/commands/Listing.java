@@ -10,6 +10,8 @@ import zowe.client.sdk.zosfiles.response.Dataset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Listing {
 
@@ -26,16 +28,32 @@ public class Listing {
         this.mainTerminal = mainTerminal;
     }
 
-    public void ls(String dataSet, boolean isColumnView) {
+    public void ls(String memberValue, String dataSet, boolean isColumnView) {
+        Optional<String> member = Optional.ofNullable(memberValue);
+        if (member.isPresent()) {
+            member = Optional.of(memberValue.toUpperCase());
+        }
         try {
             dataSets = getDataSets(dataSet);
             members = getMembers(dataSet);
         } catch (Exception ignored) {
         }
 
+        member.ifPresentOrElse((m) -> {
+            final var index = m.indexOf("*");
+            final var searchForMember = index == -1 ? m : m.substring(0, index);
+            if (m.equals(searchForMember)) {
+                members = members.stream().filter(i -> i.equals(searchForMember)).collect(Collectors.toList());
+            } else {
+                members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
+            }
+        }, () -> displayDataSets(dataSets, dataSet));
         final var membersSize = members.size();
+        if (member.isPresent() && membersSize == 0) {
+            terminal.println(Constants.NO_MEMBERS);
+            return;
+        }
         displayListStatus(membersSize, dataSets.size());
-        displayDataSets(dataSets, dataSet);
 
         if (!isColumnView) {
             displayMembers(members);

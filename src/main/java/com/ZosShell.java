@@ -108,7 +108,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private String[] exclamationMark(String[] command) {
-        if ((command[0].equals(">") && command[1].startsWith("!")) || command[0].startsWith("!")) {
+        if ((command[0].equals(">") && command.length >= 2 && command[1].startsWith("!")) || command[0].startsWith("!")) {
             StringBuilder str = new StringBuilder();
             if (">".equals(command[0])) {
                 for (int i = 1; i < command.length; i++) {
@@ -344,25 +344,31 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
-                if (params.length == 2 && Util.isDataSet(params[1])) {
-                    commands.ls(currConnection, params[1]);
-                    return;
-                }
-                if (params.length == 2 && !"-l".equalsIgnoreCase(params[1])) {
-                    terminal.println(Constants.INVALID_COMMAND);
-                    return;
-                }
                 if (params.length == 3 && !"-l".equalsIgnoreCase(params[1])) {
                     terminal.println(Constants.INVALID_COMMAND);
                     return;
                 }
                 if (params.length == 3 && "-l".equalsIgnoreCase(params[1])) {
-                    if (!Util.isDataSet(params[2])) {
-                        terminal.println(Constants.INVALID_DATASET);
+                    var value = params[2];
+                    var size = params[2].length();
+                    if (size <= 9 && value.charAt(size - 1) == '*') {  // is member with wild card specified...
+                        var index = value.indexOf("*");
+                        var member = value.substring(0, index);
+                        if (Util.isMember(member)) {  // validate member value without wild card char...
+                            commands.lsl(currConnection, value, currDataSet);
+                            return;
+                        } else {
+                            terminal.println(Constants.INVALID_MEMBER);
+                        }
+                    } else if (Util.isMember(value)) {  // is member without wild card specified...
+                        commands.lsl(currConnection, value, currDataSet);
                         return;
+                    } else if (Util.isDataSet(value)) {  // is dataset specified at this point...
+                        commands.lsl(currConnection, null, value);
+                        return;
+                    } else {  // must be an invalid member or dataset specified...
+                        terminal.println(Constants.INVALID_DATASET_AND_MEMBER);
                     }
-                    commands.lsl(currConnection, params[2]);
-                    return;
                 }
                 if (params.length == 2 && "-l".equalsIgnoreCase(params[1])) {
                     if (isCurrDataSetNotSpecified()) {
@@ -372,11 +378,31 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     addVisited();
                     return;
                 }
-                if (isCurrDataSetNotSpecified()) {
+                if (params.length == 2 && Util.isDataSet(params[1])) {
+                    commands.ls(currConnection, params[1]);
                     return;
                 }
-                commands.ls(currConnection, currDataSet);
-                addVisited();
+                if (params.length == 2 && (params[1].length() <= 9 && params[1].charAt(params[1].length() - 1) == '*')) {
+                    var value = params[1];
+                    var index = value.indexOf("*");
+                    var member = value.substring(0, index);
+                    if (Util.isMember(member)) {
+                        commands.ls(currConnection, value, currDataSet);
+                        return;
+                    }
+                }
+                if (params.length == 2 && Util.isMember(params[1])) {
+                    commands.ls(currConnection, params[1], currDataSet);
+                    return;
+                }
+                if (params.length == 2) {
+                    terminal.println(Constants.INVALID_DATASET_AND_MEMBER);
+                    return;
+                }
+                if (params.length == 1) {
+                    commands.ls(currConnection, currDataSet);
+                    return;
+                }
                 break;
             case "mvs":
                 if (isParamsMissing(1, params)) {
