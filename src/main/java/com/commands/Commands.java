@@ -296,8 +296,8 @@ public class Commands {
         save.save(currDataSet, params[1]);
     }
 
-    public void search(JobOutput job, String text) {
-        var search = new Search(terminal);
+    public void searchJobLog(JobOutput job, String text) {
+        var search = new SearchJobLog(terminal);
         search.search(job, text);
     }
 

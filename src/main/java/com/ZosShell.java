@@ -469,7 +469,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                commands.search(jobOutput, params[1]);
+                commands.searchJobLog(jobOutput, params[1]);
                 break;
             case "stop":
                 if (isParamsMissing(1, params)) {
