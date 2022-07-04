@@ -235,14 +235,23 @@ public class Commands {
         Help.displayHelp(terminal);
     }
 
+    public void ls(ZOSConnection connection, String member, String dataSet) {
+        var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal);
+        listing.ls(member, dataSet, true);
+    }
+
     public void ls(ZOSConnection connection, String dataSet) {
         var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal);
-        listing.ls(dataSet, true);
+        listing.ls(null, dataSet, true);
     }
 
     public void lsl(ZOSConnection connection, String dataSet) {
+        this.lsl(connection, null, dataSet);
+    }
+
+    public void lsl(ZOSConnection connection, String member, String dataSet) {
         var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal);
-        listing.ls(dataSet, false);
+        listing.ls(member, dataSet, false);
     }
 
     public void mvsCommand(ZOSConnection connection, String command) {
