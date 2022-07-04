@@ -187,7 +187,7 @@ public class Commands {
         final var pool = Executors.newFixedThreadPool(members.size());
         var futures = new ArrayList<Future<ResponseStatus>>();
 
-        for (var member : members) {
+        for (final var member : members) {
             futures.add(pool.submit(new FutureDownload(new ZosDsnDownload(connection), dataSet, member, isBinary)));
         }
 
@@ -206,7 +206,7 @@ public class Commands {
         final var pool = Executors.newFixedThreadPool(members.size());
         var futures = new ArrayList<Future<ResponseStatus>>();
 
-        for (var member : members) {
+        for (final var member : members) {
             futures.add(pool.submit(new FutureCopy(new ZosDsnCopy(connection), fromDataSetName, toDataSetName, member)));
         }
 
@@ -217,7 +217,7 @@ public class Commands {
 
     private List<ResponseStatus> getFutureResults(List<Future<ResponseStatus>> futures) {
         var results = new ArrayList<ResponseStatus>();
-        for (var future : futures) {
+        for (final var future : futures) {
             try {
                 results.add(future.get(Constants.FUTURE_TIMEOUT_VALUE, TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException | TimeoutException e) {

@@ -531,7 +531,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isCurrDataSetNotSpecified()) {
                     return;
                 }
-                for (String key : dataSets.keySet()) {
+                for (final String key : dataSets.keySet()) {
                     List<String> lst = dataSets.get(key);
                     lst.forEach(l -> terminal.println(
                             Strings.padStart(l.toUpperCase(), currDataSetMax, ' ') + Constants.ARROW + key));
