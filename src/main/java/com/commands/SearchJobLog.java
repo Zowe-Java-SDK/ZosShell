@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class Search {
+public class SearchJobLog {
 
     private final TextTerminal<?> terminal;
 
-    public Search(TextTerminal<?> terminal) {
+    public SearchJobLog(TextTerminal<?> terminal) {
         this.terminal = terminal;
     }
 
