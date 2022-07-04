@@ -29,10 +29,10 @@ Project provides a UI shell command prompt that allows you to manipulate dataset
     !n                      - where n is a number, to execute command number n in history list   
     !string                 - will execute the last history command starting with that “string”
     !!                      - will execute the last history command
-    ls <arg>                - where arg is optional and indicates a dataset or member value",
-                            - for member value only you can specified * wild card as last character",
-    ls -l <arg>             - where arg is optional and indicates a dataset or member value",
-                            - for member value only you can specified * wild card as last character",
+    ls <arg>                - where arg is optional and indicates a dataset or member value"
+                            - for member value only you can specified * wild card as last character"
+    ls -l <arg>             - where arg is optional and indicates a dataset or member value"
+                            - for member value only you can specified * wild card as last character"
     ps                      - display all processes running
     ps <arg>                - where arg is a task/job name   
     pwd                     - show current working dataset
