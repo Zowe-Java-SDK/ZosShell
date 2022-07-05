@@ -84,7 +84,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         while (!"end".equalsIgnoreCase(commandLine)) {
             commandLine = textIO.newStringInputReader().withMaxLength(80).read(Util.getPrompt());
             command = commandLine.split(" ");
-            if (Arrays.stream(command).anyMatch(String::isEmpty)) {
+            if (Arrays.stream(command).anyMatch(String::isEmpty)) {  // handle multiple empty spaces specified
                 command = Util.stripEmptyStrings(command);
             }
 

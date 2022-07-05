@@ -135,7 +135,7 @@ public class Util {
     public static String[] stripEmptyStrings(String[] command) {
         final var list = new ArrayList<>(Arrays.asList(command));
         list.removeAll(Collections.singleton(""));
-        command = list.toArray(new String[list.size()]);
+        command = list.toArray(new String[0]);
         return command;
     }
 
