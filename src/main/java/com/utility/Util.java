@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class Util {
 
     @SuppressWarnings("Annotator")
-    private static final String PATTERN_STRING = "[A-Z#@\\$]{1}[A-Z0-9#@\\$\\-]{2,7}";
+    private static final String PATTERN_STRING = "[A-Z#@\\$]{1}[A-Z\\d#@\\$\\-]{2,7}";
 
     public static boolean isDataSet(String dataSetName) {
         dataSetName = dataSetName.toUpperCase(Locale.ROOT);
