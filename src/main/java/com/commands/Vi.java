@@ -31,6 +31,9 @@ public class Vi {
                 } else if (SystemUtils.IS_OS_MAC_OSX) {
                     pathFile = Download.DIRECTORY_PATH_MAC + dataSet + "/" + member;
                     editorName = Constants.MAC_EDITOR_NAME;
+                } else {
+                    terminal.println(Constants.OS_ERROR);
+                    return;
                 }
                 rs.exec(editorName + " " + pathFile);
             }
