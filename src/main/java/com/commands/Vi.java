@@ -23,8 +23,8 @@ public class Vi {
         ResponseStatus result = download.download(dataSet, member);
         try {
             if (result.isStatus()) {
-                String pathFile = null;
-                String editorName = null;
+                String pathFile;
+                String editorName;
                 if (SystemUtils.IS_OS_WINDOWS) {
                     pathFile = Download.DIRECTORY_PATH_WINDOWS + dataSet + "\\" + member;
                     editorName = Constants.WINDOWS_EDITOR_NAME;
