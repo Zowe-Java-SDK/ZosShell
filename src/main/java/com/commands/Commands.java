@@ -62,10 +62,6 @@ public class Commands {
                 terminal.println(Constants.BROWSE_TIMEOUT);
                 return null;
             }
-            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
-                terminal.println(Constants.SEVERE_ERROR);
-                return null;
-            }
             Util.printError(terminal, e.getMessage());
             return null;
         }
