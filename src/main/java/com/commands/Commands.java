@@ -251,7 +251,7 @@ public class Commands {
 
     public void ps(ZOSConnection connection, String jobOrTask) {
         final var pool = Executors.newFixedThreadPool(1);
-        final var submit = pool.submit(new FutureProcessList(terminal, new GetJobs(connection), jobOrTask));
+        final var submit = pool.submit(new FutureProcessList(new GetJobs(connection), jobOrTask));
         futureResult(pool, submit);
     }
 

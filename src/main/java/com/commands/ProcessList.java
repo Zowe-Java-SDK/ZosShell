@@ -3,7 +3,6 @@ package com.commands;
 import com.Constants;
 import com.dto.ResponseStatus;
 import com.utility.Util;
-import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.zosjobs.GetJobs;
 import zowe.client.sdk.zosjobs.input.GetJobParams;
 import zowe.client.sdk.zosjobs.response.Job;
@@ -13,12 +12,10 @@ import java.util.List;
 
 public class ProcessList {
 
-    private final TextTerminal<?> terminal;
     private final GetJobs getJobs;
     private final GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");
 
-    public ProcessList(TextTerminal<?> terminal, GetJobs getJobs) {
-        this.terminal = terminal;
+    public ProcessList(GetJobs getJobs) {
         this.getJobs = getJobs;
     }
 
@@ -44,7 +41,7 @@ public class ProcessList {
             var jobName = job.getJobName().orElse("");
             var jobId = job.getJobId().orElse("");
             var jobStatus = job.getStatus().orElse("");
-            str.append(String.format("%-8s %-8s %-8s", jobName, jobId, jobStatus) +"\n");
+            str.append(String.format("%-8s %-8s %-8s", jobName, jobId, jobStatus) + "\n");
         });
         return new ResponseStatus(str.toString(), true);
     }
