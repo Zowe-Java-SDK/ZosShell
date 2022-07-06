@@ -1,9 +1,9 @@
 package com.commands;
 
 import com.Constants;
+import com.dto.ResponseStatus;
 import com.utility.Util;
 import org.apache.commons.lang3.SystemUtils;
-import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.zosfiles.ZosDsn;
 
 import java.io.BufferedReader;
@@ -11,26 +11,22 @@ import java.io.FileReader;
 
 public class Save {
 
-    private final TextTerminal<?> terminal;
     private final ZosDsn zosDsn;
 
-    public Save(TextTerminal<?> terminal, ZosDsn zosDsn) {
-        this.terminal = terminal;
+    public Save(ZosDsn zosDsn) {
         this.zosDsn = zosDsn;
     }
 
-    public void save(String dataSet, String member) {
+    public ResponseStatus save(String dataSet, String member) {
         if (!Util.isDataSet(dataSet)) {
-            terminal.println(Constants.INVALID_DATASET);
-            return;
+            return new ResponseStatus(Constants.INVALID_DATASET, false);
         }
 
         var isSequentialDataSet = false;
         if (Util.isDataSet(member)) {
             isSequentialDataSet = true;
         } else if (!Util.isMember(member)) {
-            terminal.println(Constants.INVALID_MEMBER);
-            return;
+            return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
 
         String fileName;
@@ -39,8 +35,7 @@ public class Save {
         } else if (SystemUtils.IS_OS_MAC_OSX) {
             fileName = Download.DIRECTORY_PATH_MAC + dataSet + "/" + member;
         } else {
-            terminal.println(Constants.OS_ERROR);
-            return;
+            return new ResponseStatus(Constants.OS_ERROR, false);
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
@@ -60,11 +55,10 @@ public class Save {
                 zosDsn.writeDsn(dataSet, member, content);
             }
         } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
+            return new ResponseStatus(Util.getErrorMsg(e + ""), false);
         }
 
-        terminal.println(member + " successfully saved...");
+        return new ResponseStatus(member + " successfully saved...", true);
     }
 
 }

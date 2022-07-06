@@ -1,6 +1,7 @@
 package com.commands;
 
 import com.Constants;
+import com.dto.ResponseStatus;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.zosjobs.GetJobs;
@@ -21,28 +22,22 @@ public class ProcessList {
         this.getJobs = getJobs;
     }
 
-    public void ps(String task) {
+    public ResponseStatus ps(String jobOrTask) {
         List<Job> jobs;
         try {
-            if (task != null) {
-                getJobParams.prefix(task).build();
+            if (jobOrTask != null) {
+                getJobParams.prefix(jobOrTask).build();
             }
             var params = getJobParams.build();
             jobs = getJobs.getJobsCommon(params);
         } catch (Exception e) {
-            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
-                terminal.println(Constants.SEVERE_ERROR);
-                return;
-            }
-            Util.printError(terminal, e.getMessage());
-            return;
+            return new ResponseStatus(Util.getErrorMsg(e + ""), false);
         }
         jobs.sort(Comparator.comparing((Job j) -> j.getJobName().orElse(""))
                 .thenComparing(j -> j.getStatus().orElse(""))
                 .thenComparing(j -> j.getJobId().orElse("")));
         if (jobs.isEmpty()) {
-            terminal.println(Constants.NO_PROCESS_FOUND);
-            return;
+            return new ResponseStatus(Constants.NO_PROCESS_FOUND, false);
         }
         jobs.forEach(job -> {
             var jobName = job.getJobName().orElse("");
@@ -50,6 +45,7 @@ public class ProcessList {
             var jobStatus = job.getStatus().orElse("");
             terminal.println(String.format("%-8s %-8s %-8s", jobName, jobId, jobStatus));
         });
+        return new ResponseStatus("", true);
     }
 
 }

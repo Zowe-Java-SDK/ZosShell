@@ -4,23 +4,22 @@ import com.Constants;
 import com.dto.ResponseStatus;
 import com.utility.Util;
 import org.apache.commons.lang3.SystemUtils;
-import org.beryx.textio.TextTerminal;
 
 import java.io.IOException;
 
 public class Vi {
 
-    private final TextTerminal<?> terminal;
     private final Download download;
     private final Runtime rs = Runtime.getRuntime();
 
-    public Vi(TextTerminal<?> terminal, Download download) {
-        this.terminal = terminal;
+    public Vi(Download download) {
         this.download = download;
     }
 
-    public void vi(String dataSet, String member) {
-        ResponseStatus result = download.download(dataSet, member);
+    public ResponseStatus vi(String dataSet, String member) {
+        var result = download.download(dataSet, member);
+        var successMsg = "opening " + member + " in editor...";
+        var errorMsg = "\ncannot open \" + member + \", try again...";
         try {
             if (result.isStatus()) {
                 String pathFile;
@@ -32,20 +31,16 @@ public class Vi {
                     pathFile = Download.DIRECTORY_PATH_MAC + dataSet + "/" + member;
                     editorName = Constants.MAC_EDITOR_NAME;
                 } else {
-                    terminal.println(Constants.OS_ERROR);
-                    return;
+                    return new ResponseStatus(Constants.OS_ERROR, false);
                 }
                 rs.exec(editorName + " " + pathFile);
+            } else {
+                return new ResponseStatus(Util.getMsgAfterArrow(result.getMessage()) + errorMsg, false);
             }
         } catch (IOException e) {
-            result = new ResponseStatus(e.getMessage(), false);
+            return new ResponseStatus(Util.getMsgAfterArrow(e + "") + errorMsg, false);
         }
-        if (!result.isStatus()) {
-            terminal.println(Util.getMsgAfterArrow(result.getMessage()));
-            terminal.println("cannot open " + member + ", try again...");
-        } else {
-            terminal.println("opening in editor...");
-        }
+        return new ResponseStatus(successMsg, true);
     }
 
 }

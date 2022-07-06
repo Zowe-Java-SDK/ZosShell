@@ -2,30 +2,26 @@ package com.commands;
 
 import com.Constants;
 import com.dto.Member;
+import com.dto.ResponseStatus;
 import com.utility.Util;
-import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.zosfiles.ZosDsn;
 
 public class Touch {
 
-    private final TextTerminal<?> terminal;
     private final ZosDsn zosDsn;
     private final Member members;
 
-    public Touch(TextTerminal<?> terminal, ZosDsn zosDsn, Member members) {
-        this.terminal = terminal;
+    public Touch(ZosDsn zosDsn, Member members) {
         this.zosDsn = zosDsn;
         this.members = members;
     }
 
-    public void touch(String dataSet, String member) {
+    public ResponseStatus touch(String dataSet, String member) {
         if (!Util.isDataSet(dataSet)) {
-            terminal.println(Constants.INVALID_DATASET);
-            return;
+            return new ResponseStatus(Constants.INVALID_DATASET, true);
         }
         if (!Util.isMember(member)) {
-            terminal.println(Constants.INVALID_MEMBER);
-            return;
+            return new ResponseStatus(Constants.INVALID_MEMBER, true);
         }
 
         // if member already exist skip write, touch will only create a new member
@@ -39,15 +35,13 @@ public class Touch {
             if (!foundExistingMember) {
                 zosDsn.writeDsn(dataSet, member, "");
             } else {
-                terminal.println(member + " already exists.");
-                return;
+                return new ResponseStatus(member + " already exists.", true);
             }
         } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
+            return new ResponseStatus(Util.getErrorMsg(e + ""), true);
         }
 
-        terminal.println(member + " successfully created.");
+        return new ResponseStatus(member + " successfully created.", true);
     }
 
 }

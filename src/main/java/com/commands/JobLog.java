@@ -1,6 +1,5 @@
 package com.commands;
 
-import com.Constants;
 import com.future.FutureBrowseJob;
 import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.zosjobs.GetJobs;
@@ -22,11 +21,13 @@ public class JobLog {
     protected final GetJobs getJobs;
     protected List<Job> jobs = new ArrayList<>();
     private final boolean isAll;
+    private final long timeout;
 
-    public JobLog(TextTerminal<?> terminal, GetJobs getJobs, boolean isAll) {
+    public JobLog(TextTerminal<?> terminal, GetJobs getJobs, boolean isAll, long timeout) {
         this.terminal = terminal;
         this.getJobs = getJobs;
         this.isAll = isAll;
+        this.timeout = timeout;
     }
 
     protected StringBuilder browseJobLog(String param) throws Exception {
@@ -55,7 +56,7 @@ public class JobLog {
         var submit = isAll ? pool.submit(new FutureBrowseJob(getJobs, files)) :
                 pool.submit(new FutureBrowseJob(getJobs, List.of(files.get(0))));
         try {
-            StringBuilder result = submit.get(Constants.FUTURE_TIMEOUT_VALUE, TimeUnit.SECONDS);
+            StringBuilder result = submit.get(timeout, TimeUnit.SECONDS);
             pool.shutdownNow();
             return result;
         } catch (InterruptedException | ExecutionException | TimeoutException e) {

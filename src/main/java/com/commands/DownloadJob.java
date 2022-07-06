@@ -14,9 +14,9 @@ public class DownloadJob {
     private final TextTerminal<?> terminal;
     private final BrowseJob browseJob;
 
-    public DownloadJob(TextTerminal<?> terminal, GetJobs getJobs, boolean isAll) {
+    public DownloadJob(TextTerminal<?> terminal, GetJobs getJobs, boolean isAll, long timeOutValue) {
         this.terminal = terminal;
-        this.browseJob = new BrowseJob(terminal, getJobs, isAll);
+        this.browseJob = new BrowseJob(terminal, getJobs, isAll, timeOutValue);
     }
 
     public void download(String jobName) {

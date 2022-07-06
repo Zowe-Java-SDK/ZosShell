@@ -28,6 +28,7 @@ public class Constants {
     public static final String INVALID_NUMBER = "specify a number, try again...";
     public static final String INVALID_MEMBER = "invalid member name format specified, try again...";
     public static final String INVALID_PARAMETER = "invalid parameter, try again...";
+    public static final String INVALID_VALUE = "invalid value, try again...";
     public static final String HIGH_QUALIFIER_ERROR = "cant change to high qualifier level, try again...";
     public static final String NO_CONNECTIONS = "No connection(s) made or defined...";
     public static final String NO_CONNECTION_INFO = "no info, check connection settings...";
@@ -56,6 +57,7 @@ public class Constants {
     public static final String COLOR_CONFIG_PATH_FILE_WINDOWS = PATH_FILE_DIRECTORY_WINDOWS + "\\colors.txt";
     public static final String SEVERE_ERROR = "server error, check connection...";
     public static final int STRING_PAD_LENGTH = 8;
+    public static final String TIMEOUT_MESSAGE = "command exceeded time out value, double check and try again...";
     public static final String TOO_MANY_PARAMETERS = "too many parameters, try again...";
     public static final String WINDOWS_EDITOR_NAME = "notepad";
     public static final String OS_ERROR = "command is only supported on Windows and Mac OSX...";

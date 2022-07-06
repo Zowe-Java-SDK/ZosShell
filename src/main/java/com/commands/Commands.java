@@ -4,8 +4,7 @@ import com.Constants;
 import com.dto.JobOutput;
 import com.dto.Member;
 import com.dto.ResponseStatus;
-import com.future.FutureCopy;
-import com.future.FutureDownload;
+import com.future.*;
 import com.utility.Help;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
@@ -28,6 +27,7 @@ public class Commands {
     private final List<ZOSConnection> connections;
     private final TextTerminal<?> terminal;
     private final SwingTextTerminal mainTerminal;
+    private long timeOutValue = Constants.FUTURE_TIMEOUT_VALUE;
 
     public Commands(List<ZOSConnection> connections, TextTerminal<?> terminal, SwingTextTerminal mainTerminal) {
         this.connections = connections;
@@ -49,7 +49,7 @@ public class Commands {
     private JobOutput browseAll(ZOSConnection connection, String[] params, boolean isAll) {
         BrowseJob browseJob;
         try {
-            browseJob = new BrowseJob(terminal, new GetJobs(connection), isAll);
+            browseJob = new BrowseJob(terminal, new GetJobs(connection), isAll, timeOutValue);
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return null;
@@ -73,26 +73,16 @@ public class Commands {
         return new JobOutput(params[1], output);
     }
 
-    public void cancel(ZOSConnection connection, String param) {
-        Cancel cancel;
-        try {
-            cancel = new Cancel(terminal, new IssueCommand(connection));
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
-        }
-        cancel.cancel(param);
+    public void cancel(ZOSConnection connection, String jobOrTask) {
+        final var pool = Executors.newFixedThreadPool(1);
+        final var submit = pool.submit(new FutureTerminate(new IssueCommand(connection), Terminate.Type.CANCEL, jobOrTask));
+        futureResult(pool, submit);
     }
 
-    public void cat(ZOSConnection connection, String dataSet, String param) {
-        Concatenate concatenate;
-        try {
-            concatenate = new Concatenate(terminal, new Download(new ZosDsnDownload(connection), false));
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
-        }
-        concatenate.cat(dataSet, param);
+    public void cat(ZOSConnection connection, String dataSet, String member) {
+        final var pool = Executors.newFixedThreadPool(1);
+        final var submit = pool.submit(new FutureConcatenate(terminal, new Download(new ZosDsnDownload(connection), false), dataSet, member));
+        futureResult(pool, submit);
     }
 
     public String cd(ZOSConnection connection, String currDataSet, String param) {
@@ -141,15 +131,10 @@ public class Commands {
         terminal.println(responseStatus.getMessage());
     }
 
-    public void count(ZOSConnection connection, String dataSet, String param) {
-        Count count;
-        try {
-            count = new Count(terminal, new ZosDsnList(connection));
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
-        }
-        count.count(dataSet, param);
+    public void count(ZOSConnection connection, String dataSet, String filter) {
+        final var pool = Executors.newFixedThreadPool(1);
+        final var submit = pool.submit(new FutureCount(new ZosDsnList(connection), dataSet, filter));
+        futureResult(pool, submit);
     }
 
     public void download(ZOSConnection connection, String currDataSet, String member, boolean isBinary) {
@@ -179,7 +164,7 @@ public class Commands {
     }
 
     public void downloadJob(ZOSConnection currConnection, String param, boolean isAll) {
-        DownloadJob downloadJob = new DownloadJob(terminal, new GetJobs(currConnection), isAll);
+        DownloadJob downloadJob = new DownloadJob(terminal, new GetJobs(currConnection), isAll, timeOutValue);
         downloadJob.download(param);
     }
 
@@ -219,7 +204,7 @@ public class Commands {
         var results = new ArrayList<ResponseStatus>();
         for (final var future : futures) {
             try {
-                results.add(future.get(Constants.FUTURE_TIMEOUT_VALUE, TimeUnit.SECONDS));
+                results.add(future.get(timeOutValue, TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 results.add(new ResponseStatus("timeout", false));
             }
@@ -255,23 +240,19 @@ public class Commands {
     }
 
     public void mvsCommand(ZOSConnection connection, String command) {
-        var mvsCommand = new MvsCommand(terminal, connection);
-        mvsCommand.executeCommand(command);
+        final var pool = Executors.newFixedThreadPool(1);
+        final var submit = pool.submit(new FutureMvs(connection, command));
+        futureResult(pool, submit);
     }
 
     public void ps(ZOSConnection connection) {
         ps(connection, null);
     }
 
-    public void ps(ZOSConnection connection, String task) {
-        ProcessList processList;
-        try {
-            processList = new ProcessList(terminal, new GetJobs(connection));
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
-        }
-        processList.ps(task);
+    public void ps(ZOSConnection connection, String jobOrTask) {
+        final var pool = Executors.newFixedThreadPool(1);
+        final var submit = pool.submit(new FutureProcessList(terminal, new GetJobs(connection), jobOrTask));
+        futureResult(pool, submit);
     }
 
     public void rm(ZOSConnection connection, String currDataSet, String param) {
@@ -285,15 +266,11 @@ public class Commands {
         delete.rm(currDataSet, param);
     }
 
-    public void save(ZOSConnection connection, String currDataSet, String[] params) {
-        Save save;
-        try {
-            save = new Save(terminal, new ZosDsn(connection));
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
-        }
-        save.save(currDataSet, params[1]);
+    public void save(ZOSConnection connection, String dataSet, String[] params) {
+        final var member = params[1];
+        final var pool = Executors.newFixedThreadPool(1);
+        final var submit = pool.submit(new FutureSave(new ZosDsn(connection), dataSet, member));
+        futureResult(pool, submit);
     }
 
     public void searchJobLog(JobOutput job, String text) {
@@ -301,20 +278,16 @@ public class Commands {
         search.search(job, text);
     }
 
-    public void stop(ZOSConnection connection, String param) {
-        Stop stop;
-        try {
-            stop = new Stop(terminal, new IssueCommand(connection));
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
-        }
-        stop.stop(param);
+    public void stop(ZOSConnection connection, String jobOrTask) {
+        final var pool = Executors.newFixedThreadPool(1);
+        final var submit = pool.submit(new FutureTerminate(new IssueCommand(connection), Terminate.Type.STOP, jobOrTask));
+        futureResult(pool, submit);
     }
 
-    public void submit(ZOSConnection connection, String dataSet, String param) {
-        var submit = new Submit(terminal, new SubmitJobs(connection));
-        submit.submitJob(dataSet, param);
+    public void submit(ZOSConnection connection, String dataSet, String jobName) {
+        final var pool = Executors.newFixedThreadPool(1);
+        final var submit = pool.submit(new FutureSubmit(new SubmitJobs(connection), dataSet, jobName));
+        futureResult(pool, submit);
     }
 
     public JobOutput tailJob(ZOSConnection connection, String[] params) {
@@ -348,7 +321,7 @@ public class Commands {
     private StringBuilder tailAll(ZOSConnection connection, String[] params, boolean isAll) {
         Tail tail;
         try {
-            tail = new Tail(terminal, new GetJobs(connection), isAll);
+            tail = new Tail(terminal, new GetJobs(connection), isAll, timeOutValue);
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return null;
@@ -356,20 +329,37 @@ public class Commands {
         return tail.tail(params);
     }
 
-    public void touch(ZOSConnection connection, String currDataSet, String[] params) {
-        Touch touch;
-        try {
-            touch = new Touch(terminal, new ZosDsn(connection), new Member(new ZosDsnList(connection)));
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
-        }
-        touch.touch(currDataSet, params[1]);
+    public void timeOutValue(long value) {
+        timeOutValue = value;
+        terminal.println("timeout value set to " + timeOutValue + " seconds.");
+    }
+
+    public void timeOutValue() {
+        terminal.println("timeout value is " + timeOutValue + " seconds.");
+    }
+
+    public void touch(ZOSConnection connection, String dataSet, String[] params) {
+        final var member = params[1];
+        final var pool = Executors.newFixedThreadPool(1);
+        final var submit = pool.submit(new FutureTouch(new ZosDsn(connection), new Member(new ZosDsnList(connection)), dataSet, member));
+        futureResult(pool, submit);
     }
 
     public void vi(ZOSConnection connection, String dataSet, String[] params) {
-        var vi = new Vi(terminal, new Download(new ZosDsnDownload(connection), false));
-        vi.vi(dataSet, params[1]);
+        final var member = params[1];
+        final var pool = Executors.newFixedThreadPool(1);
+        final var submit = pool.submit(new FutureVi(new Download(new ZosDsnDownload(connection), false), dataSet, member));
+        futureResult(pool, submit);
+    }
+
+    private void futureResult(ExecutorService pool, Future<ResponseStatus> submit) {
+        try {
+            final var result = submit.get(timeOutValue, TimeUnit.SECONDS);
+            terminal.println(result.getMessage());
+        } catch (Exception e) {
+            terminal.println(Constants.TIMEOUT_MESSAGE);
+        }
+        pool.shutdownNow();
     }
 
 }

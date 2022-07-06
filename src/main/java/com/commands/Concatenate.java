@@ -1,6 +1,6 @@
 package com.commands;
 
-import com.Constants;
+import com.dto.ResponseStatus;
 import com.utility.Util;
 import org.apache.commons.io.IOUtils;
 import org.beryx.textio.TextTerminal;
@@ -21,18 +21,15 @@ public class Concatenate {
         this.download = download;
     }
 
-    public void cat(String dataSet, String param) {
+    public ResponseStatus cat(String dataSet, String param) {
         InputStream inputStream;
         try {
             inputStream = download.getInputStream(dataSet, param);
             display(inputStream);
         } catch (Exception e) {
-            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
-                terminal.println(Constants.SEVERE_ERROR);
-                return;
-            }
-            Util.printError(terminal, e.getMessage());
+            return new ResponseStatus(Util.getErrorMsg(e + ""), false);
         }
+        return new ResponseStatus("", true);
     }
 
     private void display(InputStream inputStream) throws IOException {

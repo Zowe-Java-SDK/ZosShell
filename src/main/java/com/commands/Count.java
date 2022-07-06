@@ -1,6 +1,6 @@
 package com.commands;
 
-import org.beryx.textio.TextTerminal;
+import com.dto.ResponseStatus;
 import zowe.client.sdk.zosfiles.ZosDsnList;
 import zowe.client.sdk.zosfiles.input.ListParams;
 import zowe.client.sdk.zosfiles.response.Dataset;
@@ -11,16 +11,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Count {
 
-    private final TextTerminal<?> terminal;
     private final ZosDsnList zosDsnList;
     private final ListParams params = new ListParams.Builder().build();
 
-    public Count(TextTerminal<?> terminal, ZosDsnList zosDsnList) {
-        this.terminal = terminal;
+    public Count(ZosDsnList zosDsnList) {
         this.zosDsnList = zosDsnList;
     }
 
-    public void count(String dataSet, String param) {
+    public ResponseStatus count(String dataSet, String param) {
         AtomicInteger dataSetCount = new AtomicInteger();
         List<Dataset> ds = new ArrayList<>();
         List<String> members = new ArrayList<>();
@@ -37,10 +35,9 @@ public class Count {
                 }
             });
         } catch (Exception e) {
-            terminal.println("0");
-            return;
+            return new ResponseStatus("0", false);
         }
-        terminal.println(String.valueOf(members.size() + dataSetCount.get()));
+        return new ResponseStatus(String.valueOf(members.size() + dataSetCount.get()), true);
     }
 
 }
