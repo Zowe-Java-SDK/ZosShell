@@ -45,10 +45,6 @@ public class ChangeDir {
             try {
                 dsLst = zosDsnList.listDsn(currDataSet, params);
             } catch (Exception e) {
-                if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
-                    terminal.println(Constants.SEVERE_ERROR);
-                    return currDataSet;
-                }
                 Util.printError(terminal, e.getMessage());
                 return currDataSet;
             }

@@ -10,8 +10,8 @@ import java.util.List;
 
 public class Tail extends JobLog {
 
-    public Tail(TextTerminal<?> terminal, GetJobs getJobs, boolean isAll) {
-        super(terminal, getJobs, isAll);
+    public Tail(TextTerminal<?> terminal, GetJobs getJobs, boolean isAll, long timeOutValue) {
+        super(terminal, getJobs, isAll, timeOutValue);
     }
 
     public StringBuilder tail(String[] params) {

@@ -506,6 +506,20 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     jobOutput = tailJobOutput;
                 }
                 break;
+            case "timeout":
+                if (isParamsExceeded(2, params)) {
+                    return;
+                }
+                if (params.length == 1) {
+                    commands.timeOutValue();
+                } else {
+                    try {
+                        commands.timeOutValue(Long.parseLong(params[1]));
+                    } catch (NumberFormatException e) {
+                        terminal.println(Constants.INVALID_VALUE);
+                    }
+                }
+                break;
             case "touch":
                 if (isParamsMissing(1, params)) {
                     return;

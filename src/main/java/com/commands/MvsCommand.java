@@ -2,8 +2,8 @@ package com.commands;
 
 import com.Constants;
 import com.config.MvsConsoles;
+import com.dto.ResponseStatus;
 import org.apache.commons.lang3.SystemUtils;
-import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.core.ZOSConnection;
 import zowe.client.sdk.zosconsole.ConsoleResponse;
 import zowe.client.sdk.zosconsole.IssueCommand;
@@ -13,21 +13,18 @@ import java.util.regex.Pattern;
 
 public class MvsCommand {
 
-    private final TextTerminal<?> terminal;
     private final IssueCommand issueCommand;
     private final ZOSConnection connection;
     private final MvsConsoles mvsConsoles = new MvsConsoles();
 
-    public MvsCommand(TextTerminal<?> terminal, ZOSConnection connection) {
-        this.terminal = terminal;
+    public MvsCommand(ZOSConnection connection) {
         this.connection = connection;
         this.issueCommand = new IssueCommand(connection);
     }
 
-    public void executeCommand(String command) {
+    public ResponseStatus executeCommand(String command) {
         if (!SystemUtils.IS_OS_WINDOWS && !SystemUtils.IS_OS_MAC_OSX) {
-            terminal.println(Constants.OS_ERROR);
-            return;
+            return new ResponseStatus(Constants.OS_ERROR, false);
         }
 
         var p = Pattern.compile("\"([^\"]*)\"");
@@ -57,11 +54,10 @@ public class MvsCommand {
         }
 
         if (response == null) {
-            terminal.println(Constants.MVS_EXECUTION_ERROR_MSG);
-            return;
+            return new ResponseStatus(Constants.MVS_EXECUTION_ERROR_MSG, false);
         }
-        terminal.println(Constants.MVS_EXECUTION_SUCCESS);
-        terminal.println(response.getCommandResponse().orElse("no response"));
+        return new ResponseStatus(Constants.MVS_EXECUTION_SUCCESS + "\n" +
+                response.getCommandResponse().orElse("no response"), true);
     }
 
     private ConsoleResponse execute(IssueParams params) throws Exception {

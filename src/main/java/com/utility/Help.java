@@ -44,6 +44,7 @@ public class Help {
             "search <arg>            - search for arg within a job log from the last browse command performed",
             "stop <arg>              - where arg is a task/job name",
             "submit <arg>            - where arg is a member name",
+            "timeout <arg>           - where arg is optional, with arg value you set new timeout, without shows current value",
             "tailjob <arg1> <arg2> <arg3>  - where arg1 is job name and arg2 and arg3 are optional",
             "                                use arg2 to specify either line limit or \"all\" value",
             "                                if \"all\" is specified, display output from all of job's spool content",

@@ -1,15 +1,13 @@
 package com.commands;
 
-import com.Constants;
+import com.dto.ResponseStatus;
 import com.utility.Util;
-import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.zosconsole.ConsoleResponse;
 import zowe.client.sdk.zosconsole.IssueCommand;
 import zowe.client.sdk.zosconsole.input.IssueParams;
 
 public class Terminate {
 
-    private final TextTerminal<?> terminal;
     private final IssueCommand issueCommand;
 
     public enum Type {
@@ -17,40 +15,33 @@ public class Terminate {
         CANCEL
     }
 
-    public Terminate(TextTerminal<?> terminal, IssueCommand issueCommand) {
-        this.terminal = terminal;
+    public Terminate(IssueCommand issueCommand) {
         this.issueCommand = issueCommand;
     }
 
-    public void kill(Type type, String param) {
+    public ResponseStatus stopOrCancel(Type type, String jobOrTask) {
         final var params = new IssueParams();
         switch (type) {
             case STOP:
-                params.setCommand("P " + param);
+                params.setCommand("P " + jobOrTask);
                 break;
             case CANCEL:
-                params.setCommand("C " + param);
+                params.setCommand("C " + jobOrTask);
                 break;
             default:
-                terminal.println("invalid terminate type, try again...");
-                return;
+                return new ResponseStatus("invalid termination type, try again...", false);
         }
         ConsoleResponse response;
         try {
             response = issueCommand.issue(params);
             var result = response.getCommandResponse().orElse(null);
             if (result == null) {
-                terminal.println("no response from " + (type == Type.STOP ? "stop" : "cancel") + " command, try again...");
-                return;
+                return new ResponseStatus("no response from " + (type == Type.STOP ? "stop" : "cancel") + " command, try again...", false);
             }
             // remove last newline i.e. \n
-            terminal.println(result.substring(0, result.length() - 1));
+            return new ResponseStatus(result.substring(0, result.length() - 1), true);
         } catch (Exception e) {
-            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
-                terminal.println(Constants.SEVERE_ERROR);
-                return;
-            }
-            Util.printError(terminal, e.getMessage());
+            return new ResponseStatus(Util.getErrorMsg(e + ""), false);
         }
     }
 
