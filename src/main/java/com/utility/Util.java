@@ -16,7 +16,8 @@ import java.util.regex.Pattern;
 public class Util {
 
     @SuppressWarnings("Annotator")
-    private static final String PATTERN_STRING = "[A-Z#@\\$][A-Z\\d#@\\$\\-]{2,7}";
+    private static final String PATTERN_STRING_MORE_THAN_ONE_CHAR = "[A-Z#@\\$][A-Z\\d#@\\$\\-]{1,7}";
+    private static final String PATTERN_STRING_FOR_ONE_CHAR = "[A-Z#@\\$]{1}";
 
     public static boolean isDataSet(String dataSetName) {
         dataSetName = dataSetName.toUpperCase(Locale.ROOT);
@@ -110,10 +111,18 @@ public class Util {
         // Each segment cannot be more than 8 characters
         // Each segment's first letter is a letter or #, @, $.
         // The remaining seven characters in a segment can be letters, numbers, and #, @, $, -
-        if (segment.length() > 8) {
+        var size = segment.length();
+        if (size > 8) {
             return false;
         }
-        final var p = Pattern.compile(PATTERN_STRING);
+
+        if (size == 1) {
+            final var p = Pattern.compile(PATTERN_STRING_FOR_ONE_CHAR);
+            final var m = p.matcher(segment);
+            return m.matches();
+        }
+
+        final var p = Pattern.compile(PATTERN_STRING_MORE_THAN_ONE_CHAR);
         final var m = p.matcher(segment);
         return m.matches();
     }
