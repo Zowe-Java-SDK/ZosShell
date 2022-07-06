@@ -39,13 +39,14 @@ public class ProcessList {
         if (jobs.isEmpty()) {
             return new ResponseStatus(Constants.NO_PROCESS_FOUND, false);
         }
+        StringBuilder str = new StringBuilder();
         jobs.forEach(job -> {
             var jobName = job.getJobName().orElse("");
             var jobId = job.getJobId().orElse("");
             var jobStatus = job.getStatus().orElse("");
-            terminal.println(String.format("%-8s %-8s %-8s", jobName, jobId, jobStatus));
+            str.append(String.format("%-8s %-8s %-8s", jobName, jobId, jobStatus) +"\n");
         });
-        return new ResponseStatus("", true);
+        return new ResponseStatus(str.toString(), true);
     }
 
 }
