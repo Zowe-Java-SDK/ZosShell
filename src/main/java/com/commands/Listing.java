@@ -1,6 +1,8 @@
 package com.commands;
 
 import com.Constants;
+import com.future.FutureDsnMembers;
+import com.future.FutureListDsn;
 import org.beryx.textio.TextTerminal;
 import org.beryx.textio.swing.SwingTextTerminal;
 import zowe.client.sdk.zosfiles.ZosDsnList;
@@ -11,33 +13,37 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 public class Listing {
 
     private final TextTerminal<?> terminal;
+    private final long timeOutValue;
     private List<String> members = new ArrayList<>();
     private List<Dataset> dataSets = new ArrayList<>();
     private final ZosDsnList zosDsnList;
     private final ListParams params = new ListParams.Builder().build();
     private final SwingTextTerminal mainTerminal;
 
-    public Listing(TextTerminal<?> terminal, ZosDsnList zosDsnList, SwingTextTerminal mainTerminal) {
+    public Listing(TextTerminal<?> terminal, ZosDsnList zosDsnList, SwingTextTerminal mainTerminal, long timeOutValue) {
         this.terminal = terminal;
         this.zosDsnList = zosDsnList;
         this.mainTerminal = mainTerminal;
+        this.timeOutValue = timeOutValue;
     }
 
-    public void ls(String memberValue, String dataSet, boolean isColumnView) {
+    public void ls(String memberValue, String dataSet, boolean isColumnView) throws ExecutionException, InterruptedException, TimeoutException {
         Optional<String> member = Optional.ofNullable(memberValue);
         if (member.isPresent()) {
             member = Optional.of(memberValue.toUpperCase());
         }
-        try {
-            dataSets = getDataSets(dataSet);
-            members = getMembers(dataSet);
-        } catch (Exception ignored) {
-        }
+
+        dataSets = getDataSets(dataSet);
+        members = getMembers(dataSet);
 
         member.ifPresentOrElse((m) -> {
             final var index = m.indexOf("*");
@@ -118,12 +124,16 @@ public class Listing {
         });
     }
 
-    private List<String> getMembers(String dataSet) throws Exception {
-        return zosDsnList.listDsnMembers(dataSet, params);
+    private List<String> getMembers(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
+        final var pool = Executors.newFixedThreadPool(1);
+        final var submit = pool.submit(new FutureDsnMembers(zosDsnList, dataSet, params));
+        return submit.get(timeOutValue, TimeUnit.SECONDS);
     }
 
-    private List<Dataset> getDataSets(String dataSet) throws Exception {
-        return zosDsnList.listDsn(dataSet, params);
+    private List<Dataset> getDataSets(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
+        final var pool = Executors.newFixedThreadPool(1);
+        final var submit = pool.submit(new FutureListDsn(zosDsnList, dataSet, params));
+        return submit.get(timeOutValue, TimeUnit.SECONDS);
     }
 
     private void displayListStatus(int membersSize, int dataSetsSize) {

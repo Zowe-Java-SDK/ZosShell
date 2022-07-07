@@ -219,13 +219,25 @@ public class Commands {
     }
 
     public void ls(ZOSConnection connection, String member, String dataSet) {
-        var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal);
-        listing.ls(member, dataSet, true);
+        var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal, timeOutValue);
+        try {
+            listing.ls(member, dataSet, true);
+        } catch (TimeoutException e) {
+            terminal.println(Constants.TIMEOUT_MESSAGE);
+        } catch (ExecutionException | InterruptedException e) {
+            terminal.println(Util.getErrorMsg(e + ""));
+        }
     }
 
     public void ls(ZOSConnection connection, String dataSet) {
-        var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal);
-        listing.ls(null, dataSet, true);
+        var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal, timeOutValue);
+        try {
+            listing.ls(null, dataSet, true);
+        } catch (TimeoutException e) {
+            terminal.println(Constants.TIMEOUT_MESSAGE);
+        } catch (ExecutionException | InterruptedException e) {
+            terminal.println(Util.getErrorMsg(e + ""));
+        }
     }
 
     public void lsl(ZOSConnection connection, String dataSet) {
@@ -233,8 +245,14 @@ public class Commands {
     }
 
     public void lsl(ZOSConnection connection, String member, String dataSet) {
-        var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal);
-        listing.ls(member, dataSet, false);
+        var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal, timeOutValue);
+        try {
+            listing.ls(member, dataSet, false);
+        } catch (TimeoutException e) {
+            terminal.println(Constants.TIMEOUT_MESSAGE);
+        } catch (ExecutionException | InterruptedException e) {
+            terminal.println(Util.getErrorMsg(e + ""));
+        }
     }
 
     public void mvsCommand(ZOSConnection connection, String command) {
