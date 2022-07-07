@@ -201,8 +201,10 @@ public class Commands {
         for (final var future : futures) {
             try {
                 results.add(future.get(timeOutValue, TimeUnit.SECONDS));
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            } catch (TimeoutException e) {
                 results.add(new ResponseStatus("timeout", false));
+            } catch (InterruptedException | ExecutionException e) {
+                results.add(new ResponseStatus(Util.getErrorMsg(e + ""), false));
             }
         }
         return results;
