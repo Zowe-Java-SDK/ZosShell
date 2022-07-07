@@ -352,8 +352,10 @@ public class Commands {
         try {
             final var result = submit.get(timeOutValue, TimeUnit.SECONDS);
             terminal.println(result.getMessage());
-        } catch (Exception e) {
+        } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
+        } catch (ExecutionException | InterruptedException e) {
+            terminal.println(Util.getErrorMsg(e + ""));
         }
         pool.shutdownNow();
     }
