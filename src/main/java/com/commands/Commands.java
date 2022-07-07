@@ -72,13 +72,13 @@ public class Commands {
     public void cancel(ZOSConnection connection, String jobOrTask) {
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureTerminate(new IssueCommand(connection), Terminate.Type.CANCEL, jobOrTask));
-        futureResult(pool, submit);
+        processFuture(pool, submit);
     }
 
     public void cat(ZOSConnection connection, String dataSet, String member) {
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureConcatenate(terminal, new Download(new ZosDsnDownload(connection), false), dataSet, member));
-        futureResult(pool, submit);
+        processFuture(pool, submit);
     }
 
     public String cd(ZOSConnection connection, String currDataSet, String param) {
@@ -130,7 +130,7 @@ public class Commands {
     public void count(ZOSConnection connection, String dataSet, String filter) {
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureCount(new ZosDsnList(connection), dataSet, filter));
-        futureResult(pool, submit);
+        processFuture(pool, submit);
     }
 
     public void download(ZOSConnection connection, String currDataSet, String member, boolean isBinary) {
@@ -238,7 +238,7 @@ public class Commands {
     public void mvsCommand(ZOSConnection connection, String command) {
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureMvs(connection, command));
-        futureResult(pool, submit);
+        processFuture(pool, submit);
     }
 
     public void ps(ZOSConnection connection) {
@@ -248,7 +248,7 @@ public class Commands {
     public void ps(ZOSConnection connection, String jobOrTask) {
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureProcessList(new GetJobs(connection), jobOrTask));
-        futureResult(pool, submit);
+        processFuture(pool, submit);
     }
 
     public void rm(ZOSConnection connection, String currDataSet, String param) {
@@ -266,7 +266,7 @@ public class Commands {
         final var member = params[1];
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureSave(new ZosDsn(connection), dataSet, member));
-        futureResult(pool, submit);
+        processFuture(pool, submit);
     }
 
     public void searchJobLog(JobOutput job, String text) {
@@ -277,13 +277,13 @@ public class Commands {
     public void stop(ZOSConnection connection, String jobOrTask) {
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureTerminate(new IssueCommand(connection), Terminate.Type.STOP, jobOrTask));
-        futureResult(pool, submit);
+        processFuture(pool, submit);
     }
 
     public void submit(ZOSConnection connection, String dataSet, String jobName) {
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureSubmit(new SubmitJobs(connection), dataSet, jobName));
-        futureResult(pool, submit);
+        processFuture(pool, submit);
     }
 
     public JobOutput tailJob(ZOSConnection connection, String[] params) {
@@ -338,17 +338,17 @@ public class Commands {
         final var member = params[1];
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureTouch(new ZosDsn(connection), new Member(new ZosDsnList(connection)), dataSet, member));
-        futureResult(pool, submit);
+        processFuture(pool, submit);
     }
 
     public void vi(ZOSConnection connection, String dataSet, String[] params) {
         final var member = params[1];
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureVi(new Download(new ZosDsnDownload(connection), false), dataSet, member));
-        futureResult(pool, submit);
+        processFuture(pool, submit);
     }
 
-    private void futureResult(ExecutorService pool, Future<ResponseStatus> submit) {
+    private void processFuture(ExecutorService pool, Future<ResponseStatus> submit) {
         try {
             final var result = submit.get(timeOutValue, TimeUnit.SECONDS);
             terminal.println(result.getMessage());
