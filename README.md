@@ -133,7 +133,7 @@ Example:
 
 ## Trouble Shooting
     
-Log4j logging is set up and configuration is located under src/main/resources/log4j2.xml  
+Logback logging is set up and configuration is located under src/main/resources/logback.xml  
     
 It is configured to produce output logging while application is running under the running directory where the application was kicked off.
       
