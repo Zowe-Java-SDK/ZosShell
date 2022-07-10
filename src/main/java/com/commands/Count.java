@@ -19,7 +19,7 @@ public class Count {
     }
 
     public ResponseStatus count(String dataSet, String param) {
-        AtomicInteger dataSetCount = new AtomicInteger();
+        final var dataSetCount = new AtomicInteger();
         List<Dataset> ds = new ArrayList<>();
         List<String> members = new ArrayList<>();
         try {

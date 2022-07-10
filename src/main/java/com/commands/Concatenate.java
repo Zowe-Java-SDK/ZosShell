@@ -34,9 +34,9 @@ public class Concatenate {
 
     private void display(InputStream inputStream) throws IOException {
         if (inputStream != null) {
-            var writer = new StringWriter();
+            final var writer = new StringWriter();
             IOUtils.copy(inputStream, writer, UtilIO.UTF8);
-            var content = writer.toString().split("\\n");
+            final var content = writer.toString().split("\\n");
             Arrays.stream(content).forEach(terminal::println);
             inputStream.close();
         }

@@ -47,7 +47,7 @@ public class Save {
                 sb.append(System.lineSeparator());
                 line = br.readLine();
             }
-            var content = sb.toString().replaceAll("(\\r)", "");
+            final var content = sb.toString().replaceAll("(\\r)", "");
 
             if (isSequentialDataSet) {
                 zosDsn.writeDsn(member, content);

@@ -130,7 +130,7 @@ public class Delete {
     }
 
     private boolean performDeleteCheckFailedResponse(String currDataSet, String param) throws Exception {
-        var response = zosDsn.deleteDsn(currDataSet, param);
+        final var response = zosDsn.deleteDsn(currDataSet, param);
         return failed(response);
     }
 
@@ -143,7 +143,7 @@ public class Delete {
     }
 
     private boolean failed(Response response) {
-        var code = response.getStatusCode().orElse(-1);
+        final var code = response.getStatusCode().orElse(-1);
         if (Util.isHttpError(code)) {
             terminal.println("delete operation failed with http code + " + code + ", try again...");
             return true;
