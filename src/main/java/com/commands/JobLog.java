@@ -56,7 +56,7 @@ public class JobLog {
         var submit = isAll ? pool.submit(new FutureBrowseJob(getJobs, files)) :
                 pool.submit(new FutureBrowseJob(getJobs, List.of(files.get(0))));
         try {
-            StringBuilder result = submit.get(timeout, TimeUnit.SECONDS);
+            final var result = submit.get(timeout, TimeUnit.SECONDS);
             pool.shutdownNow();
             return result;
         } catch (InterruptedException | ExecutionException | TimeoutException e) {

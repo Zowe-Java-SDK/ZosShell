@@ -38,7 +38,7 @@ public class Save {
             return new ResponseStatus(Constants.OS_ERROR, false);
         }
 
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+        try (final var br = new BufferedReader(new FileReader(fileName))) {
             var sb = new StringBuilder();
             var line = br.readLine();
 

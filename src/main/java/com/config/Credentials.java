@@ -20,14 +20,14 @@ public class Credentials {
         } else if (SystemUtils.IS_OS_MAC_OSX) {
             file = new File(Constants.SECURITY_CONFIG_PATH_FILE_MAC);
         }
-        try (var br = new BufferedReader(new FileReader(Objects.requireNonNull(file)))) {
+        try (final var br = new BufferedReader(new FileReader(Objects.requireNonNull(file)))) {
             String str;
             while ((str = br.readLine()) != null) {
-                var items = str.split(",");
+                final var items = str.split(",");
                 if (items.length < 4) {
                     continue;
                 }
-                var connection = new ZOSConnection(items[0], items[1], items[2], items[3]);
+                final var connection = new ZOSConnection(items[0], items[1], items[2], items[3]);
                 connections.add(connection);
             }
         } catch (IOException | NullPointerException ignored) {

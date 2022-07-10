@@ -197,7 +197,7 @@ public class Commands {
     }
 
     private List<ResponseStatus> getFutureResults(List<Future<ResponseStatus>> futures) {
-        var results = new ArrayList<ResponseStatus>();
+        final var results = new ArrayList<ResponseStatus>();
         for (final var future : futures) {
             try {
                 results.add(future.get(timeOutValue, TimeUnit.SECONDS));
@@ -219,7 +219,7 @@ public class Commands {
     }
 
     public void ls(ZOSConnection connection, String member, String dataSet) {
-        var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal, timeOutValue);
+        final var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal, timeOutValue);
         try {
             listing.ls(member, dataSet, true);
         } catch (TimeoutException e) {
@@ -230,7 +230,7 @@ public class Commands {
     }
 
     public void ls(ZOSConnection connection, String dataSet) {
-        var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal, timeOutValue);
+        final var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal, timeOutValue);
         try {
             listing.ls(null, dataSet, true);
         } catch (TimeoutException e) {
@@ -245,7 +245,7 @@ public class Commands {
     }
 
     public void lsl(ZOSConnection connection, String member, String dataSet) {
-        var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal, timeOutValue);
+        final var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal, timeOutValue);
         try {
             listing.ls(member, dataSet, false);
         } catch (TimeoutException e) {

@@ -37,7 +37,7 @@ public class Listing {
     }
 
     public void ls(String memberValue, String dataSet, boolean isColumnView) throws ExecutionException, InterruptedException, TimeoutException {
-        Optional<String> member = Optional.ofNullable(memberValue);
+        var member = Optional.ofNullable(memberValue);
         if (member.isPresent()) {
             member = Optional.of(memberValue.toUpperCase());
         }

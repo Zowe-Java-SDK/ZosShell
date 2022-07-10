@@ -20,7 +20,7 @@ public class ColorConfig {
             file = new File(Constants.COLOR_CONFIG_PATH_FILE_MAC);
         }
         String[] str = null;
-        try (var br = new BufferedReader(new FileReader(Objects.requireNonNull(file)))) {
+        try (final var br = new BufferedReader(new FileReader(Objects.requireNonNull(file)))) {
             str = br.readLine().split(",");
         } catch (IOException | NullPointerException ignored) {
         }

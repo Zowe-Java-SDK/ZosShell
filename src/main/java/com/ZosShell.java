@@ -109,7 +109,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private String[] exclamationMark(String[] command) {
         if ((command[0].equals(">") && command.length >= 2 && command[1].startsWith("!")) || command[0].startsWith("!")) {
-            StringBuilder str = new StringBuilder();
+            final var str = new StringBuilder();
             if (">".equals(command[0])) {
                 for (int i = 1; i < command.length; i++) {
                     str.append(command[i]);

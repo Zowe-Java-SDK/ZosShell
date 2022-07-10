@@ -26,10 +26,10 @@ public class MvsConsoles {
         } else if (SystemUtils.IS_OS_MAC) {
             file = new File(Constants.SECURITY_CONFIG_PATH_FILE_MAC);
         }
-        try (var br = new BufferedReader(new FileReader(Objects.requireNonNull(file)))) {
+        try (final var br = new BufferedReader(new FileReader(Objects.requireNonNull(file)))) {
             String str;
             while ((str = br.readLine()) != null) {
-                var items = str.split(",");
+                final var items = str.split(",");
                 if (items.length == 5) {
                     consoles.put(items[0], items[4]);
                 }

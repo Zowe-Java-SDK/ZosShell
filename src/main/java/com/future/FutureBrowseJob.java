@@ -18,7 +18,7 @@ public class FutureBrowseJob implements Callable<StringBuilder> {
 
     @Override
     public StringBuilder call() {
-        StringBuilder str = new StringBuilder();
+        final var str = new StringBuilder();
         files.forEach(file -> {
             try {
                 str.append(List.of(getJobs.getSpoolContent(file)));
