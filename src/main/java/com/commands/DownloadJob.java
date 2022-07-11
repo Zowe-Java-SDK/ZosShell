@@ -20,7 +20,7 @@ public class DownloadJob {
     }
 
     public void download(String jobName) {
-        var error = "error retrieving " + jobName + " log ";
+        final var error = "error retrieving " + jobName + " log ";
         StringBuilder output;
         try {
             output = browseJob.browseJob(jobName);
@@ -32,7 +32,7 @@ public class DownloadJob {
             terminal.println(error);
             return;
         }
-        var jobId = this.browseJob.jobs.get(0).getJobId().orElse(null);
+        final var jobId = this.browseJob.jobs.get(0).getJobId().orElse(null);
 
         DirectorySetup dirSetup = new DirectorySetup();
         try {
@@ -49,7 +49,7 @@ public class DownloadJob {
             return;
         }
 
-        var message = Strings.padStart(jobName, 8, ' ') + Constants.ARROW;
+        final var message = Strings.padStart(jobName, 8, ' ') + Constants.ARROW;
         terminal.println(message + "downloaded to " + dirSetup.getFileNamePath());
     }
 

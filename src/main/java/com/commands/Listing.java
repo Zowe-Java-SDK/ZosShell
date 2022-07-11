@@ -99,7 +99,7 @@ public class Listing {
             numOfColumns = 22;
         }
 
-        var numOfLines = membersSize / numOfColumns;
+        final var numOfLines = membersSize / numOfColumns;
         var lines = new String[numOfLines + 1];
 
         int lineIndex = 0;
@@ -147,7 +147,7 @@ public class Listing {
 
     private void displayDataSets(List<Dataset> dataSets, String ignoreDataSet) {
         dataSets.forEach(ds -> {
-            var dsName = ds.getDsname().orElse("");
+            final var dsName = ds.getDsname().orElse("");
             if (!dsName.equalsIgnoreCase(ignoreDataSet)) {
                 terminal.println(dsName);
             }

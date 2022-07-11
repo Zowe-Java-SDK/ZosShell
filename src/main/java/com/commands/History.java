@@ -34,7 +34,7 @@ public class History {
     }
 
     public void addHistory(String[] params) {
-        var str = new StringBuilder();
+        final var str = new StringBuilder();
         Arrays.stream(params).forEach(p -> {
             str.append(p);
             str.append(" ");
@@ -72,7 +72,7 @@ public class History {
             terminal.println(Constants.NO_HISTORY);
             return;
         }
-        var size = commandLst.size();
+        final var size = commandLst.size();
         if (num > size) {
             displayAll();
         } else {
@@ -127,7 +127,7 @@ public class History {
     }
 
     public String getLastHistoryByValue(String str) {
-        var lst = commandLst.stream().filter(c -> c.startsWith(str.toLowerCase())).collect(Collectors.toList());
+        final var lst = commandLst.stream().filter(c -> c.startsWith(str.toLowerCase())).collect(Collectors.toList());
         if (lst.isEmpty()) {
             terminal.println(Constants.NO_HISTORY);
             return null;
@@ -140,8 +140,8 @@ public class History {
     }
 
     private void display(int i) {
-        var orderNum = Strings.padStart(String.valueOf(i + 1), 4, ' ');
-        var historyRow = orderNum + Constants.ARROW + commandLst.get(i);
+        final var orderNum = Strings.padStart(String.valueOf(i + 1), 4, ' ');
+        final var historyRow = orderNum + Constants.ARROW + commandLst.get(i);
         terminal.println(historyRow);
     }
 

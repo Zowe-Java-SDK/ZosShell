@@ -39,7 +39,7 @@ public class Save {
         }
 
         try (final var br = new BufferedReader(new FileReader(fileName))) {
-            var sb = new StringBuilder();
+            final var sb = new StringBuilder();
             var line = br.readLine();
 
             while (line != null) {

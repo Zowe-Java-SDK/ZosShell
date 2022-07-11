@@ -17,9 +17,9 @@ public class Vi {
     }
 
     public ResponseStatus vi(String dataSet, String member) {
-        var result = download.download(dataSet, member);
-        var successMsg = "opening " + member + " in editor...";
-        var errorMsg = "\ncannot open " + member + ", try again...";
+        final var result = download.download(dataSet, member);
+        final var successMsg = "opening " + member + " in editor...";
+        final var errorMsg = "\ncannot open " + member + ", try again...";
         try {
             if (result.isStatus()) {
                 String pathFile;

@@ -34,7 +34,7 @@ public class Terminate {
         ConsoleResponse response;
         try {
             response = issueCommand.issue(params);
-            var result = response.getCommandResponse().orElse(null);
+            final var result = response.getCommandResponse().orElse(null);
             if (result == null) {
                 return new ResponseStatus("no response from " + (type == Type.STOP ? "stop" : "cancel") + " command, try again...", false);
             }

@@ -99,9 +99,9 @@ public class Download {
 
     private String getTextStreamData(InputStream inputStream) throws IOException {
         if (inputStream != null) {
-            var writer = new StringWriter();
+            final var writer = new StringWriter();
             IOUtils.copy(inputStream, writer, UtilIO.UTF8);
-            var content = writer.toString();
+            final var content = writer.toString();
             inputStream.close();
             return content;
         }

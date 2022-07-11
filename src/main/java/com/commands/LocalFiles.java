@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 public class LocalFiles {
 
     public static void listFiles(TextTerminal<?> terminal, String dataSet) {
-        var files = getFiles(terminal, dataSet);
+        final var files = getFiles(terminal, dataSet);
         if (files.isEmpty()) {
             terminal.println(Constants.NO_FILES);
             return;
@@ -36,7 +36,7 @@ public class LocalFiles {
         terminal.println(path + ":");
         Predicate<String> isNotCredentials = name -> !name.equalsIgnoreCase("credentials.txt");
         Predicate<String> isNotColors = name -> !name.equalsIgnoreCase("colors.txt");
-        var files = Optional.ofNullable(new File(path).listFiles());
+        final var files = Optional.ofNullable(new File(path).listFiles());
         return Stream.of(files.orElse(new File[]{}))
                 .map(File::getName)
                 .filter(isNotCredentials.and(isNotColors))

@@ -27,16 +27,16 @@ public class MvsCommand {
             return new ResponseStatus(Constants.OS_ERROR, false);
         }
 
-        var p = Pattern.compile("\"([^\"]*)\"");
-        var m = p.matcher(command);
+        final var p = Pattern.compile("\"([^\"]*)\"");
+        final var m = p.matcher(command);
         while (m.find()) {
             command = m.group(1);
         }
 
         ConsoleResponse response = null;
-        var params = new IssueParams();
+        final var params = new IssueParams();
         params.setCommand(command);
-        var mvsConsoleName = mvsConsoles.getConsoleName(connection.getHost());
+        final var mvsConsoleName = mvsConsoles.getConsoleName(connection.getHost());
         if (mvsConsoleName != null) {
             params.setConsoleName(mvsConsoleName);
         }

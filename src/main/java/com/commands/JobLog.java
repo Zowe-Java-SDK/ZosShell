@@ -31,7 +31,7 @@ public class JobLog {
     }
 
     protected StringBuilder browseJobLog(String param) throws Exception {
-        var jobParams = new GetJobParams.Builder("*").prefix(param).build();
+        final var jobParams = new GetJobParams.Builder("*").prefix(param).build();
         jobs = getJobs.getJobsCommon(jobParams);
         if (jobs.isEmpty()) {
             terminal.println(jobParams.getPrefix().orElse("n\\a") + " does not exist, try again...");
@@ -41,8 +41,8 @@ public class JobLog {
         Predicate<Job> isActive = j -> "ACTIVE".equalsIgnoreCase(j.getStatus().orElse(""));
         Predicate<Job> isInput = j -> "INPUT".equalsIgnoreCase(j.getStatus().orElse(""));
 
-        var jobStillRunning = jobs.stream().filter(isActive.or(isInput)).findAny();
-        var job = jobStillRunning.orElse(jobs.get(0));
+        final var jobStillRunning = jobs.stream().filter(isActive.or(isInput)).findAny();
+        final var job = jobStillRunning.orElse(jobs.get(0));
         final List<JobFile> files;
         try {
             files = getJobs.getSpoolFilesForJob(job);
@@ -52,8 +52,8 @@ public class JobLog {
             throw new Exception(e);
         }
 
-        var pool = Executors.newFixedThreadPool(1);
-        var submit = isAll ? pool.submit(new FutureBrowseJob(getJobs, files)) :
+        final var pool = Executors.newFixedThreadPool(1);
+        final var submit = isAll ? pool.submit(new FutureBrowseJob(getJobs, files)) :
                 pool.submit(new FutureBrowseJob(getJobs, List.of(files.get(0))));
         try {
             final var result = submit.get(timeout, TimeUnit.SECONDS);

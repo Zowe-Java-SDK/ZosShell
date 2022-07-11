@@ -32,7 +32,7 @@ public class Tail extends JobLog {
         }
         List<String> output = Arrays.asList(result.toString().split("\n"));
 
-        var size = output.size();
+        final var size = output.size();
         var lines = 0;
         if (params.length == 3) {
             if (!"all".equalsIgnoreCase(params[2])) {
@@ -70,7 +70,7 @@ public class Tail extends JobLog {
     }
 
     private StringBuilder displayAll(List<String> output) {
-        StringBuilder stringBuilder = new StringBuilder();
+        final var stringBuilder = new StringBuilder();
         output.forEach(line -> {
             terminal.println(line);
             stringBuilder.append(line).append("\n");
@@ -79,7 +79,7 @@ public class Tail extends JobLog {
     }
 
     private StringBuilder display(int lines, int size, List<String> output) {
-        StringBuilder stringBuilder = new StringBuilder();
+        final var stringBuilder = new StringBuilder();
         for (var i = size - lines; i < size; i++) {
             terminal.println(output.get(i));
             stringBuilder.append(output.get(i)).append("\n");
