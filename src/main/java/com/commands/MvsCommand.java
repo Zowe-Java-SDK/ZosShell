@@ -61,9 +61,7 @@ public class MvsCommand {
     }
 
     private ConsoleResponse execute(IssueParams params) throws Exception {
-        ConsoleResponse response;
-        response = issueCommand.issue(params);
-        return response;
+        return issueCommand.issue(params);
     }
 
 }
