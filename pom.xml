@@ -173,7 +173,7 @@
         <dependency>
             <groupId>org.zowe.client.java.sdk</groupId>
             <artifactId>zowe-client-java-sdk</artifactId>
-            <version>1.0.14</version>
+            <version>1.0.15</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
