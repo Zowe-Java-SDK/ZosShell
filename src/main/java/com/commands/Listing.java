@@ -42,8 +42,11 @@ public class Listing {
             member = Optional.of(memberValue.toUpperCase());
         }
 
-        dataSets = getDataSets(dataSet);
-        members = getMembers(dataSet);
+        try {
+            dataSets = getDataSets(dataSet);
+            members = getMembers(dataSet);
+        } catch (Exception ignore) {
+        }
 
         member.ifPresentOrElse((m) -> {
             final var index = m.indexOf("*");
