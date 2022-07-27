@@ -7,7 +7,6 @@ import com.utility.DirectorySetup;
 import com.utility.Util;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import zowe.client.sdk.utility.UtilIO;
 import zowe.client.sdk.zosfiles.ZosDsnDownload;
 import zowe.client.sdk.zosfiles.input.DownloadParams;
 
@@ -100,7 +99,7 @@ public class Download {
     private String getTextStreamData(InputStream inputStream) throws IOException {
         if (inputStream != null) {
             final var writer = new StringWriter();
-            IOUtils.copy(inputStream, writer, UtilIO.UTF8);
+            IOUtils.copy(inputStream, writer, Constants.UTF8);
             final var content = writer.toString();
             inputStream.close();
             return content;

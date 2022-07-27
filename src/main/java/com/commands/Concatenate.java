@@ -1,10 +1,10 @@
 package com.commands;
 
+import com.Constants;
 import com.dto.ResponseStatus;
 import com.utility.Util;
 import org.apache.commons.io.IOUtils;
 import org.beryx.textio.TextTerminal;
-import zowe.client.sdk.utility.UtilIO;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +35,7 @@ public class Concatenate {
     private void display(InputStream inputStream) throws IOException {
         if (inputStream != null) {
             final var writer = new StringWriter();
-            IOUtils.copy(inputStream, writer, UtilIO.UTF8);
+            IOUtils.copy(inputStream, writer, Constants.UTF8);
             final var content = writer.toString().split("\\n");
             Arrays.stream(content).forEach(terminal::println);
             inputStream.close();
