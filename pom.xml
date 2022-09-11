@@ -234,7 +234,6 @@
             </exclusion>
             </exclusions>
         </dependency>
-
     </dependencies>
 
     <properties>
