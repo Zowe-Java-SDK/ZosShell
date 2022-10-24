@@ -51,7 +51,7 @@ Along with following custom commands:
     cancel <arg>                  - where arg is a task/job name  
     change <arg>                  - where arg is a number representing a connection
     clearlog                      - clear out the cached job log from last browsejob command 
-    color <arg>                   - change color of prompt an text, arg i.e. blue, yellow, cyan etc..
+    color <arg>                   - change color of prompt and text, arg i.e. blue, yellow, cyan etc..
     connections                   - a list of connection(s)   
     count members                 - return member count in current pwd dataset
     count datasets                - return dataset count in current pwd dataset
@@ -113,17 +113,22 @@ If you are planning to browse large job output you may want to set the JVM memor
   
     java -jar -Xmx2G zosshell-1.0.jar   
   
-### Terminal color configuration (optional)
+### Terminal configuration properties (optional)
   
-By default, the terminal will display its text in green on a black background. If you want to change those settings, follow the instructions bellow.  
+By default, the terminal will display its text in green on a black background. If you want to change those settings and more, follow the instructions bellow.  
   
-Create a colors.txt file under "C:\ZosShell" for Windows or "/ZosShell" on Max OSX directory location that contains one line of two comma delimiter values to control the color scheme.    
+Create a config.txt file under "C:\ZosShell" for Windows or "/ZosShell" on Max OSX directory location that contains one line of two comma delimiter values.  
   
-First value will control the color of the text and prompt. Second value will control the color of the background panel.  
+Config property values specify in order on the same line separated by comma.   
+   
+    First value will set the following properties input.color and prompt.color
+    Second value will control the color of the background panel.
+    Third value will set the following properties: input.font.size and prompt.font.size
+    Fifth value will trigger text to be bold highlighted 
   
 Format:  
   
-    colornameornumbervalue,colornameornumbervalue  
+    colornameornumbervalue,colornameornumbervalue,fontnumbersizenumbervalue,anyvalue  
   
 Example:  
   

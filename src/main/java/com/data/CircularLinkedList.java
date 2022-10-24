@@ -14,10 +14,10 @@ public class CircularLinkedList<T> {
         }
     }
 
-    private int size = 0;
     public Node<T> head = null;
     public Node<T> tail = null;
     public Node<T> currNode = null;
+    private int size = 0;
 
     // this function will add the new node at the end of the list.
     public void add(T data) {
@@ -43,26 +43,27 @@ public class CircularLinkedList<T> {
         size++;
     }
 
+    public T back() {
+        if (currNode == null) {
+            currNode = this.tail;
+            return (currNode != null ? currNode.data : null);
+        }
+
+        currNode = currNode.prev;
+        return (currNode != null ? currNode.data : null);
+    }
+
     public T forward() {
         if (currNode == null) {
             currNode = this.head;
         } else {
             currNode = currNode.next;
         }
-        return currNode.data;
+        return (currNode != null ? currNode.data : null);
     }
 
-    public T back() {
-        T result;
-        if (currNode == null) {
-            currNode = this.tail;
-            result = currNode.data;
-            return result;
-        }
-
-        currNode = currNode.prev;
-        result = currNode.data;
-        return result;
+    public boolean isEmpty() {
+        return head == tail;
     }
 
     private void setTail(Node<T> newNode) {

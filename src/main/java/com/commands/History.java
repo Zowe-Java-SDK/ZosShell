@@ -24,13 +24,17 @@ public class History {
     }
 
     public void listUpCommands(String prompt) {
-        terminal.resetLine();
-        terminal.printf(prompt + " " + circularLinkedList.back().trim());
+        if (!circularLinkedList.isEmpty()) {
+            terminal.resetLine();
+            terminal.printf(prompt + " " + circularLinkedList.back().trim());
+        }
     }
 
     public void listDownCommands(String prompt) {
-        terminal.resetLine();
-        terminal.printf(prompt + " " + circularLinkedList.forward().trim());
+        if (!circularLinkedList.isEmpty()) {
+            terminal.resetLine();
+            terminal.printf(prompt + " " + circularLinkedList.forward().trim());
+        }
     }
 
     public void addHistory(String[] params) {

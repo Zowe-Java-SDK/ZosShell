@@ -2,7 +2,7 @@ package com;
 
 import com.commands.Commands;
 import com.commands.History;
-import com.config.ColorConfig;
+import com.config.Config;
 import com.config.Credentials;
 import com.dto.JobOutput;
 import com.google.common.base.Strings;
@@ -34,6 +34,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static History history;
     private static JobOutput jobOutput;
     private static final SwingTextTerminal mainTerminal = new SwingTextTerminal();
+    private static final int defaultFontSize = 10;
+    private static int fontSize = defaultFontSize;
+    private static boolean fontSizeChanged = false;
+    private static Config config;
 
     public static void main(String[] args) {
         Credentials.readCredentials(connections);
@@ -64,13 +68,36 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             history.listDownCommands(Util.getPrompt());
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
+        mainTerminal.registerHandler("ctrl UP", t -> {
+            fontSize++;
+            mainTerminal.setInputFontSize(fontSize);
+            mainTerminal.setPromptFontSize(fontSize);
+            mainTerminal.moveToLineStart();
+            mainTerminal.print("> Increased font size to " + fontSize + ".");
+            fontSizeChanged = true;
+            return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+        });
+        mainTerminal.registerHandler("ctrl DOWN", t -> {
+            if (fontSize != defaultFontSize) {
+                fontSize--;
+                mainTerminal.setInputFontSize(fontSize);
+                mainTerminal.setPromptFontSize(fontSize);
+                mainTerminal.moveToLineStart();
+                mainTerminal.print("> Decreased font size to " + fontSize + ".");
+                fontSizeChanged = true;
+            }
+            return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+        });
     }
 
     @Override
     public void accept(TextIO textIO, RunnerData runnerData) {
         terminal = textIO.getTextTerminal();
         terminal.setBookmark("top");
-        ColorConfig.readConfig(terminal);
+        config = new Config(terminal);
+        if (config.getFrontSize() != null) {
+            fontSize = Integer.parseInt(config.getFrontSize());
+        }
         commands = new Commands(connections, terminal, mainTerminal);
         history = new History(terminal);
         if (currConnection == null) {
@@ -83,6 +110,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         String commandLine = "";
         while (!"end".equalsIgnoreCase(commandLine)) {
             commandLine = textIO.newStringInputReader().withMaxLength(80).read(Util.getPrompt());
+            if (fontSizeChanged) {
+                terminal.println("Front size set.");
+                fontSizeChanged = false;
+                continue;
+            }
             command = commandLine.split(" ");
             if (Arrays.stream(command).anyMatch(String::isEmpty)) {  // handle multiple empty spaces specified
                 command = Util.stripEmptyStrings(command);
