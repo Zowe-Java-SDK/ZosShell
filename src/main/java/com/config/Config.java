@@ -13,7 +13,7 @@ import java.util.Objects;
 
 public class Config {
 
-    private TextTerminal<?> terminal;
+    private final TextTerminal<?> terminal;
     private String textColor;
     private String backGroundColor;
     private String frontSize;
