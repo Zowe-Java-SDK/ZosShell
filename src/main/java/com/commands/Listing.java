@@ -69,62 +69,16 @@ public class Listing {
             return;
         }
 
-        final var screenWidth = mainTerminal.getTextPane().getWidth();
-
         if (membersSize == 0) {
             return;
         }
-        var numOfColumns = 3;
 
-        if (screenWidth > 350 && screenWidth < 450) {
-            numOfColumns = 4;
-        } else if (screenWidth > 450 && screenWidth < 550) {
-            numOfColumns = 5;
-        } else if (screenWidth > 550 && screenWidth < 650) {
-            numOfColumns = 6;
-        } else if (screenWidth > 650 && screenWidth < 750) {
-            numOfColumns = 7;
-        } else if (screenWidth > 750 && screenWidth < 850) {
-            numOfColumns = 8;
-        } else if (screenWidth > 850 && screenWidth < 950) {
-            numOfColumns = 9;
-        } else if (screenWidth > 950 && screenWidth < 1050) {
-            numOfColumns = 10;
-        } else if (screenWidth > 1050 && screenWidth < 1150) {
-            numOfColumns = 12;
-        } else if (screenWidth > 1200 && screenWidth < 1500) {
-            numOfColumns = 14;
-        } else if (screenWidth > 1500 && screenWidth < 2000) {
-            numOfColumns = 16;
-        } else if (screenWidth > 2000 && screenWidth < 2500) {
-            numOfColumns = 20;
-        } else if (screenWidth > 2500) {
-            numOfColumns = 22;
+        StringBuilder line = new StringBuilder();
+        for (var i = 0; i < membersSize; i++) {
+            line.append(String.format("%-8s", members.get(i++)));
+            line.append(" ");
         }
-
-        final var numOfLines = membersSize / numOfColumns;
-        var lines = new String[numOfLines + 1];
-
-        int lineIndex = 0;
-        for (var i = 0; i < membersSize; ) {
-            int count = 1;
-            StringBuilder line = new StringBuilder();
-            while (count % (numOfColumns + 1) != 0) {
-                if (i >= membersSize) {
-                    break;
-                }
-                line.append(String.format("%-8s", members.get(i++)));
-                line.append(" ");
-                count++;
-            }
-            lines[lineIndex++] = line.toString();
-        }
-
-        Arrays.stream(lines).forEach(line -> {
-            if (line != null) {
-                terminal.println(line);
-            }
-        });
+        terminal.println(String.valueOf(line));
     }
 
     private List<String> getMembers(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
