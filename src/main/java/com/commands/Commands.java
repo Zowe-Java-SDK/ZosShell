@@ -8,7 +8,6 @@ import com.future.*;
 import com.utility.Help;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
-import org.beryx.textio.swing.SwingTextTerminal;
 import zowe.client.sdk.core.ZOSConnection;
 import zowe.client.sdk.zosconsole.IssueCommand;
 import zowe.client.sdk.zosfiles.ZosDsn;
@@ -26,13 +25,11 @@ public class Commands {
 
     private final List<ZOSConnection> connections;
     private final TextTerminal<?> terminal;
-    private final SwingTextTerminal mainTerminal;
     private long timeOutValue = Constants.FUTURE_TIMEOUT_VALUE;
 
-    public Commands(List<ZOSConnection> connections, TextTerminal<?> terminal, SwingTextTerminal mainTerminal) {
+    public Commands(List<ZOSConnection> connections, TextTerminal<?> terminal) {
         this.connections = connections;
         this.terminal = terminal;
-        this.mainTerminal = mainTerminal;
     }
 
     public JobOutput browse(ZOSConnection connection, String[] params) {
@@ -219,7 +216,7 @@ public class Commands {
     }
 
     public void ls(ZOSConnection connection, String member, String dataSet) {
-        final var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal, timeOutValue);
+        final var listing = new Listing(terminal, new ZosDsnList(connection), timeOutValue);
         try {
             listing.ls(member, dataSet, true);
         } catch (TimeoutException e) {
@@ -230,7 +227,7 @@ public class Commands {
     }
 
     public void ls(ZOSConnection connection, String dataSet) {
-        final var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal, timeOutValue);
+        final var listing = new Listing(terminal, new ZosDsnList(connection), timeOutValue);
         try {
             listing.ls(null, dataSet, true);
         } catch (TimeoutException e) {
@@ -245,7 +242,7 @@ public class Commands {
     }
 
     public void lsl(ZOSConnection connection, String member, String dataSet) {
-        final var listing = new Listing(terminal, new ZosDsnList(connection), mainTerminal, timeOutValue);
+        final var listing = new Listing(terminal, new ZosDsnList(connection), timeOutValue);
         try {
             listing.ls(member, dataSet, false);
         } catch (TimeoutException e) {

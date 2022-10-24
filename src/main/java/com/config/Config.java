@@ -51,7 +51,7 @@ public class Config {
                     backGroundColor = str[1];
                     terminal.getProperties().setPaneBackgroundColor(backGroundColor);
                 }
-                TerminalProperties tp = terminal.getProperties();
+                TerminalProperties<?> tp = terminal.getProperties();
                 if (str[2] != null) {
                     frontSize = str[2];
                     tp.put("prompt.font.size", Integer.valueOf(frontSize));
@@ -59,8 +59,8 @@ public class Config {
                 }
                 if (str[3] != null) {
                     bold = true;
-                    tp.put("prompt.bold", bold);
-                    tp.put("input.bold", bold);
+                    tp.put("prompt.bold", true);
+                    tp.put("input.bold", true);
                 }
             } catch (Exception ignored) {
             }

@@ -37,7 +37,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static final int defaultFontSize = 10;
     private static int fontSize = defaultFontSize;
     private static boolean fontSizeChanged = false;
-    private static Config config;
 
     public static void main(String[] args) {
         Credentials.readCredentials(connections);
@@ -94,11 +93,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     public void accept(TextIO textIO, RunnerData runnerData) {
         terminal = textIO.getTextTerminal();
         terminal.setBookmark("top");
-        config = new Config(terminal);
+        Config config = new Config(terminal);
         if (config.getFrontSize() != null) {
             fontSize = Integer.parseInt(config.getFrontSize());
         }
-        commands = new Commands(connections, terminal, mainTerminal);
+        commands = new Commands(connections, terminal);
         history = new History(terminal);
         if (currConnection == null) {
             terminal.println(Constants.NO_CONNECTIONS);

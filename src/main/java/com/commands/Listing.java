@@ -4,7 +4,6 @@ import com.Constants;
 import com.future.FutureDsnMembers;
 import com.future.FutureListDsn;
 import org.beryx.textio.TextTerminal;
-import org.beryx.textio.swing.SwingTextTerminal;
 import zowe.client.sdk.zosfiles.ZosDsnList;
 import zowe.client.sdk.zosfiles.input.ListParams;
 import zowe.client.sdk.zosfiles.response.Dataset;
@@ -26,12 +25,10 @@ public class Listing {
     private List<Dataset> dataSets = new ArrayList<>();
     private final ZosDsnList zosDsnList;
     private final ListParams params = new ListParams.Builder().build();
-    private final SwingTextTerminal mainTerminal;
 
-    public Listing(TextTerminal<?> terminal, ZosDsnList zosDsnList, SwingTextTerminal mainTerminal, long timeOutValue) {
+    public Listing(TextTerminal<?> terminal, ZosDsnList zosDsnList, long timeOutValue) {
         this.terminal = terminal;
         this.zosDsnList = zosDsnList;
-        this.mainTerminal = mainTerminal;
         this.timeOutValue = timeOutValue;
     }
 
