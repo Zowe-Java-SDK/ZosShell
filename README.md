@@ -81,6 +81,8 @@ The following key combinations provide the following functionality within the sh
     CTRL V                  - paste coped text
     UP arrow                - scroll up through history list
     DOWN arrow              - scroll down through history list
+    CTRL UP arrow           - increase font size
+    CTRL DOWN arrow         - decrease font size
     
 To quit from the command shell UI, you can either press 'X' windows close icon or enter 'end' keyword.  
   
