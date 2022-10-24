@@ -10,7 +10,6 @@ import zowe.client.sdk.zosfiles.input.ListParams;
 import zowe.client.sdk.zosfiles.response.Dataset;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -73,7 +72,7 @@ public class Listing {
             return;
         }
 
-        StringBuilder line = new StringBuilder();
+        final var line = new StringBuilder();
         for (var i = 0; i < membersSize; i++) {
             line.append(String.format("%-8s", members.get(i++)));
             line.append(" ");
