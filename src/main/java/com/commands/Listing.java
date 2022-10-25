@@ -71,7 +71,7 @@ public class Listing {
 
         final var line = new StringBuilder();
         for (var i = 0; i < membersSize; i++) {
-            line.append(String.format("%-8s", members.get(i++)));
+            line.append(String.format("%-8s", members.get(i)));
             line.append(" ");
         }
         terminal.println(String.valueOf(line));
