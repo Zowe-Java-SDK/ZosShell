@@ -74,7 +74,7 @@ public class Listing {
             line.append(String.format("%-8s", members.get(i)));
             line.append(" ");
         }
-        terminal.println(String.valueOf(line));
+        terminal.println(line.toString());
     }
 
     private List<String> getMembers(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
