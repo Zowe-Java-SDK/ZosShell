@@ -163,7 +163,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 return null;
             }
 
-            var subStr = cmd.substring(1);
+            final var subStr = cmd.substring(1);
             var isStrNum = Util.isStrNum(subStr);
 
             String newCmd;
