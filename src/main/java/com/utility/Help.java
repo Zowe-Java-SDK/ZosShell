@@ -16,6 +16,8 @@ public class Help {
             "change <arg>            - where arg is a number representing a connection",
             "clear                   - clear the shell of all history",
             "clearlog                - clear out the cached job log from last browsejob command",
+            "color <arg> <arg2>      - change color arg is prompt and text ",
+            "                          and arg2 is background color, i.e. blue, yellow, cyan etc..",
             "connections             - a list of connection(s)",
             "count members           - return member count in dataset",
             "count datasets          - return dataset count in dataset",

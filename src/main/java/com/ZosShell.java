@@ -259,10 +259,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                if (isParamsExceeded(2, params)) {
+                if (isParamsExceeded(3, params)) {
                     return;
                 }
-                commands.color(params[1]);
+                if (params.length == 3) {
+                    commands.color(params[1], params[2]);
+                } else {
+                    commands.color(params[1], null);
+                }
                 break;
             case "connections":
                 if (isParamsExceeded(1, params)) {

@@ -94,9 +94,10 @@ public class Commands {
         return changeConn.changeConnection(connection, commands);
     }
 
-    public void color(String param) {
+    public void color(String arg, String agr2) {
         var color = new Color(terminal);
-        color.color(param);
+        color.setTextColor(arg);
+        color.setBackGroundColor(agr2);
     }
 
     public void connections(ZOSConnection connection) {

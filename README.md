@@ -51,7 +51,7 @@ Along with following custom commands:
     cancel <arg>                  - where arg is a task/job name  
     change <arg>                  - where arg is a number representing a connection
     clearlog                      - clear out the cached job log from last browsejob command 
-    color <arg>                   - change color of prompt and text, arg i.e. blue, yellow, cyan etc..
+    color <arg> <arg2>            - change color arg is prompt and text and arg2 is background color, i.e. blue, yellow, cyan etc..
     connections                   - a list of connection(s)   
     count members                 - return member count in current pwd dataset
     count datasets                - return dataset count in current pwd dataset
