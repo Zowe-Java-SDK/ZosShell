@@ -63,7 +63,7 @@ public class CircularLinkedList<T> {
     }
 
     public boolean isEmpty() {
-        return head == tail;
+        return size == 0;
     }
 
     private void setTail(Node<T> newNode) {
