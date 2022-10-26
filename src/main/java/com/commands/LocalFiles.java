@@ -24,14 +24,22 @@ public class LocalFiles {
     }
 
     private static List<String> getFiles(TextTerminal<?> terminal, String dataSet) {
-        if (!SystemUtils.IS_OS_WINDOWS) {
+        if (!SystemUtils.IS_OS_WINDOWS && !SystemUtils.IS_OS_MAC_OSX) {
             return new ArrayList<>();
         }
         String path;
         if (dataSet == null || dataSet.isEmpty()) {
-            path = Constants.PATH_FILE_DIRECTORY_WINDOWS;
+            if (SystemUtils.IS_OS_WINDOWS) {
+                path = Constants.PATH_FILE_DIRECTORY_WINDOWS;
+            } else {
+                path = Constants.PATH_FILE_DIRECTORY_MAC;
+            }
         } else {
-            path = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\" + dataSet;
+            if (SystemUtils.IS_OS_WINDOWS) {
+                path = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\" + dataSet;
+            } else {
+                path = Constants.PATH_FILE_DIRECTORY_MAC + "\\" + dataSet;
+            }
         }
         terminal.println(path + ":");
         Predicate<String> isNotCredentials = name -> !name.equalsIgnoreCase("credentials.txt");
