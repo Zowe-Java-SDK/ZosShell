@@ -176,7 +176,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             }
 
             // set new command from history content
-            command = newCmd.split(" ");
+            command = newCmd != null ? newCmd.split(" ") : null;
         }
         return command;
     }
