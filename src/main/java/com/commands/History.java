@@ -24,16 +24,22 @@ public class History {
     }
 
     public void listUpCommands(String prompt) {
-        if (!circularLinkedList.isEmpty()) {
+        if (circularLinkedList.getSize() > 1) {
             terminal.resetLine();
             terminal.printf(prompt + " " + circularLinkedList.back().trim());
+        } else if (circularLinkedList.getSize() == 1) {
+            terminal.resetLine();
+            terminal.printf(prompt + " " + circularLinkedList.head.getData().trim());
         }
     }
 
     public void listDownCommands(String prompt) {
-        if (!circularLinkedList.isEmpty()) {
+        if (circularLinkedList.getSize() > 1) {
             terminal.resetLine();
             terminal.printf(prompt + " " + circularLinkedList.forward().trim());
+        } else if (circularLinkedList.getSize() == 1) {
+            terminal.resetLine();
+            terminal.printf(prompt + " " + circularLinkedList.head.getData().trim());
         }
     }
 

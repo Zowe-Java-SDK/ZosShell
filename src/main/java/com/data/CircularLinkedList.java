@@ -4,19 +4,9 @@ import com.Constants;
 
 public class CircularLinkedList<T> {
 
-    public static class Node<T> {
-        final T data;
-        Node<T> next;
-        Node<T> prev;
-
-        public Node(T data) {
-            this.data = data;
-        }
-    }
-
+    public Node<T> currNode = null;
     public Node<T> head = null;
     public Node<T> tail = null;
-    public Node<T> currNode = null;
     private int size = 0;
 
     // this function will add the new node at the end of the list.
@@ -62,8 +52,8 @@ public class CircularLinkedList<T> {
         return (currNode != null ? currNode.data : null);
     }
 
-    public boolean isEmpty() {
-        return size == 0;
+    public int getSize() {
+        return size;
     }
 
     private void setTail(Node<T> newNode) {
@@ -79,6 +69,20 @@ public class CircularLinkedList<T> {
         tail.prev = temp;
         // circular double linked
         head.prev = tail;
+    }
+
+    public static class Node<T> {
+        final T data;
+        Node<T> next;
+        Node<T> prev;
+
+        public Node(T data) {
+            this.data = data;
+        }
+
+        public T getData() {
+            return data;
+        }
     }
 
 }
