@@ -13,18 +13,18 @@ public class Color {
     public void setTextColor(String color) {
         terminal.getProperties().setPromptColor(color);
         terminal.getProperties().setInputColor(color);
-        display();
+        display("text color " + color + " set");
     }
 
     public void setBackGroundColor(String color) {
         if (color != null) {
             terminal.getProperties().setPaneBackgroundColor(color);
-            display();
+            display("background color " + color + " set");
         }
     }
 
-    private void display() {
-        terminal.println("color set");
+    private void display(String msg) {
+        terminal.println(msg);
     }
 
 }
