@@ -288,7 +288,7 @@ public class Commands {
     }
 
     public void searchJobLog(JobOutput job, String text) {
-        var search = new SearchJobLog(terminal);
+        final var search = new SearchJobLog(terminal);
         search.search(job, text);
     }
 
