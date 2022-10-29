@@ -14,10 +14,7 @@ import java.util.Objects;
 public class Config {
 
     private final TextTerminal<?> terminal;
-    private String textColor;
-    private String backGroundColor;
     private String frontSize;
-    private boolean bold;
 
     public Config(TextTerminal<?> terminal) {
         this.terminal = terminal;
@@ -43,12 +40,12 @@ public class Config {
         if (str != null) {
             try {
                 if (str[0] != null) {
-                    textColor = str[0];
+                    final var textColor = str[0];
                     terminal.getProperties().setPromptColor(textColor);
                     terminal.getProperties().setInputColor(textColor);
                 }
                 if (str[1] != null) {
-                    backGroundColor = str[1];
+                    final var backGroundColor = str[1];
                     terminal.getProperties().setPaneBackgroundColor(backGroundColor);
                 }
                 TerminalProperties<?> tp = terminal.getProperties();
@@ -58,7 +55,6 @@ public class Config {
                     tp.put("input.font.size", Integer.valueOf(frontSize));
                 }
                 if (str[3] != null) {
-                    bold = true;
                     tp.put("prompt.bold", true);
                     tp.put("input.bold", true);
                 }
