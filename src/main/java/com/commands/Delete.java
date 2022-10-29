@@ -53,7 +53,7 @@ public class Delete {
                     members = members.stream().filter(i -> i.contains(finalLookForStr)).collect(Collectors.toList());
                 }
 
-                var success = new AtomicBoolean(true);
+                final var success = new AtomicBoolean(true);
                 members.forEach(m -> {
                     try {
                         Response response = zosDsn.deleteDsn(currDataSet, m);
@@ -97,7 +97,7 @@ public class Delete {
             }
 
             if (param.contains("(") && param.contains(")")) {
-                DataSetMember dataSetMember = Util.getMemberFromDataSet(param);
+                final var dataSetMember = Util.getMemberFromDataSet(param);
                 if (dataSetMember == null) {
                     terminal.println(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR);
                     return;

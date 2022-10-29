@@ -93,7 +93,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     public void accept(TextIO textIO, RunnerData runnerData) {
         terminal = textIO.getTextTerminal();
         terminal.setBookmark("top");
-        Config config = new Config(terminal);
+        final var config = new Config(terminal);
         if (config.getFrontSize() != null) {
             fontSize = Integer.parseInt(config.getFrontSize());
         }
@@ -157,7 +157,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
             }
 
-            var cmd = str.toString();
+            final var cmd = str.toString();
             if (cmd.length() == 1) {
                 terminal.println(Constants.MISSING_PARAMETERS);
                 return null;
@@ -384,11 +384,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 3 && "-l".equalsIgnoreCase(params[1])) {
-                    var value = params[2];
-                    var size = params[2].length();
+                    final var value = params[2];
+                    final var size = params[2].length();
                     if (size <= 9 && value.charAt(size - 1) == '*') {  // is member with wild card specified...
-                        var index = value.indexOf("*");
-                        var member = value.substring(0, index);
+                        final var index = value.indexOf("*");
+                        final var member = value.substring(0, index);
                         if (Util.isMember(member)) {  // validate member value without wild card char...
                             commands.lsl(currConnection, value, currDataSet);
                             return;
@@ -418,9 +418,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 2 && (params[1].length() <= 9 && params[1].charAt(params[1].length() - 1) == '*')) {
-                    var value = params[1];
-                    var index = value.indexOf("*");
-                    var member = value.substring(0, index);
+                    final var value = params[1];
+                    final var index = value.indexOf("*");
+                    final var member = value.substring(0, index);
                     if (Util.isMember(member)) {
                         commands.ls(currConnection, value, currDataSet);
                         return;
@@ -443,14 +443,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                StringBuilder mvsCommandCandidate = new StringBuilder();
+                final var mvsCommandCandidate = new StringBuilder();
                 for (int i = 1; i < params.length; i++) {
                     mvsCommandCandidate.append(params[i]);
                     if (i != params.length - 1) {
                         mvsCommandCandidate.append(" ");
                     }
                 }
-                var count = mvsCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
+                final var count = mvsCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (count == 2 && mvsCommandCandidate.charAt(mvsCommandCandidate.length() - 1) == '\"') {
                     commands.mvsCommand(currConnection, mvsCommandCandidate.toString());
                 } else if (count == 2) {

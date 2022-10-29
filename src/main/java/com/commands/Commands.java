@@ -94,18 +94,18 @@ public class Commands {
     }
 
     public ZOSConnection change(ZOSConnection connection, String[] commands) {
-        var changeConn = new ChangeConn(terminal, connections);
+        final var changeConn = new ChangeConn(terminal, connections);
         return changeConn.changeConnection(connection, commands);
     }
 
     public void color(String arg, String agr2) {
-        var color = new Color(terminal);
+        final var color = new Color(terminal);
         color.setTextColor(arg);
         color.setBackGroundColor(agr2);
     }
 
     public void connections(ZOSConnection connection) {
-        var changeConn = new ChangeConn(terminal, connections);
+        final var changeConn = new ChangeConn(terminal, connections);
         changeConn.displayConnections(connection);
     }
 
@@ -162,19 +162,19 @@ public class Commands {
     }
 
     public void downloadJob(ZOSConnection currConnection, String param, boolean isAll) {
-        DownloadJob downloadJob = new DownloadJob(terminal, new GetJobs(currConnection), isAll, timeOutValue);
+        final var downloadJob = new DownloadJob(terminal, new GetJobs(currConnection), isAll, timeOutValue);
         downloadJob.download(param);
     }
 
     private List<ResponseStatus> multipleDownload(ZOSConnection connection, String dataSet, List<String> members, boolean isBinary) {
         final var pool = Executors.newFixedThreadPool(members.size());
-        var futures = new ArrayList<Future<ResponseStatus>>();
+        final var futures = new ArrayList<Future<ResponseStatus>>();
 
         for (final var member : members) {
             futures.add(pool.submit(new FutureDownload(new ZosDsnDownload(connection), dataSet, member, isBinary)));
         }
 
-        var result = getFutureResults(futures);
+        final var result = getFutureResults(futures);
         pool.shutdownNow();
         return result;
     }
@@ -187,13 +187,13 @@ public class Commands {
         }
 
         final var pool = Executors.newFixedThreadPool(members.size());
-        var futures = new ArrayList<Future<ResponseStatus>>();
+        final var futures = new ArrayList<Future<ResponseStatus>>();
 
         for (final var member : members) {
             futures.add(pool.submit(new FutureCopy(new ZosDsnCopy(connection), fromDataSetName, toDataSetName, member)));
         }
 
-        var result = getFutureResults(futures);
+        final var result = getFutureResults(futures);
         pool.shutdownNow();
         return result;
     }

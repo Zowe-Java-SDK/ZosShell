@@ -49,7 +49,7 @@ public class History {
             str.append(p);
             str.append(" ");
         });
-        var command = str.toString();
+        final var command = str.toString();
         if (!command.startsWith("history")) {
             if (commandLst.size() == Constants.HISTORY_SIZE) {
                 commandLst.remove(0);

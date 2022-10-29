@@ -33,7 +33,7 @@ public class Download {
     public ResponseStatus download(String dataSet, String member) {
         var message = Strings.padStart(member, 8, ' ') + Constants.ARROW;
 
-        DirectorySetup dirSetup = new DirectorySetup();
+        final var dirSetup = new DirectorySetup();
         try {
             dirSetup.initialize(dataSet, member);
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class Download {
     }
 
     private String getTextContent(String dataSet, String param) throws Exception {
-        var inputStream = getInputStream(dataSet, param);
+        final var inputStream = getInputStream(dataSet, param);
         return getTextStreamData(inputStream);
     }
 

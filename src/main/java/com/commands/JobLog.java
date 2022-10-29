@@ -38,8 +38,8 @@ public class JobLog {
             return new StringBuilder();
         }
         // select the active or input one first; if not found then get the highest job number
-        Predicate<Job> isActive = j -> "ACTIVE".equalsIgnoreCase(j.getStatus().orElse(""));
-        Predicate<Job> isInput = j -> "INPUT".equalsIgnoreCase(j.getStatus().orElse(""));
+        final Predicate<Job> isActive = j -> "ACTIVE".equalsIgnoreCase(j.getStatus().orElse(""));
+        final Predicate<Job> isInput = j -> "INPUT".equalsIgnoreCase(j.getStatus().orElse(""));
 
         final var jobStillRunning = jobs.stream().filter(isActive.or(isInput)).findAny();
         final var job = jobStillRunning.orElse(jobs.get(0));
@@ -47,7 +47,7 @@ public class JobLog {
         try {
             files = getJobs.getSpoolFilesForJob(job);
         } catch (Exception e) {
-            var msg = "error retrieving spool content for job id " + job.getJobId().orElse("n\\a");
+            final var msg = "error retrieving spool content for job id " + job.getJobId().orElse("n\\a");
             terminal.println(msg);
             throw new Exception(e);
         }

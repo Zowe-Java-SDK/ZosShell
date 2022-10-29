@@ -34,7 +34,7 @@ public class DownloadJob {
         }
         final var jobId = this.browseJob.jobs.get(0).getJobId().orElse(null);
 
-        DirectorySetup dirSetup = new DirectorySetup();
+        final var dirSetup = new DirectorySetup();
         try {
             dirSetup.initialize(jobName, jobId);
         } catch (Exception e) {

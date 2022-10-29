@@ -42,8 +42,8 @@ public class LocalFiles {
             }
         }
         terminal.println(path + ":");
-        Predicate<String> isNotCredentials = name -> !name.equalsIgnoreCase("credentials.txt");
-        Predicate<String> isNotColors = name -> !name.equalsIgnoreCase("colors.txt");
+        final Predicate<String> isNotCredentials = name -> !name.equalsIgnoreCase("credentials.txt");
+        final Predicate<String> isNotColors = name -> !name.equalsIgnoreCase("colors.txt");
         final var files = Optional.ofNullable(new File(path).listFiles());
         return Stream.of(files.orElse(new File[]{}))
                 .map(File::getName)
