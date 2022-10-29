@@ -4,7 +4,7 @@ import com.commands.Commands;
 import com.commands.History;
 import com.config.Config;
 import com.config.Credentials;
-import com.dto.JobOutput;
+import com.dto.Output;
 import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -32,7 +32,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static TextTerminal<?> terminal;
     private static Commands commands;
     private static History history;
-    private static JobOutput jobOutput;
+    private static Output commandOutput;
     private static final SwingTextTerminal mainTerminal = new SwingTextTerminal();
     private static final int defaultFontSize = 10;
     private static int fontSize = defaultFontSize;
@@ -197,7 +197,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
-                jobOutput = commands.browse(currConnection, params);
+                commandOutput = commands.browse(currConnection, params);
                 break;
             case "cancel":
                 if (isParamsMissing(1, params)) {
@@ -217,7 +217,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 param = params[1];
-                commands.cat(currConnection, currDataSet, param);
+                commandOutput = new Output(param, commands.cat(currConnection, currDataSet, param));
                 break;
             case "cd":
                 if (isParamsMissing(1, params)) {
@@ -246,9 +246,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 mainTerminal.setPaneTitle(Constants.APP_TITLE + " - " + currConnection.getHost().toUpperCase());
                 break;
             case "clearlog":
-                if (jobOutput != null) {
-                    jobOutput.getOutput().setLength(0);
-                    jobOutput = null;
+                if (commandOutput != null) {
+                    commandOutput.getOutput().setLength(0);
+                    commandOutput = null;
                     System.gc();
                 }
                 break;
@@ -504,7 +504,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                commands.searchJobLog(jobOutput, params[1]);
+                commands.search(commandOutput, params[1]);
                 break;
             case "stop":
                 if (isParamsMissing(1, params)) {
@@ -536,10 +536,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(4, params)) {
                     return;
                 }
-                JobOutput tailJobOutput = commands.tailJob(currConnection, params);
-                if (tailJobOutput != null) {
-                    jobOutput = tailJobOutput;
-                }
+                commandOutput = commands.tailJob(currConnection, params);
                 break;
             case "timeout":
                 if (isParamsExceeded(2, params)) {
