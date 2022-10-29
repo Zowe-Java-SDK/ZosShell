@@ -23,23 +23,23 @@ public class Concatenate {
 
     public ResponseStatus cat(String dataSet, String param) {
         InputStream inputStream;
+        String result;
         try {
             inputStream = download.getInputStream(dataSet, param);
-            display(inputStream);
+            result = retrieveInfo(inputStream);
         } catch (Exception e) {
             return new ResponseStatus(Util.getErrorMsg(e + ""), false);
         }
-        return new ResponseStatus("", true);
+        return new ResponseStatus(result, true);
     }
 
-    private void display(InputStream inputStream) throws IOException {
+    private String retrieveInfo(final InputStream inputStream) throws IOException {
         if (inputStream != null) {
             final var writer = new StringWriter();
             IOUtils.copy(inputStream, writer, Constants.UTF8);
-            final var content = writer.toString().split("\\n");
-            Arrays.stream(content).forEach(terminal::println);
-            inputStream.close();
+            return writer.toString();
         }
+        return null;
     }
 
 }

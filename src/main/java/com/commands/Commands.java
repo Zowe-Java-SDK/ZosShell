@@ -1,8 +1,8 @@
 package com.commands;
 
 import com.Constants;
-import com.dto.JobOutput;
 import com.dto.Member;
+import com.dto.Output;
 import com.dto.ResponseStatus;
 import com.future.*;
 import com.utility.Help;
@@ -32,7 +32,7 @@ public class Commands {
         this.terminal = terminal;
     }
 
-    public JobOutput browse(ZOSConnection connection, String[] params) {
+    public Output browse(ZOSConnection connection, String[] params) {
         if (params.length == 3) {
             if (!"all".equalsIgnoreCase(params[2])) {
                 terminal.println(Constants.INVALID_PARAMETER);
@@ -43,7 +43,7 @@ public class Commands {
         return browseAll(connection, params, false);
     }
 
-    private JobOutput browseAll(ZOSConnection connection, String[] params, boolean isAll) {
+    private Output browseAll(ZOSConnection connection, String[] params, boolean isAll) {
         BrowseJob browseJob;
         try {
             browseJob = new BrowseJob(terminal, new GetJobs(connection), isAll, timeOutValue);
@@ -63,7 +63,7 @@ public class Commands {
             return null;
         }
         terminal.println(output.toString());
-        return new JobOutput(params[1], output);
+        return new Output(params[1], output);
     }
 
     public void cancel(ZOSConnection connection, String jobOrTask) {
@@ -72,10 +72,14 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    public void cat(ZOSConnection connection, String dataSet, String member) {
+    public StringBuilder cat(ZOSConnection connection, String dataSet, String member) {
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureConcatenate(terminal, new Download(new ZosDsnDownload(connection), false), dataSet, member));
-        processFuture(pool, submit);
+        final var result = processFuture(pool, submit);
+        if (result != null) {
+            return new StringBuilder(result.getMessage());
+        }
+        return new StringBuilder();
     }
 
     public String cd(ZOSConnection connection, String currDataSet, String param) {
@@ -287,9 +291,9 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    public void searchJobLog(JobOutput job, String text) {
-        final var search = new SearchJobLog(terminal);
-        search.search(job, text);
+    public void search(Output output, String text) {
+        final var search = new Search(terminal);
+        search.search(output, text);
     }
 
     public void stop(ZOSConnection connection, String jobOrTask) {
@@ -304,7 +308,7 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    public JobOutput tailJob(ZOSConnection connection, String[] params) {
+    public Output tailJob(ZOSConnection connection, String[] params) {
         if (params.length == 4) {
             if (!"all".equalsIgnoreCase(params[3])) {
                 terminal.println(Constants.INVALID_PARAMETER);
@@ -316,11 +320,11 @@ public class Commands {
                 terminal.println(Constants.INVALID_PARAMETER);
                 return null;
             }
-            return new JobOutput(params[1], tailAll(connection, params, true));
+            return new Output(params[1], tailAll(connection, params, true));
         }
         if (params.length == 3) {
             if ("all".equalsIgnoreCase(params[2])) {
-                return new JobOutput(params[1], tailAll(connection, params, true));
+                return new Output(params[1], tailAll(connection, params, true));
             }
             try {
                 Integer.parseInt(params[2]);
@@ -329,7 +333,7 @@ public class Commands {
                 return null;
             }
         }
-        return new JobOutput(params[1], tailAll(connection, params, false));
+        return new Output(params[1], tailAll(connection, params, false));
     }
 
     private StringBuilder tailAll(ZOSConnection connection, String[] params, boolean isAll) {
@@ -366,9 +370,10 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    private void processFuture(ExecutorService pool, Future<ResponseStatus> submit) {
+    private ResponseStatus processFuture(ExecutorService pool, Future<ResponseStatus> submit) {
+        ResponseStatus result = null;
         try {
-            final var result = submit.get(timeOutValue, TimeUnit.SECONDS);
+            result = submit.get(timeOutValue, TimeUnit.SECONDS);
             terminal.println(result.getMessage());
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
@@ -376,6 +381,7 @@ public class Commands {
             terminal.println(Util.getErrorMsg(e + ""));
         }
         pool.shutdownNow();
+        return result;
     }
 
 }
