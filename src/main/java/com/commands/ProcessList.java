@@ -41,7 +41,8 @@ public class ProcessList {
             final var jobName = job.getJobName().orElse("");
             final var jobId = job.getJobId().orElse("");
             final var jobStatus = job.getStatus().orElse("");
-            str.append(String.format("%-8s %-8s %-8s", jobName, jobId, jobStatus) + "\n");
+            str.append(String.format("%-8s %-8s %-8s", jobName, jobId, jobStatus));
+            str.append("\n");
         });
         return new ResponseStatus(str.toString(), true);
     }
