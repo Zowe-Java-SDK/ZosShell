@@ -1,6 +1,5 @@
 package zos.shell.commands;
 
-import org.checkerframework.checker.units.qual.A;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZOSConnection;
@@ -11,7 +10,6 @@ import zowe.client.sdk.zosjobs.input.GetJobParams;
 import zowe.client.sdk.zosjobs.input.ModifyJobParams;
 import zowe.client.sdk.zosjobs.response.Job;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
