@@ -51,7 +51,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.ZosShell</mainClass>
+                                    <mainClass>zos.shell.ZosShell</mainClass>
                                 </transformer>
                             </transformers>
                             <filters>
@@ -87,7 +87,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.ZosShell</mainClass>
+                            <mainClass>zos.shell.ZosShell</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

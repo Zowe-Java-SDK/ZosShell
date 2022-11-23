@@ -25,7 +25,7 @@
         </encoder>
     </appender>
 
-<!--    <logger name="com.ZosShell" level="info" additivity="false">-->
+<!--    <logger name="zos.shell.ZosShell" level="info" additivity="false">-->
 <!--        <appender-ref ref="CONSOLE"/>-->
 <!--    </logger>-->
 
