@@ -38,6 +38,24 @@ public class PurgeJob {
         }
         jobs.sort(Comparator.comparing(job -> job.getJobId().get(), Comparator.reverseOrder()));
         final var job = jobs.get(0);
+        return purgeJob(job);
+    }
+
+    public ResponseStatus purgeJobByJobId(String jobId) {
+        Job job;
+        try {
+            job = getJobs.getJob(jobId);
+        } catch (Exception e) {
+            return new ResponseStatus(Util.getErrorMsg(e + ""), false);
+        }
+
+        if (job == null) {
+            return new ResponseStatus("job not found", false);
+        }
+        return purgeJob(job);
+    }
+
+    private ResponseStatus purgeJob(Job job) {
         if (!job.getJobId().isPresent()) {
             return new ResponseStatus("job id not found", false);
         }
