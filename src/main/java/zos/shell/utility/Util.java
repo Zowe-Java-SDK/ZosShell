@@ -1,9 +1,9 @@
 package zos.shell.utility;
 
+import org.beryx.textio.TextTerminal;
 import zos.shell.Constants;
 import zos.shell.dto.DataSetMember;
 import zos.shell.dto.Member;
-import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.core.ZOSConnection;
 import zowe.client.sdk.zosfiles.ZosDsnList;
 

@@ -1,9 +1,9 @@
 package zos.shell.commands;
 
+import org.beryx.textio.TextTerminal;
 import zos.shell.Constants;
 import zos.shell.future.FutureDsnMembers;
 import zos.shell.future.FutureListDsn;
-import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.zosfiles.ZosDsnList;
 import zowe.client.sdk.zosfiles.input.ListParams;
 import zowe.client.sdk.zosfiles.response.Dataset;

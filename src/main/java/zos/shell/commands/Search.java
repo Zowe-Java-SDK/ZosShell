@@ -1,7 +1,7 @@
 package zos.shell.commands;
 
-import zos.shell.dto.Output;
 import org.beryx.textio.TextTerminal;
+import zos.shell.dto.Output;
 
 import java.util.Arrays;
 import java.util.List;

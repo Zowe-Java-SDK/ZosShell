@@ -1,5 +1,6 @@
 package zos.shell.commands;
 
+import org.beryx.textio.TextTerminal;
 import zos.shell.Constants;
 import zos.shell.dto.Member;
 import zos.shell.dto.Output;
@@ -7,7 +8,6 @@ import zos.shell.dto.ResponseStatus;
 import zos.shell.future.*;
 import zos.shell.utility.Help;
 import zos.shell.utility.Util;
-import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.core.ZOSConnection;
 import zowe.client.sdk.zosconsole.IssueCommand;
 import zowe.client.sdk.zosfiles.ZosDsn;

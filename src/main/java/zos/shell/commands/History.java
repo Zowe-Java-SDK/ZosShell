@@ -1,10 +1,10 @@
 package zos.shell.commands;
 
+import com.google.common.base.Strings;
+import org.beryx.textio.TextTerminal;
 import zos.shell.Constants;
 import zos.shell.data.CircularLinkedList;
-import com.google.common.base.Strings;
 import zos.shell.utility.Util;
-import org.beryx.textio.TextTerminal;
 
 import java.util.ArrayList;
 import java.util.Arrays;

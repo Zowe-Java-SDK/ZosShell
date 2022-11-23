@@ -1,7 +1,7 @@
 package zos.shell.config;
 
-import zos.shell.Constants;
 import org.apache.commons.lang3.SystemUtils;
+import zos.shell.Constants;
 import zowe.client.sdk.core.ZOSConnection;
 
 import java.io.BufferedReader;

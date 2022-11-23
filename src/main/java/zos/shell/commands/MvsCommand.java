@@ -1,9 +1,9 @@
 package zos.shell.commands;
 
+import org.apache.commons.lang3.SystemUtils;
 import zos.shell.Constants;
 import zos.shell.config.MvsConsoles;
 import zos.shell.dto.ResponseStatus;
-import org.apache.commons.lang3.SystemUtils;
 import zowe.client.sdk.core.ZOSConnection;
 import zowe.client.sdk.zosconsole.ConsoleResponse;
 import zowe.client.sdk.zosconsole.IssueCommand;

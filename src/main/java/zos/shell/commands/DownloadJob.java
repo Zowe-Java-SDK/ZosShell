@@ -1,10 +1,10 @@
 package zos.shell.commands;
 
-import zos.shell.Constants;
 import com.google.common.base.Strings;
+import org.beryx.textio.TextTerminal;
+import zos.shell.Constants;
 import zos.shell.utility.DirectorySetup;
 import zos.shell.utility.Util;
-import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.zosjobs.GetJobs;
 
 import java.io.IOException;

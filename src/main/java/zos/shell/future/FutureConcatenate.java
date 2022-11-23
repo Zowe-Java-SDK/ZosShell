@@ -1,9 +1,9 @@
 package zos.shell.future;
 
+import org.beryx.textio.TextTerminal;
 import zos.shell.commands.Concatenate;
 import zos.shell.commands.Download;
 import zos.shell.dto.ResponseStatus;
-import org.beryx.textio.TextTerminal;
 
 import java.util.concurrent.Callable;
 

@@ -1,12 +1,12 @@
 package zos.shell.commands;
 
-import zos.shell.Constants;
-import zos.shell.dto.ResponseStatus;
 import com.google.common.base.Strings;
-import zos.shell.utility.DirectorySetup;
-import zos.shell.utility.Util;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import zos.shell.Constants;
+import zos.shell.dto.ResponseStatus;
+import zos.shell.utility.DirectorySetup;
+import zos.shell.utility.Util;
 import zowe.client.sdk.zosfiles.ZosDsnDownload;
 import zowe.client.sdk.zosfiles.input.DownloadParams;
 

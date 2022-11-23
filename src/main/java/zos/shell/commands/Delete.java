@@ -1,8 +1,8 @@
 package zos.shell.commands;
 
+import org.beryx.textio.TextTerminal;
 import zos.shell.Constants;
 import zos.shell.utility.Util;
-import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.rest.Response;
 import zowe.client.sdk.zosfiles.ZosDsn;
 import zowe.client.sdk.zosfiles.ZosDsnList;

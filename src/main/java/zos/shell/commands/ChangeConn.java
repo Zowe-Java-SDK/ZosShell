@@ -1,7 +1,7 @@
 package zos.shell.commands;
 
-import zos.shell.Constants;
 import org.beryx.textio.TextTerminal;
+import zos.shell.Constants;
 import zowe.client.sdk.core.ZOSConnection;
 
 import java.util.List;

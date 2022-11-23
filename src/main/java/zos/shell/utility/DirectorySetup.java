@@ -1,7 +1,7 @@
 package zos.shell.utility;
 
-import zos.shell.Constants;
 import org.apache.commons.lang3.SystemUtils;
+import zos.shell.Constants;
 
 public class DirectorySetup {
 

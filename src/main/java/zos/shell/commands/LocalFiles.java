@@ -1,8 +1,8 @@
 package zos.shell.commands;
 
-import zos.shell.Constants;
 import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;
+import zos.shell.Constants;
 
 import java.io.File;
 import java.util.ArrayList;

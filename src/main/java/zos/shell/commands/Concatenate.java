@@ -1,10 +1,10 @@
 package zos.shell.commands;
 
+import org.apache.commons.io.IOUtils;
+import org.beryx.textio.TextTerminal;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
-import org.apache.commons.io.IOUtils;
-import org.beryx.textio.TextTerminal;
 
 import java.io.IOException;
 import java.io.InputStream;

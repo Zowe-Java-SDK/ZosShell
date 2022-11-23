@@ -1,9 +1,9 @@
 package zos.shell.config;
 
-import zos.shell.Constants;
 import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TerminalProperties;
 import org.beryx.textio.TextTerminal;
+import zos.shell.Constants;
 
 import java.io.BufferedReader;
 import java.io.File;

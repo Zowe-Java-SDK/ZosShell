@@ -1,7 +1,7 @@
 package zos.shell.commands;
 
-import zos.shell.future.FutureBrowseJob;
 import org.beryx.textio.TextTerminal;
+import zos.shell.future.FutureBrowseJob;
 import zowe.client.sdk.zosjobs.GetJobs;
 import zowe.client.sdk.zosjobs.input.GetJobParams;
 import zowe.client.sdk.zosjobs.input.JobFile;

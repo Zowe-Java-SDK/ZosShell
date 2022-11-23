@@ -1,9 +1,9 @@
 package zos.shell.future;
 
+import com.google.common.base.Strings;
 import zos.shell.Constants;
 import zos.shell.commands.Copy;
 import zos.shell.dto.ResponseStatus;
-import com.google.common.base.Strings;
 import zowe.client.sdk.zosfiles.ZosDsnCopy;
 
 import java.util.concurrent.Callable;
