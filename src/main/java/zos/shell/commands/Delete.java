@@ -49,7 +49,7 @@ public class Delete {
 
                 if (!lookForStr.isEmpty()) {
                     String finalLookForStr = lookForStr;
-                    members = members.stream().filter(i -> i.contains(finalLookForStr)).collect(Collectors.toList());
+                    members = members.stream().filter(i -> i.startsWith(finalLookForStr)).collect(Collectors.toList());
                 }
 
                 final var success = new AtomicBoolean(true);
