@@ -70,8 +70,8 @@ public class Listing {
         }
 
         final var line = new StringBuilder();
-        for (var i = 0; i < membersSize; i++) {
-            line.append(String.format("%-8s", members.get(i)));
+        for (String item : members) {
+            line.append(String.format("%-8s", item));
             line.append(" ");
         }
         terminal.println(line.toString());
