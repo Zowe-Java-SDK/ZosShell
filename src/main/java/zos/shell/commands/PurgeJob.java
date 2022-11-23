@@ -48,11 +48,11 @@ public class PurgeJob {
         }
 
         ModifyJobParams modifyJobParams = new ModifyJobParams.Builder(
-                job.getJobName().get(), job.getJobId().get()).version("2.0").build();
+                job.getJobName().get(), job.getJobId().get()).version("1.0").build();
         try {
             Response response = deleteJobs.deleteJobCommon(modifyJobParams);
             final var code = response.getStatusCode().orElse(-1);
-            if (Util.isHttpError(code)) {
+            if (!Util.isHttpError(code)) {
                 return new ResponseStatus("Job Name: " + job.getJobName().get() +
                         ", Job Id: " + job.getJobId().get() + " purged successfully...", true);
             } else {
