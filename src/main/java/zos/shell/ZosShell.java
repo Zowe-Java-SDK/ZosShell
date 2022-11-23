@@ -1,20 +1,20 @@
 package zos.shell;
 
-import zos.shell.commands.Commands;
-import zos.shell.commands.History;
-import zos.shell.config.Config;
-import zos.shell.config.Credentials;
-import zos.shell.dto.Output;
 import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import zos.shell.utility.Util;
 import org.beryx.textio.ReadHandlerData;
 import org.beryx.textio.ReadInterruptionStrategy;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.beryx.textio.swing.SwingTextTerminal;
 import org.beryx.textio.web.RunnerData;
+import zos.shell.commands.Commands;
+import zos.shell.commands.History;
+import zos.shell.config.Config;
+import zos.shell.config.Credentials;
+import zos.shell.dto.Output;
+import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZOSConnection;
 
 import java.util.ArrayList;
