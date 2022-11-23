@@ -129,7 +129,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             }
 
             if ("rm".equals(command[0])) {
-                terminal.printf("Are you sure you want to delete y/n");
+                if (!currDataSet.isEmpty()) {
+                    terminal.printf("Are you sure you want to delete from " + currDataSet + " y/n");
+                } else {
+                    terminal.printf("Are you sure you want to delete y/n");
+                }
                 commandLine = textIO.newStringInputReader().withMaxLength(80).read("?");
                 if (!"y".equalsIgnoreCase(commandLine) && !"yes".equalsIgnoreCase(commandLine)) {
                     terminal.println("delete canceled");
