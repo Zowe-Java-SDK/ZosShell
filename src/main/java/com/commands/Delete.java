@@ -1,7 +1,6 @@
 package com.commands;
 
 import com.Constants;
-import com.dto.DataSetMember;
 import com.utility.Util;
 import org.beryx.textio.TextTerminal;
 import zowe.client.sdk.rest.Response;
