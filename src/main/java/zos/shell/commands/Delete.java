@@ -52,22 +52,34 @@ public class Delete {
                     members = members.stream().filter(i -> i.startsWith(finalLookForStr)).collect(Collectors.toList());
                 }
 
+                StringBuilder membersDeleted = new StringBuilder();
+                StringBuilder membersNotDeleted = new StringBuilder();
                 final var success = new AtomicBoolean(true);
                 members.forEach(m -> {
                     try {
                         Response response = zosDsn.deleteDsn(currDataSet, m);
                         if (failed(response)) {
                             success.set(false);
+                        } else {
+                            success.set(true);
                         }
                     } catch (Exception e) {
                         success.set(false);
                         e.printStackTrace();
                     }
+                    if (success.get() == true) {
+                        membersDeleted.append(m);
+                        membersDeleted.append(" ");
+                    } else {
+                        membersNotDeleted.append(m);
+                        membersNotDeleted.append(" ");
+                    }
                 });
-                if (success.get() && !members.isEmpty()) {
-                    terminal.println("delete succeeded...");
-                } else if (!members.isEmpty()) {
-                    terminal.println("some deletions did not succeed...");
+                if (!members.isEmpty()) {
+                    terminal.println(membersDeleted + "successfully deleted...");
+                    if (!membersNotDeleted.toString().isEmpty()) {
+                        terminal.println(membersDeleted + "not deleted...");
+                    }
                 } else {
                     terminal.println(Constants.DELETE_NOTHING_ERROR);
                 }
