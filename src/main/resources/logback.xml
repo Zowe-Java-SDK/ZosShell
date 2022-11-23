@@ -25,13 +25,13 @@
         </encoder>
     </appender>
 
-<!--    <logger name="zos.shell.ZosShell" level="info" additivity="false">-->
-<!--        <appender-ref ref="CONSOLE"/>-->
-<!--    </logger>-->
+    <!--    <logger name="zos.shell.ZosShell" level="info" additivity="false">-->
+    <!--        <appender-ref ref="CONSOLE"/>-->
+    <!--    </logger>-->
 
     <root level="info">
-<!--        <appender-ref ref="CONSOLE"/>-->
-        <appender-ref ref="FILE" />
+        <!--        <appender-ref ref="CONSOLE"/>-->
+        <appender-ref ref="FILE"/>
     </root>
 
 </configuration>
