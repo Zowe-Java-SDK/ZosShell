@@ -95,7 +95,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         terminal.setBookmark("top");
         final var config = new Config(terminal);
         if (config.getFrontSize() != null) {
-            fontSize = Integer.parseInt(config.getFrontSize());
+            try {
+                fontSize = Integer.parseInt(config.getFrontSize());
+            } catch (NumberFormatException ignore) {
+                // when logger implement might want to log bad frontSize value from configuration
+            }
         }
         commands = new Commands(connections, terminal);
         history = new History(terminal);
