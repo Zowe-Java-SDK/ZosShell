@@ -145,6 +145,7 @@ public class Util {
         return msg.substring(index);
     }
 
+    @SuppressWarnings("SameReturnValue")
     public static String getPrompt() {
         return Constants.DEFAULT_PROMPT;
     }
