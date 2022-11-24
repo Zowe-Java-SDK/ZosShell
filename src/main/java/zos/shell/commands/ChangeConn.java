@@ -33,7 +33,7 @@ public class ChangeConn {
             var i = new AtomicInteger(1);
             connections.forEach(c ->
                     terminal.println(i.getAndIncrement() + " " + "hostname: " + c.getHost() + ", port: " +
-                            c.getZosmfPort() + ", user = " + c.getUser())
+                            c.getZosmfPort() + ", user: " + c.getUser())
             );
         } else {
             terminal.println(Constants.NO_CONNECTION_INFO);
