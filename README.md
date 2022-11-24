@@ -61,9 +61,9 @@ Along with following custom commands:
     downloadjob <arg1> <arg2>     - download the latest job log where <arg1> is job name
                                     if arg2 not specified, download job's JESMSGLG spool output
                                     if arg2 is equal to "all", download all job's spool output
-    mvs <arg>                     - execute a mvs command where arg is a command string within double quotes
     end                           - end session closes shell UI window
     files                         - list all files under local pwd drive value
+    mvs <arg>                     - execute a mvs command where arg is a command string within double quotes
     purgejob <arg>                - purge a job name or job is arg can represent either  
     save <arg>                    - save arg where arg is a file name from files command to the current pwd
     search <arg>                  - search for arg within a job log from the last browsejob or tailjob command output  
@@ -89,7 +89,7 @@ To quit from the command shell UI, you can either press 'X' windows close icon o
   
 ## Requirements  
   
-    Java 11+ 
+    Java 11+
     Maven
     z/OSMF installed on your backend z/OS instance.
               
