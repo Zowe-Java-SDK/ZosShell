@@ -478,6 +478,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 break;
             case "purgejob":
+                if (isParamsMissing(1, params)) {
+                    return;
+                }
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
