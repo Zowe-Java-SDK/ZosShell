@@ -56,6 +56,7 @@ public class Help {
             "                                line limit is 25 by default if not specified in arg2",
             "touch <arg>             - create member arg if it does not already exist",
             "uname                   - show current connected host name",
+            "ussh <arg>              - execute USS/UNIX command via SSH connection where arg is a command string within double quotes",
             "vi <arg>                - where arg is a sequential dataset or member name, arg will be downloaded",
             "                          and displayed for editing, use save command to save changes",
             "v | visited             - a list of visited datasets",

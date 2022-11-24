@@ -70,6 +70,7 @@ Along with following custom commands:
     stop <arg>                    - where arg is a task/job name  
     submit <arg>                  - where arg is a member name  
     timeout <arg>                 - where arg is optional, with arg value you set new timeout, without shows current value
+    ussh <arg>                    - execute a uss (unix) command via SSH connection where arg is a command string within double quotes
     tailjob <arg1> <arg2> <arg3>  - where arg1 is job name and arg2 and arg3 are optional
                                     use arg2 to specify either line limit or "all" value 
                                     if "all" is specified, display output from all of job's spool content
@@ -100,9 +101,13 @@ connection values. You can change the drive\directory location by changing the h
   
 Format:  
     
-    hostname,zomsfportnumber,username,password,mvsconsolename  
+    hostname,zomsfportnumber,username,password,mvsconsolename,sshport  
   
-NOTE: "mvsconsolename" is optional and not needed. If you find trouble executing the mvs command, then your zosmf instance may be using a console name other than the default. If so, you can specify it here for the app to use when executing mvs command.   
+NOTES:  
+  
+"mvsconsolename" is optional and not needed. If you find trouble executing the mvs command, then your zosmf instance may be using a console name other than the default. If so, you can specify it here for the app to use when executing mvs command.   
+  
+sshport is optional but if you try to execute the ussh command it will fail as it relies on a valid SSH connection to perform the command.  
         
 At the root directory prompt, execute the following maven command:  
   
