@@ -42,6 +42,7 @@ public class Help {
             "                        - for member value only you can specified * wild card as last character",
             "ps                      - display all processes running",
             "ps <arg>                - where arg is a task/job name",
+            "purgejob <arg>          - purge a job name or job is arg can represent either",
             "pwd                     - show current working dataset",
             "rm <arg>                - where arg is \"*\", member, dataset, or dataset with member value",
             "save <arg>              - save arg where arg is a file name from files command to the current pwd",
