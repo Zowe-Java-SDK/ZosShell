@@ -623,9 +623,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         if (count == 2 && commandCandidate.charAt(commandCandidate.length() - 1) == '\"') {
             return true;
         } else if (count == 2) {
-            terminal.println(Constants.MVS_EXTRA_TEXT_INVALID_COMMAND);
+            terminal.println(Constants.COMMAND_EXTRA_TEXT_INVALID_COMMAND);
         } else {
-            terminal.println(Constants.MVS_INVALID_COMMAND);
+            terminal.println(Constants.COMMAND_INVALID_COMMAND);
         }
         return false;
     }

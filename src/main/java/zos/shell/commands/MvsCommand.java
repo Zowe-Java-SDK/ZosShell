@@ -54,7 +54,7 @@ public class MvsCommand {
         }
 
         if (response == null) {
-            return new ResponseStatus(Constants.MVS_EXECUTION_ERROR_MSG, false);
+            return new ResponseStatus(Constants.COMMAND_EXECUTION_ERROR_MSG, false);
         }
         return new ResponseStatus(Constants.MVS_EXECUTION_SUCCESS + "\n" +
                 response.getCommandResponse().orElse("no response"), true);

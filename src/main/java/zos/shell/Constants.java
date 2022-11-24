@@ -5,7 +5,12 @@ public class Constants {
     public static final String APP_TITLE = "ZosShell";
     public static final String ARROW = " ==> ";
     public static final String BROWSE_TIMEOUT = "timeout, log may be too large to display, try again...";
+    public static final String COMMAND_EXECUTION_ERROR_MSG = "error executing command, try again...";
+    public static final String COMMAND_EXTRA_TEXT_INVALID_COMMAND =
+            "invalid command, remove extra text beyond second double quote and try again...";
     public static final String CONNECTION_REFUSED = "Connection refused";
+    public static final String COMMAND_INVALID_COMMAND =
+            "invalid command, please use two double quotes only around the command string and try again...";
     public static final String COPY_OPS_ITSELF_ERROR =
             "first argument invalid for cp operation, cant copy from same location, try again...";
     public static final String COPY_OPS_NO_MEMBER_ERROR =
@@ -43,12 +48,7 @@ public class Constants {
     public static final String MAC_EDITOR_NAME = "open -a TextEdit";
     public static final String MISSING_COUNT_PARAM = "specified either \"count members\" or \"count datasets\"";
     public static final String MISSING_PARAMETERS = "missing parameter(s), try again...";
-    public static final String MVS_EXECUTION_ERROR_MSG = "error executing command, try again...";
     public static final String MVS_EXECUTION_SUCCESS = "mvs command executed...";
-    public static final String MVS_EXTRA_TEXT_INVALID_COMMAND =
-            "invalid command, remove extra text beyond second double quote and try again...";
-    public static final String MVS_INVALID_COMMAND =
-            "invalid command, please use two double quotes only around the command string and try again...";
     public static final String PATH_FILE_DIRECTORY_MAC = "/ZosShell";
     public static final String PATH_FILE_DIRECTORY_WINDOWS = "C:\\ZosShell";
     public static final String SECURITY_CONFIG_PATH_FILE_MAC = PATH_FILE_DIRECTORY_MAC + "/credentials.txt";
