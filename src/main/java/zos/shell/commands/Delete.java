@@ -57,17 +57,13 @@ public class Delete {
                 final var success = new AtomicBoolean(true);
                 members.forEach(m -> {
                     try {
-                        Response response = zosDsn.deleteDsn(currDataSet, m);
-                        if (failed(response)) {
-                            success.set(false);
-                        } else {
-                            success.set(true);
-                        }
+                        zosDsn.deleteDsn(currDataSet, m);
+                        success.set(true);
                     } catch (Exception e) {
                         success.set(false);
-                        e.printStackTrace();
+                        terminal.println(e + "");
                     }
-                    if (success.get() == true) {
+                    if (success.get()) {
                         membersDeleted.append(m);
                         membersDeleted.append(" ");
                     } else {
