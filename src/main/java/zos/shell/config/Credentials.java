@@ -30,17 +30,14 @@ public class Credentials {
                 if (items.length < 4) {
                     continue;
                 }
-                ZOSConnection zosConnection;
-                SSHConnection sshConnection;
-                if (items.length == 4) {
-                    zosConnection = new ZOSConnection(items[0], items[1], items[2], items[3]);
-                    sshConnection = new SSHConnection(items[0], 0, items[2], items[3]);
-                } else {
-                    zosConnection = new ZOSConnection(items[0], items[1], items[2], items[3]);
-                    int sshPort = 0;
-                    if (Util.isStrNum(items[4])) {
-                        sshPort = Integer.parseInt(items[4]);
-                    }
+                int sshPort = 0;
+                ZOSConnection zosConnection = new ZOSConnection(items[0], items[1], items[2], items[3]);
+                SSHConnection sshConnection = new SSHConnection(items[0], sshPort, items[2], items[3]);
+                if (items.length == 5 && Util.isStrNum(items[4])) { // if mvsconsolename skip, if sshport process it
+                    sshPort = Integer.parseInt(items[4]);
+                    sshConnection = new SSHConnection(items[0], sshPort, items[2], items[3]);
+                } else if (items.length == 6 && Util.isStrNum(items[5])) { // should be only sshport value here
+                    sshPort = Integer.parseInt(items[5]);
                     sshConnection = new SSHConnection(items[0], sshPort, items[2], items[3]);
                 }
                 connections.add(zosConnection);
