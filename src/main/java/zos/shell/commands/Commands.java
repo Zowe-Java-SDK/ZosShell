@@ -267,9 +267,9 @@ public class Commands {
         ps(connection, null);
     }
 
-    public void purgeJob(ZOSConnection connection, String job) {
+    public void purgeJob(ZOSConnection connection, String item) {
         final var pool = Executors.newFixedThreadPool(1);
-        final var submit = pool.submit(new FuturePurgeJob(connection, job));
+        final var submit = pool.submit(new FuturePurgeJob(connection, item));
         processFuture(pool, submit);
     }
 

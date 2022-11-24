@@ -9,19 +9,43 @@ import java.util.concurrent.Callable;
 
 public class FuturePurgeJob extends PurgeJob implements Callable<ResponseStatus> {
 
-    private final String job;
+    private enum JobIdIdentifier {
 
-    public FuturePurgeJob(ZOSConnection connection, String job) {
+        JOB("JOB"),
+        TSU("TSU"),
+        STC("STC");
+
+        private final String value;
+
+        JobIdIdentifier(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+    }
+
+    private final String item;
+
+    public FuturePurgeJob(ZOSConnection connection, String item) {
         super(connection);
-        this.job = job;
+        this.item = item;
     }
 
     @Override
-    public ResponseStatus call() throws Exception {
-        if (Util.isStrNum(job)) {
-            return this.purgeJobByJobId(job);
+    public ResponseStatus call() {
+        if ((item.startsWith(JobIdIdentifier.JOB.getValue()) ||
+                item.startsWith(JobIdIdentifier.TSU.getValue()) ||
+                item.startsWith(JobIdIdentifier.STC.getValue()))) {
+
+            final var id = item.substring(3);
+            if (Util.isStrNum(id)) {
+                return this.purgeJobByJobId(item);
+            }
         }
-        return this.purgeJobByJobName(job);
+        return this.purgeJobByJobName(item);
     }
 
 }
