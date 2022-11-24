@@ -2,6 +2,7 @@ package zos.shell.config;
 
 import org.apache.commons.lang3.SystemUtils;
 import zos.shell.Constants;
+import zos.shell.utility.Util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,7 +31,7 @@ public class MvsConsoles {
             String str;
             while ((str = br.readLine()) != null) {
                 final var items = str.split(",");
-                if (items.length == 5) {
+                if (items.length >= 5 && !Util.isStrNum(items[4])) {
                     consoles.put(items[0], items[4]);
                 }
             }

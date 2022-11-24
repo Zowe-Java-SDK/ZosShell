@@ -103,6 +103,10 @@ Format:
     
     hostname,zomsfportnumber,username,password,mvsconsolename,sshport  
   
+or
+  
+    hostname,zomsfportnumber,username,password,sshport  
+  
 NOTES:  
   
 "mvsconsolename" is optional and not needed. If you find trouble executing the mvs command, then your zosmf instance may be using a console name other than the default. If so, you can specify it here for the app to use when executing mvs command.   
