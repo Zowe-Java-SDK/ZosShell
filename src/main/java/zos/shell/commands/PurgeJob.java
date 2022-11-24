@@ -66,7 +66,7 @@ public class PurgeJob {
         }
 
         try {
-            ModifyJobParams modifyJobParams = new ModifyJobParams.Builder(
+            final var modifyJobParams = new ModifyJobParams.Builder(
                     job.getJobName().get(), job.getJobId().get()).version("1.0").build();
             deleteJobs.deleteJobCommon(modifyJobParams);
             return new ResponseStatus("Job Name: " + job.getJobName().get() +
