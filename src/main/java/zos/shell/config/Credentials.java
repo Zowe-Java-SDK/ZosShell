@@ -33,10 +33,11 @@ public class Credentials {
                 int sshPort = 0;
                 ZOSConnection zosConnection = new ZOSConnection(items[0], items[1], items[2], items[3]);
                 SSHConnection sshConnection = new SSHConnection(items[0], sshPort, items[2], items[3]);
-                if (items.length == 5 && Util.isStrNum(items[4])) { // if mvsconsolename skip, if sshport process it
+                // items[4] can represent a mvsconsolename or sshport value, sshport will be a number
+                if (items.length == 5 && Util.isStrNum(items[4])) {
                     sshPort = Integer.parseInt(items[4]);
                     sshConnection = new SSHConnection(items[0], sshPort, items[2], items[3]);
-                } else if (items.length == 6 && Util.isStrNum(items[5])) { // should be only sshport value here
+                } else if (items.length == 6 && Util.isStrNum(items[5])) { // items[5] is only sshport value 
                     sshPort = Integer.parseInt(items[5]);
                     sshConnection = new SSHConnection(items[0], sshPort, items[2], items[3]);
                 }
