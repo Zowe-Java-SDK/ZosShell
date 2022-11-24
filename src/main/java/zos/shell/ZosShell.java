@@ -15,11 +15,10 @@ import zos.shell.config.Config;
 import zos.shell.config.Credentials;
 import zos.shell.dto.Output;
 import zos.shell.utility.Util;
+import zowe.client.sdk.core.SSHConnection;
 import zowe.client.sdk.core.ZOSConnection;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
@@ -28,6 +27,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static String currDataSet = "";
     private static int currDataSetMax = 0;
     private static final List<ZOSConnection> connections = new ArrayList<>();
+    private static final Map<String, SSHConnection> sshConnections = new HashMap<>();
     private static ZOSConnection currConnection;
     private static TextTerminal<?> terminal;
     private static Commands commands;
@@ -39,7 +39,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static boolean fontSizeChanged = false;
 
     public static void main(String[] args) {
-        Credentials.readCredentials(connections);
+        Credentials.readCredentials(connections, sshConnections);
         if (!connections.isEmpty()) {
             currConnection = connections.get(0);
         }
@@ -451,20 +451,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                final var mvsCommandCandidate = new StringBuilder();
-                for (int i = 1; i < params.length; i++) {
-                    mvsCommandCandidate.append(params[i]);
-                    if (i != params.length - 1) {
-                        mvsCommandCandidate.append(" ");
-                    }
-                }
-                final var count = mvsCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
-                if (count == 2 && mvsCommandCandidate.charAt(mvsCommandCandidate.length() - 1) == '\"') {
+                final var mvsCommandCandidate = getCommandFromParams(params);
+                final var mvsCommandCount = mvsCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
+                if (isCommandValid(mvsCommandCount, mvsCommandCandidate)) {
                     commands.mvsCommand(currConnection, mvsCommandCandidate.toString());
-                } else if (count == 2) {
-                    terminal.println(Constants.MVS_EXTRA_TEXT_INVALID_COMMAND);
-                } else {
-                    terminal.println(Constants.MVS_INVALID_COMMAND);
                 }
                 break;
             case "ps":
@@ -586,6 +576,16 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     terminal.println(Constants.NO_INFO);
                 }
                 break;
+            case "ussh":
+                if (isParamsMissing(1, params)) {
+                    return;
+                }
+                final var ussCommandCandidate = getCommandFromParams(params);
+                final var ussCommandCount = ussCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
+                if (isCommandValid(ussCommandCount, ussCommandCandidate)) {
+                    commands.ussh(terminal, currConnection, sshConnections, ussCommandCandidate.toString());
+                }
+                break;
             case "v":
             case "visited":
                 if (isParamsExceeded(1, params)) {
@@ -617,6 +617,28 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             default:
                 terminal.println(Constants.INVALID_COMMAND);
         }
+    }
+
+    private static boolean isCommandValid(long count, StringBuilder commandCandidate) {
+        if (count == 2 && commandCandidate.charAt(commandCandidate.length() - 1) == '\"') {
+            return true;
+        } else if (count == 2) {
+            terminal.println(Constants.COMMAND_EXTRA_TEXT_INVALID_COMMAND);
+        } else {
+            terminal.println(Constants.COMMAND_INVALID_COMMAND);
+        }
+        return false;
+    }
+
+    private static StringBuilder getCommandFromParams(String[] params) {
+        final var command = new StringBuilder();
+        for (int i = 1; i < params.length; i++) {
+            command.append(params[i]);
+            if (i != params.length - 1) {
+                command.append(" ");
+            }
+        }
+        return command;
     }
 
     private static void addVisited() {

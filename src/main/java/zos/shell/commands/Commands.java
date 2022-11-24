@@ -8,6 +8,7 @@ import zos.shell.dto.ResponseStatus;
 import zos.shell.future.*;
 import zos.shell.utility.Help;
 import zos.shell.utility.Util;
+import zowe.client.sdk.core.SSHConnection;
 import zowe.client.sdk.core.ZOSConnection;
 import zowe.client.sdk.zosconsole.IssueCommand;
 import zowe.client.sdk.zosfiles.ZosDsn;
@@ -19,6 +20,7 @@ import zowe.client.sdk.zosjobs.SubmitJobs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 
 public class Commands {
@@ -369,6 +371,11 @@ public class Commands {
         processFuture(pool, submit);
     }
 
+    public void ussh(TextTerminal<?> terminal, ZOSConnection currConnection, Map<String, SSHConnection> sshConnections, String param) {
+        final var uss = new Ussh(terminal, currConnection, sshConnections);
+        uss.sshCommand(param);
+    }
+
     public void vi(ZOSConnection connection, String dataSet, String[] params) {
         final var member = params[1];
         final var pool = Executors.newFixedThreadPool(1);
@@ -389,5 +396,4 @@ public class Commands {
         pool.shutdownNow();
         return result;
     }
-
 }
