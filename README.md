@@ -2,7 +2,7 @@
   
 This app provides a client Linux like shell to manipulate members and datasets on your z/OS backend.  
   
-This came about for a need for something more simple, direct and less verbosely than Zowe CLI.   
+This came about for a need for something more simple, direct and less verbosity than Zowe CLI.   
       
 ## Demo shows most of the common commands functionality:
 
