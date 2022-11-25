@@ -90,7 +90,7 @@ To quit from the command shell UI, you can either press 'X' windows close icon o
   
 ## Requirements  
   
-    Java 11+
+    Compatible with all Java versions 11 and above.
     Maven
     z/OSMF installed on your backend z/OS instance.
               
