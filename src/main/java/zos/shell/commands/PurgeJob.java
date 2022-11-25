@@ -64,6 +64,12 @@ public class PurgeJob {
         if (job.getJobName().isEmpty()) {
             return new ResponseStatus("job name not found", false);
         }
+        if (job.getStatus().isEmpty()) {
+            return new ResponseStatus("job status not found", false);
+        }
+        if (!"OUTPUT".equals(job.getStatus().get())) {
+            return new ResponseStatus("cannot purge active job", false);
+        }
 
         try {
             final var modifyJobParams = new ModifyJobParams.Builder(
