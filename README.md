@@ -1,6 +1,6 @@
 # ZosShell  
   
-This app provides a client Linux like shell to manipulate members and datasets on your z/OS backend.  
+This app provides a client like Linux shell to manipulate members and datasets on your z/OS backend.  
   
 This came about for a need for something more simple, direct and less verbosity than Zowe CLI.   
       
