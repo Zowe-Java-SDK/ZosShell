@@ -109,10 +109,11 @@ or
   
 NOTES:  
   
-"mvsconsolename" is optional and not needed. If you find trouble executing the mvs command, then your zosmf instance may be using a console name other than the default. If so, you can specify it here for the app to use when executing mvs command.   
+"mvsconsolename" is optional. If executing the mvs command fails, then your zosmf instance may be using a console name other than the default.  
+If so, you can specify the different mvsconsolename.      
   
-sshport is optional but if you try to execute the ussh command it will fail as it relies on a valid SSH connection to perform the command.  
-        
+"sshport" is optional. If not specified, "ussh" command will fail.    
+          
 At the root directory prompt, execute the following maven command:  
   
     mvn clean install  
