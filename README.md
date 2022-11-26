@@ -6,7 +6,7 @@ This came about for a need for something more simple, direct and less verbosity 
       
 ## Demo shows most of the common commands functionality:
 
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/main-demo.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/main-demo2.gif)
 
 ## Demo shows download (downloading member(s) from a z/OS instance to your local PC drive) functionality:
 
