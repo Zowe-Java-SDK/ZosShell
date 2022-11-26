@@ -4,16 +4,16 @@ This app provides a client like Linux shell to manipulate members and datasets o
   
 This came about for a need for something more simple, direct and less verbosity than Zowe CLI.   
       
-## Demo shows most of the common commands functionality:
-
+## Main Demo  
+  
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/main-demo2.gif)
 
-## Demo shows download (downloading member(s) from a z/OS instance to your local PC drive) functionality:
+## Download Demo  
 
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/download-demo.gif)
 
-## Demo shows vi (editing a member and saving it back to the z/OS instance) functionality:
-
+## Edit/Save Member Demo   
+  
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/save-demo.gif)
   
 This project demonstrates the usage of [Zowe Client Java SDK](https://github.com/zowe/zowe-client-java-sdk).
