@@ -8,7 +8,7 @@ Project demonstrates the usage of [Zowe Client Java SDK](https://github.com/zowe
         
 ## Main Demo  
   
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/main-demo2.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/main-demo3.gif)
 
 ## Increase Front Size Demo
 
