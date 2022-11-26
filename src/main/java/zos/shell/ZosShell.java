@@ -17,6 +17,8 @@ import zos.shell.dto.Output;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SSHConnection;
 import zowe.client.sdk.core.ZOSConnection;
+import zowe.client.sdk.zosmfinfo.ListDefinedSystems;
+import zowe.client.sdk.zosmfinfo.response.ZosmfListDefinedSystemsResponse;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -570,8 +572,21 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 break;
             case "uname":
                 if (currConnection != null) {
+                    final var listDefinedSystems = new ListDefinedSystems(currConnection);
+                    ZosmfListDefinedSystemsResponse zosmfInfoResponse;
+                    var osVersion = Optional.empty();
+                    var sysName = Optional.empty();
+                    try {
+                        zosmfInfoResponse = listDefinedSystems.listDefinedSystems();
+                        sysName = Optional.ofNullable(
+                                Arrays.stream(zosmfInfoResponse.getDefinedSystems().get()).findFirst().get().getSystemName().get());
+                        osVersion = Optional.ofNullable(
+                                Arrays.stream(zosmfInfoResponse.getDefinedSystems().get()).findFirst().get().getZosVR().get());
+                    } catch (Exception ignored) {
+                    }
                     terminal.println(
-                            "hostname: " + currConnection.getHost() + ", port: " + currConnection.getZosmfPort());
+                            "hostname: " + currConnection.getHost() + ", OS: " + osVersion.orElse("n\\a") +
+                                    ", sysName: " + sysName.orElse("n\\a"));
                 } else {
                     terminal.println(Constants.NO_INFO);
                 }
