@@ -20,7 +20,7 @@ Project demonstrates the usage of [Zowe Client Java SDK](https://github.com/zowe
 
 ## Edit/Save Member Demo   
   
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/save-demo.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/save-demo2.gif)
       
 The shell performs the following Linux like commands:    
     
