@@ -12,7 +12,7 @@ Project demonstrates the usage of [Zowe Client Java SDK](https://github.com/zowe
 
 ## Increase Front Size Demo
 
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/increase-size.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/increase-size2.gif)
 
 ## Download Demo  
 
