@@ -113,7 +113,7 @@ or
   
 NOTES:  
   
-"mvsconsolename" is optional. If executing the mvs command fails, then your zosmf instance may be using a console name other than the default. If so, you can specify the different mvsconsolename.      
+"mvsconsolename" is optional. If executing a mvs command fails, then your zosmf instance may be using a console name other than the default. If so, you can specify the different mvsconsolename.      
     
 "sshport" is optional. If not specified, "ussh" command will fail.    
           
