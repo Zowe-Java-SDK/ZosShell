@@ -16,7 +16,7 @@ Project demonstrates the usage of [Zowe Client Java SDK](https://github.com/zowe
 
 ## Download Demo  
 
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/download-demo.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/download-demo2.gif)
 
 ## Edit/Save Member Demo   
   
