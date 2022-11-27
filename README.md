@@ -70,7 +70,7 @@ Along with following custom commands:
     mvs <arg>                     - execute a mvs command where arg is a command string within double quotes
     purgejob <arg>                - purge a job name or job is arg can represent either  
     save <arg>                    - save arg where arg is a file name from files command to the current pwd
-    search <arg>                  - search for arg within a job log from the last browsejob or tailjob command output  
+    search <arg>                  - search for arg within last job browse, tailjob or member cat command  
     stop <arg>                    - where arg is a task/job name  
     submit <arg>                  - where arg is a member name  
     timeout <arg>                 - where arg is optional, with arg value you set new timeout, without shows current value
