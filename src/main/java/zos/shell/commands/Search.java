@@ -3,6 +3,7 @@ package zos.shell.commands;
 import org.beryx.textio.TextTerminal;
 import zos.shell.dto.Output;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +22,12 @@ public class Search {
         log.ifPresentOrElse((value) -> {
             final var name = value.getName();
             terminal.println("searching " + name.toUpperCase() + "...");
-            List<String> results = Arrays.stream(output.getOutput().toString().split("\n"))
-                    .filter(line -> line.toUpperCase().contains(text.toUpperCase())).collect(Collectors.toList());
+            List<String> results = new ArrayList<>();
+            try {
+                results = Arrays.stream(output.getOutput().toString().split("\n"))
+                        .filter(line -> line.toUpperCase().contains(text.toUpperCase())).collect(Collectors.toList());
+            } catch (Exception ignored) {
+            }
             if (!results.isEmpty()) {
                 results.forEach(terminal::println);
             } else {
