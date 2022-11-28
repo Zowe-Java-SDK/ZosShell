@@ -8,19 +8,19 @@ Project demonstrates the usage of [Zowe Client Java SDK](https://github.com/zowe
         
 ## Main Demo  
   
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/main-demo.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/main-demo2.gif)
 
 ## Increase Front Size Demo
 
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/increase-size.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/increase-size2.gif)
 
 ## Download Demo  
 
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/download-demo.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/download-demo2.gif)
 
 ## Edit/Save Member Demo   
   
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/save-demo.gif)
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/save-demo2.gif)
       
 The shell performs the following Linux like commands:    
     
