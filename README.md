@@ -49,37 +49,37 @@ The shell performs the following Linux like commands:
   
 Along with following custom commands:  
 
-    browsejob <arg1> <arg2>       - where arg1 is a job name and arg2 is optional
-                                    if arg2 not specified, display job's JESMSGLG spool output
-                                    if arg2 is equal to "all", display all job's spool output
-    cancel <arg>                  - where arg is a task/job name  
-    change <arg>                  - where arg is a number representing a connection
-    clearlog                      - clear out the cached job log from last browsejob command 
-    color <arg> <arg2>            - change color arg is prompt and text and arg2 is background color, i.e. blue, yellow, cyan etc..
-    connections                   - a list of connection(s)   
-    count members                 - return member count in current pwd dataset
-    count datasets                - return dataset count in current pwd dataset
-    cp | copy <arg> <arg>         - where arg can be ".", "*", member, dataset or dataset(member)
-    download <arg1> <arg2>        - download arg1 to local c:\ZosShell\pwd where arg1 is member or sequential dataset  
-                                    and arg2 is optional and only accepts "-b" for binary download      
-    downloadjob <arg1> <arg2>     - download the latest job log where <arg1> is job name
-                                    if arg2 not specified, download job's JESMSGLG spool output
-                                    if arg2 is equal to "all", download all job's spool output
-    end                           - end session closes shell UI window
-    files                         - list all files under local pwd drive value
-    mvs <arg>                     - execute a mvs command where arg is a command string within double quotes
-    purgejob <arg>                - purge a job name or job is arg can represent either  
-    save <arg>                    - save arg where arg is a file name from files command to the current pwd
-    search <arg>                  - search for arg within last job browse, tailjob or member cat command  
-    stop <arg>                    - where arg is a task/job name  
-    submit <arg>                  - where arg is a member name  
-    timeout <arg>                 - where arg is optional, with arg value you set new timeout, without shows current value
-    ussh <arg>                    - execute a uss (unix) command via SSH connection where arg is a command string within double quotes
-    tailjob <arg1> <arg2> <arg3>  - where arg1 is job name and arg2 and arg3 are optional
-                                    use arg2 to specify either line limit or "all" value 
-                                    if "all" is specified, display output from all of job's spool content
-                                    line limit is 25 by default if not specified in arg2
-    v | visited                   - a list of visited datasets  
+    bj | browsejob <arg1> <arg2>        - where arg1 is a job name and arg2 is optional
+                                          if arg2 not specified, display job's JESMSGLG spool output
+                                          if arg2 is equal to "all", display all job's spool output
+    cancel <arg>                        - where arg is a task/job name  
+    change <arg>                        - where arg is a number representing a connection
+    clearlog                            - clear out the cached job log from last browsejob command 
+    color <arg> <arg2>                  - change color arg is prompt and text and arg2 is background color, i.e. blue, yellow, cyan etc..
+    connections                         - a list of connection(s)   
+    count members                       - return member count in current pwd dataset
+    count datasets                      - return dataset count in current pwd dataset
+    cp | copy <arg> <arg>               - where arg can be ".", "*", member, dataset or dataset(member)
+    d | download <arg1> <arg2>          - download arg1 to local c:\ZosShell\pwd where arg1 is member or sequential dataset  
+                                          and arg2 is optional and only accepts "-b" for binary download      
+    dj | downloadjob <arg1> <arg2>      - download the latest job log where <arg1> is job name
+                                          if arg2 not specified, download job's JESMSGLG spool output
+                                          if arg2 is equal to "all", download all job's spool output
+    end                                 - end session closes shell UI window
+    files                               - list all files under local pwd drive value
+    mvs <arg>                           - execute a mvs command where arg is a command string within double quotes
+    pj | purgejob <arg>                 - purge a job name or job is arg can represent either  
+    save <arg>                          - save arg where arg is a file name from files command to the current pwd
+    search <arg>                        - search for arg within last job browse, tailjob or member cat command  
+    stop <arg>                          - where arg is a task/job name  
+    submit <arg>                        - where arg is a member name  
+    t | timeout <arg>                   - where arg is optional, with arg value you set new timeout, without shows current value
+    ussh <arg>                          - execute a uss (unix) command via SSH connection where arg is a command string within double quotes
+    tj | tailjob <arg1> <arg2> <arg3>   - where arg1 is job name and arg2 and arg3 are optional
+                                          use arg2 to specify either line limit or "all" value 
+                                          if "all" is specified, display output from all of job's spool content
+                                          line limit is 25 by default if not specified in arg2
+    v | visited                         - a list of visited datasets  
   
 Key combinations provide the following functionality within the shell:    
     

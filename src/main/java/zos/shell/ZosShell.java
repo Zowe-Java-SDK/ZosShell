@@ -201,6 +201,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         history.addHistory(params);
 
         switch (command.toLowerCase()) {
+            case "bj":
             case "browsejob":
                 if (isParamsMissing(1, params)) {
                     return;
@@ -313,6 +314,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 param = params[1];
                 commands.count(currConnection, currDataSet, param);
                 break;
+            case "d":
             case "download":
                 if (isParamsMissing(1, params)) {
                     return;
@@ -332,6 +334,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 commands.download(currConnection, currDataSet, param, isBinary);
                 break;
+            case "dj":
             case "downloadjob":
                 if (isParamsMissing(1, params)) {
                     return;
@@ -470,6 +473,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     commands.ps(currConnection);
                 }
                 break;
+            case "pj":
             case "purgejob":
                 if (isParamsMissing(1, params)) {
                     return;
@@ -539,6 +543,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 param = params[1];
                 commands.submit(currConnection, currDataSet, param);
                 break;
+            case "tj":
             case "tailjob":
                 if (isParamsMissing(1, params)) {
                     return;
@@ -548,6 +553,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 commandOutput = commands.tailJob(currConnection, params);
                 break;
+            case "t":
             case "timeout":
                 if (isParamsExceeded(2, params)) {
                     return;
