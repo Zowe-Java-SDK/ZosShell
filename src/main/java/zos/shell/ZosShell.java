@@ -126,6 +126,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 command = Util.stripEmptyStrings(command);
             }
 
+            command = removePrompt(command);
             command = exclamationMark(command);
             if (command == null) {
                 continue;
@@ -149,22 +150,29 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         textIO.dispose();
     }
 
+    private static String[] removePrompt(String[] command) {
+        if (Constants.DEFAULT_PROMPT.equals(command[0])) {
+            int size = command.length;
+            List<String> newCmdLst = new ArrayList<>();
+            String[] newCmdArr = new String[size - 1];
+            for (int i = 1; i < size; i++) {
+                newCmdLst.add(command[i]);
+            }
+            for (int i = 0; i < newCmdLst.size(); i++) {
+                newCmdArr[i] = newCmdLst.get(i);
+            }
+            command = newCmdArr;
+        }
+        return command;
+    }
+
     private String[] exclamationMark(String[] command) {
-        if ((command[0].equals(">") && command.length >= 2 && command[1].startsWith("!")) || command[0].startsWith("!")) {
+        if (command[0].startsWith("!")) {
             final var str = new StringBuilder();
-            if (">".equals(command[0])) {
-                for (int i = 1; i < command.length; i++) {
-                    str.append(command[i]);
-                    if (i + 1 != command.length) {
-                        str.append(" ");
-                    }
-                }
-            } else {
-                for (int i = 0; i < command.length; i++) {
-                    str.append(command[i]);
-                    if (i + 1 != command.length) {
-                        str.append(" ");
-                    }
+            for (int i = 0; i < command.length; i++) {
+                str.append(command[i]);
+                if (i + 1 != command.length) {
+                    str.append(" ");
                 }
             }
 
