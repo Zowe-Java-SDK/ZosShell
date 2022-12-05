@@ -99,7 +99,7 @@ public class Delete {
                     Util.printError(terminal, e.getMessage());
                     return;
                 }
-                terminal.println(param + " successfully deleted...");
+                terminal.println(param.toUpperCase() + " successfully deleted...");
                 return;
             }
 
