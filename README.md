@@ -140,7 +140,7 @@ Config property values specify in order on the same line separated by comma.
     First value will set the following properties input.color and prompt.color
     Second value will control the color of the background panel.
     Third value will set the following properties: input.font.size and prompt.font.size
-    Fifth value will trigger text to be bold highlighted 
+    Forth value will trigger text to be bold highlighted 
   
 Format:  
   
@@ -148,9 +148,9 @@ Format:
   
 Example:  
   
-    449,white
+    yellow,green,19,yes
 
-![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/color.gif)    
+![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/colors.gif)    
 
 ## Trouble Shooting
     
