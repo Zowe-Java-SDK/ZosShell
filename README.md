@@ -1,9 +1,11 @@
 # ZosShell  
   
-This app provides a client like Linux shell to manipulate members and datasets on your z/OS backend.  
+ZosShell provides a client like Linux shell to manipulate members and datasets on your z/OS backend.  
   
-The project arise for a need for something more simple, direct and less verbosity than Zowe CLI.   
-
+The project arise for a need for something more simple, direct and less verbosity than Zowe CLI.     
+  
+The app works well on Windows and MacOS. ZosShell has not been tested in a Linux environment yet and some features may be limited.         
+    
 Project demonstrates the usage of [Zowe Client Java SDK](https://github.com/zowe/zowe-client-java-sdk).  
         
 ## Main Demo  
@@ -93,9 +95,9 @@ Key combinations provide the following functionality within the shell:
 To quit from the command shell UI, you can either press 'X' windows close icon or enter 'end' keyword.  
   
 ## Requirements  
-  
-    Compatible with all Java versions 11 and above.
+
     Maven
+    Compatible with all Java versions 11 and above.
     z/OSMF installed on your backend z/OS instance.
               
 ## Build And Execute  
@@ -140,7 +142,7 @@ Config property values specify in order on the same line separated by comma.
     First value will set the following properties input.color and prompt.color
     Second value will control the color of the background panel.
     Third value will set the following properties: input.font.size and prompt.font.size
-    Forth value will trigger text to be bold highlighted 
+    Forth value will trigger text to be bold   
   
 Format:  
   
