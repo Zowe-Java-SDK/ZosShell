@@ -13,6 +13,7 @@ import zos.shell.commands.Commands;
 import zos.shell.commands.History;
 import zos.shell.config.Config;
 import zos.shell.config.Credentials;
+import zos.shell.data.SearchDictionary;
 import zos.shell.dto.Output;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SSHConnection;
@@ -40,6 +41,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static final int defaultFontSize = 10;
     private static int fontSize = defaultFontSize;
     private static boolean fontSizeChanged = false;
+    private static final SearchDictionary searchDictionary = new SearchDictionary();
+    private static TextIO mainTextIO;
 
     public static void main(String[] args) {
         Credentials.readCredentials(connections, sshConnections);
@@ -48,7 +51,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         }
         mainTerminal.init();
         setTerminalProperties();
-        var mainTextIO = new TextIO(mainTerminal);
+        mainTextIO = new TextIO(mainTerminal);
         new ZosShell().accept(mainTextIO, null);
     }
 
@@ -75,6 +78,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             mainTerminal.setInputFontSize(fontSize);
             mainTerminal.setPromptFontSize(fontSize);
             mainTerminal.moveToLineStart();
+            System.out.println(mainTerminal.getTextPane().getText());
             mainTerminal.print("> Increased font size to " + fontSize + ".");
             fontSizeChanged = true;
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
@@ -87,6 +91,21 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 mainTerminal.moveToLineStart();
                 mainTerminal.print("> Decreased font size to " + fontSize + ".");
                 fontSizeChanged = true;
+            }
+            return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+        });
+        mainTerminal.registerHandler("TAB", t -> {
+            final var items = mainTerminal.getTextPane().getText().split(">");
+            var candidateStr = items[items.length - 1].trim();
+            candidateStr = candidateStr.replaceAll("[\\p{Cf}]", "");
+            final var candidateLst = searchDictionary.search(candidateStr);
+            if (!candidateLst.isEmpty()) {
+                mainTerminal.moveToLineStart();
+                if (candidateLst.size() == 1) {
+                    mainTerminal.print("> " + candidateLst.get(0));
+                } else {
+                    mainTextIO.newStringInputReader().read(("> " + candidateLst));
+                }
             }
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
