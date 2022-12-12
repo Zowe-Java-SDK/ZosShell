@@ -109,10 +109,7 @@ public class TrieNode {
     }
 
     public boolean isEmpty(TrieNode node) {
-        if (node.children == null) {
-            return true;
-        }
-        return false;
+        return node.children == null;
     }
 
     public TrieNode getNode(int index) {
