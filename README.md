@@ -91,6 +91,7 @@ Key combinations provide the following functionality within the shell:
     DOWN arrow              - scroll down through history list
     CTRL UP arrow           - increase font size
     CTRL DOWN arrow         - decrease font size
+    TAB                     - command autofill key - type a few characters then click on TAB key 
     
 To quit from the command shell UI, you can either press 'X' windows close icon or enter 'end' keyword.  
   
