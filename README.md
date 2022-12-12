@@ -4,7 +4,7 @@ ZosShell provides a client like Linux shell to manipulate members and datasets o
   
 The project arise for a need for something more simple, direct and less verbosity than Zowe CLI.     
   
-The app works well on Windows and macOS. ZosShell has not been tested in a Linux environment yet and some features may be limited.         
+The app works well on Windows and macOS. It has not been tested in a Linux environment and some features may be limited.         
     
 Project demonstrates the usage of [Zowe Client Java SDK](https://github.com/zowe/zowe-client-java-sdk).  
         
