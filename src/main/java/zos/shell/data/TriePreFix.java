@@ -5,7 +5,7 @@ import java.util.List;
 
 public class TriePreFix {
 
-    private TrieNode root;
+    private final TrieNode root;
 
     public TriePreFix() {
         root = new TrieNode();
