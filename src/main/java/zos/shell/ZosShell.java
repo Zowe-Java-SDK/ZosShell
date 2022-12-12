@@ -79,7 +79,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             mainTerminal.setPromptFontSize(fontSize);
             mainTerminal.moveToLineStart();
             System.out.println(mainTerminal.getTextPane().getText());
-            mainTerminal.print("> Increased font size to " + fontSize + ".");
+            mainTerminal.print(Util.getPrompt() + " Increased font size to " + fontSize + ".");
             fontSizeChanged = true;
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
@@ -89,22 +89,22 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 mainTerminal.setInputFontSize(fontSize);
                 mainTerminal.setPromptFontSize(fontSize);
                 mainTerminal.moveToLineStart();
-                mainTerminal.print("> Decreased font size to " + fontSize + ".");
+                mainTerminal.print(Util.getPrompt() + " Decreased font size to " + fontSize + ".");
                 fontSizeChanged = true;
             }
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerminal.registerHandler("TAB", t -> {
-            final var items = mainTerminal.getTextPane().getText().split(">");
+            final var items = mainTerminal.getTextPane().getText().split(Util.getPrompt());
             var candidateStr = items[items.length - 1].trim();
             candidateStr = candidateStr.replaceAll("[\\p{Cf}]", "");
             final var candidateLst = searchDictionary.search(candidateStr);
             if (!candidateLst.isEmpty()) {
                 mainTerminal.moveToLineStart();
                 if (candidateLst.size() == 1) {
-                    mainTerminal.print("> " + candidateLst.get(0));
+                    mainTerminal.print(Util.getPrompt() + " " + candidateLst.get(0));
                 } else {
-                    mainTextIO.newStringInputReader().read(("> " + candidateLst));
+                    mainTextIO.newStringInputReader().read((Util.getPrompt() + " " + candidateLst));
                 }
             }
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
