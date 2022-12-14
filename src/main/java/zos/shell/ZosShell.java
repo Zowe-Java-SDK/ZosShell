@@ -104,7 +104,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (candidateLst.size() == 1) {
                     mainTerminal.print(Util.getPrompt() + " " + candidateLst.get(0));
                 } else {
-                    mainTextIO.newStringInputReader().read((Util.getPrompt() + " " + candidateLst));
+                    mainTextIO.newStringInputReader().withDefaultValue("hit enter to skip")
+                            .read((Util.getPrompt() + " " + candidateLst));
                 }
             }
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
