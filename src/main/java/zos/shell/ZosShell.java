@@ -606,6 +606,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 commands.touch(currConnection, currDataSet, params);
                 break;
             case "uname":
+                if (isParamsExceeded(1, params)) {
+                    return;
+                }
                 if (currConnection != null) {
                     final var listDefinedSystems = new ListDefinedSystems(currConnection);
                     ZosmfListDefinedSystemsResponse zosmfInfoResponse;
