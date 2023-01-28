@@ -18,9 +18,6 @@ import zos.shell.dto.Output;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SSHConnection;
 import zowe.client.sdk.core.ZOSConnection;
-import zowe.client.sdk.zosmfinfo.ListDefinedSystems;
-import zowe.client.sdk.zosmfinfo.response.DefinedSystem;
-import zowe.client.sdk.zosmfinfo.response.ZosmfListDefinedSystemsResponse;
 
 import java.util.*;
 import java.util.function.BiConsumer;
