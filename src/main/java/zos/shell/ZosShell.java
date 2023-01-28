@@ -70,7 +70,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             history.listDownCommands(Util.getPrompt());
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
-        mainTerminal.registerHandler("ctrl UP", t -> {
+        mainTerminal.registerHandler("shift UP", t -> {
             fontSize++;
             mainTerminal.setInputFontSize(fontSize);
             mainTerminal.setPromptFontSize(fontSize);
@@ -80,7 +80,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             fontSizeChanged = true;
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
-        mainTerminal.registerHandler("ctrl DOWN", t -> {
+        mainTerminal.registerHandler("shift DOWN", t -> {
             if (fontSize != defaultFontSize) {
                 fontSize--;
                 mainTerminal.setInputFontSize(fontSize);
