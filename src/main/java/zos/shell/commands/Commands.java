@@ -17,10 +17,14 @@ import zowe.client.sdk.zosfiles.ZosDsnDownload;
 import zowe.client.sdk.zosfiles.ZosDsnList;
 import zowe.client.sdk.zosjobs.GetJobs;
 import zowe.client.sdk.zosjobs.SubmitJobs;
+import zowe.client.sdk.zosmfinfo.ListDefinedSystems;
+import zowe.client.sdk.zosmfinfo.response.DefinedSystem;
+import zowe.client.sdk.zosmfinfo.response.ZosmfListDefinedSystemsResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.*;
 
 public class Commands {
@@ -371,6 +375,32 @@ public class Commands {
         processFuture(pool, submit);
     }
 
+    public void uname(ZOSConnection currConnection) {
+        if (currConnection != null) {
+            final var listDefinedSystems = new ListDefinedSystems(currConnection);
+            ZosmfListDefinedSystemsResponse zosmfInfoResponse;
+            Optional<String> osVersion = Optional.empty();
+            Optional<String> sysName = Optional.empty();
+            try {
+                zosmfInfoResponse = listDefinedSystems.listDefinedSystems();
+                DefinedSystem[] items;
+                DefinedSystem item;
+                if (zosmfInfoResponse.getDefinedSystems().isPresent()) {
+                    items = zosmfInfoResponse.getDefinedSystems().get();
+                    item = items[0];
+                    osVersion = item.getZosVR();
+                    sysName = item.getSystemName();
+                }
+            } catch (Exception ignored) {
+            }
+            terminal.println(
+                    "hostname: " + currConnection.getHost() + ", OS: " + osVersion.orElse("n\\a") +
+                            ", sysName: " + sysName.orElse("n\\a"));
+        } else {
+            terminal.println(Constants.NO_INFO);
+        }
+    }
+
     public void ussh(TextTerminal<?> terminal, ZOSConnection currConnection, Map<String, SSHConnection> sshConnections, String param) {
         final var uss = new Ussh(terminal, currConnection, sshConnections);
         uss.sshCommand(param);
@@ -396,4 +426,5 @@ public class Commands {
         pool.shutdownNow();
         return result;
     }
+
 }

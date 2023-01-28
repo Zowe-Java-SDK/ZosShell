@@ -609,29 +609,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(1, params)) {
                     return;
                 }
-                if (currConnection != null) {
-                    final var listDefinedSystems = new ListDefinedSystems(currConnection);
-                    ZosmfListDefinedSystemsResponse zosmfInfoResponse;
-                    Optional<String> osVersion = Optional.empty();
-                    Optional<String> sysName = Optional.empty();
-                    try {
-                        zosmfInfoResponse = listDefinedSystems.listDefinedSystems();
-                        DefinedSystem[] items;
-                        DefinedSystem item;
-                        if (zosmfInfoResponse.getDefinedSystems().isPresent()) {
-                            items = zosmfInfoResponse.getDefinedSystems().get();
-                            item = items[0];
-                            osVersion = item.getZosVR();
-                            sysName = item.getSystemName();
-                        }
-                    } catch (Exception ignored) {
-                    }
-                    terminal.println(
-                            "hostname: " + currConnection.getHost() + ", OS: " + osVersion.orElse("n\\a") +
-                                    ", sysName: " + sysName.orElse("n\\a"));
-                } else {
-                    terminal.println(Constants.NO_INFO);
-                }
+                commands.uname(currConnection);
                 break;
             case "ussh":
                 if (isParamsMissing(1, params)) {
