@@ -1,6 +1,10 @@
 package zos.shell;
 
-public class Constants {
+public final class Constants {
+    
+    private Constants() {
+        throw new IllegalStateException("Constants class");
+    }
 
     public static final String APP_TITLE = "ZosShell";
     public static final String ARROW = " ==> ";
