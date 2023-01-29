@@ -7,10 +7,6 @@ public class TriePreFix {
 
     private final TrieNode root;
 
-    public TriePreFix() {
-        root = new TrieNode();
-    }
-
     public TriePreFix(String[] words) {
         root = new TrieNode();
         root.addWords(words);

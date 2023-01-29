@@ -92,22 +92,6 @@ public class TrieNode {
         return value;
     }
 
-    public boolean isWord(String s) {
-        TrieNode node = this;
-        final var limit = s.length();
-
-        for (int i = 0; i < limit; i++) {
-            int letter = s.charAt(i);
-            int index = letter - 'a';
-
-            if (node.children[index] == null)
-                return false;
-            node = node.children[index];
-        }
-
-        return node.isWord();
-    }
-
     public boolean isEmpty(TrieNode node) {
         return node.children == null;
     }
@@ -147,22 +131,6 @@ public class TrieNode {
 
     public void setChildren(TrieNode[] children) {
         this.children = children;
-    }
-
-    public TrieNode getParent() {
-        return parent;
-    }
-
-    public void setParent(TrieNode parent) {
-        this.parent = parent;
-    }
-
-    public char getCharacter() {
-        return character;
-    }
-
-    public void setCharacter(char character) {
-        this.character = character;
     }
 
     public boolean isWord() {
