@@ -4,7 +4,8 @@ import java.util.List;
 
 public class SearchDictionary {
 
-    private TriePreFix dictionary;
+    private final TriePreFix dictionary;
+
     private final String[] commands = new String[]{"browsejob", "cancel", "cat", "cd", "change", "clear",
             "clearlog", "color", "connections", "count", "copy", "download", "downloadjob", "end", "files",
             "help", "history", "ls", "mvs", "purgejob", "ps", "pwd", "rm", "save", "search", "stop", "submit",
