@@ -1,7 +1,7 @@
 package zos.shell;
 
 public final class Constants {
-    
+
     private Constants() {
         throw new IllegalStateException("Constants class");
     }
@@ -12,7 +12,7 @@ public final class Constants {
     public static final String COMMAND_EXECUTION_ERROR_MSG = "error executing command, try again...";
     public static final String COMMAND_EXTRA_TEXT_INVALID_COMMAND =
             "invalid command, remove extra text beyond second double quote and try again...";
-    public static final String CONNECTION_REFUSED = "Connection refused";
+    public static final String CONNECTION_REFUSED = "connection refused";
     public static final String COMMAND_INVALID_COMMAND =
             "invalid command, please use two double quotes only around the command string and try again...";
     public static final String COPY_OPS_ITSELF_ERROR =
@@ -39,7 +39,7 @@ public final class Constants {
     public static final String INVALID_PARAMETER = "invalid parameter, try again...";
     public static final String INVALID_VALUE = "invalid value, try again...";
     public static final String HIGH_QUALIFIER_ERROR = "cant change to high qualifier level, try again...";
-    public static final String NO_CONNECTIONS = "No connection(s) made or defined...";
+    public static final String NO_CONNECTIONS = "no connection(s) made or defined...";
     public static final String NO_CONNECTION_INFO = "no info, check connection settings...";
     public static final String NO_CONNECTION = "no connection to change too...";
     public static final String NO_FILES = "no files within " + Constants.PATH_FILE_DIRECTORY_WINDOWS + ", try again...";
