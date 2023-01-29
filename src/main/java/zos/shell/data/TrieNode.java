@@ -27,14 +27,14 @@ public class TrieNode {
         this.setLeaf(true);
     }
 
-    public void addWord(String word) {
-        final var limit = word.length();
+    public void addCommand(String command) {
+        final var limit = command.length();
         TrieNode node = this;
         int letter, index;
 
-        word = word.toLowerCase();
+        command = command.toLowerCase();
         for (int i = 0; i < limit; i++) {
-            letter = word.charAt(i);
+            letter = command.charAt(i);
             index = letter - 'a';
 
             if (!isNotLetter(letter))
@@ -55,17 +55,17 @@ public class TrieNode {
         return Character.isAlphabetic(letter);
     }
 
-    public List<String> FindAndRetrieveWords() {
+    public List<String> FindAndRetrieveCommands() {
         var words = new ArrayList<String>();
         TrieNode node = this;
 
         if (node.isWord())
-            words.add(node.getWord());
+            words.add(node.getCommand());
 
         if (!node.isLeaf()) {
             for (int i = 0; i < node.children.length; i++) {
                 if (node.children[i] != null) {
-                    words.addAll(children[i].FindAndRetrieveWords());
+                    words.addAll(children[i].FindAndRetrieveCommands());
                 }
             }
         }
@@ -73,7 +73,7 @@ public class TrieNode {
         return words;
     }
 
-    private String getWord() {
+    private String getCommand() {
         TrieNode node = this;
         var buffer = new char[BUFFER_SIZE];
         var result = new StringBuilder();
@@ -112,13 +112,13 @@ public class TrieNode {
      * for branches of other patterns that complete the word with the prefix and
      * return a list of those words.
      */
-    public List<String> getWords() {
+    public List<String> getCommands() {
         TrieNode node = this;
         var words = new ArrayList<String>();
 
         for (int i = 0; i < ALPHABET_SIZE; i++) {
             if (node.children[i] != null) {
-                words.addAll(node.getChildren()[i].FindAndRetrieveWords());
+                words.addAll(node.getChildren()[i].FindAndRetrieveCommands());
             }
         }
 
@@ -149,9 +149,9 @@ public class TrieNode {
         this.leaf = leaf;
     }
 
-    public void addWords(String[] words) {
-        for (String s : words) {
-            addWord(s);
+    public void addCommands(String[] commands) {
+        for (String s : commands) {
+            addCommand(s);
         }
     }
 

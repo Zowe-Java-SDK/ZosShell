@@ -16,7 +16,7 @@ public class SearchDictionary {
     }
 
     public List<String> search(String prefix) {
-        return dictionary.getWords(prefix);
+        return dictionary.getCommands(prefix);
     }
 
 }

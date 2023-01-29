@@ -7,16 +7,16 @@ public class TriePreFix {
 
     private final TrieNode root;
 
-    public TriePreFix(String[] words) {
+    public TriePreFix(String[] commands) {
         root = new TrieNode();
-        root.addWords(words);
+        root.addCommands(commands);
     }
 
-    public void addWord(String word) {
-        root.addWord(word);
+    public void addCommand(String command) {
+        root.addCommand(command);
     }
 
-    public List<String> getWords(String prefix) {
+    public List<String> getCommands(String prefix) {
         TrieNode lastNode = root;
         final var limit = prefix.length();
 
@@ -29,7 +29,7 @@ public class TriePreFix {
                 return new ArrayList<>();
         }
 
-        return lastNode.getWords();
+        return lastNode.getCommands();
     }
 
 }
