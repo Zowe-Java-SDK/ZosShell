@@ -17,6 +17,7 @@ public class Search {
         this.terminal = terminal;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public void search(Output output, String text) {
         final var log = Optional.ofNullable(output);
         log.ifPresentOrElse((value) -> {
@@ -24,7 +25,6 @@ public class Search {
             terminal.println("searching " + name.toUpperCase() + "...");
             List<String> results = new ArrayList<>();
             try {
-                //noinspection ConstantConditions
                 results = Arrays.stream(output.getOutput().toString().split("\n"))
                         .filter(line -> line.toUpperCase().contains(text.toUpperCase())).collect(Collectors.toList());
             } catch (Exception ignored) {
