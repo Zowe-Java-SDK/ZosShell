@@ -62,7 +62,7 @@ public class TrieNode {
         if (node.isWord())
             words.add(node.getCommand());
 
-        if (!node.isLeaf()) {
+        if (node.isNotLeaf()) {
             for (int i = 0; i < node.children.length; i++) {
                 if (node.children[i] != null) {
                     words.addAll(children[i].FindAndRetrieveCommands());
@@ -80,7 +80,7 @@ public class TrieNode {
         String value;
 
         int i = 0;
-        while (!node.isLeaf()) {
+        while (node.isNotLeaf()) {
             buffer[i] = node.character;
             node = node.parent;
             i++;
@@ -137,8 +137,8 @@ public class TrieNode {
         this.isWord = isWord;
     }
 
-    public boolean isLeaf() {
-        return leaf;
+    public boolean isNotLeaf() {
+        return !leaf;
     }
 
     public void setLeaf(boolean leaf) {
