@@ -38,7 +38,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static final int defaultFontSize = 10;
     private static int fontSize = defaultFontSize;
     private static boolean fontSizeChanged = false;
-    private static final SearchDictionary searchDictionary = new SearchDictionary();
     private static TextIO mainTextIO;
 
     public static void main(String[] args) {
