@@ -142,6 +142,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 command = Util.stripEmptyStrings(command);
             }
 
+            // handle edge case where end user enters prompt as the only input, skip it and continue
+            if (command.length == 1 && Constants.DEFAULT_PROMPT.equals(command[0])) {
+                continue;
+            }
             command = removePrompt(command);
             command = exclamationMark(command);
             if (command == null) {
