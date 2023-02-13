@@ -12,10 +12,6 @@ public class TriePreFix {
         root.addCommands(commands);
     }
 
-    public void addCommand(String command) {
-        root.addCommand(command);
-    }
-
     public List<String> getCommands(String prefix) {
         TrieNode lastNode = root;
         final var limit = prefix.length();

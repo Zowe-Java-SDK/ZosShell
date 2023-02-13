@@ -92,10 +92,6 @@ public class TrieNode {
         return value;
     }
 
-    public boolean isEmpty(TrieNode node) {
-        return node.children == null;
-    }
-
     public TrieNode getNode(int index) {
         TrieNode node = this;
 
