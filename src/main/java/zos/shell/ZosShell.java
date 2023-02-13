@@ -175,9 +175,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             int size = command.length;
             List<String> newCmdLst = new ArrayList<>();
             String[] newCmdArr = new String[size - 1];
-            for (int i = 1; i < size; i++) {
-                newCmdLst.add(command[i]);
-            }
+            newCmdLst.addAll(Arrays.asList(command).subList(1, size));
             for (int i = 0; i < newCmdLst.size(); i++) {
                 newCmdArr[i] = newCmdLst.get(i);
             }
