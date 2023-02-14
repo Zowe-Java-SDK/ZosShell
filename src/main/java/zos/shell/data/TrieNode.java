@@ -11,17 +11,17 @@ public class TrieNode {
     private static final int ALPHABET_SIZE = 26;
     private static final int BUFFER_SIZE = 1024;
     private TrieNode[] children;
-    private TrieNode parent; // parent allows to backtrack nodes to form the word
-    private char character; // while looping through parent get the char to form the word
-    private boolean isWord;
+    private TrieNode parent; // parent allows to backtrack nodes to form the command
+    private char character; // while looping through parent get the char to form the command
+    private boolean isCmd;
     private boolean leaf;
 
     public TrieNode() {
         this.setChildren(new TrieNode[ALPHABET_SIZE]);
-        this.setWord(false);
+        this.setCmd(false);
         // no character here as such leaf = true
         // this is used for checking while looping through the parent
-        // to form the word, any leaf set as true is the root and is
+        // to form the command, any leaf set as true is the root and is
         // the end of the looping point, there is no character in
         // the root node
         this.setLeaf(true);
@@ -48,7 +48,7 @@ public class TrieNode {
             node.children[index].parent = node;
             node = node.children[index];
         }
-        node.setWord(true);
+        node.setCmd(true);
     }
 
     private boolean isNotLetter(int letter) {
@@ -56,21 +56,21 @@ public class TrieNode {
     }
 
     public List<String> FindAndRetrieveCommands() {
-        var words = new ArrayList<String>();
+        var cmds = new ArrayList<String>();
         TrieNode node = this;
 
-        if (node.isWord())
-            words.add(node.getCommand());
+        if (node.isCmd())
+            cmds.add(node.getCommand());
 
         if (node.isNotLeaf()) {
             for (int i = 0; i < node.children.length; i++) {
                 if (node.children[i] != null) {
-                    words.addAll(children[i].FindAndRetrieveCommands());
+                    cmds.addAll(children[i].FindAndRetrieveCommands());
                 }
             }
         }
 
-        return words;
+        return cmds;
     }
 
     private String getCommand() {
@@ -106,19 +106,19 @@ public class TrieNode {
      * When this method is called, the "this" Node is pointing to the last character
      * of the prefix string. From this Node, look at all its children nodes (array)
      * for branches of other patterns that complete the word with the prefix and
-     * return a list of those words.
+     * return a list of those commands.
      */
     public List<String> getCommands() {
         TrieNode node = this;
-        var words = new ArrayList<String>();
+        var cmds = new ArrayList<String>();
 
         for (int i = 0; i < ALPHABET_SIZE; i++) {
             if (node.children[i] != null) {
-                words.addAll(node.getChildren()[i].FindAndRetrieveCommands());
+                cmds.addAll(node.getChildren()[i].FindAndRetrieveCommands());
             }
         }
 
-        return words;
+        return cmds;
     }
 
     public TrieNode[] getChildren() {
@@ -129,12 +129,12 @@ public class TrieNode {
         this.children = children;
     }
 
-    public boolean isWord() {
-        return isWord;
+    public boolean isCmd() {
+        return isCmd;
     }
 
-    public void setWord(boolean isWord) {
-        this.isWord = isWord;
+    public void setCmd(boolean isCmd) {
+        this.isCmd = isCmd;
     }
 
     public boolean isNotLeaf() {
