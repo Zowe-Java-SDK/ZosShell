@@ -17,18 +17,13 @@ public class Search {
         this.terminal = terminal;
     }
 
-    @SuppressWarnings("DataFlowIssue")
     public void search(Output output, String text) {
         final var log = Optional.ofNullable(output);
         log.ifPresentOrElse((value) -> {
             final var name = value.getName();
             terminal.println("searching " + name.toUpperCase() + "...");
-            List<String> results = new ArrayList<>();
-            try {
-                results = Arrays.stream(output.getOutput().toString().split("\n"))
-                        .filter(line -> line.toUpperCase().contains(text.toUpperCase())).collect(Collectors.toList());
-            } catch (Exception ignored) {
-            }
+            List<String> results = Arrays.stream(value.getOutput().toString().split("\n"))
+                    .filter(line -> line.toUpperCase().contains(text.toUpperCase())).collect(Collectors.toList());
             if (!results.isEmpty()) {
                 results.forEach(terminal::println);
             } else {
