@@ -80,7 +80,7 @@ public class Commands {
 
     public StringBuilder cat(ZOSConnection connection, String dataSet, String member) {
         final var pool = Executors.newFixedThreadPool(1);
-        final var submit = pool.submit(new FutureConcatenate(terminal, new Download(new ZosDsnDownload(connection), false), dataSet, member));
+        final var submit = pool.submit(new FutureConcatenate(new Download(new ZosDsnDownload(connection), false), dataSet, member));
         final var result = processFuture(pool, submit);
         if (result != null) {
             return new StringBuilder(result.getMessage());
