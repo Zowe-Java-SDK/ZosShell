@@ -27,7 +27,7 @@ public class Ussh {
         try {
             final var shell = new Shell(sshConnection);
             // 10000 is the timeout value in milliseconds
-            terminal.println(shell.executeSshCwd(command, 10000));
+            terminal.println(shell.executeSshCmd(command, 10000));
         } catch (Exception e) {
             terminal.println(e + "");
         }
