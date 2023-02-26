@@ -60,7 +60,7 @@ public class Tail extends JobLog {
                 return displayAll(output);
             }
         } else {
-            int LINES_LIMIT = 25;
+            final var LINES_LIMIT = 25;
             if (size > LINES_LIMIT) {
                 return display(LINES_LIMIT, size, output);
             } else {

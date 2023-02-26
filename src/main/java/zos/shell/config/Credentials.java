@@ -30,7 +30,7 @@ public class Credentials {
                 if (items.length < 4) {
                     continue;
                 }
-                int sshPort = 0;
+                var sshPort = 0;
                 var zosConnection = new ZOSConnection(items[0], items[1], items[2], items[3]);
                 var sshConnection = new SSHConnection(items[0], sshPort, items[2], items[3]);
                 // items[4] can represent a mvsconsolename or sshport value, sshport will be a number

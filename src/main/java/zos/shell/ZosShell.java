@@ -172,8 +172,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private static String[] removePrompt(String[] command) {
         if (Constants.DEFAULT_PROMPT.equals(command[0])) {
-            int size = command.length;
-            String[] newCmdArr = new String[size - 1];
+            final var size = command.length;
+            final var newCmdArr = new String[size - 1];
             List<String> newCmdLst = new ArrayList<>(Arrays.asList(command).subList(1, size));
             for (int i = 0; i < newCmdLst.size(); i++) {
                 newCmdArr[i] = newCmdLst.get(i);

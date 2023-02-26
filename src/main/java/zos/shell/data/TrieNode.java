@@ -79,7 +79,7 @@ public class TrieNode {
         var result = new StringBuilder();
         String value;
 
-        int i = 0;
+        var i = 0;
         while (node.isNotLeaf()) {
             buffer[i] = node.character;
             node = node.parent;

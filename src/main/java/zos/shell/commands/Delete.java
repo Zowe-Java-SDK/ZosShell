@@ -34,7 +34,7 @@ public class Delete {
                 String lookForStr = "";
 
                 if (param.length() > 1) {
-                    int index = param.indexOf('*');
+                    final var index = param.indexOf('*');
                     lookForStr = param.substring(0, index).toUpperCase();
                 }
 
