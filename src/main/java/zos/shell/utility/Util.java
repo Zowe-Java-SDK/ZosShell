@@ -1,5 +1,6 @@
 package zos.shell.utility;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;
 import zos.shell.Constants;
 import zos.shell.dto.DataSetMember;
@@ -159,6 +160,26 @@ public class Util {
         list.removeAll(Collections.singleton(""));
         command = list.toArray(new String[0]);
         return command;
+    }
+
+    public static void openFileLocation(String filePath) {
+        if (filePath == null) {
+            return;
+        }
+
+        try {
+            if (SystemUtils.IS_OS_WINDOWS) {
+                Runtime.getRuntime().exec("explorer.exe /select, " + filePath);
+            } else if (SystemUtils.IS_OS_MAC_OSX) {
+                final var arr = filePath.split("/");
+                final var str = new StringBuilder();
+                for (int i = 0; i < arr.length - 1; i++) {
+                    str.append(arr[i]).append("/");
+                }
+                Runtime.getRuntime().exec("/usr/bin/open " + str);
+            }
+        } catch (IOException ignored) {
+        }
     }
 
 }

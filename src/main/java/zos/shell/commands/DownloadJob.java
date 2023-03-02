@@ -51,6 +51,7 @@ public class DownloadJob {
 
         final var message = Strings.padStart(jobName, 8, ' ') + Constants.ARROW;
         terminal.println(message + "downloaded to " + dirSetup.getFileNamePath());
+        Util.openFileLocation(dirSetup.getFileNamePath());
     }
 
 }

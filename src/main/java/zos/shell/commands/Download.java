@@ -66,7 +66,7 @@ public class Download {
             }
             return new ResponseStatus(message + e.getMessage(), false);
         }
-        return new ResponseStatus(message, true);
+        return new ResponseStatus(message, true, dirSetup.getFileNamePath());
     }
 
     private void writeBinaryFile(InputStream input, String directoryPath, String fileNamePath) throws IOException {

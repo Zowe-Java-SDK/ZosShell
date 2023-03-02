@@ -164,6 +164,7 @@ public class Commands {
             terminal.println("cannot open " + member + ", try again...");
         } else {
             terminal.println(result.getMessage());
+            Util.openFileLocation(result.getOptionalData());
         }
     }
 
@@ -181,6 +182,7 @@ public class Commands {
         }
 
         final var result = getFutureResults(futures);
+        Util.openFileLocation(result.get(0).getOptionalData());
         pool.shutdownNow();
         return result;
     }
