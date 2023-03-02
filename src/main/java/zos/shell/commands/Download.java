@@ -31,6 +31,9 @@ public class Download {
     }
 
     public ResponseStatus download(String dataSet, String member) {
+        if (!Util.isMember(member)) {
+            return new ResponseStatus(Constants.INVALID_MEMBER, false);
+        }
         var message = Strings.padStart(member, 8, ' ') + Constants.ARROW;
 
         final var dirSetup = new DirectorySetup();

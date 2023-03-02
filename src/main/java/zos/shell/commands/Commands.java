@@ -52,24 +52,22 @@ public class Commands {
     private Output browseAll(ZOSConnection connection, String[] params, boolean isAll) {
         BrowseJob browseJob;
         try {
-            browseJob = new BrowseJob(terminal, new GetJobs(connection), isAll, timeOutValue);
+            browseJob = new BrowseJob(new GetJobs(connection), isAll, timeOutValue);
         } catch (Exception e) {
             Util.printError(terminal, e.getMessage());
             return null;
         }
-        StringBuilder output;
-        try {
-            output = browseJob.browseJob(params[1]);
-        } catch (Exception e) {
-            if (e.getMessage().contains("timeout")) {
-                terminal.println(Constants.BROWSE_TIMEOUT);
-                return null;
-            }
-            Util.printError(terminal, e.getMessage());
+        ResponseStatus responseStatus = browseJob.browseJob(params[1]);
+        if (!responseStatus.isStatus() && responseStatus.getMessage().contains("timeout")) {
+            terminal.println(Constants.BROWSE_TIMEOUT);
+            return null;
+        } else if (!responseStatus.isStatus()) {
+            Util.printError(terminal, responseStatus.getMessage());
             return null;
         }
-        terminal.println(output.toString());
-        return new Output(params[1], output);
+        String output = responseStatus.getMessage();
+        terminal.println(output);
+        return new Output(params[1], new StringBuilder(output));
     }
 
     public void cancel(ZOSConnection connection, String jobOrTask) {
@@ -142,7 +140,7 @@ public class Commands {
     }
 
     public void download(ZOSConnection connection, String currDataSet, String member, boolean isBinary) {
-        if ("*".equals(member)) {
+        if ("*".equals(member) && member.length() == 1) {
             final List<String> members = Util.getMembers(terminal, connection, currDataSet);
             if (members.isEmpty()) {
                 return;
@@ -169,8 +167,9 @@ public class Commands {
     }
 
     public void downloadJob(ZOSConnection currConnection, String param, boolean isAll) {
-        final var downloadJob = new DownloadJob(terminal, new GetJobs(currConnection), isAll, timeOutValue);
-        downloadJob.download(param);
+        final var pool = Executors.newFixedThreadPool(1);
+        final var submit = pool.submit(new FutureDownloadJob(new GetJobs(currConnection), isAll, timeOutValue, param));
+        processFuture(pool, submit);
     }
 
     private List<ResponseStatus> multipleDownload(ZOSConnection connection, String dataSet, List<String> members, boolean isBinary) {

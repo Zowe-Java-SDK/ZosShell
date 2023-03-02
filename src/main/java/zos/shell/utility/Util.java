@@ -141,6 +141,9 @@ public class Util {
     }
 
     public static String getMsgAfterArrow(String msg) {
+        if (!msg.contains(Constants.ARROW)) {
+            return msg;
+        }
         final var index = msg.indexOf(Constants.ARROW) + Constants.ARROW.length();
         return msg.substring(index);
     }
