@@ -37,8 +37,9 @@ public class TrieNode {
             letter = command.charAt(i);
             index = letter - 'a';
 
-            if (!isNotLetter(letter))
+            if (!isNotLetter(letter)) {
                 continue;
+            }
 
             if (node.children[index] == null) {
                 node.children[index] = new TrieNode();
@@ -56,11 +57,12 @@ public class TrieNode {
     }
 
     public List<String> FindAndRetrieveCommands() {
-        var cmds = new ArrayList<String>();
+        final var cmds = new ArrayList<String>();
         TrieNode node = this;
 
-        if (node.isCmd())
+        if (node.isCmd()) {
             cmds.add(node.getCommand());
+        }
 
         if (node.isNotLeaf()) {
             for (int i = 0; i < node.children.length; i++) {
