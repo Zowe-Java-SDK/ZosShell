@@ -6,9 +6,7 @@ import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.DirectorySetup;
 import zos.shell.utility.Util;
 import zowe.client.sdk.zosjobs.GetJobs;
-import zowe.client.sdk.zosjobs.response.Job;
 
-import java.util.Collections;
 import java.util.Comparator;
 
 public class DownloadJob {
@@ -33,9 +31,7 @@ public class DownloadJob {
         }
 
         final var output = responseStatus.getMessage();
-        Comparator<Job> comparator = Comparator.comparing(o -> o.getJobId().get());
-        browseJob.jobs.sort(comparator);
-        Collections.reverse(browseJob.jobs);
+        browseJob.jobs.sort(Comparator.comparing(job -> job.getJobId().orElse(""), Comparator.reverseOrder()));
         final var id = browseJob.jobs.get(0).getJobId().orElse(null);
 
         final var dirSetup = new DirectorySetup();
