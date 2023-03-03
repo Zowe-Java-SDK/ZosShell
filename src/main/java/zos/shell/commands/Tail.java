@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Tail extends JobLog {
 
-    TextTerminal<?> terminal;
+    private final TextTerminal<?> terminal;
 
     public Tail(TextTerminal<?> terminal, GetJobs getJobs, boolean isAll, long timeOutValue) {
         super(getJobs, isAll, timeOutValue);

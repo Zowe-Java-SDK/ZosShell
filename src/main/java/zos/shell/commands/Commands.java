@@ -140,7 +140,7 @@ public class Commands {
     }
 
     public void download(ZOSConnection connection, String currDataSet, String member, boolean isBinary) {
-        if ("*".equals(member) && member.length() == 1) {
+        if ("*".equals(member)) {
             final List<String> members = Util.getMembers(terminal, connection, currDataSet);
             if (members.isEmpty()) {
                 return;
