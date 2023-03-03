@@ -1,6 +1,6 @@
 package zos.shell.commands;
 
-import org.beryx.textio.TextTerminal;
+import zos.shell.dto.ResponseStatus;
 import zos.shell.future.FutureBrowseJob;
 import zowe.client.sdk.zosjobs.GetJobs;
 import zowe.client.sdk.zosjobs.input.GetJobParams;
@@ -9,33 +9,34 @@ import zowe.client.sdk.zosjobs.response.Job;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
 public class JobLog {
 
-    protected final TextTerminal<?> terminal;
     protected final GetJobs getJobs;
     protected List<Job> jobs = new ArrayList<>();
     private final boolean isAll;
     private final long timeout;
 
-    public JobLog(TextTerminal<?> terminal, GetJobs getJobs, boolean isAll, long timeout) {
-        this.terminal = terminal;
+    public JobLog(GetJobs getJobs, boolean isAll, long timeout) {
         this.getJobs = getJobs;
         this.isAll = isAll;
         this.timeout = timeout;
     }
 
-    protected StringBuilder browseJobLog(String param) throws Exception {
+    protected ResponseStatus browseJobLog(String param) {
         final var jobParams = new GetJobParams.Builder("*").prefix(param).build();
-        jobs = getJobs.getJobsCommon(jobParams);
+        try {
+            jobs = getJobs.getJobsCommon(jobParams);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseStatus("error retrieving job details, try again.", false);
+        }
         if (jobs.isEmpty()) {
-            terminal.println(jobParams.getPrefix().orElse("n\\a") + " does not exist, try again...");
-            return new StringBuilder();
+            final var msg = jobParams.getPrefix().orElse("n\\a") + " does not exist, try again...";
+            return new ResponseStatus(msg, false);
         }
         // select the active or input one first; if not found then get the highest job number
         final Predicate<Job> isActive = j -> "ACTIVE".equalsIgnoreCase(j.getStatus().orElse(""));
@@ -47,9 +48,9 @@ public class JobLog {
         try {
             files = getJobs.getSpoolFilesForJob(job);
         } catch (Exception e) {
+            e.printStackTrace();
             final var msg = "error retrieving spool content for job id " + job.getJobId().orElse("n\\a");
-            terminal.println(msg);
-            throw new Exception(e);
+            return new ResponseStatus(msg, false);
         }
 
         final var pool = Executors.newFixedThreadPool(1);
@@ -58,10 +59,11 @@ public class JobLog {
         try {
             final var result = submit.get(timeout, TimeUnit.SECONDS);
             pool.shutdownNow();
-            return result;
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            return new ResponseStatus(result.toString(), true);
+        } catch (Exception e) {
+            e.printStackTrace();
             pool.shutdownNow();
-            throw new Exception("timeout");
+            return new ResponseStatus(e.getMessage(), false);
         }
     }
 

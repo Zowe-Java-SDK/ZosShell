@@ -2,6 +2,7 @@ package zos.shell.commands;
 
 import org.beryx.textio.TextTerminal;
 import zos.shell.Constants;
+import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
 import zowe.client.sdk.zosjobs.GetJobs;
 
@@ -10,12 +11,15 @@ import java.util.List;
 
 public class Tail extends JobLog {
 
+    private final TextTerminal<?> terminal;
+
     public Tail(TextTerminal<?> terminal, GetJobs getJobs, boolean isAll, long timeOutValue) {
-        super(terminal, getJobs, isAll, timeOutValue);
+        super(getJobs, isAll, timeOutValue);
+        this.terminal = terminal;
     }
 
     public StringBuilder tail(String[] params) {
-        StringBuilder result;
+        ResponseStatus result;
         try {
             result = browseJobLog(params[1]);
         } catch (Exception e) {
