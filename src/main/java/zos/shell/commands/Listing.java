@@ -114,8 +114,8 @@ public class Listing {
         }
         if (!isColumnView) { // ls -l
             final var columnFormat = "%-11s %-11s %-8s %-5s %-5s %-6s %-7s %-5s";
-            terminal.println(String.format(columnFormat, "cdate", "rdate", "vol", "dsorg", "recfm", "blksz", "dsntp", "dsname")
-            );
+            terminal.println(String.format(columnFormat,
+                    "cdate", "rdate", "vol", "dsorg", "recfm", "blksz", "dsntp", "dsname"));
             dataSets.forEach(ds -> {
                 final var dsname = ds.getDsname().orElse("");
                 if (!dsname.equalsIgnoreCase(ignoreCurrDataSet)) {
