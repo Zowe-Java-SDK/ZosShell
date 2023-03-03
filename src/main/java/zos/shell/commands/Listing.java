@@ -111,7 +111,8 @@ public class Listing {
     }
 
     private void displayDataSets(List<Dataset> dataSets, String ignoreCurrDataSet, boolean isColumnView, boolean isAttributes) {
-        if (dataSets.isEmpty()) {
+        if (dataSets.isEmpty() || (dataSets.size() == 1
+                && ignoreCurrDataSet.equalsIgnoreCase(dataSets.get(0).getDsname().orElse("")))) {
             return;
         }
         if (!isColumnView && isAttributes) { // ls -l
