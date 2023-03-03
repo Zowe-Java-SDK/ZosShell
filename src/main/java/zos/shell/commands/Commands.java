@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 public class Commands {
 
@@ -143,11 +144,26 @@ public class Commands {
         if ("*".equals(member)) {
             final List<String> members = Util.getMembers(terminal, connection, currDataSet);
             if (members.isEmpty()) {
+                terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
                 return;
             }
             multipleDownload(connection, currDataSet, members, isBinary).forEach(i -> terminal.println(i.getMessage()));
             return;
         }
+
+        if (member.contains("*") && Util.isMember(member.substring(0, member.indexOf("*")))) {
+            var members = Util.getMembers(terminal, connection, currDataSet);
+            if (members.isEmpty()) {
+                terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
+                return;
+            }
+            final var index = member.indexOf("*");
+            final var searchForMember = member.substring(0, index).toUpperCase();
+            members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
+            multipleDownload(connection, currDataSet, members, isBinary).forEach(i -> terminal.println(i.getMessage()));
+            return;
+        }
+
         Download download;
         try {
             download = new Download(new ZosDsnDownload(connection), isBinary);
@@ -173,6 +189,13 @@ public class Commands {
     }
 
     private List<ResponseStatus> multipleDownload(ZOSConnection connection, String dataSet, List<String> members, boolean isBinary) {
+        if (members.isEmpty()) {
+            final var rs = new ResponseStatus("", false);
+            final var rss = new ArrayList<ResponseStatus>();
+            rss.add(rs);
+            terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
+            return rss;
+        }
         final var pool = Executors.newFixedThreadPool(members.size());
         final var futures = new ArrayList<Future<ResponseStatus>>();
 

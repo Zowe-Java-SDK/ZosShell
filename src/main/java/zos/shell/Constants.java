@@ -29,6 +29,7 @@ public final class Constants {
     public static final String DEFAULT_PROMPT = ">";
     public static final String DELETE_NOTHING_ERROR = "nothing to delete, try again...";
     public static final String DOWNLOAD_FAIL = "download failed, try again...";
+    public static final String DOWNLOAD_NOTHING_WARNING = "nothing to download, try again...";
     public static final long FUTURE_TIMEOUT_VALUE = 10;
     public static final int HISTORY_SIZE = 200;
     public static final String INVALID_COMMAND = "invalid command, try again...";
