@@ -33,12 +33,12 @@ public class Listing {
         this.timeout = timeout;
     }
 
-    public void ls(String memberValue, String dataSet, boolean isColumnView)
+    public void ls(String memberValue, String dataSet, boolean isColumnView, boolean isAttributes)
             throws ExecutionException, InterruptedException, TimeoutException {
-        ListParams.Builder paramsBuilder =  new ListParams.Builder()
+        ListParams.Builder paramsBuilder = new ListParams.Builder()
                 .maxLength("0")  // return all
                 .responseTimeout(String.valueOf(timeout));
-        if (!isColumnView) { // ls -1
+        if (!isColumnView && isAttributes) { // ls -1
             params = paramsBuilder.attribute(AttributeType.BASE).build();
         } else { // ls
             params = paramsBuilder.build();
@@ -62,7 +62,7 @@ public class Listing {
             } else {
                 members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
             }
-        }, () -> displayDataSets(dataSets, dataSet, isColumnView));
+        }, () -> displayDataSets(dataSets, dataSet, isColumnView, isAttributes));
         final var membersSize = members.size();
         if (member.isPresent() && membersSize == 0) {
             terminal.println(Constants.NO_MEMBERS);
@@ -108,11 +108,11 @@ public class Listing {
         }
     }
 
-    private void displayDataSets(List<Dataset> dataSets, String ignoreCurrDataSet, boolean isColumnView) {
+    private void displayDataSets(List<Dataset> dataSets, String ignoreCurrDataSet, boolean isColumnView, boolean isAttributes) {
         if (dataSets.isEmpty()) {
             return;
         }
-        if (!isColumnView) { // ls -l
+        if (!isColumnView && isAttributes) { // ls -l
             final var columnFormat = "%-11s %-11s %-8s %-5s %-5s %-6s %-7s %-5s";
             terminal.println(String.format(columnFormat,
                     "cdate", "rdate", "vol", "dsorg", "recfm", "blksz", "dsntp", "dsname"));
