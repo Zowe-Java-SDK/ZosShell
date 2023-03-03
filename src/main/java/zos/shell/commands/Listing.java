@@ -51,7 +51,9 @@ public class Listing {
         try {
             dataSets = getDataSets(dataSet);
             members = getMembers(dataSet);
-        } catch (Exception ignore) {
+        } catch (TimeoutException e) {
+            throw new TimeoutException(e.getMessage());
+        } catch (Exception ignored) {
         }
 
         member.ifPresentOrElse((m) -> {
