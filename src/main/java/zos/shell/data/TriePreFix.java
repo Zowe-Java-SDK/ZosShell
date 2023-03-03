@@ -21,8 +21,9 @@ public class TriePreFix {
         for (int i = 0; i < limit; i++) {
             lastNode = lastNode.getNode(prefix.charAt(i) - 'a');
             // if none, return empty array
-            if (lastNode == null)
+            if (lastNode == null) {
                 return new ArrayList<>();
+            }
         }
 
         return lastNode.getCommands();
