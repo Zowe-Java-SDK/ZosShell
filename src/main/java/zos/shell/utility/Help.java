@@ -40,6 +40,7 @@ public class Help {
             "                        - for member value only you can specified * wild card as last character",
             "ls -l <arg>             - where arg is optional and indicates a dataset or member value",
             "                        - for member value only you can specified * wild card as last character",
+            "ls --l <arg>            - same as above without attribute info",
             "ps                      - display all processes running",
             "ps <arg>                - where arg is a task/job name",
             "pj | purgejob <arg>          - purge a job name or job is arg can represent either",

@@ -425,33 +425,46 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     terminal.println(Constants.INVALID_COMMAND);
                     return;
                 }
-                if (params.length == 3 && "-l".equalsIgnoreCase(params[1])) {
+                if (params.length == 3 && "-l".equalsIgnoreCase(params[1]) ||
+                        (params.length == 3 && "--l".equalsIgnoreCase(params[1]))) {
+                    if (isCurrDataSetNotSpecified()) {
+                        return;
+                    }
+                    boolean isAttributes = true;
+                    if ("--l".equalsIgnoreCase(params[1])) {
+                        isAttributes = false;
+                    }
                     final var value = params[2];
                     final var size = params[2].length();
                     if (size <= 9 && value.charAt(size - 1) == '*') {  // is member with wild card specified...
                         final var index = value.indexOf("*");
                         final var member = value.substring(0, index);
                         if (Util.isMember(member)) {  // validate member value without wild card char...
-                            commands.lsl(currConnection, value, currDataSet);
+                            commands.lsl(currConnection, value, currDataSet, isAttributes);
                             return;
                         } else {
                             terminal.println(Constants.INVALID_MEMBER);
                         }
                     } else if (Util.isMember(value)) {  // is member without wild card specified...
-                        commands.lsl(currConnection, value, currDataSet);
+                        commands.lsl(currConnection, value, currDataSet, isAttributes);
                         return;
                     } else if (Util.isDataSet(value)) {  // is dataset specified at this point...
-                        commands.lsl(currConnection, null, value);
+                        commands.lsl(currConnection, null, value, isAttributes);
                         return;
                     } else {  // must be an invalid member or dataset specified...
                         terminal.println(Constants.INVALID_DATASET_AND_MEMBER);
                     }
                 }
-                if (params.length == 2 && "-l".equalsIgnoreCase(params[1])) {
+                if (params.length == 2 && "-l".equalsIgnoreCase(params[1]) ||
+                        (params.length == 2 && "--l".equalsIgnoreCase(params[1]))) {
                     if (isCurrDataSetNotSpecified()) {
                         return;
                     }
-                    commands.lsl(currConnection, currDataSet);
+                    boolean isAttributes = true;
+                    if ("--l".equalsIgnoreCase(params[1])) {
+                        isAttributes = false;
+                    }
+                    commands.lsl(currConnection, currDataSet, isAttributes);
                     addVisited();
                     return;
                 }

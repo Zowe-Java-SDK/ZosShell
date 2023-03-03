@@ -230,7 +230,7 @@ public class Commands {
     public void ls(ZOSConnection connection, String member, String dataSet) {
         final var listing = new Listing(terminal, new ZosDsnList(connection), timeOutValue);
         try {
-            listing.ls(member, dataSet, true);
+            listing.ls(member, dataSet, true, false);
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
         } catch (ExecutionException | InterruptedException e) {
@@ -241,7 +241,7 @@ public class Commands {
     public void ls(ZOSConnection connection, String dataSet) {
         final var listing = new Listing(terminal, new ZosDsnList(connection), timeOutValue);
         try {
-            listing.ls(null, dataSet, true);
+            listing.ls(null, dataSet, true, false);
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
         } catch (ExecutionException | InterruptedException e) {
@@ -249,14 +249,14 @@ public class Commands {
         }
     }
 
-    public void lsl(ZOSConnection connection, String dataSet) {
-        this.lsl(connection, null, dataSet);
+    public void lsl(ZOSConnection connection, String dataSet, boolean isAttributes) {
+        this.lsl(connection, null, dataSet, isAttributes);
     }
 
-    public void lsl(ZOSConnection connection, String member, String dataSet) {
+    public void lsl(ZOSConnection connection, String member, String dataSet, boolean isAttributes) {
         final var listing = new Listing(terminal, new ZosDsnList(connection), timeOutValue);
         try {
-            listing.ls(member, dataSet, false);
+            listing.ls(member, dataSet, false, isAttributes);
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
         } catch (ExecutionException | InterruptedException e) {
