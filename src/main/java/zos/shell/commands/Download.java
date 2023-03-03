@@ -31,6 +31,9 @@ public class Download {
     }
 
     public ResponseStatus download(String dataSet, String member) {
+        if (!Util.isMember(member)) {
+            return new ResponseStatus(Constants.INVALID_MEMBER, false);
+        }
         var message = Strings.padStart(member, 8, ' ') + Constants.ARROW;
 
         final var dirSetup = new DirectorySetup();
@@ -66,7 +69,7 @@ public class Download {
             }
             return new ResponseStatus(message + e.getMessage(), false);
         }
-        return new ResponseStatus(message, true);
+        return new ResponseStatus(message, true, dirSetup.getFileNamePath());
     }
 
     private void writeBinaryFile(InputStream input, String directoryPath, String fileNamePath) throws IOException {
