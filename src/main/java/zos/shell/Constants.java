@@ -15,6 +15,7 @@ public final class Constants {
     public static final String CONNECTION_REFUSED = "connection refused";
     public static final String COMMAND_INVALID_COMMAND =
             "invalid command, please use two double quotes only around the command string and try again...";
+    public static final String COPY_NOTHING_WARNING = "nothing to copy, try again...";
     public static final String COPY_OPS_ITSELF_ERROR =
             "first argument invalid for cp operation, cant copy from same location, try again...";
     public static final String COPY_OPS_NO_MEMBER_ERROR =

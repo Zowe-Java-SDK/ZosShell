@@ -26,6 +26,17 @@ public class Copy {
             fromDataSetName = currDataSet + "(" + param1 + ")";
         }
 
+        // if param1 does not contain period it means end user specified a member
+        // if member check for member validity.
+        if (!param1.contains(".")) {
+            if (param1.charAt(param1.length() - 1) == '*') {
+                final var member = param1.substring(0, param1.length() - 1);
+                if (!Util.isMember(member)) {
+                    return new ResponseStatus(Constants.INVALID_MEMBER, false);
+                }
+            }
+        }
+
         if (Util.isMember(param2)) {
             toDataSetName = currDataSet + "(" + param2 + ")";
         }

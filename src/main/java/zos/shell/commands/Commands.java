@@ -123,6 +123,20 @@ public class Commands {
             multipleCopy(connection, currDataSet, params[2], members).forEach(i -> terminal.println(i.getMessage()));
             return;
         }
+
+        if (params[1].contains("*") && Util.isMember(params[1].substring(0, params[1].indexOf("*")))) {
+            var members = Util.getMembers(terminal, connection, currDataSet);
+            if (members.isEmpty()) {
+                terminal.println(Constants.COPY_NOTHING_WARNING);
+                return;
+            }
+            final var index = params[1].indexOf("*");
+            final var searchForMember = params[1].substring(0, index).toUpperCase();
+            members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
+            multipleCopy(connection, currDataSet, params[2], members).forEach(i -> terminal.println(i.getMessage()));
+            return;
+        }
+
         Copy copy;
         try {
             copy = new Copy(new ZosDsnCopy(connection));
