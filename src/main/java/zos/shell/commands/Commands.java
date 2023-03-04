@@ -144,8 +144,18 @@ public class Commands {
             Util.printError(terminal, e.getMessage());
             return;
         }
-        var responseStatus = copy.copy(currDataSet, params);
-        terminal.println(responseStatus.getMessage());
+        terminal.println(copy.copy(currDataSet, params).getMessage());
+    }
+
+    public void copySequential(ZOSConnection connection, String currDataSet, String[] params) {
+        CopySequential copy;
+        try {
+            copy = new CopySequential(new ZosDsnCopy(connection));
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
+        terminal.println(copy.copy(currDataSet, params).getMessage());
     }
 
     public void count(ZOSConnection connection, String dataSet, String filter) {

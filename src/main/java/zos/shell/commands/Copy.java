@@ -22,27 +22,22 @@ public class Copy {
         var param1 = params[1].toUpperCase();
         var param2 = params[2].toUpperCase();
 
+        if (!(Util.isDataSet(param1) || Util.isMember(param1) || ".".equals(param1))) {
+            return new ResponseStatus("invalid first argument, try again...", false);
+        }
+        if (!(Util.isDataSet(param2) || Util.isMember(param2) || ".".equals(param2))) {
+            return new ResponseStatus("invalid second argument, try again...", false);
+        }
+        if (".".equals(param1) && ".".equals(param2)) {
+            return new ResponseStatus(Constants.INVALID_COMMAND, false);
+        }
+
         if (Util.isMember(param1)) {
             fromDataSetName = currDataSet + "(" + param1 + ")";
         }
 
-        // if param1 does not contain period it means end user specified a member
-        // if member check for member validity.
-        if (!param1.contains(".")) {
-            if (param1.charAt(param1.length() - 1) == '*') {
-                final var member = param1.substring(0, param1.length() - 1);
-                if (!Util.isMember(member)) {
-                    return new ResponseStatus(Constants.INVALID_MEMBER, false);
-                }
-            }
-        }
-
         if (Util.isMember(param2)) {
             toDataSetName = currDataSet + "(" + param2 + ")";
-        }
-
-        if (".".equals(param1) && ".".equals(param2)) {
-            return new ResponseStatus(Constants.INVALID_COMMAND, false);
         }
 
         if (".".equals(param1)) {

@@ -29,6 +29,7 @@ The shell performs the following Linux like commands:
     cat                     - display contents
     cd <arg>                - where arg is a dataset value or empty
     clear                   - clear the shell of all history
+    cp | copy <arg> <arg>   - where arg can be ".", "*", member, dataset or dataset(member)
     h | help                - list commands
     history <arg>           - where arg is optional and indicates the number to display from bottom  
     hostname                - display current hostname connection
@@ -61,7 +62,7 @@ Along with following custom commands:
     connections                         - a list of connection(s)   
     count members                       - return member count in current pwd dataset
     count datasets                      - return dataset count in current pwd dataset
-    cp | copy <arg> <arg>               - where arg can be ".", "*", member, dataset or dataset(member)
+    cps | copys <arg> arg>              - where at least one argument is a sequential dataset
     d | download <arg1> <arg2>          - download arg1 to local c:\ZosShell\pwd where arg1 is member or sequential dataset  
                                           and arg2 is optional and only accepts "-b" for binary download      
     dj | downloadjob <arg1> <arg2>      - download the latest job log where <arg1> is job name
