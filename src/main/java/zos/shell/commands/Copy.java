@@ -19,8 +19,8 @@ public class Copy {
         var toDataSetName = "";
         var copyAllMembers = false;
 
-        var param1 = params[1].toUpperCase();
-        var param2 = params[2].toUpperCase();
+        final var param1 = params[1].toUpperCase();
+        final var param2 = params[2].toUpperCase();
 
         if (!(Util.isDataSet(param1) || Util.isMember(param1) || ".".equals(param1))) {
             return new ResponseStatus("invalid first argument, try again...", false);

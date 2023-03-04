@@ -17,8 +17,8 @@ public class CopySequential {
         var fromDataSetName = "";
         var toDataSetName = "";
 
-        var param1 = params[1].toUpperCase();
-        var param2 = params[2].toUpperCase();
+        final var param1 = params[1].toUpperCase();
+        final var param2 = params[2].toUpperCase();
 
         if (Util.isMember(param1) && Util.isMember(param2)) {
             return new ResponseStatus(
@@ -30,7 +30,7 @@ public class CopySequential {
                     "invalid second argument, specify a valid sequential dataset, try again...", false);
         }
 
-        if (!Util.isMember(param1) && Util.isDataSet(param2)) {
+        if (!Util.isMember(param1) && !Util.isDataSet(param1) && Util.isDataSet(param2)) {
             return new ResponseStatus(
                     "invalid first argument, specify a valid member or sequential dataset, try again...", false);
         }
@@ -40,7 +40,7 @@ public class CopySequential {
                     "invalid first argument, specify a valid sequential dataset, try again...", false);
         }
 
-        if (!Util.isMember(param2) && Util.isDataSet(param1)) {
+        if (!Util.isMember(param2) && !Util.isDataSet(param2) && Util.isDataSet(param1)) {
             return new ResponseStatus(
                     "invalid second argument, specify a valid member or sequential dataset, try again...", false);
         }
