@@ -52,21 +52,21 @@ public class Copy {
 
         if (".".equals(param2)) {
             if (Util.isMember(param1)) {
-                return new ResponseStatus(Constants.COPY_OPS_ITSELF_ERROR, false);
+                return new ResponseStatus(Constants.COPY_ITSELF_ERROR, false);
             }
 
             if (Util.isDataSet(param1)) {
-                return new ResponseStatus(Constants.COPY_OPS_NO_MEMBER_ERROR, false);
+                return new ResponseStatus(Constants.COPY_NO_MEMBER_ERROR, false);
             }
 
             if (param1.contains(currDataSet)) {
-                return new ResponseStatus(Constants.COPY_OPS_ITSELF_ERROR, false);
+                return new ResponseStatus(Constants.COPY_ITSELF_ERROR, false);
             }
 
             if (param1.contains("(") && param1.contains(")")) {
                 DataSetMember dataSetMember = Util.getMemberFromDataSet(param1);
                 if (dataSetMember == null) {
-                    return new ResponseStatus(Constants.COPY_OPS_NO_MEMBER_AND_DATASET_ERROR, false);
+                    return new ResponseStatus(Constants.COPY_NO_MEMBER_AND_DATASET_ERROR, false);
                 }
 
                 fromDataSetName = param1;
