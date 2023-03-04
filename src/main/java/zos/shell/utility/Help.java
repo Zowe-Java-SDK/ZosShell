@@ -22,6 +22,8 @@ public class Help {
             "count members           - return member count in dataset",
             "count datasets          - return dataset count in dataset",
             "cp | copy <arg> arg>    - where arg can be \".\", member, dataset or dataset(member)",
+            "cps | copys <arg> arg>  - where at least one argument is a sequential dataset",
+            "                        - for sequential dataset copying",
             "d | download <arg1> <arg2>  - download arg1 to local c:\\ZosShell\\pwd where arg1 is member or sequential dataset",
             "                          and arg2 is optional and only accepts \"-b\" for binary download ",
             "dj | downloadjob <arg1> <arg2> - download the latest job log where <arg1> is job name",

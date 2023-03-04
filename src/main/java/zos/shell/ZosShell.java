@@ -324,6 +324,19 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 commands.copy(currConnection, currDataSet, params);
                 break;
+            case "cps":
+            case "copys":
+                if (isParamsMissing(1, params)) {
+                    return;
+                }
+                if (isParamsMissing(2, params)) {
+                    return;
+                }
+                if (isParamsExceeded(3, params)) {
+                    return;
+                }
+                commands.copySequential(currConnection, currDataSet, params);
+                break;
             case "count":
                 if (params.length == 1) {
                     terminal.println(Constants.MISSING_COUNT_PARAM);

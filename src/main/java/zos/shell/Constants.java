@@ -16,12 +16,12 @@ public final class Constants {
     public static final String COMMAND_INVALID_COMMAND =
             "invalid command, please use two double quotes only around the command string and try again...";
     public static final String COPY_NOTHING_WARNING = "nothing to copy, try again...";
-    public static final String COPY_OPS_ITSELF_ERROR =
-            "first argument invalid for cp operation, cant copy from same location, try again...";
-    public static final String COPY_OPS_NO_MEMBER_ERROR =
-            "first argument invalid for cp operation, specified a member, try again...";
-    public static final String COPY_OPS_NO_MEMBER_AND_DATASET_ERROR =
-            "first argument invalid for cp operation, specified valid dataset or member or dataset(member), try again...";
+    public static final String COPY_ITSELF_ERROR =
+            "first argument invalid for copy, cant copy from same location, try again...";
+    public static final String COPY_NO_MEMBER_ERROR =
+            "first argument invalid for copy, specified a member, try again...";
+    public static final String COPY_NO_MEMBER_AND_DATASET_ERROR =
+            "first argument invalid for copy, specified valid dataset or member or dataset(member), try again...";
     public static final String DATASET_OR_HIGH_QUALIFIER_ERROR =
             "invalid dataset or cant change to high qualifier level, try again...";
     public static final String DATASET_NOT_SPECIFIED = "no dataset specified, try again...";
@@ -33,6 +33,7 @@ public final class Constants {
     public static final String DOWNLOAD_NOTHING_WARNING = "nothing to download, try again...";
     public static final long FUTURE_TIMEOUT_VALUE = 10;
     public static final int HISTORY_SIZE = 200;
+    public static final String INVALID_ARGUMENTS = "invalid arguments, try again...";
     public static final String INVALID_COMMAND = "invalid command, try again...";
     public static final String INVALID_DATASET = "invalid dataset specified, try again...";
     public static final String INVALID_DATASET_AND_MEMBER = "invalid dataset or member specified, try again...";

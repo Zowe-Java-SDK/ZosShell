@@ -124,15 +124,21 @@ public class Commands {
             return;
         }
 
+        long count = params[1].chars().filter(ch -> ch == '*').count();
+        if (count > 1) {
+            terminal.println("invalid first argument, try again...");
+            return;
+        }
+
         if (params[1].contains("*") && Util.isMember(params[1].substring(0, params[1].indexOf("*")))) {
             var members = Util.getMembers(terminal, connection, currDataSet);
+            final var index = params[1].indexOf("*");
+            final var searchForMember = params[1].substring(0, index).toUpperCase();
+            members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
             if (members.isEmpty()) {
                 terminal.println(Constants.COPY_NOTHING_WARNING);
                 return;
             }
-            final var index = params[1].indexOf("*");
-            final var searchForMember = params[1].substring(0, index).toUpperCase();
-            members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
             multipleCopy(connection, currDataSet, params[2], members).forEach(i -> terminal.println(i.getMessage()));
             return;
         }
@@ -144,8 +150,18 @@ public class Commands {
             Util.printError(terminal, e.getMessage());
             return;
         }
-        var responseStatus = copy.copy(currDataSet, params);
-        terminal.println(responseStatus.getMessage());
+        terminal.println(copy.copy(currDataSet, params).getMessage());
+    }
+
+    public void copySequential(ZOSConnection connection, String currDataSet, String[] params) {
+        CopySequential copy;
+        try {
+            copy = new CopySequential(new ZosDsnCopy(connection));
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
+        terminal.println(copy.copy(currDataSet, params).getMessage());
     }
 
     public void count(ZOSConnection connection, String dataSet, String filter) {
@@ -167,13 +183,13 @@ public class Commands {
 
         if (member.contains("*") && Util.isMember(member.substring(0, member.indexOf("*")))) {
             var members = Util.getMembers(terminal, connection, currDataSet);
+            final var index = member.indexOf("*");
+            final var searchForMember = member.substring(0, index).toUpperCase();
+            members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
             if (members.isEmpty()) {
                 terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
                 return;
             }
-            final var index = member.indexOf("*");
-            final var searchForMember = member.substring(0, index).toUpperCase();
-            members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
             multipleDownload(connection, currDataSet, members, isBinary).forEach(i -> terminal.println(i.getMessage()));
             return;
         }
@@ -185,7 +201,7 @@ public class Commands {
             Util.printError(terminal, e.getMessage());
             return;
         }
-        var result = download.download(currDataSet, member);
+        final var result = download.download(currDataSet, member);
 
         if (!result.isStatus()) {
             terminal.println(Util.getMsgAfterArrow(result.getMessage()));
