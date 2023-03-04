@@ -14,7 +14,7 @@ public class Copy {
         this.zosDsnCopy = zosDsnCopy;
     }
 
-    public ResponseStatus copy(String currDataSet, String[] params) {
+    public ResponseStatus copy(String currDataSet, String[] params, boolean isSequential) {
         var fromDataSetName = "";
         var toDataSetName = "";
         var copyAllMembers = false;
@@ -77,9 +77,16 @@ public class Copy {
                 fromDataSetName = param1;
                 toDataSetName = currDataSet + "(" + dataSetMember.getMember() + ")";
             }
-        }
-
-        if (Util.isMember(param1) && Util.isDataSet(param2)) {
+        } else if (isSequential && Util.isDataSet(param1) && Util.isDataSet(param2)) {
+            fromDataSetName = param1;
+            toDataSetName = param2;
+        } else if (isSequential && Util.isMember(param1) && Util.isDataSet(param2)) {
+            fromDataSetName = currDataSet + "(" + param1 + ")";
+            toDataSetName = param2;
+        } else if (isSequential && Util.isDataSet(param1) && Util.isMember(param2)) {
+            fromDataSetName = param1;
+            toDataSetName = currDataSet + "(" + param2 + ")";
+        } else {
             fromDataSetName = currDataSet + "(" + param1 + ")";
             toDataSetName = param2 + "(" + param1 + ")";
         }

@@ -144,7 +144,7 @@ public class Commands {
             Util.printError(terminal, e.getMessage());
             return;
         }
-        var responseStatus = copy.copy(currDataSet, params);
+        var responseStatus = copy.copy(currDataSet, params, true);
         terminal.println(responseStatus.getMessage());
     }
 
