@@ -46,7 +46,7 @@ public class CopySequential {
         }
 
         if ((!Util.isMember(param1) && !Util.isMember(param2)) && (!Util.isDataSet(param1) && !Util.isDataSet(param2))) {
-            return new ResponseStatus("invalid arguments, try again...", false);
+            return new ResponseStatus(Constants.INVALID_ARGUMENTS, false);
         }
 
         if (Util.isDataSet(param1) && Util.isDataSet(param2)) {

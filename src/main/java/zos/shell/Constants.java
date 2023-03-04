@@ -33,6 +33,7 @@ public final class Constants {
     public static final String DOWNLOAD_NOTHING_WARNING = "nothing to download, try again...";
     public static final long FUTURE_TIMEOUT_VALUE = 10;
     public static final int HISTORY_SIZE = 200;
+    public static final String INVALID_ARGUMENTS = "invalid arguments, try again...";
     public static final String INVALID_COMMAND = "invalid command, try again...";
     public static final String INVALID_DATASET = "invalid dataset specified, try again...";
     public static final String INVALID_DATASET_AND_MEMBER = "invalid dataset or member specified, try again...";

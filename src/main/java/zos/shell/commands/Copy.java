@@ -29,7 +29,7 @@ public class Copy {
             return new ResponseStatus("invalid second argument, try again...", false);
         }
         if (".".equals(param1) && ".".equals(param2)) {
-            return new ResponseStatus(Constants.INVALID_COMMAND, false);
+            return new ResponseStatus(Constants.INVALID_ARGUMENTS, false);
         }
 
         if (Util.isMember(param1)) {
