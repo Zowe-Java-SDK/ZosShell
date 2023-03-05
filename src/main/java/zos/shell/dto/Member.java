@@ -3,6 +3,7 @@ package zos.shell.dto;
 import zowe.client.sdk.zosfiles.ZosDsnList;
 import zowe.client.sdk.zosfiles.input.ListParams;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Member {
@@ -15,7 +16,10 @@ public class Member {
     }
 
     public List<String> getMembers(String dataSet) throws Exception {
-        return zosDsnList.listDsnMembers(dataSet, params);
+        List<zowe.client.sdk.zosfiles.response.Member> members = zosDsnList.listDsnMembers(dataSet, params);
+        List<String> memberNames = new ArrayList<>();
+        members.forEach(m -> memberNames.add(m.getMember().orElse("")));
+        return memberNames;
     }
 
     @Override

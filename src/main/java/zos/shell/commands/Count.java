@@ -4,6 +4,7 @@ import zos.shell.dto.ResponseStatus;
 import zowe.client.sdk.zosfiles.ZosDsnList;
 import zowe.client.sdk.zosfiles.input.ListParams;
 import zowe.client.sdk.zosfiles.response.Dataset;
+import zowe.client.sdk.zosfiles.response.Member;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class Count {
     public ResponseStatus count(String dataSet, String param) {
         final var dataSetCount = new AtomicInteger();
         List<Dataset> ds = new ArrayList<>();
-        List<String> members = new ArrayList<>();
+        List<Member> members = new ArrayList<>();
         try {
             if ("members".equalsIgnoreCase(param)) {
                 members = zosDsnList.listDsnMembers(dataSet, params);

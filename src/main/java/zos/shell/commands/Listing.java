@@ -7,6 +7,7 @@ import zos.shell.future.FutureListDsn;
 import zowe.client.sdk.zosfiles.ZosDsnList;
 import zowe.client.sdk.zosfiles.input.ListParams;
 import zowe.client.sdk.zosfiles.response.Dataset;
+import zowe.client.sdk.zosfiles.response.Member;
 import zowe.client.sdk.zosfiles.types.AttributeType;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class Listing {
 
     private final TextTerminal<?> terminal;
     private final long timeout;
-    private List<String> members = new ArrayList<>();
+    private List<Member> members = new ArrayList<>();
     private List<Dataset> dataSets = new ArrayList<>();
     private final ZosDsnList zosDsnList;
     private ListParams params;
@@ -62,7 +63,8 @@ public class Listing {
             if (m.equals(searchForMember)) {
                 members = members.stream().filter(i -> i.equals(searchForMember)).collect(Collectors.toList());
             } else {
-                members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
+                members = members.stream()
+                        .filter(i -> i.getMember().orElse("").startsWith(searchForMember)).collect(Collectors.toList());
             }
         }, () -> displayDataSets(dataSets, dataSet, isColumnView, isAttributes));
         final var membersSize = members.size();
@@ -81,15 +83,25 @@ public class Listing {
             return;
         }
 
+        final var columnFormat = "%-11s %-11s %-8s %-5s %-5s";
+        if (isAttributes) {
+            terminal.println(String.format(columnFormat, "user", "cdate", "mdate", "mod", "member"));
+        }
         final var line = new StringBuilder();
-        for (String item : members) {
-            line.append(String.format("%-8s", item));
+        for (Member item : members) {
+            if (isAttributes) {
+                terminal.println(String.format(columnFormat, item.getUser().orElse(""),
+                        item.getC4date().orElse(""), item.getM4date().orElse(""),
+                        item.getMod().orElse(0), item.getMember().orElse("")));
+            } else {
+                line.append(String.format("%-8s", item.getMember().orElse("")));
+            }
             line.append(" ");
         }
         terminal.println(line.toString());
     }
 
-    private List<String> getMembers(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
+    private List<Member> getMembers(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureDsnMembers(zosDsnList, dataSet, params));
         return submit.get(timeout, TimeUnit.SECONDS);
@@ -137,8 +149,8 @@ public class Listing {
         }
     }
 
-    private void displayMembers(List<String> members) {
-        members.forEach(terminal::println);
+    private void displayMembers(List<Member> members) {
+        members.forEach(m -> terminal.println(m.getMember().orElse("")));
     }
 
 }
