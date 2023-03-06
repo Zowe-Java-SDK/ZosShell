@@ -7,6 +7,7 @@ import zowe.client.sdk.rest.Response;
 import zowe.client.sdk.zosfiles.ZosDsn;
 import zowe.client.sdk.zosfiles.ZosDsnList;
 import zowe.client.sdk.zosfiles.input.ListParams;
+import zowe.client.sdk.zosfiles.response.Member;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class Delete {
 
     public void rm(String currDataSet, String param) {
         try {
-            List<String> members = new ArrayList<>();
+            List<Member> members = new ArrayList<>();
 
             if (param.contains("*")) {
                 String lookForStr = "";
@@ -49,25 +50,26 @@ public class Delete {
 
                 if (!lookForStr.isEmpty()) {
                     String finalLookForStr = lookForStr;
-                    members = members.stream().filter(i -> i.startsWith(finalLookForStr)).collect(Collectors.toList());
+                    members = members.stream().
+                            filter(i -> i.getMember().orElse("").startsWith(finalLookForStr)).collect(Collectors.toList());
                 }
 
-                StringBuilder membersDeleted = new StringBuilder();
-                StringBuilder membersNotDeleted = new StringBuilder();
+                final var membersDeleted = new StringBuilder();
+                final var membersNotDeleted = new StringBuilder();
                 final var success = new AtomicBoolean(true);
                 members.forEach(m -> {
                     try {
-                        zosDsn.deleteDsn(currDataSet, m);
+                        zosDsn.deleteDsn(currDataSet, m.getMember().orElse(""));
                         success.set(true);
                     } catch (Exception e) {
                         success.set(false);
                         terminal.println(e + "");
                     }
                     if (success.get()) {
-                        membersDeleted.append(m);
+                        membersDeleted.append(m.getMember().orElse("n\\a"));
                         membersDeleted.append(" ");
                     } else {
-                        membersNotDeleted.append(m);
+                        membersNotDeleted.append(m.getMember().orElse("n\\a"));
                         membersNotDeleted.append(" ");
                     }
                 });
@@ -88,7 +90,7 @@ public class Delete {
                 }
                 try {
                     members = zosDsnList.listDsnMembers(currDataSet, params);
-                    if (members.stream().noneMatch(param::equalsIgnoreCase)) {
+                    if (members.stream().noneMatch(m -> param.equalsIgnoreCase(m.getMember().orElse("")))) {
                         terminal.println(Constants.DELETE_NOTHING_ERROR);
                         return;
                     }

@@ -2,11 +2,12 @@ package zos.shell.future;
 
 import zowe.client.sdk.zosfiles.ZosDsnList;
 import zowe.client.sdk.zosfiles.input.ListParams;
+import zowe.client.sdk.zosfiles.response.Member;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class FutureDsnMembers implements Callable<List<String>> {
+public class FutureDsnMembers implements Callable<List<Member>> {
 
     private final String dataSet;
     private final ZosDsnList zosDsnList;
@@ -19,7 +20,7 @@ public class FutureDsnMembers implements Callable<List<String>> {
     }
 
     @Override
-    public List<String> call() throws Exception {
+    public List<Member> call() throws Exception {
         return zosDsnList.listDsnMembers(dataSet, params);
     }
 

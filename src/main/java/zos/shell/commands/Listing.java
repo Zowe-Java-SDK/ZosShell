@@ -7,6 +7,7 @@ import zos.shell.future.FutureListDsn;
 import zowe.client.sdk.zosfiles.ZosDsnList;
 import zowe.client.sdk.zosfiles.input.ListParams;
 import zowe.client.sdk.zosfiles.response.Dataset;
+import zowe.client.sdk.zosfiles.response.Member;
 import zowe.client.sdk.zosfiles.types.AttributeType;
 
 import java.util.ArrayList;
@@ -22,10 +23,11 @@ public class Listing {
 
     private final TextTerminal<?> terminal;
     private final long timeout;
-    private List<String> members = new ArrayList<>();
+    private List<Member> members = new ArrayList<>();
     private List<Dataset> dataSets = new ArrayList<>();
     private final ZosDsnList zosDsnList;
     private ListParams params;
+    private boolean isDataSets = false;
 
     public Listing(TextTerminal<?> terminal, ZosDsnList zosDsnList, long timeout) {
         this.terminal = terminal;
@@ -35,7 +37,7 @@ public class Listing {
 
     public void ls(String memberValue, String dataSet, boolean isColumnView, boolean isAttributes)
             throws ExecutionException, InterruptedException, TimeoutException {
-        ListParams.Builder paramsBuilder = new ListParams.Builder()
+        final var paramsBuilder = new ListParams.Builder()
                 .maxLength("0")  // return all
                 .responseTimeout(String.valueOf(timeout));
         if (!isColumnView && isAttributes) { // ls -1
@@ -50,6 +52,7 @@ public class Listing {
 
         try {
             dataSets = getDataSets(dataSet);
+            isDataSets = dataSets.size() > 1 ? true : false;
             members = getMembers(dataSet);
         } catch (TimeoutException e) {
             throw new TimeoutException(e.getMessage());
@@ -62,7 +65,8 @@ public class Listing {
             if (m.equals(searchForMember)) {
                 members = members.stream().filter(i -> i.equals(searchForMember)).collect(Collectors.toList());
             } else {
-                members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
+                members = members.stream()
+                        .filter(i -> i.getMember().orElse("").startsWith(searchForMember)).collect(Collectors.toList());
             }
         }, () -> displayDataSets(dataSets, dataSet, isColumnView, isAttributes));
         final var membersSize = members.size();
@@ -72,8 +76,8 @@ public class Listing {
         }
         displayListStatus(membersSize, dataSets.size());
 
-        if (!isColumnView) {
-            displayMembers(members);
+        if (!isColumnView) {  // ls -l
+            displayMembers(members, isAttributes);
             return;
         }
 
@@ -81,15 +85,16 @@ public class Listing {
             return;
         }
 
+        // ls
         final var line = new StringBuilder();
-        for (String item : members) {
-            line.append(String.format("%-8s", item));
+        for (Member item : members) {
+            line.append(String.format("%-8s", item.getMember().orElse("")));
             line.append(" ");
         }
         terminal.println(line.toString());
     }
 
-    private List<String> getMembers(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
+    private List<Member> getMembers(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureDsnMembers(zosDsnList, dataSet, params));
         return submit.get(timeout, TimeUnit.SECONDS);
@@ -110,7 +115,8 @@ public class Listing {
         }
     }
 
-    private void displayDataSets(List<Dataset> dataSets, String ignoreCurrDataSet, boolean isColumnView, boolean isAttributes) {
+    private void displayDataSets(List<Dataset> dataSets, String ignoreCurrDataSet,
+                                 boolean isColumnView, boolean isAttributes) {
         if (dataSets.isEmpty() || (dataSets.size() == 1
                 && ignoreCurrDataSet.equalsIgnoreCase(dataSets.get(0).getDsname().orElse("")))) {
             return;
@@ -120,11 +126,13 @@ public class Listing {
             terminal.println(String.format(columnFormat,
                     "cdate", "rdate", "vol", "dsorg", "recfm", "blksz", "dsntp", "dsname"));
             dataSets.forEach(ds -> {
-                final var dsname = ds.getDsname().orElse("");
+                final var dsname = ds.getDsname().orElse("n\\a");
                 if (!dsname.equalsIgnoreCase(ignoreCurrDataSet)) {
-                    terminal.println(String.format(columnFormat, ds.getCdate().orElse(""), ds.getRdate().orElse(""),
-                            ds.getVol().orElse(""), ds.getDsorg().orElse(""), ds.getRecfm().orElse(""),
-                            ds.getBlksz().orElse(""), ds.getDsntp().orElse(""), dsname));
+                    terminal.println(String.format(columnFormat, ds.getCdate().orElse("n\\a"),
+                            ds.getRdate().orElse("n\\a"), ds.getVol().orElse("n\\a"),
+                            ds.getDsorg().orElse("n\\a"), ds.getRecfm().orElse("n\\a"),
+                            ds.getBlksz().orElse("n\\a"), ds.getDsntp().orElse("n\\a"),
+                            dsname));
                 }
             });
         } else { // ls
@@ -137,8 +145,21 @@ public class Listing {
         }
     }
 
-    private void displayMembers(List<String> members) {
-        members.forEach(terminal::println);
+    private void displayMembers(List<Member> members, boolean isAttributes) {
+        final var columnFormat = "%-8s %-10s %-10s %-4s %-5s";
+        if (isDataSets) {
+            terminal.println();
+        }
+        if (isAttributes) {
+            terminal.println(String.format(columnFormat, "user", "cdate", "mdate", "mod", "member"));
+            for (Member member: members) {
+                terminal.println(String.format(columnFormat, member.getUser().orElse("n\\a"),
+                        member.getC4date().orElse("n\\a"), member.getM4date().orElse("n\\a"),
+                        member.getMod().orElse(0), member.getMember().orElse("n\\a")));
+            }
+        } else {
+            members.forEach(m -> terminal.println(m.getMember().orElse("")));
+        }
     }
 
 }
