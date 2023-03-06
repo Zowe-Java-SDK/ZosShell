@@ -54,8 +54,8 @@ public class Delete {
                             filter(i -> i.getMember().orElse("").startsWith(finalLookForStr)).collect(Collectors.toList());
                 }
 
-                StringBuilder membersDeleted = new StringBuilder();
-                StringBuilder membersNotDeleted = new StringBuilder();
+                final var membersDeleted = new StringBuilder();
+                final var membersNotDeleted = new StringBuilder();
                 final var success = new AtomicBoolean(true);
                 members.forEach(m -> {
                     try {
@@ -66,10 +66,10 @@ public class Delete {
                         terminal.println(e + "");
                     }
                     if (success.get()) {
-                        membersDeleted.append(m);
+                        membersDeleted.append(m.getMember().orElse("n\\a"));
                         membersDeleted.append(" ");
                     } else {
-                        membersNotDeleted.append(m);
+                        membersNotDeleted.append(m.getMember().orElse("n\\a"));
                         membersNotDeleted.append(" ");
                     }
                 });
