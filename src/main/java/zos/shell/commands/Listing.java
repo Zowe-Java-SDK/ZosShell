@@ -115,7 +115,7 @@ public class Listing {
         }
     }
 
-    private void displayDataSets(List<Dataset> dataSets, String ignoreCurrDataSet, 
+    private void displayDataSets(List<Dataset> dataSets, String ignoreCurrDataSet,
                                  boolean isColumnView, boolean isAttributes) {
         if (dataSets.isEmpty() || (dataSets.size() == 1
                 && ignoreCurrDataSet.equalsIgnoreCase(dataSets.get(0).getDsname().orElse("")))) {
@@ -157,8 +157,9 @@ public class Listing {
                         member.getC4date().orElse("n\\a"), member.getM4date().orElse("n\\a"),
                         member.getMod().orElse(0), member.getMember().orElse("n\\a")));
             }
+        } else {
+            members.forEach(m -> terminal.println(m.getMember().orElse("")));
         }
-        members.forEach(m -> terminal.println(m.getMember().orElse("")));
     }
 
 }
