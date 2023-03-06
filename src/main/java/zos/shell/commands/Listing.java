@@ -27,6 +27,7 @@ public class Listing {
     private List<Dataset> dataSets = new ArrayList<>();
     private final ZosDsnList zosDsnList;
     private ListParams params;
+    private boolean isDataSets = false;
 
     public Listing(TextTerminal<?> terminal, ZosDsnList zosDsnList, long timeout) {
         this.terminal = terminal;
@@ -36,7 +37,7 @@ public class Listing {
 
     public void ls(String memberValue, String dataSet, boolean isColumnView, boolean isAttributes)
             throws ExecutionException, InterruptedException, TimeoutException {
-        ListParams.Builder paramsBuilder = new ListParams.Builder()
+        final var paramsBuilder = new ListParams.Builder()
                 .maxLength("0")  // return all
                 .responseTimeout(String.valueOf(timeout));
         if (!isColumnView && isAttributes) { // ls -1
@@ -51,6 +52,7 @@ public class Listing {
 
         try {
             dataSets = getDataSets(dataSet);
+            isDataSets = dataSets.size() > 1 ? true : false;
             members = getMembers(dataSet);
         } catch (TimeoutException e) {
             throw new TimeoutException(e.getMessage());
@@ -74,8 +76,8 @@ public class Listing {
         }
         displayListStatus(membersSize, dataSets.size());
 
-        if (!isColumnView) {
-            displayMembers(members);
+        if (!isColumnView) {  // ls -l
+            displayMembers(members, isAttributes);
             return;
         }
 
@@ -83,19 +85,10 @@ public class Listing {
             return;
         }
 
-        final var columnFormat = "%-11s %-11s %-8s %-5s %-5s";
-        if (isAttributes) {
-            terminal.println(String.format(columnFormat, "user", "cdate", "mdate", "mod", "member"));
-        }
+        // ls
         final var line = new StringBuilder();
         for (Member item : members) {
-            if (isAttributes) {
-                terminal.println(String.format(columnFormat, item.getUser().orElse(""),
-                        item.getC4date().orElse(""), item.getM4date().orElse(""),
-                        item.getMod().orElse(0), item.getMember().orElse("")));
-            } else {
-                line.append(String.format("%-8s", item.getMember().orElse("")));
-            }
+            line.append(String.format("%-8s", item.getMember().orElse("")));
             line.append(" ");
         }
         terminal.println(line.toString());
@@ -122,7 +115,8 @@ public class Listing {
         }
     }
 
-    private void displayDataSets(List<Dataset> dataSets, String ignoreCurrDataSet, boolean isColumnView, boolean isAttributes) {
+    private void displayDataSets(List<Dataset> dataSets, String ignoreCurrDataSet, 
+                                 boolean isColumnView, boolean isAttributes) {
         if (dataSets.isEmpty() || (dataSets.size() == 1
                 && ignoreCurrDataSet.equalsIgnoreCase(dataSets.get(0).getDsname().orElse("")))) {
             return;
@@ -132,11 +126,13 @@ public class Listing {
             terminal.println(String.format(columnFormat,
                     "cdate", "rdate", "vol", "dsorg", "recfm", "blksz", "dsntp", "dsname"));
             dataSets.forEach(ds -> {
-                final var dsname = ds.getDsname().orElse("");
+                final var dsname = ds.getDsname().orElse("n\\a");
                 if (!dsname.equalsIgnoreCase(ignoreCurrDataSet)) {
-                    terminal.println(String.format(columnFormat, ds.getCdate().orElse(""), ds.getRdate().orElse(""),
-                            ds.getVol().orElse(""), ds.getDsorg().orElse(""), ds.getRecfm().orElse(""),
-                            ds.getBlksz().orElse(""), ds.getDsntp().orElse(""), dsname));
+                    terminal.println(String.format(columnFormat, ds.getCdate().orElse("n\\a"),
+                            ds.getRdate().orElse("n\\a"), ds.getVol().orElse("n\\a"),
+                            ds.getDsorg().orElse("n\\a"), ds.getRecfm().orElse("n\\a"),
+                            ds.getBlksz().orElse("n\\a"), ds.getDsntp().orElse("n\\a"),
+                            dsname));
                 }
             });
         } else { // ls
@@ -149,7 +145,19 @@ public class Listing {
         }
     }
 
-    private void displayMembers(List<Member> members) {
+    private void displayMembers(List<Member> members, boolean isAttributes) {
+        final var columnFormat = "%-8s %-10s %-10s %-4s %-5s";
+        if (isDataSets) {
+            terminal.println();
+        }
+        if (isAttributes) {
+            terminal.println(String.format(columnFormat, "user", "cdate", "mdate", "mod", "member"));
+            for (Member member: members) {
+                terminal.println(String.format(columnFormat, member.getUser().orElse("n\\a"),
+                        member.getC4date().orElse("n\\a"), member.getM4date().orElse("n\\a"),
+                        member.getMod().orElse(0), member.getMember().orElse("n\\a")));
+            }
+        }
         members.forEach(m -> terminal.println(m.getMember().orElse("")));
     }
 
