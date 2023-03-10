@@ -152,7 +152,7 @@ public class Listing {
         }
         if (isAttributes) {
             terminal.println(String.format(columnFormat, "user", "cdate", "mdate", "mod", "member"));
-            for (Member member: members) {
+            for (Member member : members) {
                 terminal.println(String.format(columnFormat, member.getUser().orElse("n\\a"),
                         member.getC4date().orElse("n\\a"), member.getM4date().orElse("n\\a"),
                         member.getMod().orElse(0), member.getMember().orElse("n\\a")));
