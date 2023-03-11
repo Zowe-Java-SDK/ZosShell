@@ -405,9 +405,8 @@ public class Commands {
                 return;
             }
         }
-
-        ResponseStatus responseStatus = makeDirectory.mkdir(param, createParams);
-        terminal.println(responseStatus.getMessage());
+        
+        terminal.println(makeDirectory.mkdir(param, createParams).getMessage());
     }
 
     private static Integer getMakeDirNum(TextIO mainTextIO, String prompt) {
