@@ -396,6 +396,17 @@ public class Commands {
         }
 
         param = param.toUpperCase();
+        while (true) {
+            input = getMakeDirStr(mainTextIO, "Create " + param + " (y/n)?:");
+            if ("y".equalsIgnoreCase(input) || "yes".equalsIgnoreCase(input)) {
+                break;
+            }
+            if ("n".equalsIgnoreCase(input) || "no".equalsIgnoreCase(input)) {
+                terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+                return;
+            }
+        }
+
         ResponseStatus responseStatus = makeDirectory.mkdir(param, createParams);
         terminal.println(responseStatus.getMessage());
     }
