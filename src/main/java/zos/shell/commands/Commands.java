@@ -405,7 +405,7 @@ public class Commands {
                 return;
             }
         }
-        
+
         terminal.println(makeDirectory.mkdir(param, createParams).getMessage());
     }
 
