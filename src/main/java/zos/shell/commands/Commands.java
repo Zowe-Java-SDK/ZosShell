@@ -379,13 +379,6 @@ public class Commands {
 
         createParamsBuilder.alcunit("CYL");
         final var createParams = createParamsBuilder.build();
-        MakeDirectory makeDirectory;
-        try {
-            makeDirectory = new MakeDirectory(new ZosDsn(connection));
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
-        }
 
         if (!Util.isDataSet(param) && Util.isMember(param) && !currDataSet.isEmpty()) {
             param = currDataSet + "." + param;
@@ -406,7 +399,9 @@ public class Commands {
             }
         }
 
-        terminal.println(makeDirectory.mkdir(param, createParams).getMessage());
+        final var pool = Executors.newFixedThreadPool(1);
+        final var submit = pool.submit(new FutureMakeDirectory(new ZosDsn(connection), param, createParams));
+        processFuture(pool, submit);
     }
 
     private static Integer getMakeDirNum(TextIO mainTextIO, String prompt) {
