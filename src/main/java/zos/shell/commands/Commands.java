@@ -320,6 +320,22 @@ public class Commands {
     }
 
     public void mkdir(ZOSConnection connection, TextIO mainTextIO, String currDataSet, String param) {
+        if (param.contains(".") && !Util.isDataSet(param)) {
+            terminal.println("invalid data set character sequence, try again...");
+            return;
+        }
+        if (!param.contains(".") && !Util.isMember(param)) {
+            terminal.println("invalid 8 character sequence, try again...");
+            return;
+        }
+
+        if (!Util.isDataSet(param) && Util.isMember(param) && !currDataSet.isEmpty()) {
+            param = currDataSet + "." + param;
+        } else if (Util.isMember(param) && currDataSet.isEmpty()) {
+            terminal.println(Constants.DATASET_NOT_SPECIFIED);
+            return;
+        }
+
         final var createParamsBuilder = new CreateParams.Builder();
 
         var input = getMakeDirStr(mainTextIO,
@@ -379,13 +395,6 @@ public class Commands {
 
         createParamsBuilder.alcunit("CYL");
         final var createParams = createParamsBuilder.build();
-
-        if (!Util.isDataSet(param) && Util.isMember(param) && !currDataSet.isEmpty()) {
-            param = currDataSet + "." + param;
-        } else if (Util.isMember(param) && currDataSet.isEmpty()) {
-            terminal.println(Constants.DATASET_NOT_SPECIFIED);
-            return;
-        }
 
         param = param.toUpperCase();
         while (true) {
