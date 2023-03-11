@@ -320,10 +320,9 @@ public class Commands {
     }
 
     public void mkdir(ZOSConnection connection, TextIO mainTextIO, String currDataSet, String param) {
-        String input;
-        CreateParams.Builder createParamsBuilder = new CreateParams.Builder();
+        final var createParamsBuilder = new CreateParams.Builder();
 
-        input = getMakeDirStr(mainTextIO,
+        var input = getMakeDirStr(mainTextIO,
                 "Enter data set organization, PS (sequential), PO (partitioned), DA (direct), quit (to exit):");
         if (input == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
@@ -331,7 +330,7 @@ public class Commands {
         }
         createParamsBuilder.dsorg(input);
 
-        Integer num = getMakeDirNum(mainTextIO, "Enter primary quantity number (enter quit to exit):");
+        var num = getMakeDirNum(mainTextIO, "Enter primary quantity number (enter quit to exit):");
         if (num == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
@@ -379,7 +378,7 @@ public class Commands {
         }
 
         createParamsBuilder.alcunit("CYL");
-        CreateParams createParams = createParamsBuilder.build();
+        final var createParams = createParamsBuilder.build();
         MakeDirectory makeDirectory;
         try {
             makeDirectory = new MakeDirectory(new ZosDsn(connection));
