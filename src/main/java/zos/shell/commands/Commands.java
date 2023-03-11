@@ -1,5 +1,6 @@
 package zos.shell.commands;
 
+import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import zos.shell.Constants;
 import zos.shell.dto.Member;
@@ -15,6 +16,7 @@ import zowe.client.sdk.zosfiles.ZosDsn;
 import zowe.client.sdk.zosfiles.ZosDsnCopy;
 import zowe.client.sdk.zosfiles.ZosDsnDownload;
 import zowe.client.sdk.zosfiles.ZosDsnList;
+import zowe.client.sdk.zosfiles.input.CreateParams;
 import zowe.client.sdk.zosjobs.GetJobs;
 import zowe.client.sdk.zosjobs.SubmitJobs;
 import zowe.client.sdk.zosmfinfo.ListDefinedSystems;
@@ -314,6 +316,103 @@ public class Commands {
             terminal.println(Constants.TIMEOUT_MESSAGE);
         } catch (ExecutionException | InterruptedException e) {
             terminal.println(Util.getErrorMsg(e + ""));
+        }
+    }
+
+    public void mkdir(ZOSConnection connection, TextIO mainTextIO, String currDataSet, String param) {
+        String input;
+        CreateParams.Builder createParamsBuilder = new CreateParams.Builder();
+
+        input = mainTextIO.newStringInputReader().withMaxLength(80).read(
+                "Enter data set organization, PS (sequential), PO (partitioned), DA (direct), quit (to exit):");
+        if ("quit".equalsIgnoreCase(input)) {
+            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+            return;
+        }
+        createParamsBuilder.dsorg(input);
+
+        Integer num = getMakeDirNum(mainTextIO, "Enter primary quantity number (enter quit to exit):");
+        if (num == null) {
+            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+            return;
+        }
+        createParamsBuilder.primary(num);
+
+        num = getMakeDirNum(mainTextIO, "Enter secondary quantity number (enter quit to exit):");
+        if (num == null) {
+            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+            return;
+        }
+        createParamsBuilder.secondary(num);
+
+        num = getMakeDirNum(mainTextIO, "Enter number of directory blocks (enter quit to exit):");
+        if (num == null) {
+            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+            return;
+        }
+        createParamsBuilder.dirblk(num);
+
+        input = mainTextIO.newStringInputReader().withMaxLength(80).read(
+                "Enter record format, FB, VB, U, etc (enter quit to exit):");
+        if ("quit".equalsIgnoreCase(input)) {
+            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+            return;
+        }
+        createParamsBuilder.recfm(input);
+
+        num = getMakeDirNum(mainTextIO, "Enter block size number (enter quit to exit):");
+        if (num == null) {
+            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+            return;
+        }
+        createParamsBuilder.blksize(num);
+
+        num = getMakeDirNum(mainTextIO, "Enter record length number (enter quit to exit):");
+        if (num == null) {
+            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+            return;
+        }
+        createParamsBuilder.lrecl(num);
+
+        input = mainTextIO.newStringInputReader().withMaxLength(80).read(
+                "Enter volume name (enter quit to skip):");
+        if (!"quit".equalsIgnoreCase(input)) {
+            createParamsBuilder.volser(input);
+        }
+
+        createParamsBuilder.alcunit("CYL");
+        CreateParams createParams = createParamsBuilder.build();
+        MakeDirectory makeDirectory;
+        try {
+            makeDirectory = new MakeDirectory(new ZosDsn(connection));
+        } catch (Exception e) {
+            Util.printError(terminal, e.getMessage());
+            return;
+        }
+
+        if (!Util.isDataSet(param) && Util.isMember(param) && !currDataSet.isEmpty()) {
+            param = currDataSet + "." + param;
+        } else if (Util.isMember(param) && currDataSet.isEmpty()) {
+            terminal.println(Constants.DATASET_NOT_SPECIFIED);
+            return;
+        }
+
+        param = param.toUpperCase();
+        ResponseStatus responseStatus = makeDirectory.mkdir(param, createParams);
+        terminal.println(responseStatus.getMessage());
+    }
+
+    private static Integer getMakeDirNum(TextIO mainTextIO, String prompt) {
+        while (true) {
+            final var input = mainTextIO.newStringInputReader().withMaxLength(80).read(prompt);
+            if ("quit".equalsIgnoreCase(input)) {
+                return null;
+            }
+
+            try {
+                return (Integer.valueOf(input));
+            } catch (Exception ignored) {
+            }
         }
     }
 

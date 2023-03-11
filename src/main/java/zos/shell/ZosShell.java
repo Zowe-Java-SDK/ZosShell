@@ -507,6 +507,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 break;
+            case "mkdir":
+                if (isParamsMissing(1, params)) {
+                    return;
+                }
+                commands.mkdir(currConnection, mainTextIO, currDataSet, params[1]);
+                break;
             case "mvs":
                 if (isParamsMissing(1, params)) {
                     return;
