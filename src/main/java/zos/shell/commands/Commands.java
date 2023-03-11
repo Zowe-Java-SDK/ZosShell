@@ -323,9 +323,9 @@ public class Commands {
         String input;
         CreateParams.Builder createParamsBuilder = new CreateParams.Builder();
 
-        input = mainTextIO.newStringInputReader().withMaxLength(80).read(
+        input = getMakeDirStr(mainTextIO,
                 "Enter data set organization, PS (sequential), PO (partitioned), DA (direct), quit (to exit):");
-        if ("quit".equalsIgnoreCase(input)) {
+        if (input == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
@@ -352,9 +352,8 @@ public class Commands {
         }
         createParamsBuilder.dirblk(num);
 
-        input = mainTextIO.newStringInputReader().withMaxLength(80).read(
-                "Enter record format, FB, VB, U, etc (enter quit to exit):");
-        if ("quit".equalsIgnoreCase(input)) {
+        input = getMakeDirStr(mainTextIO, "Enter record format, FB, VB, U, etc (enter quit to exit):");
+        if (input == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
@@ -374,8 +373,7 @@ public class Commands {
         }
         createParamsBuilder.lrecl(num);
 
-        input = mainTextIO.newStringInputReader().withMaxLength(80).read(
-                "Enter volume name (enter quit to skip):");
+        input = getMakeDirStr(mainTextIO, "Enter volume name (enter quit to skip):");
         if (!"quit".equalsIgnoreCase(input)) {
             createParamsBuilder.volser(input);
         }
@@ -408,12 +406,25 @@ public class Commands {
             if ("quit".equalsIgnoreCase(input)) {
                 return null;
             }
-
             try {
                 return (Integer.valueOf(input));
             } catch (Exception ignored) {
             }
         }
+    }
+
+    private static String getMakeDirStr(TextIO mainTextIO, String prompt) {
+        String input;
+        while (true) {
+            input = mainTextIO.newStringInputReader().withMaxLength(80).read(prompt);
+            if ("quit".equalsIgnoreCase(input)) {
+                return null;
+            }
+            if (!Util.isStrNum(input)) {
+                break;
+            }
+        }
+        return input;
     }
 
     public void mvsCommand(ZOSConnection connection, String command) {
