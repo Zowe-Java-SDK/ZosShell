@@ -146,6 +146,9 @@ public class Listing {
     }
 
     private void displayMembers(List<Member> members, boolean isAttributes) {
+        if (members.isEmpty()) {
+            return;
+        }
         final var columnFormat = "%-8s %-10s %-10s %-4s %-5s";
         if (isDataSets) {
             terminal.println();
