@@ -19,6 +19,8 @@ import zos.shell.utility.Util;
 import zowe.client.sdk.core.SSHConnection;
 import zowe.client.sdk.core.ZOSConnection;
 
+import javax.swing.*;
+import java.net.URL;
 import java.util.*;
 import java.util.function.BiConsumer;
 
@@ -57,6 +59,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             title = " - " + currConnection.getHost().toUpperCase();
         }
         mainTerminal.setPaneTitle(Constants.APP_TITLE + title);
+
+        URL iconURL = ZosShell.class.getResource("/image/zowe-icon.png");
+        ImageIcon icon = new ImageIcon(iconURL);
+        mainTerminal.getFrame().setIconImage(icon.getImage());
+
         mainTerminal.registerHandler("ctrl C", t -> {
             t.getTextPane().copy();
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
