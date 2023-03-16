@@ -94,6 +94,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             final var items = mainTerminal.getTextPane().getText().split(Util.getPrompt());
             var candidateStr = items[items.length - 1].trim();
             candidateStr = candidateStr.replaceAll("[\\p{Cf}]", "");
+            if (candidateStr.contains(" ")) {  // invalid look up 
+                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+            }
             final var candidateLst = SearchDictionary.search(candidateStr);
             if (!candidateLst.isEmpty()) {
                 mainTerminal.moveToLineStart();
