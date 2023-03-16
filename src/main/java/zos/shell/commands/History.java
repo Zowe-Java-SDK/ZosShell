@@ -112,7 +112,7 @@ public class History {
         } else {
             // prompt not seen maybe removed by end user when scrolling through history
             newCommand = new String[list.size()];
-            for (int i = 0; i < list.size(); i++) {
+            for (var i = 0; i < list.size(); i++) {
                 newCommand[i] = list.get(i);
             }
         }

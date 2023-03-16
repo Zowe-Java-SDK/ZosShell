@@ -94,7 +94,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             final var items = mainTerminal.getTextPane().getText().split(Util.getPrompt());
             var candidateStr = items[items.length - 1].trim();
             candidateStr = candidateStr.replaceAll("[\\p{Cf}]", "");
-            if (candidateStr.contains(" ")) {  // invalid look up 
+            if (candidateStr.contains(" ")) {  // invalid look up
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
             final var candidateLst = SearchDictionary.search(candidateStr);
@@ -132,7 +132,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         }
 
         String[] command;
-        String commandLine = "";
+        var commandLine = "";
         while (!"end".equalsIgnoreCase(commandLine)) {
             commandLine = textIO.newStringInputReader().withMaxLength(80).read(Util.getPrompt());
             if (fontSizeChanged) {
@@ -178,7 +178,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             final var size = command.length;
             final var newCmdArr = new String[size - 1];
             List<String> newCmdLst = new ArrayList<>(Arrays.asList(command).subList(1, size));
-            for (int i = 0; i < newCmdLst.size(); i++) {
+            for (var i = 0; i < newCmdLst.size(); i++) {
                 newCmdArr[i] = newCmdLst.get(i);
             }
             command = newCmdArr;
@@ -189,7 +189,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private String[] exclamationMark(String[] command) {
         if (command[0].startsWith("!")) {
             final var str = new StringBuilder();
-            for (int i = 0; i < command.length; i++) {
+            for (var i = 0; i < command.length; i++) {
                 str.append(command[i]);
                 if (i + 1 != command.length) {
                     str.append(" ");
@@ -702,7 +702,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private static StringBuilder getCommandFromParams(String[] params) {
         final var command = new StringBuilder();
-        for (int i = 1; i < params.length; i++) {
+        for (var i = 1; i < params.length; i++) {
             command.append(params[i]);
             if (i != params.length - 1) {
                 command.append(" ");

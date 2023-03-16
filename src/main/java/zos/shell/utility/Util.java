@@ -176,7 +176,7 @@ public class Util {
             } else if (SystemUtils.IS_OS_MAC_OSX) {
                 final var arr = filePath.split("/");
                 final var str = new StringBuilder();
-                for (int i = 0; i < arr.length - 1; i++) {
+                for (var i = 0; i < arr.length - 1; i++) {
                     str.append(arr[i]).append("/");
                 }
                 Runtime.getRuntime().exec("/usr/bin/open " + str);

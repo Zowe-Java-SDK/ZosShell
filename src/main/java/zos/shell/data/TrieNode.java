@@ -29,11 +29,11 @@ public class TrieNode {
 
     public void addCommand(String command) {
         final var limit = command.length();
-        TrieNode node = this;
+        var node = this;
         int letter, index;
 
         command = command.toLowerCase();
-        for (int i = 0; i < limit; i++) {
+        for (var i = 0; i < limit; i++) {
             letter = command.charAt(i);
             index = letter - 'a';
 
@@ -58,14 +58,14 @@ public class TrieNode {
 
     public List<String> FindAndRetrieveCommands() {
         final var cmds = new ArrayList<String>();
-        TrieNode node = this;
+        final var node = this;
 
         if (node.isCmd()) {
             cmds.add(node.getCommand());
         }
 
         if (node.isNotLeaf()) {
-            for (int i = 0; i < node.children.length; i++) {
+            for (var i = 0; i < node.children.length; i++) {
                 if (node.children[i] != null) {
                     cmds.addAll(children[i].FindAndRetrieveCommands());
                 }
@@ -76,9 +76,9 @@ public class TrieNode {
     }
 
     private String getCommand() {
-        TrieNode node = this;
-        var buffer = new char[BUFFER_SIZE];
-        var result = new StringBuilder();
+        var node = this;
+        final var buffer = new char[BUFFER_SIZE];
+        final var result = new StringBuilder();
         String value;
 
         var i = 0;
@@ -95,7 +95,7 @@ public class TrieNode {
     }
 
     public TrieNode getNode(int index) {
-        TrieNode node = this;
+        final var node = this;
 
         if (node.children[index] != null) {
             return node.children[index];
@@ -111,10 +111,10 @@ public class TrieNode {
      * return a list of those commands.
      */
     public List<String> getCommands() {
-        TrieNode node = this;
-        var cmds = new ArrayList<String>();
+        final var node = this;
+        final var cmds = new ArrayList<String>();
 
-        for (int i = 0; i < ALPHABET_SIZE; i++) {
+        for (var i = 0; i < ALPHABET_SIZE; i++) {
             if (node.children[i] != null) {
                 cmds.addAll(node.getChildren()[i].FindAndRetrieveCommands());
             }
@@ -148,7 +148,7 @@ public class TrieNode {
     }
 
     public void addCommands(String[] commands) {
-        for (String s : commands) {
+        for (final String s : commands) {
             addCommand(s);
         }
     }
