@@ -20,7 +20,6 @@ import zowe.client.sdk.core.SSHConnection;
 import zowe.client.sdk.core.ZOSConnection;
 
 import javax.swing.*;
-import java.net.URL;
 import java.util.*;
 import java.util.function.BiConsumer;
 
