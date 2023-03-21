@@ -1,6 +1,8 @@
 package zos.shell.commands;
 
 import org.beryx.textio.TextTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
@@ -11,14 +13,18 @@ import java.util.List;
 
 public class Tail extends JobLog {
 
+    private static Logger LOG = LoggerFactory.getLogger(Tail.class);
+
     private final TextTerminal<?> terminal;
 
     public Tail(TextTerminal<?> terminal, GetJobs getJobs, boolean isAll, long timeOutValue) {
         super(getJobs, isAll, timeOutValue);
+        LOG.debug("*** Tail ***");
         this.terminal = terminal;
     }
 
     public StringBuilder tail(String[] params) {
+        LOG.debug("*** tail ***");
         ResponseStatus result;
         try {
             result = browseJobLog(params[1]);
@@ -74,6 +80,7 @@ public class Tail extends JobLog {
     }
 
     private StringBuilder displayAll(List<String> output) {
+        LOG.debug("*** displayAll ***");
         final var stringBuilder = new StringBuilder();
         output.forEach(line -> {
             terminal.println(line);
@@ -83,6 +90,7 @@ public class Tail extends JobLog {
     }
 
     private StringBuilder display(int lines, int size, List<String> output) {
+        LOG.debug("*** display ***");
         final var stringBuilder = new StringBuilder();
         for (var i = size - lines; i < size; i++) {
             terminal.println(output.get(i));

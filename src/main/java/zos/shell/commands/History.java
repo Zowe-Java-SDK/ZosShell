@@ -2,6 +2,8 @@ package zos.shell.commands;
 
 import com.google.common.base.Strings;
 import org.beryx.textio.TextTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.data.CircularLinkedList;
 import zos.shell.utility.Util;
@@ -15,15 +17,19 @@ import java.util.stream.IntStream;
 
 public class History {
 
+    private static Logger LOG = LoggerFactory.getLogger(History.class);
+
     private final TextTerminal<?> terminal;
     private final List<String> commandLst = new LinkedList<>();
     private final CircularLinkedList<String> circularLinkedList = new CircularLinkedList<>();
 
     public History(TextTerminal<?> terminal) {
+        LOG.debug("*** History ***");
         this.terminal = terminal;
     }
 
     public void listUpCommands(String prompt) {
+        LOG.debug("*** listUpCommands ***");
         if (circularLinkedList.getSize() > 1) {
             terminal.resetLine();
             terminal.printf(prompt + " " + circularLinkedList.back().trim());
@@ -34,6 +40,7 @@ public class History {
     }
 
     public void listDownCommands(String prompt) {
+        LOG.debug("*** listDownCommands ***");
         if (circularLinkedList.getSize() > 1) {
             terminal.resetLine();
             terminal.printf(prompt + " " + circularLinkedList.forward().trim());
@@ -44,6 +51,7 @@ public class History {
     }
 
     public void addHistory(String[] params) {
+        LOG.debug("*** addHistory ***");
         final var str = new StringBuilder();
         Arrays.stream(params).forEach(p -> {
             str.append(p);
@@ -66,10 +74,12 @@ public class History {
     }
 
     public void displayHistory() {
+        LOG.debug("*** displayHistory 1 ***");
         displayAll();
     }
 
     public void displayHistory(String param) {
+        LOG.debug("*** displayHistory 2 ***");
         int num;
         try {
             num = Integer.parseInt(param);
@@ -94,6 +104,7 @@ public class History {
     }
 
     public String[] filterCommand(String prompt, String[] command) {
+        LOG.debug("*** filterCommand ***");
         if (!prompt.equals(command[0])) {
             return command;
         }
@@ -121,6 +132,7 @@ public class History {
     }
 
     public String getHistoryByIndex(int index) {
+        LOG.debug("*** getHistoryByIndex ***");
         if (index > commandLst.size() - 1 || commandLst.isEmpty()) {
             terminal.println(Constants.NO_HISTORY);
             return null;
@@ -129,6 +141,7 @@ public class History {
     }
 
     public String getLastHistory() {
+        LOG.debug("*** getLastHistory ***");
         if (commandLst.isEmpty()) {
             terminal.println(Constants.NO_HISTORY);
             return null;
@@ -137,6 +150,7 @@ public class History {
     }
 
     public String getLastHistoryByValue(String str) {
+        LOG.debug("*** getLastHistoryByValue ***");
         final var lst = commandLst.stream().filter(c -> c.startsWith(str.toLowerCase())).collect(Collectors.toList());
         if (lst.isEmpty()) {
             terminal.println(Constants.NO_HISTORY);
@@ -146,10 +160,12 @@ public class History {
     }
 
     private void displayAll() {
+        LOG.debug("*** displayAll ***");
         IntStream.range(0, commandLst.size()).forEach(this::display);
     }
 
     private void display(int i) {
+        LOG.debug("*** display ***");
         final var orderNum = Strings.padStart(String.valueOf(i + 1), 4, ' ');
         final var historyRow = orderNum + Constants.ARROW + commandLst.get(i);
         terminal.println(historyRow);

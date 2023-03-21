@@ -1,5 +1,7 @@
 package zos.shell.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.DataSetMember;
 import zos.shell.dto.ResponseStatus;
@@ -8,13 +10,17 @@ import zowe.client.sdk.zosfiles.ZosDsnCopy;
 
 public class Copy {
 
+    private static Logger LOG = LoggerFactory.getLogger(Copy.class);
+
     private final ZosDsnCopy zosDsnCopy;
 
     public Copy(ZosDsnCopy zosDsnCopy) {
+        LOG.debug("*** Copy ***");
         this.zosDsnCopy = zosDsnCopy;
     }
 
     public ResponseStatus copy(String currDataSet, String[] params) {
+        LOG.debug("*** copy ***");
         var fromDataSetName = "";
         var toDataSetName = "";
         var copyAllMembers = false;

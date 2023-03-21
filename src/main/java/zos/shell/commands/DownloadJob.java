@@ -1,6 +1,8 @@
 package zos.shell.commands;
 
 import com.google.common.base.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.DirectorySetup;
@@ -11,13 +13,17 @@ import java.util.Comparator;
 
 public class DownloadJob {
 
+    private static Logger LOG = LoggerFactory.getLogger(DownloadJob.class);
+
     private final BrowseJob browseJob;
 
     public DownloadJob(GetJobs getJobs, boolean isAll, long timeOutValue) {
+        LOG.debug("*** DownloadJob ***");
         this.browseJob = new BrowseJob(getJobs, isAll, timeOutValue);
     }
 
     public ResponseStatus download(String name) {
+        LOG.debug("*** download ***");
         if (!Util.isMember(name)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }

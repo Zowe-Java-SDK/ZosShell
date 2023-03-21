@@ -1,6 +1,8 @@
 package zos.shell.commands;
 
 import org.beryx.textio.TextTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.future.FutureDsnMembers;
 import zos.shell.future.FutureListDsn;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 
 public class Listing {
 
+    private static Logger LOG = LoggerFactory.getLogger(Listing.class);
+
     private final TextTerminal<?> terminal;
     private final long timeout;
     private List<Member> members = new ArrayList<>();
@@ -30,6 +34,7 @@ public class Listing {
     private boolean isDataSets = false;
 
     public Listing(TextTerminal<?> terminal, ZosDsnList zosDsnList, long timeout) {
+        LOG.debug("*** Listing ***");
         this.terminal = terminal;
         this.zosDsnList = zosDsnList;
         this.timeout = timeout;
@@ -37,6 +42,7 @@ public class Listing {
 
     public void ls(String memberValue, String dataSet, boolean isColumnView, boolean isAttributes)
             throws ExecutionException, InterruptedException, TimeoutException {
+        LOG.debug("*** ls ***");
         final var paramsBuilder = new ListParams.Builder()
                 .maxLength("0")  // return all
                 .responseTimeout(String.valueOf(timeout));
@@ -95,18 +101,21 @@ public class Listing {
     }
 
     private List<Member> getMembers(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
+        LOG.debug("*** getMembers ***");
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureDsnMembers(zosDsnList, dataSet, params));
         return submit.get(timeout, TimeUnit.SECONDS);
     }
 
     private List<Dataset> getDataSets(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
+        LOG.debug("*** getDataSets ***");
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureListDsn(zosDsnList, dataSet, params));
         return submit.get(timeout, TimeUnit.SECONDS);
     }
 
     private void displayListStatus(int membersSize, int dataSetsSize) {
+        LOG.debug("*** displayListStatus ***");
         if (membersSize == 0 && dataSetsSize == 1) {
             terminal.println(Constants.NO_MEMBERS);
         }
@@ -117,6 +126,7 @@ public class Listing {
 
     private void displayDataSets(List<Dataset> dataSets, String ignoreCurrDataSet,
                                  boolean isColumnView, boolean isAttributes) {
+        LOG.debug("*** displayDataSets ***");
         if (dataSets.isEmpty() || (dataSets.size() == 1
                 && ignoreCurrDataSet.equalsIgnoreCase(dataSets.get(0).getDsname().orElse("")))) {
             return;
@@ -146,6 +156,7 @@ public class Listing {
     }
 
     private void displayMembers(List<Member> members, boolean isAttributes) {
+        LOG.debug("*** displayMembers ***");
         if (members.isEmpty()) {
             return;
         }

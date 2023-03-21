@@ -1,6 +1,8 @@
 package zos.shell.commands;
 
 import org.beryx.textio.TextTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zowe.client.sdk.core.ZOSConnection;
 
@@ -9,15 +11,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ChangeConn {
 
+    private static Logger LOG = LoggerFactory.getLogger(ChangeConn.class);
+
     private final TextTerminal<?> terminal;
     private final List<ZOSConnection> connections;
 
     public ChangeConn(TextTerminal<?> terminal, List<ZOSConnection> connections) {
+        LOG.debug("*** ChangeConn ***");
         this.terminal = terminal;
         this.connections = connections;
     }
 
     public ZOSConnection changeConnection(ZOSConnection connection, String[] commands) {
+        LOG.debug("*** changeConnection ***");
         var index = Integer.parseInt(commands[1]);
         if (index-- > connections.size()) {
             terminal.println(Constants.NO_CONNECTION);
@@ -29,6 +35,7 @@ public class ChangeConn {
     }
 
     public void displayConnections(ZOSConnection connection) {
+        LOG.debug("*** displayConnections ***");
         if (connection != null) {
             var i = new AtomicInteger(1);
             connections.forEach(c ->

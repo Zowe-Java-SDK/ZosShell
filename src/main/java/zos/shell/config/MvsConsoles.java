@@ -1,6 +1,8 @@
 package zos.shell.config;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.utility.Util;
 
@@ -14,13 +16,17 @@ import java.util.Objects;
 
 public class MvsConsoles {
 
+    private static Logger LOG = LoggerFactory.getLogger(MvsConsoles.class);
+
     private final Map<String, String> consoles = new HashMap<>();
 
     public MvsConsoles() {
+        LOG.debug("*** MvsConsoles ***");
         setup();
     }
 
     public void setup() {
+        LOG.debug("*** setup ***");
         File file = null;
         if (SystemUtils.IS_OS_WINDOWS) {
             file = new File(Constants.SECURITY_CONFIG_PATH_FILE_WINDOWS);
@@ -40,6 +46,7 @@ public class MvsConsoles {
     }
 
     public String getConsoleName(String connection) {
+        LOG.debug("*** getConsoleName ***");
         return consoles.get(connection);
     }
 

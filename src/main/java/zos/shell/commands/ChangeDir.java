@@ -1,6 +1,8 @@
 package zos.shell.commands;
 
 import org.beryx.textio.TextTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.utility.Util;
 import zowe.client.sdk.zosfiles.ZosDsnList;
@@ -11,16 +13,20 @@ import java.util.List;
 
 public class ChangeDir {
 
+    private static Logger LOG = LoggerFactory.getLogger(ChangeDir.class);
+
     private final TextTerminal<?> terminal;
     private final ZosDsnList zosDsnList;
     private final ListParams params = new ListParams.Builder().build();
 
     public ChangeDir(TextTerminal<?> terminal, ZosDsnList zosDsnList) {
+        LOG.debug("*** ChangeDir ***");
         this.terminal = terminal;
         this.zosDsnList = zosDsnList;
     }
 
     public String cd(String currDataSet, String param) {
+        LOG.debug("*** cd ***");
         if (Util.isDataSet(param)) {
             return param;
         } else if (param.equals("..") && !currDataSet.isEmpty()) {

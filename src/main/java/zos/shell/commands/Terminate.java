@@ -1,5 +1,7 @@
 package zos.shell.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
 import zowe.client.sdk.zosconsole.ConsoleResponse;
@@ -7,6 +9,8 @@ import zowe.client.sdk.zosconsole.IssueCommand;
 import zowe.client.sdk.zosconsole.input.IssueParams;
 
 public class Terminate {
+
+    private static Logger LOG = LoggerFactory.getLogger(Terminate.class);
 
     private final IssueCommand issueCommand;
 
@@ -16,10 +20,12 @@ public class Terminate {
     }
 
     public Terminate(IssueCommand issueCommand) {
+        LOG.debug("*** Terminate ***");
         this.issueCommand = issueCommand;
     }
 
     public ResponseStatus stopOrCancel(Type type, String jobOrTask) {
+        LOG.debug("*** stopOrCancel ***");
         final var params = new IssueParams();
         switch (type) {
             case STOP:

@@ -1,5 +1,7 @@
 package zos.shell.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.Member;
 import zos.shell.dto.ResponseStatus;
@@ -8,15 +10,19 @@ import zowe.client.sdk.zosfiles.ZosDsn;
 
 public class Touch {
 
+    private static Logger LOG = LoggerFactory.getLogger(Touch.class);
+
     private final ZosDsn zosDsn;
     private final Member members;
 
     public Touch(ZosDsn zosDsn, Member members) {
+        LOG.debug("*** Touch ***");
         this.zosDsn = zosDsn;
         this.members = members;
     }
 
     public ResponseStatus touch(String dataSet, String member) {
+        LOG.debug("*** touch ***");
         if (!Util.isDataSet(dataSet)) {
             return new ResponseStatus(Constants.INVALID_DATASET, true);
         }

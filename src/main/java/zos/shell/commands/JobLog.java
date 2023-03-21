@@ -1,5 +1,7 @@
 package zos.shell.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.future.FutureBrowseJob;
 import zowe.client.sdk.zosjobs.GetJobs;
@@ -15,18 +17,22 @@ import java.util.function.Predicate;
 
 public class JobLog {
 
+    private static Logger LOG = LoggerFactory.getLogger(JobLog.class);
+
     protected final GetJobs getJobs;
     protected List<Job> jobs = new ArrayList<>();
     private final boolean isAll;
     private final long timeout;
 
     public JobLog(GetJobs getJobs, boolean isAll, long timeout) {
+        LOG.debug("*** JobLog ***");
         this.getJobs = getJobs;
         this.isAll = isAll;
         this.timeout = timeout;
     }
 
     protected ResponseStatus browseJobLog(String param) {
+        LOG.debug("*** browseJobLog ***");
         final var jobParams = new GetJobParams.Builder("*").prefix(param).build();
         try {
             jobs = getJobs.getJobsCommon(jobParams);

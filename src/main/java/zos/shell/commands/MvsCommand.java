@@ -1,6 +1,8 @@
 package zos.shell.commands;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.config.MvsConsoles;
 import zos.shell.dto.ResponseStatus;
@@ -13,16 +15,20 @@ import java.util.regex.Pattern;
 
 public class MvsCommand {
 
+    private static Logger LOG = LoggerFactory.getLogger(MvsCommand.class);
+
     private final IssueCommand issueCommand;
     private final ZOSConnection connection;
     private final MvsConsoles mvsConsoles = new MvsConsoles();
 
     public MvsCommand(ZOSConnection connection) {
+        LOG.debug("*** MvsCommand ***");
         this.connection = connection;
         this.issueCommand = new IssueCommand(connection);
     }
 
     public ResponseStatus executeCommand(String command) {
+        LOG.debug("*** executeCommand ***");
         if (!SystemUtils.IS_OS_WINDOWS && !SystemUtils.IS_OS_MAC_OSX) {
             return new ResponseStatus(Constants.OS_ERROR, false);
         }
@@ -61,6 +67,7 @@ public class MvsCommand {
     }
 
     private ConsoleResponse execute(IssueParams params) throws Exception {
+        LOG.debug("*** execute ***");
         return issueCommand.issue(params);
     }
 

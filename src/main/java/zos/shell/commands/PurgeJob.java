@@ -1,5 +1,7 @@
 package zos.shell.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZOSConnection;
@@ -13,15 +15,19 @@ import java.util.List;
 
 public class PurgeJob {
 
+    private static Logger LOG = LoggerFactory.getLogger(PurgeJob.class);
+
     private final DeleteJobs deleteJobs;
     private final GetJobs getJobs;
 
     public PurgeJob(ZOSConnection connection) {
+        LOG.debug("*** PurgeJob ***");
         deleteJobs = new DeleteJobs(connection);
         getJobs = new GetJobs(connection);
     }
 
     public ResponseStatus purgeJobByJobName(String jobName) {
+        LOG.debug("*** purgeJobByJobName ***");
         if (!Util.isMember(jobName)) {
             return new ResponseStatus("invalid name or id specified, try again...", false);
         }
@@ -41,6 +47,7 @@ public class PurgeJob {
     }
 
     public ResponseStatus purgeJobByJobId(String jobId) {
+        LOG.debug("*** purgeJobByJobId ***");
         if (!Util.isMember(jobId)) {
             return new ResponseStatus("invalid name or id specified, try again...", false);
         }
@@ -58,6 +65,7 @@ public class PurgeJob {
     }
 
     private ResponseStatus purgeJob(Job job) {
+        LOG.debug("*** purgeJob ***");
         if (job.getJobId().isEmpty()) {
             return new ResponseStatus("job id not found", false);
         }

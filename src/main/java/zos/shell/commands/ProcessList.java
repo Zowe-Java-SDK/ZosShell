@@ -1,5 +1,7 @@
 package zos.shell.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
@@ -12,14 +14,18 @@ import java.util.List;
 
 public class ProcessList {
 
+    private static Logger LOG = LoggerFactory.getLogger(ProcessList.class);
+
     private final GetJobs getJobs;
     private final GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");
 
     public ProcessList(GetJobs getJobs) {
+        LOG.debug("*** ProcessList ***");
         this.getJobs = getJobs;
     }
 
     public ResponseStatus ps(String jobOrTask) {
+        LOG.debug("*** ps ***");
         List<Job> jobs;
         try {
             if (jobOrTask != null) {

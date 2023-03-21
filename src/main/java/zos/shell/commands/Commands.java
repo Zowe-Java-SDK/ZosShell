@@ -2,6 +2,8 @@ package zos.shell.commands;
 
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.Member;
 import zos.shell.dto.Output;
@@ -32,16 +34,20 @@ import java.util.stream.Collectors;
 
 public class Commands {
 
+    private static Logger LOG = LoggerFactory.getLogger(Commands.class);
+
     private final List<ZOSConnection> connections;
     private final TextTerminal<?> terminal;
     private long timeOutValue = Constants.FUTURE_TIMEOUT_VALUE;
 
     public Commands(List<ZOSConnection> connections, TextTerminal<?> terminal) {
+        LOG.debug("*** Commands ***");
         this.connections = connections;
         this.terminal = terminal;
     }
 
     public Output browse(ZOSConnection connection, String[] params) {
+        LOG.debug("*** browse ***");
         if (params.length == 3) {
             if (!"all".equalsIgnoreCase(params[2])) {
                 terminal.println(Constants.INVALID_PARAMETER);
@@ -53,6 +59,7 @@ public class Commands {
     }
 
     private Output browseAll(ZOSConnection connection, String[] params, boolean isAll) {
+        LOG.debug("*** browseAll ***");
         BrowseJob browseJob;
         try {
             browseJob = new BrowseJob(new GetJobs(connection), isAll, timeOutValue);
@@ -74,12 +81,14 @@ public class Commands {
     }
 
     public void cancel(ZOSConnection connection, String jobOrTask) {
+        LOG.debug("*** cancel ***");
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureTerminate(new IssueCommand(connection), Terminate.Type.CANCEL, jobOrTask));
         processFuture(pool, submit);
     }
 
     public StringBuilder cat(ZOSConnection connection, String dataSet, String member) {
+        LOG.debug("*** cat ***");
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureConcatenate(new Download(new ZosDsnDownload(connection), false), dataSet, member));
         final var result = processFuture(pool, submit);
@@ -90,6 +99,7 @@ public class Commands {
     }
 
     public String cd(ZOSConnection connection, String currDataSet, String param) {
+        LOG.debug("*** cd ***");
         ChangeDir changeDir;
         try {
             changeDir = new ChangeDir(terminal, new ZosDsnList(connection));
@@ -101,22 +111,26 @@ public class Commands {
     }
 
     public ZOSConnection change(ZOSConnection connection, String[] commands) {
+        LOG.debug("*** change ***");
         final var changeConn = new ChangeConn(terminal, connections);
         return changeConn.changeConnection(connection, commands);
     }
 
     public void color(String arg, String agr2) {
+        LOG.debug("*** color ***");
         final var color = new Color(terminal);
         color.setTextColor(arg);
         color.setBackGroundColor(agr2);
     }
 
     public void connections(ZOSConnection connection) {
+        LOG.debug("*** connections ***");
         final var changeConn = new ChangeConn(terminal, connections);
         changeConn.displayConnections(connection);
     }
 
     public void copy(ZOSConnection connection, String currDataSet, String[] params) {
+        LOG.debug("*** copy ***");
         if ("*".equals(params[1])) {
             final List<String> members = Util.getMembers(terminal, connection, currDataSet);
             if (members.isEmpty()) {
@@ -156,6 +170,7 @@ public class Commands {
     }
 
     public void copySequential(ZOSConnection connection, String currDataSet, String[] params) {
+        LOG.debug("*** copySequential ***");
         CopySequential copy;
         try {
             copy = new CopySequential(new ZosDsnCopy(connection));
@@ -167,12 +182,14 @@ public class Commands {
     }
 
     public void count(ZOSConnection connection, String dataSet, String filter) {
+        LOG.debug("*** count ***");
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureCount(new ZosDsnList(connection), dataSet, filter));
         processFuture(pool, submit);
     }
 
     public void download(ZOSConnection connection, String currDataSet, String member, boolean isBinary) {
+        LOG.debug("*** download ***");
         if ("*".equals(member)) {
             final List<String> members = Util.getMembers(terminal, connection, currDataSet);
             if (members.isEmpty()) {
@@ -215,12 +232,15 @@ public class Commands {
     }
 
     public void downloadJob(ZOSConnection currConnection, String param, boolean isAll) {
+        LOG.debug("*** downloadJob ***");
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureDownloadJob(new GetJobs(currConnection), isAll, timeOutValue, param));
         processFuture(pool, submit);
     }
 
-    private List<ResponseStatus> multipleDownload(ZOSConnection connection, String dataSet, List<String> members, boolean isBinary) {
+    private List<ResponseStatus> multipleDownload(ZOSConnection connection, String dataSet, List<String> members,
+                                                  boolean isBinary) {
+        LOG.debug("*** multipleDownload ***");
         if (members.isEmpty()) {
             final var rs = new ResponseStatus("", false);
             final var rss = new ArrayList<ResponseStatus>();
@@ -243,6 +263,7 @@ public class Commands {
 
     private List<ResponseStatus> multipleCopy(ZOSConnection connection, String fromDataSetName, String toDataSetName,
                                               List<String> members) {
+        LOG.debug("*** multipleCopy ***");
         if (!Util.isDataSet(toDataSetName)) {
             terminal.println(Constants.INVALID_DATASET);
             return new ArrayList<>();
@@ -261,6 +282,7 @@ public class Commands {
     }
 
     private List<ResponseStatus> getFutureResults(List<Future<ResponseStatus>> futures) {
+        LOG.debug("*** getFutureResults ***");
         final var results = new ArrayList<ResponseStatus>();
         for (final var future : futures) {
             try {
@@ -275,14 +297,17 @@ public class Commands {
     }
 
     public void files(String dataSet) {
+        LOG.debug("*** files ***");
         LocalFiles.listFiles(terminal, dataSet);
     }
 
     public void help() {
+        LOG.debug("*** help ***");
         Help.displayHelp(terminal);
     }
 
     public void ls(ZOSConnection connection, String member, String dataSet) {
+        LOG.debug("*** ls 1 ***");
         final var listing = new Listing(terminal, new ZosDsnList(connection), timeOutValue);
         try {
             listing.ls(member, dataSet, true, false);
@@ -294,6 +319,7 @@ public class Commands {
     }
 
     public void ls(ZOSConnection connection, String dataSet) {
+        LOG.debug("*** ls 2 ***");
         final var listing = new Listing(terminal, new ZosDsnList(connection), timeOutValue);
         try {
             listing.ls(null, dataSet, true, false);
@@ -305,10 +331,12 @@ public class Commands {
     }
 
     public void lsl(ZOSConnection connection, String dataSet, boolean isAttributes) {
+        LOG.debug("*** lsl 1 ***");
         this.lsl(connection, null, dataSet, isAttributes);
     }
 
     public void lsl(ZOSConnection connection, String member, String dataSet, boolean isAttributes) {
+        LOG.debug("*** lsl 2 ***");
         final var listing = new Listing(terminal, new ZosDsnList(connection), timeOutValue);
         try {
             listing.ls(member, dataSet, false, isAttributes);
@@ -320,6 +348,7 @@ public class Commands {
     }
 
     public void mkdir(ZOSConnection connection, TextIO mainTextIO, String currDataSet, String param) {
+        LOG.debug("*** mkdir ***");
         if (param.contains(".") && !Util.isDataSet(param)) {
             terminal.println("invalid data set character sequence, try again...");
             return;
@@ -414,6 +443,7 @@ public class Commands {
     }
 
     private static Integer getMakeDirNum(TextIO mainTextIO, String prompt) {
+        LOG.debug("*** getMakeDirNum ***");
         while (true) {
             final var input = mainTextIO.newStringInputReader().withMaxLength(80).read(prompt);
             if ("quit".equalsIgnoreCase(input)) {
@@ -427,6 +457,7 @@ public class Commands {
     }
 
     private static String getMakeDirStr(TextIO mainTextIO, String prompt) {
+        LOG.debug("*** getMakeDirStr ***");
         String input;
         while (true) {
             input = mainTextIO.newStringInputReader().withMaxLength(80).read(prompt);
@@ -441,28 +472,33 @@ public class Commands {
     }
 
     public void mvsCommand(ZOSConnection connection, String command) {
+        LOG.debug("*** mvsCommand ***");
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureMvs(connection, command));
         processFuture(pool, submit);
     }
 
     public void ps(ZOSConnection connection) {
+        LOG.debug("*** ps ***");
         ps(connection, null);
     }
 
     public void purgeJob(ZOSConnection connection, String item) {
+        LOG.debug("*** purgeJob ***");
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FuturePurgeJob(connection, item));
         processFuture(pool, submit);
     }
 
     public void ps(ZOSConnection connection, String jobOrTask) {
+        LOG.debug("*** ps ***");
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureProcessList(new GetJobs(connection), jobOrTask));
         processFuture(pool, submit);
     }
 
     public void rm(ZOSConnection connection, String currDataSet, String param) {
+        LOG.debug("*** rm ***");
         Delete delete;
         try {
             delete = new Delete(terminal, new ZosDsn(connection), new ZosDsnList(connection));
@@ -474,6 +510,7 @@ public class Commands {
     }
 
     public void save(ZOSConnection connection, String dataSet, String[] params) {
+        LOG.debug("*** save ***");
         final var member = params[1];
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureSave(new ZosDsn(connection), dataSet, member));
@@ -481,23 +518,28 @@ public class Commands {
     }
 
     public void search(Output output, String text) {
+        LOG.debug("*** search ***");
         final var search = new Search(terminal);
         search.search(output, text);
     }
 
     public void stop(ZOSConnection connection, String jobOrTask) {
+        LOG.debug("*** stop ***");
         final var pool = Executors.newFixedThreadPool(1);
-        final var submit = pool.submit(new FutureTerminate(new IssueCommand(connection), Terminate.Type.STOP, jobOrTask));
+        final var submit = pool.submit(new FutureTerminate(new IssueCommand(connection), Terminate.Type.STOP,
+                jobOrTask));
         processFuture(pool, submit);
     }
 
     public void submit(ZOSConnection connection, String dataSet, String jobName) {
+        LOG.debug("*** submit ***");
         final var pool = Executors.newFixedThreadPool(1);
         final var submit = pool.submit(new FutureSubmit(new SubmitJobs(connection), dataSet, jobName));
         processFuture(pool, submit);
     }
 
     public Output tailJob(ZOSConnection connection, String[] params) {
+        LOG.debug("*** tailJob ***");
         if (params.length == 4) {
             if (!"all".equalsIgnoreCase(params[3])) {
                 terminal.println(Constants.INVALID_PARAMETER);
@@ -526,6 +568,7 @@ public class Commands {
     }
 
     private StringBuilder tailAll(ZOSConnection connection, String[] params, boolean isAll) {
+        LOG.debug("*** tailAll ***");
         Tail tail;
         try {
             tail = new Tail(terminal, new GetJobs(connection), isAll, timeOutValue);
@@ -537,22 +580,27 @@ public class Commands {
     }
 
     public void timeOutValue(long value) {
+        LOG.debug("*** timeOutValue ***");
         timeOutValue = value;
         terminal.println("timeout value set to " + timeOutValue + " seconds.");
     }
 
     public void timeOutValue() {
+        LOG.debug("*** timeOutValue ***");
         terminal.println("timeout value is " + timeOutValue + " seconds.");
     }
 
     public void touch(ZOSConnection connection, String dataSet, String[] params) {
+        LOG.debug("*** touch ***");
         final var member = params[1];
         final var pool = Executors.newFixedThreadPool(1);
-        final var submit = pool.submit(new FutureTouch(new ZosDsn(connection), new Member(new ZosDsnList(connection)), dataSet, member));
+        final var submit = pool.submit(new FutureTouch(new ZosDsn(connection),
+                new Member(new ZosDsnList(connection)), dataSet, member));
         processFuture(pool, submit);
     }
 
     public void uname(ZOSConnection currConnection) {
+        LOG.debug("*** uname ***");
         if (currConnection != null) {
             final var listDefinedSystems = new ListDefinedSystems(currConnection);
             ZosmfListDefinedSystemsResponse zosmfInfoResponse;
@@ -578,19 +626,24 @@ public class Commands {
         }
     }
 
-    public void ussh(TextTerminal<?> terminal, ZOSConnection currConnection, Map<String, SSHConnection> sshConnections, String param) {
+    public void ussh(TextTerminal<?> terminal, ZOSConnection currConnection,
+                     Map<String, SSHConnection> sshConnections, String param) {
+        LOG.debug("*** ussh ***");
         final var uss = new Ussh(terminal, currConnection, sshConnections);
         uss.sshCommand(param);
     }
 
     public void vi(ZOSConnection connection, String dataSet, String[] params) {
+        LOG.debug("*** vi ***");
         final var member = params[1];
         final var pool = Executors.newFixedThreadPool(1);
-        final var submit = pool.submit(new FutureVi(new Download(new ZosDsnDownload(connection), false), dataSet, member));
+        final var submit = pool.submit(new FutureVi(
+                new Download(new ZosDsnDownload(connection), false), dataSet, member));
         processFuture(pool, submit);
     }
 
     private ResponseStatus processFuture(ExecutorService pool, Future<ResponseStatus> submit) {
+        LOG.debug("*** processFuture ***");
         ResponseStatus result = null;
         try {
             result = submit.get(timeOutValue, TimeUnit.SECONDS);

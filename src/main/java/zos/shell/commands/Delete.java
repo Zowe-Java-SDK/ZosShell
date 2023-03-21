@@ -1,6 +1,8 @@
 package zos.shell.commands;
 
 import org.beryx.textio.TextTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.utility.Util;
 import zowe.client.sdk.rest.Response;
@@ -16,18 +18,22 @@ import java.util.stream.Collectors;
 
 public class Delete {
 
+    private static Logger LOG = LoggerFactory.getLogger(Delete.class);
+
     private final TextTerminal<?> terminal;
     private final ZosDsn zosDsn;
     private final ZosDsnList zosDsnList;
     private final ListParams params = new ListParams.Builder().build();
 
     public Delete(TextTerminal<?> terminal, ZosDsn zosDsn, ZosDsnList zosDsnList) {
+        LOG.debug("*** Delete ***");
         this.terminal = terminal;
         this.zosDsn = zosDsn;
         this.zosDsnList = zosDsnList;
     }
 
     public void rm(String currDataSet, String param) {
+        LOG.debug("*** rm ***");
         try {
             List<Member> members = new ArrayList<>();
 
@@ -139,11 +145,13 @@ public class Delete {
     }
 
     private boolean performDeleteCheckFailedResponse(String currDataSet, String param) throws Exception {
+        LOG.debug("*** performDeleteCheckFailedResponse ***");
         final var response = zosDsn.deleteDsn(currDataSet, param);
         return failed(response);
     }
 
     private boolean isCurrDataSetEmpty(String currDataSet) {
+        LOG.debug("*** isCurrDataSetEmpty ***");
         if (currDataSet.isEmpty()) {
             terminal.println(Constants.DELETE_NOTHING_ERROR);
             return true;
@@ -152,6 +160,7 @@ public class Delete {
     }
 
     private boolean failed(Response response) {
+        LOG.debug("*** failed ***");
         final var code = response.getStatusCode().orElse(-1);
         if (Util.isHttpError(code)) {
             terminal.println("delete operation failed with http code + " + code + ", try again...");

@@ -2,6 +2,8 @@ package zos.shell.commands;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 
 import java.io.File;
@@ -14,7 +16,10 @@ import java.util.stream.Stream;
 
 public class LocalFiles {
 
+    private static Logger LOG = LoggerFactory.getLogger(LocalFiles.class);
+
     public static void listFiles(TextTerminal<?> terminal, String dataSet) {
+        LOG.debug("*** listFiles ***");
         final var files = getFiles(terminal, dataSet);
         if (files.isEmpty()) {
             terminal.println(Constants.NO_FILES);
@@ -24,6 +29,7 @@ public class LocalFiles {
     }
 
     private static List<String> getFiles(TextTerminal<?> terminal, String dataSet) {
+        LOG.debug("*** getFiles ***");
         if (!SystemUtils.IS_OS_WINDOWS && !SystemUtils.IS_OS_MAC_OSX) {
             return new ArrayList<>();
         }

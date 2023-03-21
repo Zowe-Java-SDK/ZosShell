@@ -1,6 +1,8 @@
 package zos.shell.commands;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
@@ -11,13 +13,17 @@ import java.io.StringWriter;
 
 public class Concatenate {
 
+    private static Logger LOG = LoggerFactory.getLogger(Concatenate.class);
+
     private final Download download;
 
     public Concatenate(Download download) {
+        LOG.debug("*** Concatenate ***");
         this.download = download;
     }
 
     public ResponseStatus cat(String dataSet, String param) {
+        LOG.debug("*** cat ***");
         InputStream inputStream;
         String result;
         try {

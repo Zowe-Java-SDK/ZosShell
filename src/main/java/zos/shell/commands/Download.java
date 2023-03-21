@@ -3,6 +3,8 @@ package zos.shell.commands;
 import com.google.common.base.Strings;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.DirectorySetup;
@@ -19,6 +21,8 @@ import java.nio.file.Paths;
 
 public class Download {
 
+    private static Logger LOG = LoggerFactory.getLogger(Download.class);
+
     public static final String DIRECTORY_PATH_WINDOWS = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\";
     public static final String DIRECTORY_PATH_MAC = Constants.PATH_FILE_DIRECTORY_MAC + "/";
     private final ZosDsnDownload download;
@@ -26,11 +30,13 @@ public class Download {
     private final boolean isBinary;
 
     public Download(ZosDsnDownload download, boolean isBinary) {
+        LOG.debug("*** Download ***");
         this.download = download;
         this.isBinary = isBinary;
     }
 
     public ResponseStatus download(String dataSet, String member) {
+        LOG.debug("*** download ***");
         if (!Util.isMember(member)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
@@ -73,20 +79,24 @@ public class Download {
     }
 
     private void writeBinaryFile(InputStream input, String directoryPath, String fileNamePath) throws IOException {
+        LOG.debug("*** writeBinaryFile ***");
         Files.createDirectories(Paths.get(directoryPath));
         FileUtils.copyInputStreamToFile(input, new File(fileNamePath));
     }
 
     private String getTextContent(String dataSet, String param) throws Exception {
+        LOG.debug("*** getTextContent ***");
         final var inputStream = getInputStream(dataSet, param);
         return getTextStreamData(inputStream);
     }
 
     private InputStream getBinaryContent(String dataSet, String param) throws Exception {
+        LOG.debug("*** getBinaryContent ***");
         return getInputStream(dataSet, param);
     }
 
     public InputStream getInputStream(String dataSet, String param) throws Exception {
+        LOG.debug("*** getInputStream ***");
         InputStream inputStream;
         if (dlParams == null) {
             dlParams = new DownloadParams.Builder().build();
@@ -100,6 +110,7 @@ public class Download {
     }
 
     private String getTextStreamData(InputStream inputStream) throws IOException {
+        LOG.debug("*** getTextStreamData ***");
         if (inputStream != null) {
             final var writer = new StringWriter();
             IOUtils.copy(inputStream, writer, Constants.UTF8);

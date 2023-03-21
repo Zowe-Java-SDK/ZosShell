@@ -2,6 +2,8 @@ package zos.shell.utility;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.DataSetMember;
 import zos.shell.dto.Member;
@@ -16,10 +18,13 @@ import java.util.regex.Pattern;
 
 public class Util {
 
+    private static Logger LOG = LoggerFactory.getLogger(Util.class);
+
     private static final String PATTERN_STRING_MORE_THAN_ONE_CHAR = "[A-Z#@\\$][A-Z\\d#@\\$\\-]{1,7}";
     private static final String PATTERN_STRING_FOR_ONE_CHAR = "[A-Z#@\\$]{1}";
 
     public static boolean isDataSet(String dataSetName) {
+        LOG.debug("*** isDataSet ***");
         dataSetName = dataSetName.toUpperCase(Locale.ROOT);
 
         // Check that the dataset contains more than one segment
@@ -54,10 +59,12 @@ public class Util {
     }
 
     public static boolean isMember(String memberName) {
+        LOG.debug("*** isMember ***");
         return isSegment(memberName.toUpperCase(Locale.ROOT));
     }
 
     public static void printError(TextTerminal<?> terminal, String message) {
+        LOG.debug("*** printError ***");
         if (message.contains("Not Found")) {
             final var index = message.indexOf("Not Found");
             final var msg = message.substring(index);
@@ -72,6 +79,7 @@ public class Util {
     }
 
     public static String getErrorMsg(String message) {
+        LOG.debug("*** getErrorMsg ***");
         if (message.contains("Not Found")) {
             final var index = message.indexOf("Not Found");
             return message.substring(index);
@@ -85,6 +93,7 @@ public class Util {
     }
 
     public static boolean isStrNum(String strNum) {
+        LOG.debug("*** isStrNum ***");
         try {
             Integer.parseInt(strNum);
             return true;
@@ -94,10 +103,12 @@ public class Util {
     }
 
     public static boolean isHttpError(int statusCode) {
+        LOG.debug("*** isHttpError ***");
         return !((statusCode >= 200 && statusCode <= 299) || (statusCode >= 100 && statusCode <= 199));
     }
 
     public static DataSetMember getMemberFromDataSet(String param) {
+        LOG.debug("*** getMemberFromDataSet ***");
         final var index = param.indexOf("(");
         final var dataset = param.substring(0, index);
         if (!Util.isDataSet(dataset)) {
@@ -109,6 +120,7 @@ public class Util {
     }
 
     public static List<String> getMembers(TextTerminal<?> terminal, ZOSConnection connection, String dataSet) {
+        LOG.debug("*** getMembers ***");
         final var member = new Member(new ZosDsnList(connection));
         final List<String> members;
         try {
@@ -121,6 +133,7 @@ public class Util {
     }
 
     private static boolean isSegment(String segment) {
+        LOG.debug("*** isSegment ***");
         // Each segment cannot be more than 8 characters
         // Each segment's first letter is a letter or #, @, $.
         // The remaining seven characters in a segment can be letters, numbers, and #, @, $, -
@@ -141,6 +154,7 @@ public class Util {
     }
 
     public static String getMsgAfterArrow(String msg) {
+        LOG.debug("*** getMsgAfterArrow ***");
         if (!msg.contains(Constants.ARROW)) {
             return msg;
         }
@@ -150,15 +164,18 @@ public class Util {
 
     @SuppressWarnings("SameReturnValue")
     public static String getPrompt() {
+        LOG.debug("*** getPrompt ***");
         return Constants.DEFAULT_PROMPT;
     }
 
     public static void writeTextFile(String content, String directoryPath, String fileNamePath) throws IOException {
+        LOG.debug("*** writeTextFile ***");
         Files.createDirectories(Paths.get(directoryPath));
         Files.write(Paths.get(fileNamePath), content.getBytes());
     }
 
     public static String[] stripEmptyStrings(String[] command) {
+        LOG.debug("*** stripEmptyStrings ***");
         final var list = new ArrayList<>(Arrays.asList(command));
         list.removeAll(Collections.singleton(""));
         command = list.toArray(new String[0]);
@@ -166,6 +183,7 @@ public class Util {
     }
 
     public static void openFileLocation(String filePath) {
+        LOG.debug("*** openFileLocation ***");
         if (filePath == null) {
             return;
         }

@@ -1,6 +1,8 @@
 package zos.shell.commands;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
@@ -11,13 +13,17 @@ import java.io.FileReader;
 
 public class Save {
 
+    private static Logger LOG = LoggerFactory.getLogger(Save.class);
+
     private final ZosDsn zosDsn;
 
     public Save(ZosDsn zosDsn) {
+        LOG.debug("*** Save ***");
         this.zosDsn = zosDsn;
     }
 
     public ResponseStatus save(String dataSet, String member) {
+        LOG.debug("*** save ***");
         if (!Util.isDataSet(dataSet)) {
             return new ResponseStatus(Constants.INVALID_DATASET, false);
         }

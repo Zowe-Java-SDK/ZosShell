@@ -1,6 +1,8 @@
 package zos.shell.commands;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
@@ -9,14 +11,18 @@ import java.io.IOException;
 
 public class Vi {
 
+    private static Logger LOG = LoggerFactory.getLogger(Vi.class);
+
     private final Download download;
     private final Runtime rs = Runtime.getRuntime();
 
     public Vi(Download download) {
+        LOG.debug("*** Vi ***");
         this.download = download;
     }
 
     public ResponseStatus vi(String dataSet, String member) {
+        LOG.debug("*** vi ***");
         final var result = download.download(dataSet, member);
         final var successMsg = "opening " + member + " in editor...";
         final var errorMsg = "\ncannot open " + member + ", try again...";

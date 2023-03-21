@@ -1,6 +1,8 @@
 package zos.shell.config;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SSHConnection;
@@ -16,7 +18,10 @@ import java.util.Objects;
 
 public class Credentials {
 
+    private static Logger LOG = LoggerFactory.getLogger(Credentials.class);
+
     public static void readCredentials(List<ZOSConnection> connections, Map<String, SSHConnection> sshConnections) {
+        LOG.debug("*** readCredentials ***");
         File file = null;
         if (SystemUtils.IS_OS_WINDOWS) {
             file = new File(Constants.SECURITY_CONFIG_PATH_FILE_WINDOWS);

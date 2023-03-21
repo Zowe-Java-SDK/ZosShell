@@ -3,6 +3,8 @@ package zos.shell.config;
 import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TerminalProperties;
 import org.beryx.textio.TextTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 
 import java.io.BufferedReader;
@@ -13,19 +15,24 @@ import java.util.Objects;
 
 public class Config {
 
+    private static Logger LOG = LoggerFactory.getLogger(Config.class);
+
     private final TextTerminal<?> terminal;
     private String frontSize;
 
     public Config(TextTerminal<?> terminal) {
+        LOG.debug("*** Config ***");
         this.terminal = terminal;
         this.readConfig();
     }
 
     public String getFrontSize() {
+        LOG.debug("*** getFrontSize ***");
         return frontSize;
     }
 
     public void readConfig() {
+        LOG.debug("*** readConfig ***");
         File file = null;
         if (SystemUtils.IS_OS_WINDOWS) {
             file = new File(Constants.CONFIG_PATH_FILE_WINDOWS);

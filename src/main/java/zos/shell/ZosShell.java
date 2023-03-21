@@ -9,6 +9,8 @@ import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.beryx.textio.swing.SwingTextTerminal;
 import org.beryx.textio.web.RunnerData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.commands.Commands;
 import zos.shell.commands.History;
 import zos.shell.config.Config;
@@ -24,6 +26,8 @@ import java.util.*;
 import java.util.function.BiConsumer;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
+
+    private static Logger LOG = LoggerFactory.getLogger(ZosShell.class);
 
     private static final ListMultimap<String, String> dataSets = ArrayListMultimap.create();
     private static String currDataSet = "";
@@ -42,6 +46,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static TextIO mainTextIO;
 
     public static void main(String[] args) {
+        LOG.debug("*** main ***");
         Credentials.readCredentials(connections, sshConnections);
         if (!connections.isEmpty()) {
             currConnection = connections.get(0);
@@ -53,6 +58,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void setTerminalProperties() {
+        LOG.debug("*** setTerminalProperties ***");
         var title = "";
         if (currConnection != null) {
             title = " - " + currConnection.getHost().toUpperCase();
@@ -119,6 +125,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     @Override
     public void accept(TextIO textIO, RunnerData runnerData) {
+        LOG.debug("*** accept ***");
         terminal = textIO.getTextTerminal();
         terminal.setBookmark("top");
         final var config = new Config(terminal);
@@ -180,6 +187,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static String[] removePrompt(String[] command) {
+        LOG.debug("*** removePrompt ***");
         if (Constants.DEFAULT_PROMPT.equals(command[0])) {
             final var size = command.length;
             final var newCmdArr = new String[size - 1];
@@ -193,6 +201,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private String[] exclamationMark(String[] command) {
+        LOG.debug("*** exclamationMark ***");
         if (command[0].startsWith("!")) {
             final var str = new StringBuilder();
             for (var i = 0; i < command.length; i++) {
@@ -227,6 +236,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void executeCommand(String[] params) {
+        LOG.debug("*** executeCommand ***");
         if (params.length == 0) {
             return;
         }
@@ -696,6 +706,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static boolean isCommandValid(long count, StringBuilder commandCandidate) {
+        LOG.debug("*** isCommandValid ***");
         if (count == 2 && commandCandidate.charAt(commandCandidate.length() - 1) == '\"') {
             return true;
         } else if (count == 2) {
@@ -707,6 +718,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static StringBuilder getCommandFromParams(String[] params) {
+        LOG.debug("*** getCommandFromParams ***");
         final var command = new StringBuilder();
         for (var i = 1; i < params.length; i++) {
             command.append(params[i]);
@@ -718,6 +730,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void addVisited() {
+        LOG.debug("*** addVisited ***");
         // if hostname and dataset not in datasets multimap add it
         if (currConnection == null || currConnection.getHost() == null && currDataSet.isEmpty()) {
             return;
@@ -728,6 +741,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static boolean isParamsExceeded(int num, String[] params) {
+        LOG.debug("*** isParamsExceeded ***");
         if (params.length > num) {
             terminal.println(Constants.TOO_MANY_PARAMETERS);
             return true;
@@ -736,6 +750,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static boolean isParamsMissing(int num, String[] params) {
+        LOG.debug("*** isParamsMissing ***");
         if (params.length == num) {
             terminal.println(Constants.MISSING_PARAMETERS);
             return true;
@@ -744,6 +759,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static boolean isCurrDataSetNotSpecified() {
+        LOG.debug("*** isCurrDataSetNotSpecified ***");
         if (currDataSet.isEmpty()) {
             terminal.println(Constants.DATASET_NOT_SPECIFIED);
             return true;
