@@ -21,9 +21,6 @@ import zowe.client.sdk.zosfiles.ZosDsnList;
 import zowe.client.sdk.zosfiles.input.CreateParams;
 import zowe.client.sdk.zosjobs.GetJobs;
 import zowe.client.sdk.zosjobs.SubmitJobs;
-import zowe.client.sdk.zosmfinfo.ListDefinedSystems;
-import zowe.client.sdk.zosmfinfo.response.DefinedSystem;
-import zowe.client.sdk.zosmfinfo.response.ZosmfListDefinedSystemsResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -602,25 +599,21 @@ public class Commands {
     public void uname(ZOSConnection currConnection) {
         LOG.debug("*** uname ***");
         if (currConnection != null) {
-            final var listDefinedSystems = new ListDefinedSystems(currConnection);
-            ZosmfListDefinedSystemsResponse zosmfInfoResponse;
-            Optional<String> osVersion = Optional.empty();
-            Optional<String> sysName = Optional.empty();
+            Optional<String> zosVersion = Optional.empty();
             try {
-                zosmfInfoResponse = listDefinedSystems.listDefinedSystems();
-                DefinedSystem[] items;
-                DefinedSystem item;
-                if (zosmfInfoResponse.getDefinedSystems().isPresent()) {
-                    items = zosmfInfoResponse.getDefinedSystems().get();
-                    item = items[0];
-                    osVersion = item.getZosVR();
-                    sysName = item.getSystemName();
+                final var issueCommand = new IssueCommand(currConnection);
+                final var response = issueCommand.issueSimple("D IPLINFO");
+                final var output = response.getCommandResponse()
+                        .orElseThrow((() -> new Exception("IPLINFO command no response")));
+                int index = output.indexOf("RELEASE z/OS ");
+                if (index >= 0) {
+                    zosVersion = Optional.of(output.substring(index, index + 22));
                 }
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                LOG.debug(e.getMessage());
             }
             terminal.println(
-                    "hostname: " + currConnection.getHost() + ", OS: " + osVersion.orElse("n\\a") +
-                            ", sysName: " + sysName.orElse("n\\a"));
+                    "hostname: " + currConnection.getHost() + ", " + zosVersion.orElse("n\\a"));
         } else {
             terminal.println(Constants.NO_INFO);
         }
