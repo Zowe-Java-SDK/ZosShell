@@ -605,7 +605,7 @@ public class Commands {
                 final var response = issueCommand.issueSimple("D IPLINFO");
                 final var output = response.getCommandResponse()
                         .orElseThrow((() -> new Exception("IPLINFO command no response")));
-                int index = output.indexOf("RELEASE z/OS ");
+                final var index = output.indexOf("RELEASE z/OS ");
                 if (index >= 0) {
                     zosVersion = Optional.of(output.substring(index, index + 22));
                 }
