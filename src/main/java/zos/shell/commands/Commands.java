@@ -364,58 +364,66 @@ public class Commands {
 
         final var createParamsBuilder = new CreateParams.Builder();
 
+        // TODO
+        // may want to disable arrow keys
+
+        terminal.println("To quit, enter 'q', 'quit' or 'exit' at any prompt.");
         var input = getMakeDirStr(mainTextIO,
-                "Enter data set organization, PS (sequential), PO (partitioned), DA (direct), quit (to exit):");
+                "Enter data set organization, PS (sequential), PO (partitioned), DA (direct):");
         if (input == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.dsorg(input);
 
-        var num = getMakeDirNum(mainTextIO, "Enter primary quantity number (enter quit to exit):");
+        var num = getMakeDirNum(mainTextIO, "Enter primary quantity number:");
         if (num == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.primary(num);
 
-        num = getMakeDirNum(mainTextIO, "Enter secondary quantity number (enter quit to exit):");
+        num = getMakeDirNum(mainTextIO, "Enter secondary quantity number:");
         if (num == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.secondary(num);
 
-        num = getMakeDirNum(mainTextIO, "Enter number of directory blocks (enter quit to exit):");
+        num = getMakeDirNum(mainTextIO, "Enter number of directory blocks:");
         if (num == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.dirblk(num);
 
-        input = getMakeDirStr(mainTextIO, "Enter record format, FB, VB, U, etc (enter quit to exit):");
+        input = getMakeDirStr(mainTextIO, "Enter record format, FB, VB, U, etc:");
         if (input == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.recfm(input);
 
-        num = getMakeDirNum(mainTextIO, "Enter block size number (enter quit to exit):");
+        num = getMakeDirNum(mainTextIO, "Enter block size number:");
         if (num == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.blksize(num);
 
-        num = getMakeDirNum(mainTextIO, "Enter record length number (enter quit to exit):");
+        num = getMakeDirNum(mainTextIO, "Enter record length number:");
         if (num == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.lrecl(num);
 
-        input = getMakeDirStr(mainTextIO, "Enter volume name (enter quit to skip):");
-        if (!"quit".equalsIgnoreCase(input)) {
+        input = getMakeDirStr(mainTextIO, "Enter volume name ('s' to skip):");
+        if (input == null) {
+            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+            return;
+        }
+        if (!"s".equalsIgnoreCase(input) && !"skip".equalsIgnoreCase(input)) {
             createParamsBuilder.volser(input);
         }
 
@@ -443,7 +451,7 @@ public class Commands {
         LOG.debug("*** getMakeDirNum ***");
         while (true) {
             final var input = mainTextIO.newStringInputReader().withMaxLength(80).read(prompt);
-            if ("quit".equalsIgnoreCase(input)) {
+            if ("q".equalsIgnoreCase(input) || "quit".equalsIgnoreCase(input) || "exit".equalsIgnoreCase(input)) {
                 return null;
             }
             try {
@@ -458,7 +466,7 @@ public class Commands {
         String input;
         while (true) {
             input = mainTextIO.newStringInputReader().withMaxLength(80).read(prompt);
-            if ("quit".equalsIgnoreCase(input)) {
+            if ("q".equalsIgnoreCase(input) || "quit".equalsIgnoreCase(input) || "exit".equalsIgnoreCase(input)) {
                 return null;
             }
             if (!Util.isStrNum(input)) {
