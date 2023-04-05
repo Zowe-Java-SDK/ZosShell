@@ -43,6 +43,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static final int defaultFontSize = 10;
     private static int fontSize = defaultFontSize;
     private static boolean fontSizeChanged = false;
+    private static boolean disableKeys = false;
     private static TextIO mainTextIO;
 
     public static void main(String[] args) {
@@ -74,14 +75,23 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerminal.registerHandler("UP", t -> {
+            if (disableKeys) {
+                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+            }
             history.listUpCommands(Util.getPrompt());
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerminal.registerHandler("DOWN", t -> {
+            if (disableKeys) {
+                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+            }
             history.listDownCommands(Util.getPrompt());
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerminal.registerHandler("shift UP", t -> {
+            if (disableKeys) {
+                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+            }
             fontSize++;
             mainTerminal.setInputFontSize(fontSize);
             mainTerminal.setPromptFontSize(fontSize);
@@ -92,6 +102,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerminal.registerHandler("shift DOWN", t -> {
+            if (disableKeys) {
+                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+            }
             if (fontSize != defaultFontSize) {
                 fontSize--;
                 mainTerminal.setInputFontSize(fontSize);
@@ -103,6 +116,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerminal.registerHandler("TAB", t -> {
+            if (disableKeys) {
+                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+            }
             final var items = mainTerminal.getTextPane().getText().split(Util.getPrompt());
             var candidateStr = items[items.length - 1].trim();
             candidateStr = candidateStr.replaceAll("[\\p{Cf}]", "");
@@ -530,7 +546,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                commands.mkdir(currConnection, mainTextIO, currDataSet, params[1]);
+                disableKeys = true;
+                try {
+                    commands.mkdir(currConnection, mainTextIO, currDataSet, params[1]);
+                } catch (Exception ignore) {
+                }
+                disableKeys = false;
                 break;
             case "mvs":
                 if (isParamsMissing(1, params)) {
