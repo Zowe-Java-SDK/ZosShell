@@ -65,8 +65,6 @@ public class History {
             if (commandLst.isEmpty() || !getLastHistory().equals(command)) {
                 commandLst.add(command);
                 circularLinkedList.add(command);
-            } else {
-                return;
             }
         }
         // reset the currNode pointer used to handle history scrolling..
