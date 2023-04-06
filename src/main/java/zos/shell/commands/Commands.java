@@ -363,16 +363,23 @@ public class Commands {
         }
 
         final var createParamsBuilder = new CreateParams.Builder();
-
-        // TODO
-        // may want to disable arrow keys
+        var isSequential = false;
 
         terminal.println("To quit, enter 'q', 'quit' or 'exit' at any prompt.");
-        var input = getMakeDirStr(mainTextIO,
-                "Enter data set organization, PS (sequential), PO (partitioned), DA (direct):");
-        if (input == null) {
-            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
-            return;
+        String input;
+        while (true) {
+            input = getMakeDirStr(mainTextIO,
+                    "Enter data set organization, PS (sequential), PO (partitioned), DA (direct):");
+            if (input == null) {
+                terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+                return;
+            }
+            if ("PS".equalsIgnoreCase(input) || "PO".equalsIgnoreCase(input) || "DA".equalsIgnoreCase(input)) {
+                if ("PS".equalsIgnoreCase(input)) {
+                    isSequential = true;
+                }
+                break;
+            }
         }
         createParamsBuilder.dsorg(input);
 
@@ -390,12 +397,16 @@ public class Commands {
         }
         createParamsBuilder.secondary(num);
 
-        num = getMakeDirNum(mainTextIO, "Enter number of directory blocks:");
-        if (num == null) {
-            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
-            return;
+        if (!isSequential) {
+            num = getMakeDirNum(mainTextIO, "Enter number of directory blocks:");
+            if (num == null) {
+                terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+                return;
+            }
+            createParamsBuilder.dirblk(num);
+        } else {
+            createParamsBuilder.dirblk(0);
         }
-        createParamsBuilder.dirblk(num);
 
         input = getMakeDirStr(mainTextIO, "Enter record format, FB, VB, U, etc:");
         if (input == null) {
