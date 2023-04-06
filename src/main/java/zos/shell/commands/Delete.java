@@ -100,7 +100,7 @@ public class Delete {
                         terminal.println(Constants.DELETE_NOTHING_ERROR);
                         return;
                     }
-                    if (performDeleteCheckFailedResponse(currDataSet, param)) {
+                    if (performMemberDeleteCheckFailedResponse(currDataSet, param)) {
                         return;
                     }
                 } catch (Exception e) {
@@ -127,14 +127,16 @@ public class Delete {
                     Util.printError(terminal, e.getMessage());
                     return;
                 }
-                terminal.println(param + " successfully deleted...");
+                terminal.println(param.toUpperCase() + " successfully deleted...");
                 return;
             }
 
             if (Util.isDataSet(param)) {
-                if (performDeleteCheckFailedResponse(currDataSet, param)) {
+                if (performDatasetDeleteCheckFailedResponse(param)) {
                     return;
                 }
+                terminal.println(param.toUpperCase() + " successfully deleted...");
+                return;
             }
         } catch (Exception e) {
             terminal.println(e.getMessage());
@@ -144,9 +146,15 @@ public class Delete {
         terminal.println(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR);
     }
 
-    private boolean performDeleteCheckFailedResponse(String currDataSet, String param) throws Exception {
-        LOG.debug("*** performDeleteCheckFailedResponse ***");
-        final var response = zosDsn.deleteDsn(currDataSet, param);
+    private boolean performMemberDeleteCheckFailedResponse(String currDataSet, String memberName) throws Exception {
+        LOG.debug("*** performMemberDeleteCheckFailedResponse ***");
+        final var response = zosDsn.deleteDsn(currDataSet, memberName);
+        return failed(response);
+    }
+
+    private boolean performDatasetDeleteCheckFailedResponse(String datasetName) throws Exception {
+        LOG.debug("*** performDatasetDeleteCheckFailedResponse ***");
+        final var response = zosDsn.deleteDsn(datasetName);
         return failed(response);
     }
 
