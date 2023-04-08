@@ -72,10 +72,10 @@ Along with following custom commands:
                                           if arg2 is equal to "all", download all job's spool output
     end                                 - end session closes shell UI window
     files                               - list all files under local pwd drive value
-    mvs <arg>                           - execute a mvs command where arg is a command string within double quotes
     ls --l <arg>                        - where arg is optional and indicates a dataset or member value
                                         - for member value only you can specified * wild card as last character
                                         - -- option means same view as ls -l but without attribute info
+    mvs <arg>                           - execute a mvs command where arg is a command string within double quotes
     pj | purgejob <arg>                 - purge a job name or job is arg can represent either  
     save <arg>                          - save arg where arg is a file name from files command to the current pwd
     search <arg>                        - search for arg within last job browse, tailjob or member cat command  
