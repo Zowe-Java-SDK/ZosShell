@@ -40,6 +40,7 @@ The shell performs the following Linux like commands:
                             - for member value only you can specified * wild card as last character
     ls -l <arg>             - where arg is optional and indicates a dataset or member value
                             - for member value only you can specified * wild card as last character
+    mkdir <arg>             - where arg is a dataset
     ps                      - display all processes running
     ps <arg>                - where arg is a task/job name   
     pwd                     - show current working dataset
