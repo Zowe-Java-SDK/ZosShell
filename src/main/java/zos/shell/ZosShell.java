@@ -323,9 +323,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     commandOutput = null;
                     System.gc();
                 }
+                terminal.println();
                 break;
             case "clear":
+                terminal.println();
                 terminal.resetToBookmark("top");
+                terminal.println();
                 break;
             case "color":
                 if (isParamsMissing(1, params)) {
