@@ -30,6 +30,7 @@ The shell performs the following Linux like commands:
     cd <arg>                - where arg is a dataset value or empty
     clear                   - clear the shell of all history
     cp | copy <arg> <arg>   - where arg can be ".", "*", member, dataset or dataset(member)
+    g | grep <arg> <arg2>   - where arg is search string and arg2 is member value
     h | help                - list commands
     history <arg>           - where arg is optional and indicates the number to display from bottom  
     hostname                - display current hostname connection

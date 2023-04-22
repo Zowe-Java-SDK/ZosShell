@@ -11,7 +11,7 @@ public final class SearchDictionary {
 
     private static final String[] commands = new String[]{"browsejob", "cancel", "cat", "cd", "change", "clear",
             "clearlog", "color", "connections", "count", "copy", "copys", "download", "downloadjob", "end", "files",
-            "help", "history", "ls", "mvs", "purgejob", "ps", "pwd", "rm", "save", "search", "stop", "submit",
+            "grep", "help", "history", "ls", "mvs", "purgejob", "ps", "pwd", "rm", "save", "search", "stop", "submit",
             "tailjob", "timeout", "touch", "uname", "ussh", "vi", "visited", "whoami"};
 
     private static final TriePreFix dictionary = new TriePreFix(commands);
