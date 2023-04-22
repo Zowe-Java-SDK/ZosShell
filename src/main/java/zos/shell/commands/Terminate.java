@@ -10,7 +10,7 @@ import zowe.client.sdk.zosconsole.input.IssueParams;
 
 public class Terminate {
 
-    private static Logger LOG = LoggerFactory.getLogger(Terminate.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Terminate.class);
 
     private final IssueCommand issueCommand;
 

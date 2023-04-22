@@ -7,7 +7,7 @@ import zowe.client.sdk.zosjobs.GetJobs;
 
 public class BrowseJob extends JobLog {
 
-    private static Logger LOG = LoggerFactory.getLogger(BrowseJob.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BrowseJob.class);
 
     public BrowseJob(GetJobs getJobs, boolean isAll, long timeout) {
         super(getJobs, isAll, timeout);

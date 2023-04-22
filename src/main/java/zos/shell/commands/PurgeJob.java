@@ -15,7 +15,7 @@ import java.util.List;
 
 public class PurgeJob {
 
-    private static Logger LOG = LoggerFactory.getLogger(PurgeJob.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PurgeJob.class);
 
     private final DeleteJobs deleteJobs;
     private final GetJobs getJobs;

@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 public class MvsCommand {
 
-    private static Logger LOG = LoggerFactory.getLogger(MvsCommand.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MvsCommand.class);
 
     private final IssueCommand issueCommand;
     private final ZOSConnection connection;

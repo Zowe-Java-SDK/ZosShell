@@ -13,7 +13,7 @@ import java.util.Comparator;
 
 public class DownloadJob {
 
-    private static Logger LOG = LoggerFactory.getLogger(DownloadJob.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DownloadJob.class);
 
     private final BrowseJob browseJob;
 

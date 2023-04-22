@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 public class Color {
 
-    private static Logger LOG = LoggerFactory.getLogger(Color.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Color.class);
 
     private final TextTerminal<?> terminal;
 

@@ -17,7 +17,7 @@ import java.util.function.Predicate;
 
 public class JobLog {
 
-    private static Logger LOG = LoggerFactory.getLogger(JobLog.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JobLog.class);
 
     protected final GetJobs getJobs;
     protected List<Job> jobs = new ArrayList<>();

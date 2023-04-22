@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ChangeConn {
 
-    private static Logger LOG = LoggerFactory.getLogger(ChangeConn.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChangeConn.class);
 
     private final TextTerminal<?> terminal;
     private final List<ZOSConnection> connections;

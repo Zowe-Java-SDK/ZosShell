@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class Search {
 
-    private static Logger LOG = LoggerFactory.getLogger(Search.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Search.class);
 
     private final TextTerminal<?> terminal;
 

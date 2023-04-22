@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Count {
 
-    private static Logger LOG = LoggerFactory.getLogger(Count.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Count.class);
 
     private final ZosDsnList zosDsnList;
     private final ListParams params = new ListParams.Builder().build();

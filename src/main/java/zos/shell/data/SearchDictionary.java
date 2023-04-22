@@ -7,7 +7,7 @@ import java.util.List;
 
 public final class SearchDictionary {
 
-    private static Logger LOG = LoggerFactory.getLogger(SearchDictionary.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SearchDictionary.class);
 
     private static final String[] commands = new String[]{"browsejob", "cancel", "cat", "cd", "change", "clear",
             "clearlog", "color", "connections", "count", "copy", "copys", "download", "downloadjob", "end", "files",

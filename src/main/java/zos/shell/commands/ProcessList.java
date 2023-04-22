@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ProcessList {
 
-    private static Logger LOG = LoggerFactory.getLogger(ProcessList.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProcessList.class);
 
     private final GetJobs getJobs;
     private final GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");

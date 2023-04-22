@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 public class LocalFiles {
 
-    private static Logger LOG = LoggerFactory.getLogger(LocalFiles.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LocalFiles.class);
 
     public static void listFiles(TextTerminal<?> terminal, String dataSet) {
         LOG.debug("*** listFiles ***");

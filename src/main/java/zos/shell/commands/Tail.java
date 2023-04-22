@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Tail extends JobLog {
 
-    private static Logger LOG = LoggerFactory.getLogger(Tail.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Tail.class);
 
     private final TextTerminal<?> terminal;
 

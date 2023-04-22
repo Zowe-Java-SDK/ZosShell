@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class Delete {
 
-    private static Logger LOG = LoggerFactory.getLogger(Delete.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Delete.class);
 
     private final TextTerminal<?> terminal;
     private final ZosDsn zosDsn;

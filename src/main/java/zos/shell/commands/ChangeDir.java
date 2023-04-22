@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ChangeDir {
 
-    private static Logger LOG = LoggerFactory.getLogger(ChangeDir.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChangeDir.class);
 
     private final TextTerminal<?> terminal;
     private final ZosDsnList zosDsnList;

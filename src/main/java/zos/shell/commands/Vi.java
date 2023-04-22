@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class Vi {
 
-    private static Logger LOG = LoggerFactory.getLogger(Vi.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Vi.class);
 
     private final Download download;
     private final Runtime rs = Runtime.getRuntime();

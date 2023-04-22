@@ -13,7 +13,7 @@ import java.io.FileReader;
 
 public class Save {
 
-    private static Logger LOG = LoggerFactory.getLogger(Save.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Save.class);
 
     private final ZosDsn zosDsn;
 
