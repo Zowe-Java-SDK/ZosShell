@@ -298,6 +298,21 @@ public class Commands {
         LocalFiles.listFiles(terminal, dataSet);
     }
 
+    public void grep(ZOSConnection connection, String pattern, String member, String dataSet) {
+        LOG.debug("*** grep ***");
+        if (!Util.isMember(member)) {
+            terminal.println("invalid 8 character sequence, try again...");
+            return;
+        }
+        if (Util.isMember(member) && dataSet.isEmpty()) {
+            terminal.println(Constants.DATASET_NOT_SPECIFIED);
+            return;
+        }
+        final var concatenate = new Concatenate(new Download(new ZosDsnDownload(connection), false));
+        final var grep = new Grep(concatenate, pattern);
+        grep.search(dataSet, member).forEach(terminal::println);
+    }
+
     public void help() {
         LOG.debug("*** help ***");
         Help.displayHelp(terminal);
