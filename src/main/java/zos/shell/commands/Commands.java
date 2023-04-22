@@ -475,15 +475,12 @@ public class Commands {
     private static String getMakeDirStr(TextIO mainTextIO, String prompt) {
         LOG.debug("*** getMakeDirStr ***");
         String input;
-        while (true) {
+        do {
             input = mainTextIO.newStringInputReader().withMaxLength(80).read(prompt);
             if ("q".equalsIgnoreCase(input) || "quit".equalsIgnoreCase(input) || "exit".equalsIgnoreCase(input)) {
                 return null;
             }
-            if (!Util.isStrNum(input)) {
-                break;
-            }
-        }
+        } while (Util.isStrNum(input));
         return input;
     }
 
