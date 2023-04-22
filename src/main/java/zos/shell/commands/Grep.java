@@ -65,7 +65,7 @@ public class Grep {
                     if (misMatchShiftsTable.get(text.charAt(i + j)) != null) {
                         numOfSkips = misMatchShiftsTable.get(text.charAt(i + j));
                     } else {
-                        numOfSkips = lengthOfPattern;
+                        numOfSkips = misMatchShiftsTable.size();
                     }
                     break;
                 }
