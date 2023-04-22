@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 public class Util {
 
-    private static Logger LOG = LoggerFactory.getLogger(Util.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Util.class);
 
     private static final String PATTERN_STRING_MORE_THAN_ONE_CHAR = "[A-Z#@\\$][A-Z\\d#@\\$\\-]{1,7}";
     private static final String PATTERN_STRING_FOR_ONE_CHAR = "[A-Z#@\\$]{1}";

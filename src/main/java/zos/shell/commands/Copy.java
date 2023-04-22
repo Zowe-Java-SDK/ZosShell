@@ -10,7 +10,7 @@ import zowe.client.sdk.zosfiles.ZosDsnCopy;
 
 public class Copy {
 
-    private static Logger LOG = LoggerFactory.getLogger(Copy.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Copy.class);
 
     private final ZosDsnCopy zosDsnCopy;
 

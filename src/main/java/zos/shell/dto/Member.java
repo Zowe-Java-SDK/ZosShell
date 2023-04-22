@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Member {
 
-    private static Logger LOG = LoggerFactory.getLogger(Member.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Member.class);
 
     private final ZosDsnList zosDsnList;
     private final ListParams params = new ListParams.Builder().build();

@@ -13,7 +13,7 @@ import java.io.StringWriter;
 
 public class Concatenate {
 
-    private static Logger LOG = LoggerFactory.getLogger(Concatenate.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Concatenate.class);
 
     private final Download download;
 

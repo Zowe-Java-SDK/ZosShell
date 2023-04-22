@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 
 public class History {
 
-    private static Logger LOG = LoggerFactory.getLogger(History.class);
+    private static final Logger LOG = LoggerFactory.getLogger(History.class);
 
     private final TextTerminal<?> terminal;
     private final List<String> commandLst = new LinkedList<>();

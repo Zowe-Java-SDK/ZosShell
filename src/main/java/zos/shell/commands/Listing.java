@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 public class Listing {
 
-    private static Logger LOG = LoggerFactory.getLogger(Listing.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Listing.class);
 
     private final TextTerminal<?> terminal;
     private final long timeout;

@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class Config {
 
-    private static Logger LOG = LoggerFactory.getLogger(Config.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Config.class);
 
     private final TextTerminal<?> terminal;
     private String frontSize;

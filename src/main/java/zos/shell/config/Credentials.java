@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class Credentials {
 
-    private static Logger LOG = LoggerFactory.getLogger(Credentials.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Credentials.class);
 
     public static void readCredentials(List<ZOSConnection> connections, Map<String, SSHConnection> sshConnections) {
         LOG.debug("*** readCredentials ***");

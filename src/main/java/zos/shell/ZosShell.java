@@ -27,7 +27,7 @@ import java.util.function.BiConsumer;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
-    private static Logger LOG = LoggerFactory.getLogger(ZosShell.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ZosShell.class);
 
     private static final ListMultimap<String, String> dataSets = ArrayListMultimap.create();
     private static String currDataSet = "";

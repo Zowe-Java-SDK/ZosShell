@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class Ussh {
 
-    private static Logger LOG = LoggerFactory.getLogger(Ussh.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Ussh.class);
 
     private final TextTerminal<?> terminal;
     private final SSHConnection sshConnection;

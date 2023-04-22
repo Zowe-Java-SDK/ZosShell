@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class MvsConsoles {
 
-    private static Logger LOG = LoggerFactory.getLogger(MvsConsoles.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MvsConsoles.class);
 
     private final Map<String, String> consoles = new HashMap<>();
 

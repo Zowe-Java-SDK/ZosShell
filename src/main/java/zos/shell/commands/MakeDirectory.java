@@ -9,7 +9,7 @@ import zowe.client.sdk.zosfiles.input.CreateParams;
 
 public class MakeDirectory {
 
-    private static Logger LOG = LoggerFactory.getLogger(MakeDirectory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MakeDirectory.class);
 
     private final ZosDsn zosDsn;
 

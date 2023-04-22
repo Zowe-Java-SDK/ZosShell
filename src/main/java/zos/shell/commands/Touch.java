@@ -10,7 +10,7 @@ import zowe.client.sdk.zosfiles.ZosDsn;
 
 public class Touch {
 
-    private static Logger LOG = LoggerFactory.getLogger(Touch.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Touch.class);
 
     private final ZosDsn zosDsn;
     private final Member members;

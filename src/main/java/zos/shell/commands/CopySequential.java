@@ -9,7 +9,7 @@ import zowe.client.sdk.zosfiles.ZosDsnCopy;
 
 public class CopySequential {
 
-    private static Logger LOG = LoggerFactory.getLogger(CopySequential.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CopySequential.class);
 
     private final ZosDsnCopy zosDsnCopy;
 

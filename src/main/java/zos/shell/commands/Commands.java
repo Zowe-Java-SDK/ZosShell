@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 public class Commands {
 
-    private static Logger LOG = LoggerFactory.getLogger(Commands.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Commands.class);
 
     private final List<ZOSConnection> connections;
     private final TextTerminal<?> terminal;

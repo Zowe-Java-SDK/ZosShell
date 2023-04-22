@@ -9,7 +9,7 @@ import zowe.client.sdk.zosjobs.response.Job;
 
 public class Submit {
 
-    private static Logger LOG = LoggerFactory.getLogger(Submit.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Submit.class);
 
     private final SubmitJobs submitJobs;
 
