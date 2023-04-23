@@ -102,14 +102,14 @@ public class Listing {
 
     private List<Member> getMembers(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
         LOG.debug("*** getMembers ***");
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureDsnMembers(zosDsnList, dataSet, params));
         return submit.get(timeout, TimeUnit.SECONDS);
     }
 
     private List<Dataset> getDataSets(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
         LOG.debug("*** getDataSets ***");
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureListDsn(zosDsnList, dataSet, params));
         return submit.get(timeout, TimeUnit.SECONDS);
     }

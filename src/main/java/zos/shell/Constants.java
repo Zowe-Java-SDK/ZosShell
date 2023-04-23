@@ -65,6 +65,8 @@ public final class Constants {
     public static final String CONFIG_PATH_FILE_WINDOWS = PATH_FILE_DIRECTORY_WINDOWS + "\\config.txt";
     public static final String SEVERE_ERROR = "server error, check connection...";
     public static final int STRING_PAD_LENGTH = 8;
+    public static final int THREAD_POOL_MIN = 1;
+    public static final int THREAD_POOL_MAX = 10;
     public static final String TIMEOUT_MESSAGE = "command exceeded time out value, double check and try again...";
     public static final String TOO_MANY_PARAMETERS = "too many parameters, try again...";
     public static final String UTF8 = "UTF8";

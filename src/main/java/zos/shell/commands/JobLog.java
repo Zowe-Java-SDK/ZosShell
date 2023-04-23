@@ -2,6 +2,7 @@ package zos.shell.commands;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.future.FutureBrowseJob;
 import zowe.client.sdk.zosjobs.GetJobs;
@@ -59,7 +60,7 @@ public class JobLog {
             return new ResponseStatus(msg, false);
         }
 
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = isAll ? pool.submit(new FutureBrowseJob(getJobs, files)) :
                 pool.submit(new FutureBrowseJob(getJobs, List.of(files.get(0))));
         try {

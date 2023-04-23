@@ -79,14 +79,14 @@ public class Commands {
 
     public void cancel(ZOSConnection connection, String jobOrTask) {
         LOG.debug("*** cancel ***");
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureTerminate(new IssueCommand(connection), Terminate.Type.CANCEL, jobOrTask));
         processFuture(pool, submit);
     }
 
     public StringBuilder cat(ZOSConnection connection, String dataSet, String member) {
         LOG.debug("*** cat ***");
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureConcatenate(new Download(new ZosDsnDownload(connection), false), dataSet, member));
         final var result = processFuture(pool, submit);
         if (result != null) {
@@ -180,7 +180,7 @@ public class Commands {
 
     public void count(ZOSConnection connection, String dataSet, String filter) {
         LOG.debug("*** count ***");
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureCount(new ZosDsnList(connection), dataSet, filter));
         processFuture(pool, submit);
     }
@@ -230,7 +230,7 @@ public class Commands {
 
     public void downloadJob(ZOSConnection currConnection, String param, boolean isAll) {
         LOG.debug("*** downloadJob ***");
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureDownloadJob(new GetJobs(currConnection), isAll, timeOutValue, param));
         processFuture(pool, submit);
     }
@@ -245,7 +245,7 @@ public class Commands {
             terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
             return rss;
         }
-        final var pool = Executors.newFixedThreadPool(members.size());
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
         final var futures = new ArrayList<Future<ResponseStatus>>();
 
         for (final var member : members) {
@@ -266,7 +266,7 @@ public class Commands {
             return new ArrayList<>();
         }
 
-        final var pool = Executors.newFixedThreadPool(members.size());
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
         final var futures = new ArrayList<Future<ResponseStatus>>();
 
         for (final var member : members) {
@@ -314,7 +314,7 @@ public class Commands {
             return;
         }
 
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var concatenate = new Concatenate(new Download(new ZosDsnDownload(connection), false));
         final var submit = pool.submit(new FutureGrep(new Grep(concatenate, pattern), dataSet, member));
         List<String> result;
@@ -333,7 +333,7 @@ public class Commands {
     private List<String> multipleGrep(ZOSConnection connection, String pattern, String dataSet, List<String> members) {
         LOG.debug("*** multipleGrep ***");
         final var results = new ArrayList<String>();
-        final var pool = Executors.newFixedThreadPool(10);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
         final var futures = new ArrayList<Future<List<String>>>();
 
         for (final var member : members) {
@@ -513,7 +513,7 @@ public class Commands {
             }
         }
 
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureMakeDirectory(new ZosDsn(connection), param, createParams));
         processFuture(pool, submit);
     }
@@ -546,7 +546,7 @@ public class Commands {
 
     public void mvsCommand(ZOSConnection connection, String command) {
         LOG.debug("*** mvsCommand ***");
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureMvs(connection, command));
         processFuture(pool, submit);
     }
@@ -558,14 +558,14 @@ public class Commands {
 
     public void purgeJob(ZOSConnection connection, String item) {
         LOG.debug("*** purgeJob ***");
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FuturePurgeJob(connection, item));
         processFuture(pool, submit);
     }
 
     public void ps(ZOSConnection connection, String jobOrTask) {
         LOG.debug("*** ps ***");
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureProcessList(new GetJobs(connection), jobOrTask));
         processFuture(pool, submit);
     }
@@ -585,7 +585,7 @@ public class Commands {
     public void save(ZOSConnection connection, String dataSet, String[] params) {
         LOG.debug("*** save ***");
         final var member = params[1];
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureSave(new ZosDsn(connection), dataSet, member));
         processFuture(pool, submit);
     }
@@ -598,7 +598,7 @@ public class Commands {
 
     public void stop(ZOSConnection connection, String jobOrTask) {
         LOG.debug("*** stop ***");
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureTerminate(new IssueCommand(connection), Terminate.Type.STOP,
                 jobOrTask));
         processFuture(pool, submit);
@@ -606,7 +606,7 @@ public class Commands {
 
     public void submit(ZOSConnection connection, String dataSet, String jobName) {
         LOG.debug("*** submit ***");
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureSubmit(new SubmitJobs(connection), dataSet, jobName));
         processFuture(pool, submit);
     }
@@ -666,7 +666,7 @@ public class Commands {
     public void touch(ZOSConnection connection, String dataSet, String[] params) {
         LOG.debug("*** touch ***");
         final var member = params[1];
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureTouch(new ZosDsn(connection),
                 new Member(new ZosDsnList(connection)), dataSet, member));
         processFuture(pool, submit);
@@ -705,7 +705,7 @@ public class Commands {
     public void vi(ZOSConnection connection, String dataSet, String[] params) {
         LOG.debug("*** vi ***");
         final var member = params[1];
-        final var pool = Executors.newFixedThreadPool(1);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureVi(
                 new Download(new ZosDsnDownload(connection), false), dataSet, member));
         processFuture(pool, submit);
