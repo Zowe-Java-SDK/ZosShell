@@ -454,6 +454,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
+                if (isCurrDataSetNotSpecified()) {
+                    return;
+                }
                 commands.grep(currConnection, params[1], params[2], currDataSet);
                 break;
             case "h":

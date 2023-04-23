@@ -9,11 +9,20 @@ public class Grep {
 
     private final Concatenate concatenate;
     private String pattern;
+    private boolean withMember;
     private Map<Character, Integer> misMatchShiftsTable = new HashMap<>();
 
     public Grep(Concatenate concatenate, String pattern) {
         this.concatenate = concatenate;
         this.pattern = pattern;
+        this.withMember = false;
+        this.compileMisMatchShiftsTable();
+    }
+
+    public Grep(Concatenate concatenate, String pattern, boolean withMember) {
+        this.concatenate = concatenate;
+        this.pattern = pattern;
+        this.withMember = withMember;
         this.compileMisMatchShiftsTable();
     }
 
@@ -27,6 +36,9 @@ public class Grep {
             String foundStr = content.substring(index);
 
             StringBuilder entireLine = new StringBuilder();
+            if (withMember) {
+                entireLine.append(member).append(":");
+            }
             for (var i = index - 1; i >= 0; i--) {
                 if (content.charAt(i) == '\n') {
                     break;
