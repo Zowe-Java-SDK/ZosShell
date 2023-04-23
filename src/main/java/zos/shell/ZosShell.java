@@ -529,10 +529,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     if (isCurrDataSetNotSpecified()) {
                         return;
                     }
-                    boolean isAttributes = true;
-                    if ("--l".equalsIgnoreCase(params[1])) {
-                        isAttributes = false;
-                    }
+                    boolean isAttributes = !"--l".equalsIgnoreCase(params[1]);
                     commands.lsl(currConnection, currDataSet, isAttributes);
                     addVisited();
                     return;
