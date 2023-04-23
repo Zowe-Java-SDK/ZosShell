@@ -18,7 +18,7 @@ public class FutureGrep implements Callable<List<String>> {
     }
 
     @Override
-    public List<String> call() throws Exception {
+    public List<String> call() {
         return grep.search(dataSet, member);
     }
 
