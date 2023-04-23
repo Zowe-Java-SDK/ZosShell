@@ -499,10 +499,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     if (isCurrDataSetNotSpecified()) {
                         return;
                     }
-                    boolean isAttributes = true;
-                    if ("--l".equalsIgnoreCase(params[1])) {
-                        isAttributes = false;
-                    }
+                    boolean isAttributes = !"--l".equalsIgnoreCase(params[1]);
                     final var value = params[2];
                     final var size = params[2].length();
                     if (size <= 9 && value.charAt(size - 1) == '*') {  // is member with wild card specified...
