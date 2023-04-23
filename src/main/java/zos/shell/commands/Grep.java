@@ -36,9 +36,7 @@ public class Grep {
             String foundStr = content.substring(index);
 
             StringBuilder entireLine = new StringBuilder();
-            if (withMember) {
-                entireLine.append(member).append(":");
-            }
+
             for (var i = index - 1; i >= 0; i--) {
                 if (content.charAt(i) == '\n') {
                     break;
@@ -53,7 +51,10 @@ public class Grep {
                 entireLine.append(foundStr.charAt(i));
             }
 
-            lines.add(entireLine.toString());
+            if (entireLine.length() > 0) {
+                final var title = member + ":";
+                lines.add(withMember ? entireLine.insert(0, title).toString() : entireLine.toString());
+            }
             var newIndex = index + pattern.length();
             if (newIndex > content.length()) {
                 break;
@@ -66,8 +67,8 @@ public class Grep {
     }
 
     private int findPosition(String text) {
-        var lengthOfPattern = pattern.length();
-        var lengthOfText = text.length();
+        final var lengthOfPattern = pattern.length();
+        final var lengthOfText = text.length();
         int numOfSkips;
 
         for (var i = 0; i <= lengthOfText - lengthOfPattern; i += numOfSkips) {
@@ -92,7 +93,7 @@ public class Grep {
     }
 
     private void compileMisMatchShiftsTable() {
-        var lengthOfPattern = pattern.length();
+        final var lengthOfPattern = pattern.length();
         for (var i = 0; i < lengthOfPattern; i++) {
             misMatchShiftsTable.put(pattern.charAt(i), Math.max(1, lengthOfPattern - i - 1));
         }
