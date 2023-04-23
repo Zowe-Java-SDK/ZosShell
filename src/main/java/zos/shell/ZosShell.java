@@ -67,8 +67,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         mainTerminal.setPaneTitle(Constants.APP_TITLE + title);
 
         final var iconURL = ZosShell.class.getResource("/image/zowe-icon.png");
-        final var icon = new ImageIcon(iconURL);
-        mainTerminal.getFrame().setIconImage(icon.getImage());
+        if (iconURL != null) {
+            final var icon = new ImageIcon(iconURL);
+            mainTerminal.getFrame().setIconImage(icon.getImage());
+        }
 
         mainTerminal.registerHandler("ctrl C", t -> {
             t.getTextPane().copy();
