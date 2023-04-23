@@ -58,7 +58,7 @@ public class Listing {
 
         try {
             dataSets = getDataSets(dataSet);
-            isDataSets = dataSets.size() > 1 ? true : false;
+            isDataSets = dataSets.size() > 1;
             members = getMembers(dataSet);
         } catch (TimeoutException e) {
             throw new TimeoutException(e.getMessage());
