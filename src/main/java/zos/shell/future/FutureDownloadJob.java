@@ -19,7 +19,7 @@ public class FutureDownloadJob extends DownloadJob implements Callable<ResponseS
     @Override
     public ResponseStatus call() {
         final var responseStatus = this.download(jobName);
-        if (responseStatus != null & responseStatus.isStatus()) {
+        if (responseStatus != null && responseStatus.isStatus()) {
             Util.openFileLocation(responseStatus.getOptionalData());
         }
         return responseStatus;
