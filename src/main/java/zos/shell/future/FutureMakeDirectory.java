@@ -19,7 +19,7 @@ public class FutureMakeDirectory extends MakeDirectory implements Callable<Respo
     }
 
     @Override
-    public ResponseStatus call() throws Exception {
+    public ResponseStatus call() {
         return this.mkdir(dataset, params);
     }
 
