@@ -33,9 +33,8 @@ public class Grep {
 
         var index = findPosition(content.toString());
         while (index != 0) {
-            String foundStr = content.substring(index);
-
-            StringBuilder entireLine = new StringBuilder();
+            final var foundStr = content.substring(index);
+            final var entireLine = new StringBuilder();
 
             for (var i = index - 1; i >= 0; i--) {
                 if (content.charAt(i) == '\n') {
@@ -55,7 +54,7 @@ public class Grep {
                 final var title = member + ":";
                 lines.add(withMember ? entireLine.insert(0, title).toString() : entireLine.toString());
             }
-            var newIndex = index + pattern.length();
+            final var newIndex = index + pattern.length();
             if (newIndex > content.length()) {
                 break;
             }
