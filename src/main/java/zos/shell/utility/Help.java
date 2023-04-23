@@ -31,6 +31,7 @@ public class Help {
             "                          if arg2 is equal to \"all\", download all job's spool output",
             "end                     - end session closes shell UI window",
             "files                   - list all files under local pwd drive value",
+            "g | grep <arg> <arg2>   - where arg is search string and arg2 is member value",
             "h | help                - list commands",
             "history <arg>           - where arg is optional and indicates the number to display from bottom",
             "hostname                - display current hostname connection",

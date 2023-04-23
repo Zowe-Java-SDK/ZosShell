@@ -443,6 +443,19 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 commands.files(currDataSet);
                 break;
+            case "g":
+            case "grep":
+                if (isParamsMissing(1, params)) {
+                    return;
+                }
+                if (isParamsMissing(2, params)) {
+                    return;
+                }
+                if (isParamsExceeded(3, params)) {
+                    return;
+                }
+                commands.grep(currConnection, params[1], params[2], currDataSet);
+                break;
             case "h":
             case "help":
                 if (isParamsExceeded(1, params)) {
