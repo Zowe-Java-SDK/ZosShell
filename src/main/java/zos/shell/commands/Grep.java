@@ -8,9 +8,9 @@ import java.util.Map;
 public class Grep {
 
     private final Concatenate concatenate;
-    private String pattern;
-    private boolean withMember;
-    private Map<Character, Integer> misMatchShiftsTable = new HashMap<>();
+    private final String pattern;
+    private final boolean withMember;
+    private final Map<Character, Integer> misMatchShiftsTable = new HashMap<>();
 
     public Grep(Concatenate concatenate, String pattern) {
         this.concatenate = concatenate;

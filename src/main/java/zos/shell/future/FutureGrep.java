@@ -7,9 +7,9 @@ import java.util.concurrent.Callable;
 
 public class FutureGrep implements Callable<List<String>> {
 
-    private Grep grep;
-    private String dataSet;
-    private String member;
+    private final Grep grep;
+    private final String dataSet;
+    private final String member;
 
     public FutureGrep(Grep grep, String dataSet, String member) {
         this.grep = grep;
