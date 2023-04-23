@@ -188,7 +188,7 @@ public class Commands {
     public void download(ZOSConnection connection, String currDataSet, String member, boolean isBinary) {
         LOG.debug("*** download ***");
         if ("*".equals(member)) {
-            final List<String> members = Util.getMembers(terminal, connection, currDataSet);
+            final var members = Util.getMembers(terminal, connection, currDataSet);
             if (members.isEmpty()) {
                 terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
                 return;
@@ -300,17 +300,62 @@ public class Commands {
 
     public void grep(ZOSConnection connection, String pattern, String member, String dataSet) {
         LOG.debug("*** grep ***");
-        if (!Util.isMember(member)) {
-            terminal.println("invalid 8 character sequence, try again...");
+        if ("*".equals(member)) {
+            final var members = Util.getMembers(terminal, connection, dataSet);
+            multipleGrep(connection, pattern, dataSet, members).forEach(terminal::println);
             return;
         }
-        if (Util.isMember(member) && dataSet.isEmpty()) {
-            terminal.println(Constants.DATASET_NOT_SPECIFIED);
+
+        if (member.contains("*") && Util.isMember(member.substring(0, member.indexOf("*")))) {
+            var members = Util.getMembers(terminal, connection, dataSet);
+            final var searchForMember = member.substring(0, member.indexOf("*")).toUpperCase();
+            members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
+            multipleGrep(connection, pattern, dataSet, members).forEach(terminal::println);
             return;
         }
+
+        final var pool = Executors.newFixedThreadPool(1);
         final var concatenate = new Concatenate(new Download(new ZosDsnDownload(connection), false));
-        final var grep = new Grep(concatenate, pattern);
-        grep.search(dataSet, member).forEach(terminal::println);
+        final var submit = pool.submit(new FutureGrep(new Grep(concatenate, pattern), dataSet, member));
+        List<String> result;
+        try {
+            result = submit.get(timeOutValue, TimeUnit.SECONDS);
+            result.forEach(terminal::println);
+        } catch (TimeoutException e) {
+            terminal.println(Constants.TIMEOUT_MESSAGE);
+        } catch (ExecutionException | InterruptedException e) {
+            terminal.println(Util.getErrorMsg(e + ""));
+        }
+        pool.shutdownNow();
+
+    }
+
+    private List<String> multipleGrep(ZOSConnection connection, String pattern, String dataSet, List<String> members) {
+        LOG.debug("*** multipleGrep ***");
+        final var results = new ArrayList<String>();
+        final var pool = Executors.newFixedThreadPool(10);
+        final var futures = new ArrayList<Future<List<String>>>();
+
+        for (final var member : members) {
+            final var concatenate = new Concatenate(new Download(new ZosDsnDownload(connection), false));
+            futures.add(pool.submit(new FutureGrep(new Grep(concatenate, pattern, true), dataSet, member)));
+        }
+
+        for (final var future : futures) {
+            try {
+                results.addAll(future.get(timeOutValue, TimeUnit.SECONDS));
+            } catch (TimeoutException e) {
+                results.addAll(List.of("timeout"));
+            } catch (InterruptedException | ExecutionException e) {
+                results.addAll(List.of(Util.getErrorMsg(e + "")));
+            }
+        }
+
+        pool.shutdownNow();
+        if (results.isEmpty()) {
+            results.addAll(List.of("nothing found, try again..."));
+        }
+        return results;
     }
 
     public void help() {
@@ -680,5 +725,6 @@ public class Commands {
         pool.shutdownNow();
         return result;
     }
+
 
 }

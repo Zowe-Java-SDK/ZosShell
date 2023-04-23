@@ -9,11 +9,20 @@ public class Grep {
 
     private final Concatenate concatenate;
     private String pattern;
+    private boolean withMember;
     private Map<Character, Integer> misMatchShiftsTable = new HashMap<>();
 
     public Grep(Concatenate concatenate, String pattern) {
         this.concatenate = concatenate;
         this.pattern = pattern;
+        this.withMember = false;
+        this.compileMisMatchShiftsTable();
+    }
+
+    public Grep(Concatenate concatenate, String pattern, boolean withMember) {
+        this.concatenate = concatenate;
+        this.pattern = pattern;
+        this.withMember = withMember;
         this.compileMisMatchShiftsTable();
     }
 
@@ -24,9 +33,9 @@ public class Grep {
 
         var index = findPosition(content.toString());
         while (index != 0) {
-            String foundStr = content.substring(index);
+            final var foundStr = content.substring(index);
+            final var entireLine = new StringBuilder();
 
-            StringBuilder entireLine = new StringBuilder();
             for (var i = index - 1; i >= 0; i--) {
                 if (content.charAt(i) == '\n') {
                     break;
@@ -41,8 +50,11 @@ public class Grep {
                 entireLine.append(foundStr.charAt(i));
             }
 
-            lines.add(entireLine.toString());
-            var newIndex = index + pattern.length();
+            if (entireLine.length() > 0) {
+                final var title = member + ":";
+                lines.add(withMember ? entireLine.insert(0, title).toString() : entireLine.toString());
+            }
+            final var newIndex = index + pattern.length();
             if (newIndex > content.length()) {
                 break;
             }
@@ -54,8 +66,8 @@ public class Grep {
     }
 
     private int findPosition(String text) {
-        var lengthOfPattern = pattern.length();
-        var lengthOfText = text.length();
+        final var lengthOfPattern = pattern.length();
+        final var lengthOfText = text.length();
         int numOfSkips;
 
         for (var i = 0; i <= lengthOfText - lengthOfPattern; i += numOfSkips) {
@@ -80,7 +92,7 @@ public class Grep {
     }
 
     private void compileMisMatchShiftsTable() {
-        var lengthOfPattern = pattern.length();
+        final var lengthOfPattern = pattern.length();
         for (var i = 0; i < lengthOfPattern; i++) {
             misMatchShiftsTable.put(pattern.charAt(i), Math.max(1, lengthOfPattern - i - 1));
         }
