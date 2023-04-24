@@ -519,6 +519,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                             return;
                         } else {
                             terminal.println(Constants.INVALID_MEMBER);
+                            return;
                         }
                     } else if (Util.isMember(value)) {  // is member without wild card specified...
                         commands.lsl(currConnection, value, currDataSet, isAttributes);
@@ -528,6 +529,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         return;
                     } else {  // must be an invalid member or dataset specified...
                         terminal.println(Constants.INVALID_DATASET_AND_MEMBER);
+                        return;
                     }
                 }
                 if (params.length == 2 && ("-l".equals(params[1]) || "--l".equals(params[1]))) {
