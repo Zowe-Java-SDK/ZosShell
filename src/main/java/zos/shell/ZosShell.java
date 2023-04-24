@@ -508,7 +508,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 3 && ("-l".equals(params[1]) || "--l".equals(params[1]))) {
-                    boolean isAttributes = !"--l".equals(params[1]);
+                    final var isAttributes = !"--l".equals(params[1]);
                     final var value = params[2];
                     final var size = params[2].length();
                     if (size <= 9 && value.charAt(size - 1) == '*') {  // is member with wild card specified...
@@ -536,7 +536,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     if (isCurrDataSetNotSpecified()) {
                         return;
                     }
-                    boolean isAttributes = !"--l".equals(params[1]);
+                    final var isAttributes = !"--l".equals(params[1]);
                     commands.lsl(currConnection, currDataSet, isAttributes);
                     addVisited();
                     return;
