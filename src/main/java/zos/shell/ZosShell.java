@@ -532,9 +532,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     }
                 }
                 if (params.length == 2 && ("-l".equals(params[1]) || "--l".equals(params[1]))) {
-                    if (isCurrDataSetNotSpecified()) {
-                        return;
-                    }
                     final var isAttributes = !"--l".equals(params[1]);
                     commands.lsl(currConnection, currDataSet, isAttributes);
                     addVisited();
