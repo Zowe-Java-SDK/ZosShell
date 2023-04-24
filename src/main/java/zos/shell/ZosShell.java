@@ -516,11 +516,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         final var member = value.substring(0, index);
                         if (Util.isMember(member)) {  // validate member value without wild card char...
                             commands.lsl(currConnection, value, currDataSet, isAttributes);
-                            return;
                         } else {
                             terminal.println(Constants.INVALID_MEMBER);
-                            return;
                         }
+                        return;
                     } else if (Util.isMember(value)) {  // is member without wild card specified...
                         commands.lsl(currConnection, value, currDataSet, isAttributes);
                         return;
