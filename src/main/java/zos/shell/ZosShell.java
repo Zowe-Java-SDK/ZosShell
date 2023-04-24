@@ -504,10 +504,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     terminal.println(Constants.INVALID_COMMAND);
                     return;
                 }
+                if (isCurrDataSetNotSpecified()) {
+                    return;
+                }
                 if (params.length == 3 && ("-l".equals(params[1]) || "--l".equals(params[1]))) {
-                    if (isCurrDataSetNotSpecified()) {
-                        return;
-                    }
                     boolean isAttributes = !"--l".equals(params[1]);
                     final var value = params[2];
                     final var size = params[2].length();
