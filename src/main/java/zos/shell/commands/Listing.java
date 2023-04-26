@@ -69,7 +69,8 @@ public class Listing {
             final var index = m.indexOf("*");
             final var searchForMember = index == -1 ? m : m.substring(0, index);
             if (m.equals(searchForMember)) {
-                members = members.stream().filter(i -> i.equals(searchForMember)).collect(Collectors.toList());
+                members = members.stream()
+                        .filter(i -> i.getMember().orElse("n\\a").equals(searchForMember)).collect(Collectors.toList());
             } else {
                 members = members.stream()
                         .filter(i -> i.getMember().orElse("").startsWith(searchForMember)).collect(Collectors.toList());
