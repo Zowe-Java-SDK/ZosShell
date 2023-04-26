@@ -490,20 +490,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
-                if (params.length == 2
-                        && !"-l".equals(params[1])
-                        && !"--l".equals(params[1])
-                        && !Util.isDataSet(params[1])) {
-                    terminal.println(Constants.INVALID_COMMAND);
-                    return;
-                }
-                if (params.length == 3
-                        && !"-l".equals(params[1])
-                        && !"--l".equals(params[1])
-                        && !Util.isDataSet(params[2])) {
-                    terminal.println(Constants.INVALID_COMMAND);
-                    return;
-                }
                 if (isCurrDataSetNotSpecified()) {
                     return;
                 }
