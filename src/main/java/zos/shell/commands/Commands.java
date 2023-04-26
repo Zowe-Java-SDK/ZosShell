@@ -345,15 +345,15 @@ public class Commands {
             try {
                 results.addAll(future.get(timeOutValue, TimeUnit.SECONDS));
             } catch (TimeoutException e) {
-                results.addAll(List.of("timeout"));
+                results.add("timeout");
             } catch (InterruptedException | ExecutionException e) {
-                results.addAll(List.of(Util.getErrorMsg(e + "")));
+                results.add(Util.getErrorMsg(e + ""));
             }
         }
 
         pool.shutdownNow();
         if (results.isEmpty()) {
-            results.addAll(List.of("nothing found, try again..."));
+            results.add("nothing found, try again...");
         }
         return results;
     }
