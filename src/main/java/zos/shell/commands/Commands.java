@@ -166,6 +166,26 @@ public class Commands {
         terminal.println(copy.copy(currDataSet, params).getMessage());
     }
 
+    private List<ResponseStatus> multipleCopy(ZOSConnection connection, String fromDataSetName, String toDataSetName,
+                                              List<String> members) {
+        LOG.debug("*** multipleCopy ***");
+        if (!Util.isDataSet(toDataSetName)) {
+            terminal.println(Constants.INVALID_DATASET);
+            return new ArrayList<>();
+        }
+
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
+        final var futures = new ArrayList<Future<ResponseStatus>>();
+
+        for (final var member : members) {
+            futures.add(pool.submit(new FutureCopy(new ZosDsnCopy(connection), fromDataSetName, toDataSetName, member)));
+        }
+
+        final var result = getFutureResults(futures);
+        pool.shutdownNow();
+        return result;
+    }
+
     public void copySequential(ZOSConnection connection, String currDataSet, String[] params) {
         LOG.debug("*** copySequential ***");
         CopySequential copy;
@@ -254,26 +274,6 @@ public class Commands {
 
         final var result = getFutureResults(futures);
         Util.openFileLocation(result.get(0).getOptionalData());
-        pool.shutdownNow();
-        return result;
-    }
-
-    private List<ResponseStatus> multipleCopy(ZOSConnection connection, String fromDataSetName, String toDataSetName,
-                                              List<String> members) {
-        LOG.debug("*** multipleCopy ***");
-        if (!Util.isDataSet(toDataSetName)) {
-            terminal.println(Constants.INVALID_DATASET);
-            return new ArrayList<>();
-        }
-
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
-        final var futures = new ArrayList<Future<ResponseStatus>>();
-
-        for (final var member : members) {
-            futures.add(pool.submit(new FutureCopy(new ZosDsnCopy(connection), fromDataSetName, toDataSetName, member)));
-        }
-
-        final var result = getFutureResults(futures);
         pool.shutdownNow();
         return result;
     }
