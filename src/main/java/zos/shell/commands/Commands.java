@@ -327,7 +327,6 @@ public class Commands {
             terminal.println(Util.getErrorMsg(e + ""));
         }
         pool.shutdownNow();
-
     }
 
     private List<String> multipleGrep(ZOSConnection connection, String pattern, String dataSet, List<String> members) {
