@@ -94,7 +94,7 @@ public class Listing {
 
         // ls
         final var line = new StringBuilder();
-        for (Member item : members) {
+        for (final var item : members) {
             line.append(String.format("%-8s", item.getMember().orElse("")));
             line.append(" ");
         }
