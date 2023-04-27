@@ -41,7 +41,7 @@ public class Listing {
     }
 
     public void ls(String memberValue, String dataSet, boolean isColumnView, boolean isAttributes)
-            throws ExecutionException, InterruptedException, TimeoutException {
+            throws TimeoutException {
         LOG.debug("*** ls ***");
         final var paramsBuilder = new ListParams.Builder()
                 .maxLength("0")  // return all

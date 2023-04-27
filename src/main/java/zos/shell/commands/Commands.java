@@ -369,8 +369,6 @@ public class Commands {
             listing.ls(member, dataSet, true, false);
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
-        } catch (ExecutionException | InterruptedException e) {
-            terminal.println(Util.getErrorMsg(e + ""));
         }
     }
 
@@ -381,8 +379,6 @@ public class Commands {
             listing.ls(null, dataSet, true, false);
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
-        } catch (ExecutionException | InterruptedException e) {
-            terminal.println(Util.getErrorMsg(e + ""));
         }
     }
 
@@ -398,8 +394,6 @@ public class Commands {
             listing.ls(member, dataSet, false, isAttributes);
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
-        } catch (ExecutionException | InterruptedException e) {
-            terminal.println(Util.getErrorMsg(e + ""));
         }
     }
 
