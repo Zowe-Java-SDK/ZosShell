@@ -87,6 +87,7 @@ Along with following custom commands:
                                           if "all" is specified, display output from all of job's spool content
                                           line limit is 25 by default if not specified in arg2
     t | timeout <arg>                   - where arg is optional, with arg value you set new timeout, without shows current value
+    tso <arg>                           - execute a tso command where arg is a command string within double quotes
     ussh <arg>                          - execute a uss (unix) command via SSH connection where arg is a command string within double quotes
     v | visited                         - a list of visited datasets  
   

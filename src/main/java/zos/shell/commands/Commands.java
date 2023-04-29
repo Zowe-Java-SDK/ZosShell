@@ -665,6 +665,13 @@ public class Commands {
         processFuture(pool, submit);
     }
 
+    public void tsoCommand(ZOSConnection connection, String accountNumber, String command) {
+        LOG.debug("*** tsoCommand ***");
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        final var submit = pool.submit(new FutureTso(connection, accountNumber, command));
+        processFuture(pool, submit);
+    }
+
     public void uname(ZOSConnection currConnection) {
         LOG.debug("*** uname ***");
         if (currConnection != null) {

@@ -684,6 +684,16 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 commands.touch(currConnection, currDataSet, params);
                 break;
+            case "tso":
+                if (isParamsMissing(1, params)) {
+                    return;
+                }
+                final var tsoCommandCandidate = getCommandFromParams(params);
+                final var tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
+                if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {
+                    commands.tsoCommand(currConnection, "", tsoCommandCandidate.toString());
+                }
+                break;
             case "uname":
                 if (isParamsExceeded(1, params)) {
                     return;
