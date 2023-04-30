@@ -1,6 +1,5 @@
 package zos.shell.commands;
 
-import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
@@ -34,9 +33,6 @@ public class MvsCommand {
 
     public ResponseStatus executeCommand(String command) {
         LOG.debug("*** executeCommand ***");
-        if (!SystemUtils.IS_OS_WINDOWS && !SystemUtils.IS_OS_MAC_OSX) {
-            return new ResponseStatus(Constants.OS_ERROR, false);
-        }
 
         final var p = Pattern.compile("\"([^\"]*)\"");
         final var m = p.matcher(command);
