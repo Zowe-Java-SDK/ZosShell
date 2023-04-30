@@ -439,6 +439,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 break;
+            case "env":
+                if (isParamsExceeded(1, params)) {
+                    return;
+                }
+                commands.env();
+                break;
             case "files":
                 if (isParamsExceeded(1, params)) {
                     return;
@@ -626,6 +632,16 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 commands.search(commandOutput, params[1]);
+                break;
+            case "set":
+                if (isParamsMissing(1, params)) {
+                    return;
+                }
+                if (isParamsExceeded(2, params)) {
+                    return;
+                }
+                param = params[1];
+                commands.set(param);
                 break;
             case "stop":
                 if (isParamsMissing(1, params)) {

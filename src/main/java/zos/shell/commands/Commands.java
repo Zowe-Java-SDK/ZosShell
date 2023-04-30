@@ -5,6 +5,7 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
+import zos.shell.data.Environment;
 import zos.shell.dto.Member;
 import zos.shell.dto.Output;
 import zos.shell.dto.ResponseStatus;
@@ -291,6 +292,14 @@ public class Commands {
             }
         }
         return results;
+    }
+
+    public void env() {
+        Environment env = Environment.getInstance();
+        if (env.getVariables().isEmpty()) {
+            terminal.println("no environment variables set, try again...");
+        }
+        env.getVariables().forEach((k, v) -> terminal.println(k + "=" + v));
     }
 
     public void files(String dataSet) {
@@ -587,6 +596,16 @@ public class Commands {
         LOG.debug("*** search ***");
         final var search = new Search(terminal);
         search.search(output, text);
+    }
+
+    public void set(final String param) {
+        Environment environment = Environment.getInstance();
+        String[] values = param.split("=");
+        if (values.length != 2) {
+            terminal.println(Constants.INVALID_COMMAND);
+            return;
+        }
+        environment.setVariable(values[0], values[1]);
     }
 
     public void stop(ZOSConnection connection, String jobOrTask) {
