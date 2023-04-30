@@ -599,13 +599,13 @@ public class Commands {
     }
 
     public void set(final String param) {
-        Environment environment = Environment.getInstance();
-        String[] values = param.split("=");
+        final var values = param.split("=");
         if (values.length != 2) {
             terminal.println(Constants.INVALID_COMMAND);
             return;
         }
-        environment.setVariable(values[0], values[1]);
+        Environment.getInstance().setVariable(values[0], values[1]);
+        terminal.println(values[0] + "=" + values[1]);
     }
 
     public void stop(ZOSConnection connection, String jobOrTask) {
@@ -686,6 +686,10 @@ public class Commands {
 
     public void tsoCommand(ZOSConnection connection, String accountNumber, String command) {
         LOG.debug("*** tsoCommand ***");
+        if (accountNumber == null) {
+            terminal.println("ACCTNUM is not set, try again...");
+            return;
+        }
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureTso(connection, accountNumber, command));
         processFuture(pool, submit);

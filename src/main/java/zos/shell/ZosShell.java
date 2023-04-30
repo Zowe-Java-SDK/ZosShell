@@ -15,6 +15,7 @@ import zos.shell.commands.Commands;
 import zos.shell.commands.History;
 import zos.shell.config.Config;
 import zos.shell.config.Credentials;
+import zos.shell.data.Environment;
 import zos.shell.data.SearchDictionary;
 import zos.shell.dto.Output;
 import zos.shell.utility.Util;
@@ -704,10 +705,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
+                Environment environment = Environment.getInstance();
+                final var acctNum = environment.getValueByKeyName("ACCTNUM");
                 final var tsoCommandCandidate = getCommandFromParams(params);
                 final var tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {
-                    commands.tsoCommand(currConnection, "", tsoCommandCandidate.toString());
+                    commands.tsoCommand(currConnection, acctNum, tsoCommandCandidate.toString());
                 }
                 break;
             case "uname":

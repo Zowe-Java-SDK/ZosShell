@@ -19,7 +19,7 @@ public class Environment {
     }
 
     public String getValueByKeyName(String key) {
-        return variables.get(key);
+        return variables.get(key.toUpperCase());
     }
 
     public Map<String, String> getVariables() {
@@ -27,7 +27,7 @@ public class Environment {
     }
 
     public void setVariable(String key, String value) {
-        variables.put(key, value);
+        variables.put(key.toUpperCase(), value.toUpperCase());
     }
 
 }
