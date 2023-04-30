@@ -30,6 +30,7 @@ The shell performs the following Linux like commands:
     cd <arg>                - where arg is a dataset value or empty
     clear                   - clear the shell of all history
     cp | copy <arg> <arg>   - where arg can be ".", "*", member, dataset or dataset(member)
+    env                     - display environment variables
     g | grep <arg> <arg2>   - where arg is search string and arg2 is member value
     h | help                - list commands
     history <arg>           - where arg is optional and indicates the number to display from bottom  
@@ -46,6 +47,7 @@ The shell performs the following Linux like commands:
     ps <arg>                - where arg is a task/job name   
     pwd                     - show current working dataset
     rm <arg>                - where arg is "*", member, member with wildcard "*", dataset, or dataset with member value
+    set <arg>               - set environment variable with arg value in the following format: key=value
     touch <arg>             - create member arg if it does not already exist
     uname                   - show current connected host name
     vi <arg>                - where arg is a sequential dataset or member name, arg will be downloaded 
