@@ -295,7 +295,8 @@ public class Commands {
     }
 
     public void env() {
-        Environment env = Environment.getInstance();
+        LOG.debug("*** env ***");
+        final var env = Environment.getInstance();
         if (env.getVariables().isEmpty()) {
             terminal.println("no environment variables set, try again...");
         }
@@ -599,6 +600,7 @@ public class Commands {
     }
 
     public void set(final String param) {
+        LOG.debug("*** set ***");
         final var values = param.split("=");
         if (values.length != 2) {
             terminal.println(Constants.INVALID_COMMAND);
