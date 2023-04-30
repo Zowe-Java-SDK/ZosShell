@@ -16,12 +16,10 @@ public class TsoCommand {
     private static final Logger LOG = LoggerFactory.getLogger(TsoCommand.class);
 
     private final IssueTso issueCommand;
-    private final ZOSConnection connection;
     private final String accountNumber;
 
     public TsoCommand(ZOSConnection connection, String accountNumber) {
         LOG.debug("*** TsoCommand ***");
-        this.connection = connection;
         this.issueCommand = new IssueTso(connection);
         this.accountNumber = accountNumber;
     }
