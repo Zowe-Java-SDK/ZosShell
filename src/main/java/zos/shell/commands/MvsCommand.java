@@ -27,6 +27,11 @@ public class MvsCommand {
         this.issueCommand = new IssueCommand(connection);
     }
 
+    private ConsoleResponse execute(IssueParams params) throws Exception {
+        LOG.debug("*** execute ***");
+        return issueCommand.issue(params);
+    }
+
     public ResponseStatus executeCommand(String command) {
         LOG.debug("*** executeCommand ***");
         if (!SystemUtils.IS_OS_WINDOWS && !SystemUtils.IS_OS_MAC_OSX) {
@@ -64,11 +69,6 @@ public class MvsCommand {
         }
         return new ResponseStatus(Constants.MVS_EXECUTION_SUCCESS + "\n" +
                 response.getCommandResponse().orElse("no response"), true);
-    }
-
-    private ConsoleResponse execute(IssueParams params) throws Exception {
-        LOG.debug("*** execute ***");
-        return issueCommand.issue(params);
     }
 
 }
