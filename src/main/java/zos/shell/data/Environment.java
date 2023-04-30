@@ -15,7 +15,6 @@ public class Environment {
         if (INSTANCE == null) {
             INSTANCE = new Environment();
         }
-
         return INSTANCE;
     }
 
