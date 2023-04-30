@@ -6,7 +6,7 @@ import java.util.Map;
 public class Environment {
 
     private static Environment INSTANCE;
-    private Map<String, String> variables = new LinkedHashMap<>();
+    private final Map<String, String> variables = new LinkedHashMap<>();
 
     private Environment() {
     }
