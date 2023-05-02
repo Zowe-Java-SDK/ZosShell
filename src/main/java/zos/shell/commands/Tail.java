@@ -86,7 +86,7 @@ public class Tail extends JobLog {
 
     private void displayAll(List<String> output) {
         LOG.debug("*** displayAll ***");
-        output.forEach(line -> terminal.println(line));
+        output.forEach(terminal::println);
     }
 
     private ResponseStatus display(int lines, int size, List<String> output) {
