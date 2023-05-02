@@ -557,7 +557,7 @@ public class Commands {
         final var submit = pool.submit(new FutureMvs(connection, command));
         final var response = processFuture(pool, submit);
         return response != null && response.isStatus() ? new Output("mvs",
-                new StringBuilder(response.getMessage())) : new Output("mvs", new StringBuilder());
+                new StringBuilder(response.getMessage())) : null;
     }
 
     public void ps(ZOSConnection connection) {
@@ -636,13 +636,13 @@ public class Commands {
         if (params.length == 4) {
             if (!"all".equalsIgnoreCase(params[3])) {
                 terminal.println(Constants.INVALID_PARAMETER);
-                return new Output(params[1], new StringBuilder());
+                return null;
             }
             try {
                 Integer.parseInt(params[2]);
             } catch (NumberFormatException e) {
                 terminal.println(Constants.INVALID_PARAMETER);
-                return new Output(params[1], new StringBuilder());
+                return null;
             }
             final var response = tailAll(connection, params, true);
             if (!response.isStatus()) { // false nothing displayed println error message
@@ -662,7 +662,7 @@ public class Commands {
                 Integer.parseInt(params[2]);
             } catch (NumberFormatException e) {
                 terminal.println(Constants.INVALID_PARAMETER);
-                return new Output(params[1], new StringBuilder());
+                return null;
             }
         }
         final var response = tailAll(connection, params, false);
@@ -714,7 +714,7 @@ public class Commands {
         final var submit = pool.submit(new FutureTso(connection, accountNumber, command));
         final var response = processFuture(pool, submit);
         return response != null && response.isStatus() ? new Output("tso",
-                new StringBuilder(response.getMessage())) : new Output("tso", new StringBuilder());
+                new StringBuilder(response.getMessage())) : null;
     }
 
     public void uname(ZOSConnection currConnection) {
