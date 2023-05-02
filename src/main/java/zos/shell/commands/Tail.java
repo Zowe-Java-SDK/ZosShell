@@ -43,7 +43,7 @@ public class Tail extends JobLog {
         if (!result.isStatus()) {
             return result;
         }
-        List<String> output = Arrays.asList(result.toString().split("\n"));
+        final var output = Arrays.asList(result.toString().split("\n"));
 
         final var size = output.size();
         var lines = 0;

@@ -23,7 +23,7 @@ public class Member {
     public List<String> getMembers(String dataSet) throws Exception {
         LOG.debug("*** getMembers ***");
         List<zowe.client.sdk.zosfiles.response.Member> members = zosDsnList.listDsnMembers(dataSet, params);
-        List<String> memberNames = new ArrayList<>();
+        final var memberNames = new ArrayList<String>();
         members.forEach(m -> memberNames.add(m.getMember().orElse("")));
         return memberNames;
     }

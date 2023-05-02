@@ -210,7 +210,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         if (Constants.DEFAULT_PROMPT.equals(command[0])) {
             final var size = command.length;
             final var newCmdArr = new String[size - 1];
-            List<String> newCmdLst = new ArrayList<>(Arrays.asList(command).subList(1, size));
+            final var newCmdLst = new ArrayList<>(Arrays.asList(command).subList(1, size));
             for (var i = 0; i < newCmdLst.size(); i++) {
                 newCmdArr[i] = newCmdLst.get(i);
             }
@@ -737,7 +737,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 for (final String key : dataSets.keySet()) {
-                    List<String> lst = dataSets.get(key);
+                    final var lst = dataSets.get(key);
                     lst.forEach(l -> terminal.println(
                             Strings.padStart(l.toUpperCase(), currDataSetMax, ' ') + Constants.ARROW + key));
                 }

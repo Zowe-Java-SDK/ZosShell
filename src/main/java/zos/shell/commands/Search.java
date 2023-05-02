@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import zos.shell.dto.Output;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,7 +25,7 @@ public class Search {
         final var log = Optional.ofNullable(output);
         log.ifPresentOrElse((value) -> {
             terminal.println("searching " + value.getName().toUpperCase() + "...");
-            List<String> results = Arrays.stream(value.getOutput().toString().split("\n"))
+            final var results = Arrays.stream(value.getOutput().toString().split("\n"))
                     .filter(line -> line.toUpperCase().contains(text.toUpperCase())).collect(Collectors.toList());
             if (!results.isEmpty()) {
                 results.forEach(terminal::println);

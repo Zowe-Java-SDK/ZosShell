@@ -107,7 +107,7 @@ public class History {
             return command;
         }
 
-        List<String> list = new ArrayList<>(Arrays.asList(command));
+        final var list = new ArrayList<>(Arrays.asList(command));
         // remove multiple spaces entered by end user and nulls
         list.removeAll(Arrays.asList("", null));
 
