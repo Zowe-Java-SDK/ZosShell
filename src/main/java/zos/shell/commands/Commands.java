@@ -646,19 +646,11 @@ public class Commands {
                 terminal.println(Constants.INVALID_PARAMETER);
                 return null;
             }
-            final var response = tailAll(connection, params, true);
-            if (!response.isStatus()) { // false nothing displayed println error message
-                terminal.println(response.getMessage());
-            }
-            return new Output(params[1], new StringBuilder(response.getMessage()));
+            return processTailJobResponse(connection, params, true);
         }
         if (params.length == 3) {
             if ("all".equalsIgnoreCase(params[2])) {
-                final var response = tailAll(connection, params, true);
-                if (!response.isStatus()) { // false nothing displayed println error message
-                    terminal.println(response.getMessage());
-                }
-                return new Output(params[1], new StringBuilder(response.getMessage()));
+                return processTailJobResponse(connection, params, true);
             }
             try {
                 Integer.parseInt(params[2]);
@@ -667,23 +659,20 @@ public class Commands {
                 return null;
             }
         }
-        final var response = tailAll(connection, params, false);
-        if (!response.isStatus()) {  // false nothing displayed println error message
-            terminal.println(response.getMessage());
-        }
-        return new Output(params[1], new StringBuilder(response.getMessage()));
+        return processTailJobResponse(connection, params, false);
+    }
+
+    private Output processTailJobResponse(ZOSConnection connection, String[] params, boolean isAll) {
+        final var response = tailAll(connection, params, isAll);
+        return response != null && response.isStatus() ? new Output(params[1],
+                new StringBuilder(response.getMessage())) : null;
     }
 
     private ResponseStatus tailAll(ZOSConnection connection, String[] params, boolean isAll) {
         LOG.debug("*** tailAll ***");
-        Tail tail;
-        try {
-            tail = new Tail(terminal, new GetJobs(connection), isAll, timeOutValue);
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return null;
-        }
-        return tail.tail(params);
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        final var submit = pool.submit(new FutureTailJob(terminal, connection, isAll, timeOutValue, params));
+        return processFuture(pool, submit);
     }
 
     public void timeOutValue(long value) {
