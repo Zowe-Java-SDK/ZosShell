@@ -706,8 +706,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                Environment environment = Environment.getInstance();
-                final var acctNum = environment.getValueByKeyName("ACCTNUM");
+                final var acctNum = Environment.getInstance().getValueByKeyName("ACCTNUM");
                 final var tsoCommandCandidate = getCommandFromParams(params);
                 final var tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {
