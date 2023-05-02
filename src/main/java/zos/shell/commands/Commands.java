@@ -560,9 +560,9 @@ public class Commands {
                 new StringBuilder(response.getMessage())) : null;
     }
 
-    public void ps(ZOSConnection connection) {
+    public Output ps(ZOSConnection connection) {
         LOG.debug("*** ps ***");
-        ps(connection, null);
+        return ps(connection, null);
     }
 
     public void purgeJob(ZOSConnection connection, String item) {
@@ -572,11 +572,13 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    public void ps(ZOSConnection connection, String jobOrTask) {
+    public Output ps(ZOSConnection connection, String jobOrTask) {
         LOG.debug("*** ps ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureProcessList(new GetJobs(connection), jobOrTask));
-        processFuture(pool, submit);
+        final var response = processFuture(pool, submit);
+        return response != null && response.isStatus() ? new Output("ps",
+                new StringBuilder(response.getMessage())) : null;
     }
 
     public void rm(ZOSConnection connection, String currDataSet, String param) {

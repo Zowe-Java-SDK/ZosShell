@@ -582,9 +582,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length > 1) {
-                    commands.ps(currConnection, params[1]);
+                    commandOutput = commands.ps(currConnection, params[1]);
                 } else {
-                    commands.ps(currConnection);
+                    commandOutput = commands.ps(currConnection);
                 }
                 break;
             case "pj":
