@@ -644,11 +644,19 @@ public class Commands {
                 terminal.println(Constants.INVALID_PARAMETER);
                 return new Output(params[1], new StringBuilder());
             }
-            return new Output(params[1], tailAll(connection, params, true));
+            final var response = tailAll(connection, params, true);
+            if (!response.isStatus()) { // false nothing displayed println error message
+                terminal.println(response.getMessage());
+            }
+            return new Output(params[1], new StringBuilder(response.getMessage()));
         }
         if (params.length == 3) {
             if ("all".equalsIgnoreCase(params[2])) {
-                return new Output(params[1], tailAll(connection, params, true));
+                final var response = tailAll(connection, params, true);
+                if (!response.isStatus()) { // false nothing displayed println error message
+                    terminal.println(response.getMessage());
+                }
+                return new Output(params[1], new StringBuilder(response.getMessage()));
             }
             try {
                 Integer.parseInt(params[2]);
@@ -657,10 +665,14 @@ public class Commands {
                 return new Output(params[1], new StringBuilder());
             }
         }
-        return new Output(params[1], tailAll(connection, params, false));
+        final var response = tailAll(connection, params, false);
+        if (!response.isStatus()) {  // false nothing displayed println error message
+            terminal.println(response.getMessage());
+        }
+        return new Output(params[1], new StringBuilder(response.getMessage()));
     }
 
-    private StringBuilder tailAll(ZOSConnection connection, String[] params, boolean isAll) {
+    private ResponseStatus tailAll(ZOSConnection connection, String[] params, boolean isAll) {
         LOG.debug("*** tailAll ***");
         Tail tail;
         try {

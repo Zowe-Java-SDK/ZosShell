@@ -23,7 +23,7 @@ public class Tail extends JobLog {
         this.terminal = terminal;
     }
 
-    public StringBuilder tail(String[] params) {
+    public ResponseStatus tail(String[] params) {
         LOG.debug("*** tail ***");
         ResponseStatus result;
         try {
@@ -39,6 +39,9 @@ public class Tail extends JobLog {
             }
             Util.printError(terminal, e.getMessage());
             return null;
+        }
+        if (!result.isStatus()) {
+            return result;
         }
         List<String> output = Arrays.asList(result.toString().split("\n"));
 
@@ -67,36 +70,33 @@ public class Tail extends JobLog {
             if (lines < size) {
                 return display(lines, size, output);
             } else {
-                return displayAll(output);
+                displayAll(output);
+                return result;
             }
         } else {
             final var LINES_LIMIT = 25;
             if (size > LINES_LIMIT) {
                 return display(LINES_LIMIT, size, output);
             } else {
-                return displayAll(output);
+                displayAll(output);
+                return result;
             }
         }
     }
 
-    private StringBuilder displayAll(List<String> output) {
+    private void displayAll(List<String> output) {
         LOG.debug("*** displayAll ***");
-        final var stringBuilder = new StringBuilder();
-        output.forEach(line -> {
-            terminal.println(line);
-            stringBuilder.append(line).append("\n");
-        });
-        return stringBuilder;
+        output.forEach(line -> terminal.println(line));
     }
 
-    private StringBuilder display(int lines, int size, List<String> output) {
+    private ResponseStatus display(int lines, int size, List<String> output) {
         LOG.debug("*** display ***");
-        final var stringBuilder = new StringBuilder();
+        final var str = new StringBuilder();
         for (var i = size - lines; i < size; i++) {
             terminal.println(output.get(i));
-            stringBuilder.append(output.get(i)).append("\n");
+            str.append(output.get(i)).append("\n");
         }
-        return stringBuilder;
+        return new ResponseStatus(str.toString(), true);
     }
 
 }
