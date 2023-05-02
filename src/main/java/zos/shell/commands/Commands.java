@@ -664,9 +664,6 @@ public class Commands {
 
     private Output processTailJobResponse(ZOSConnection connection, String[] params, boolean isAll) {
         final var response = tailAll(connection, params, isAll);
-        if (response != null && !response.isStatus()) { // false nothing displayed println error message
-            terminal.println(response.getMessage());
-        }
         return response != null && response.isStatus() ? new Output(params[1],
                 new StringBuilder(response.getMessage())) : null;
     }
