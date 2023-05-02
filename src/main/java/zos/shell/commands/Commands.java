@@ -556,8 +556,8 @@ public class Commands {
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureMvs(connection, command));
         final var response = processFuture(pool, submit);
-        return response.isStatus() ? new Output("mvs", new StringBuilder(response.getMessage())) :
-                new Output("tso", new StringBuilder());
+        return response != null && response.isStatus() ? new Output("mvs",
+                new StringBuilder(response.getMessage())) : new Output("mvs", new StringBuilder());
     }
 
     public void ps(ZOSConnection connection) {
@@ -636,13 +636,13 @@ public class Commands {
         if (params.length == 4) {
             if (!"all".equalsIgnoreCase(params[3])) {
                 terminal.println(Constants.INVALID_PARAMETER);
-                return null;
+                return new Output(params[1], new StringBuilder());
             }
             try {
                 Integer.parseInt(params[2]);
             } catch (NumberFormatException e) {
                 terminal.println(Constants.INVALID_PARAMETER);
-                return null;
+                return new Output(params[1], new StringBuilder());
             }
             return new Output(params[1], tailAll(connection, params, true));
         }
@@ -654,7 +654,7 @@ public class Commands {
                 Integer.parseInt(params[2]);
             } catch (NumberFormatException e) {
                 terminal.println(Constants.INVALID_PARAMETER);
-                return null;
+                return new Output(params[1], new StringBuilder());
             }
         }
         return new Output(params[1], tailAll(connection, params, false));
@@ -701,8 +701,8 @@ public class Commands {
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureTso(connection, accountNumber, command));
         final var response = processFuture(pool, submit);
-        return response.isStatus() ? new Output("tso", new StringBuilder(response.getMessage())) :
-                new Output("tso", new StringBuilder());
+        return response != null && response.isStatus() ? new Output("tso",
+                new StringBuilder(response.getMessage())) : new Output("tso", new StringBuilder());
     }
 
     public void uname(ZOSConnection currConnection) {
