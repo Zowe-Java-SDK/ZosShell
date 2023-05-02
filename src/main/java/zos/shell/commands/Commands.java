@@ -82,15 +82,16 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    public StringBuilder cat(ZOSConnection connection, String dataSet, String member) {
+    public Output cat(ZOSConnection connection, String dataSet, String member) {
         LOG.debug("*** cat ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureConcatenate(new Download(new ZosDsnDownload(connection), false), dataSet, member));
+        final var submit = pool.submit(
+                new FutureConcatenate(new Download(new ZosDsnDownload(connection), false), dataSet, member));
         final var result = processFuture(pool, submit);
-        if (result != null) {
-            return new StringBuilder(result.getMessage());
+        if (result.isStatus()) {
+            return new Output("cat", new StringBuilder(result.getMessage()));
         }
-        return new StringBuilder();
+        return new Output("cat", new StringBuilder());
     }
 
     public String cd(ZOSConnection connection, String currDataSet, String param) {
@@ -291,7 +292,7 @@ public class Commands {
         return results;
     }
 
-    public StringBuilder env() {
+    public Output env() {
         LOG.debug("*** env ***");
         final var env = Environment.getInstance();
         if (env.getVariables().isEmpty()) {
@@ -303,7 +304,7 @@ public class Commands {
             str.append(value).append("\n");
             terminal.println(value);
         });
-        return str;
+        return new Output("env", str);
     }
 
     public void files(String dataSet) {
@@ -370,7 +371,7 @@ public class Commands {
         return results;
     }
 
-    public StringBuilder help() {
+    public Output help() {
         LOG.debug("*** help ***");
         return Help.displayHelp(terminal);
     }
@@ -550,12 +551,13 @@ public class Commands {
         return input;
     }
 
-    public StringBuilder mvsCommand(ZOSConnection connection, String command) {
+    public Output mvsCommand(ZOSConnection connection, String command) {
         LOG.debug("*** mvsCommand ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureMvs(connection, command));
         final var response = processFuture(pool, submit);
-        return response.isStatus() ? new StringBuilder(response.getMessage()) : new StringBuilder();
+        return response.isStatus() ? new Output("mvs", new StringBuilder(response.getMessage())) :
+                new Output("tso", new StringBuilder());
     }
 
     public void ps(ZOSConnection connection) {
@@ -690,17 +692,17 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    public StringBuilder tsoCommand(ZOSConnection connection, String accountNumber, String command) {
+    public Output tsoCommand(ZOSConnection connection, String accountNumber, String command) {
         LOG.debug("*** tsoCommand ***");
-        final var str = new StringBuilder();
         if (accountNumber == null) {
             terminal.println("ACCTNUM is not set, try again...");
-            return str;
+            return new Output("tso", new StringBuilder());
         }
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureTso(connection, accountNumber, command));
         final var response = processFuture(pool, submit);
-        return response.isStatus() ? str.append(response.getMessage()) : str;
+        return response.isStatus() ? new Output("tso", new StringBuilder(response.getMessage())) :
+                new Output("tso", new StringBuilder());
     }
 
     public void uname(ZOSConnection currConnection) {

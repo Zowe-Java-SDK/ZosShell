@@ -292,7 +292,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 param = params[1];
-                commandOutput = new Output(param, commands.cat(currConnection, currDataSet, param));
+                commandOutput = commands.cat(currConnection, currDataSet, param);
                 break;
             case "cd":
                 if (isParamsMissing(1, params)) {
@@ -444,7 +444,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(1, params)) {
                     return;
                 }
-                commandOutput = new Output("env", commands.env());
+                commandOutput = commands.env();
                 break;
             case "files":
                 if (isParamsExceeded(1, params)) {
@@ -474,7 +474,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 1) {
-                    commandOutput = new Output("help", commands.help());
+                    commandOutput = commands.help();
                 }
                 break;
             case "history":
@@ -574,8 +574,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 final var mvsCommandCandidate = getCommandFromParams(params);
                 final var mvsCommandCount = mvsCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(mvsCommandCount, mvsCommandCandidate)) {
-                    commandOutput = new Output("mvs",
-                            commands.mvsCommand(currConnection, mvsCommandCandidate.toString()));
+                    commandOutput = commands.mvsCommand(currConnection, mvsCommandCandidate.toString());
                 }
                 break;
             case "ps":
@@ -710,8 +709,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 final var tsoCommandCandidate = getCommandFromParams(params);
                 final var tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {
-                    commandOutput = new Output("tso",
-                            commands.tsoCommand(currConnection, acctNum, tsoCommandCandidate.toString()));
+                    commandOutput = commands.tsoCommand(currConnection, acctNum, tsoCommandCandidate.toString());
                 }
                 break;
             case "uname":

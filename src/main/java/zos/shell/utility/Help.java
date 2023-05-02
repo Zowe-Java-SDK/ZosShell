@@ -1,6 +1,7 @@
 package zos.shell.utility;
 
 import org.beryx.textio.TextTerminal;
+import zos.shell.dto.Output;
 
 import java.util.List;
 
@@ -70,13 +71,13 @@ public class Help {
             "v | visited             - a list of visited datasets",
             "whoami                  - show current connected user name");
 
-    public static StringBuilder displayHelp(TextTerminal<?> terminal) {
+    public static Output displayHelp(TextTerminal<?> terminal) {
         final var str = new StringBuilder();
         HELP.forEach(item -> {
             str.append(item).append("\n");
             terminal.println(item);
         });
-        return str;
+        return new Output("help", str);
     }
 
 }
