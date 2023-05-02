@@ -70,8 +70,13 @@ public class Help {
             "v | visited             - a list of visited datasets",
             "whoami                  - show current connected user name");
 
-    public static void displayHelp(TextTerminal<?> terminal) {
-        HELP.forEach(terminal::println);
+    public static StringBuilder displayHelp(TextTerminal<?> terminal) {
+        final var str = new StringBuilder();
+        HELP.forEach(item -> {
+            str.append(item).append("\n");
+            terminal.println(item);
+        });
+        return str;
     }
 
 }
