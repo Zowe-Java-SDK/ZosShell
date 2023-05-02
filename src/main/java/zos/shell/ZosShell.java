@@ -320,17 +320,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 currConnection = commands.change(currConnection, params);
                 mainTerminal.setPaneTitle(Constants.APP_TITLE + " - " + currConnection.getHost().toUpperCase());
                 break;
-            case "clearlog":
+            case "clear":
+                terminal.println();
+                terminal.resetToBookmark("top");
                 if (commandOutput != null) {
                     commandOutput.getOutput().setLength(0);
                     commandOutput = null;
                     System.gc();
                 }
-                terminal.println();
-                break;
-            case "clear":
-                terminal.println();
-                terminal.resetToBookmark("top");
                 terminal.println();
                 break;
             case "color":
