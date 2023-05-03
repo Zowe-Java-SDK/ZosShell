@@ -1,11 +1,15 @@
 package zos.shell.utility;
 
 import org.beryx.textio.TextTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.dto.Output;
 
 import java.util.List;
 
 public class Help {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Help.class);
 
     private static final List<String> HELP = List.of(
             "bj | browsejob <arg1> <arg2> - where arg1 is a job name and arg2 is optional",
@@ -71,6 +75,7 @@ public class Help {
             "whoami                  - show current connected user name");
 
     public static Output displayHelp(TextTerminal<?> terminal) {
+        LOG.debug("*** displayHelp ***");
         final var str = new StringBuilder();
         HELP.forEach(item -> {
             str.append(item).append("\n");
