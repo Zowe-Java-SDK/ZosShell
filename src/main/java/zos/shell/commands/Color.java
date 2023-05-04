@@ -11,6 +11,7 @@ public class Color {
     private final TextTerminal<?> terminal;
 
     public Color(TextTerminal<?> terminal) {
+        LOG.debug("*** Color ***");
         this.terminal = terminal;
     }
 

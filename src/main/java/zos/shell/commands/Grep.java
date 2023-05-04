@@ -1,5 +1,8 @@
 package zos.shell.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,12 +10,15 @@ import java.util.Map;
 
 public class Grep {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Grep.class);
+
     private final Concatenate concatenate;
     private final String pattern;
     private final boolean withMember;
     private final Map<Character, Integer> misMatchShiftsTable = new HashMap<>();
 
     public Grep(Concatenate concatenate, String pattern) {
+        LOG.debug("*** Grep #1 ***");
         this.concatenate = concatenate;
         this.pattern = pattern;
         this.withMember = false;
@@ -20,6 +26,7 @@ public class Grep {
     }
 
     public Grep(Concatenate concatenate, String pattern, boolean withMember) {
+        LOG.debug("*** Grep #2 ***");
         this.concatenate = concatenate;
         this.pattern = pattern;
         this.withMember = withMember;
@@ -27,6 +34,7 @@ public class Grep {
     }
 
     public List<String> search(String dataSet, String member) {
+        LOG.debug("*** search ***");
         final var lines = new ArrayList<String>();
         final var responseStatus = concatenate.cat(dataSet, member);
         var content = new StringBuilder(responseStatus.getMessage());
@@ -66,6 +74,7 @@ public class Grep {
     }
 
     private int findPosition(String text) {
+        LOG.debug("*** findPosition ***");
         final var lengthOfPattern = pattern.length();
         final var lengthOfText = text.length();
         int numOfSkips;
@@ -92,6 +101,7 @@ public class Grep {
     }
 
     private void compileMisMatchShiftsTable() {
+        LOG.debug("*** compileMisMatchShiftsTable ***");
         final var lengthOfPattern = pattern.length();
         for (var i = 0; i < lengthOfPattern; i++) {
             misMatchShiftsTable.put(pattern.charAt(i), Math.max(1, lengthOfPattern - i - 1));
