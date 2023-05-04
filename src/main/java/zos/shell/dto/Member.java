@@ -10,18 +10,14 @@ import java.util.List;
 
 public class Member {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Member.class);
-
     private final ZosDsnList zosDsnList;
     private final ListParams params = new ListParams.Builder().build();
 
     public Member(ZosDsnList zosDsnList) {
-        LOG.debug("*** Member ***");
         this.zosDsnList = zosDsnList;
     }
 
     public List<String> getMembers(String dataSet) throws Exception {
-        LOG.debug("*** getMembers ***");
         List<zowe.client.sdk.zosfiles.response.Member> members = zosDsnList.listDsnMembers(dataSet, params);
         final var memberNames = new ArrayList<String>();
         members.forEach(m -> memberNames.add(m.getMember().orElse("")));
