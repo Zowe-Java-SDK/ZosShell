@@ -663,6 +663,7 @@ public class Commands {
     }
 
     private Output processTailJobResponse(ZOSConnection connection, String[] params, boolean isAll) {
+        LOG.debug("*** processTailJobResponse ***");
         final var response = tailAll(connection, params, isAll);
         return response != null && response.isStatus() ? new Output(params[1],
                 new StringBuilder(response.getMessage())) : null;
