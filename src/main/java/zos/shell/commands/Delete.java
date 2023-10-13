@@ -56,8 +56,10 @@ public class Delete {
 
                 if (!lookForStr.isEmpty()) {
                     String finalLookForStr = lookForStr;
-                    members = members.stream().
-                            filter(i -> i.getMember().orElse("").startsWith(finalLookForStr)).collect(Collectors.toList());
+                    members = members.stream()
+                                     .filter(i -> i.getMember().orElse("")
+                                     .startsWith(finalLookForStr))
+                                     .collect(Collectors.toList());
                 }
 
                 final var membersDeleted = new StringBuilder();
