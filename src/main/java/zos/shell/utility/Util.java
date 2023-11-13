@@ -107,15 +107,21 @@ public class Util {
         return !((statusCode >= 200 && statusCode <= 299) || (statusCode >= 100 && statusCode <= 199));
     }
 
-    public static DataSetMember getMemberFromDataSet(String param) {
+    public static DataSetMember getDatasetAndMember(String param) {
         LOG.debug("*** getMemberFromDataSet ***");
         final var index = param.indexOf("(");
+        if (index == -1) {
+            return null;
+        }
         final var dataset = param.substring(0, index);
         if (!Util.isDataSet(dataset)) {
             return null;
         }
 
         final var member = param.substring(index + 1, param.length() - 1);
+        if (!Util.isMember(member)) {
+            return null;
+        }
         return new DataSetMember(dataset, member);
     }
 

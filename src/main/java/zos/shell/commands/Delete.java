@@ -57,9 +57,9 @@ public class Delete {
                 if (!lookForStr.isEmpty()) {
                     String finalLookForStr = lookForStr;
                     members = members.stream()
-                                     .filter(i -> i.getMember().orElse("")
-                                     .startsWith(finalLookForStr))
-                                     .collect(Collectors.toList());
+                            .filter(i -> i.getMember().orElse("")
+                                    .startsWith(finalLookForStr))
+                            .collect(Collectors.toList());
                 }
 
                 final var membersDeleted = new StringBuilder();
@@ -114,7 +114,7 @@ public class Delete {
             }
 
             if (param.contains("(") && param.contains(")")) {
-                final var dataSetMember = Util.getMemberFromDataSet(param);
+                final var dataSetMember = Util.getDatasetAndMember(param);
                 if (dataSetMember == null) {
                     terminal.println(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR);
                     return;
