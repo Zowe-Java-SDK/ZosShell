@@ -76,11 +76,13 @@ public class Copy {
             copyAllMembers = true;
         }
 
-        if (isEqualDatasets(currDataSet, firstParam, datasetMemberFirstParam))
+        if (isEqualDatasets(currDataSet, firstParam, datasetMemberFirstParam)) {
             return new ResponseStatus(Constants.COPY_ITSELF_ERROR, false);
+        }
 
-        if (isEqualDatasets(currDataSet, secondParam, datasetMemberSecondParam))
+        if (isEqualDatasets(currDataSet, secondParam, datasetMemberSecondParam)) {
             return new ResponseStatus(Constants.COPY_ITSELF_ERROR, false);
+        }
 
         if (".".equals(secondParam)) {
             if (Util.isMember(firstParam)) {
