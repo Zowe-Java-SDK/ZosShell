@@ -39,25 +39,34 @@ public class Copy {
         }
 
         if (!(Util.isMember(firstParam) || ".".equals(firstParam) || datasetMemberFirstParam != null)) {
-            return new ResponseStatus("invalid first argument, try again...", false);
+            return new ResponseStatus("specify valid member or dataset(member) value for first argument, try again...", false);
         }
         if (!(Util.isDataSet(secondParam) || Util.isMember(secondParam) || ".".equals(secondParam) ||
                 datasetMemberSecondParam != null)) {
-            return new ResponseStatus("invalid second argument, try again...", false);
+            return new ResponseStatus("specify valid member or dataset(member) value for second argument, try again...", false);
         }
         if (".".equals(firstParam) && ".".equals(secondParam)) {
             return new ResponseStatus(Constants.INVALID_ARGUMENTS, false);
         }
 
         if (Util.isMember(firstParam)) {
+            if (currDataSet.isBlank()) {
+                return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
+            }
             fromDataSetName = currDataSet + "(" + firstParam + ")";
         }
 
         if (Util.isMember(secondParam)) {
+            if (currDataSet.isBlank()) {
+                return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
+            }            
             toDataSetName = currDataSet + "(" + secondParam + ")";
         }
 
         if (".".equals(firstParam) || "*".equals(firstParam)) {
+            if (currDataSet.isBlank()) {
+                return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
+            }            
             fromDataSetName = currDataSet;
             if (Util.isDataSet(secondParam)) {
                 toDataSetName = secondParam;
