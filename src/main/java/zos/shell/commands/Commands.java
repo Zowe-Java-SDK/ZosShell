@@ -127,15 +127,6 @@ public class Commands {
 
     public void copy(ZOSConnection connection, String currDataSet, String[] params) {
         LOG.debug("*** copy ***");
-        if ("*".equals(params[1])) {
-            final List<String> members = Util.getMembers(terminal, connection, currDataSet);
-            if (members.isEmpty()) {
-                return;
-            }
-            multipleCopy(connection, currDataSet, params[2], members).forEach(i -> terminal.println(i.getMessage()));
-            return;
-        }
-
         long count = params[1].chars().filter(ch -> ch == '*').count();
         if (count > 1) {
             terminal.println("invalid first argument, try again...");
