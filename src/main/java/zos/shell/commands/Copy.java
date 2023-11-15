@@ -38,12 +38,15 @@ public class Copy {
             toDataSetName = datasetMemberSecondParam.getDataSet() + "(" + datasetMemberSecondParam.getMember() + ")";
         }
 
-        if (!(Util.isMember(firstParam) || ".".equals(firstParam) || datasetMemberFirstParam != null)) {
-            return new ResponseStatus("specify valid member or dataset(member) value for first argument, try again...", false);
+        if (!(Util.isMember(firstParam) || ".".equals(firstParam) || "*".equals(firstParam) ||
+                datasetMemberFirstParam != null)) {
+            final var errMsg = "specify valid member or dataset(member) value for first argument, try again...";
+            return new ResponseStatus(errMsg, false);
         }
         if (!(Util.isDataSet(secondParam) || Util.isMember(secondParam) || ".".equals(secondParam) ||
                 datasetMemberSecondParam != null)) {
-            return new ResponseStatus("specify valid member or dataset(member) value for second argument, try again...", false);
+            final var errMsg = "specify valid member or dataset(member) value for second argument, try again...";
+            return new ResponseStatus(errMsg, false);
         }
         if (".".equals(firstParam) && ".".equals(secondParam)) {
             return new ResponseStatus(Constants.INVALID_ARGUMENTS, false);
