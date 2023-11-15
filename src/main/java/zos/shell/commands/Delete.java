@@ -37,7 +37,7 @@ public class Delete {
         try {
             List<Member> members = new ArrayList<>();
 
-            if (param.contains("*")) {
+            if (param.contains("*") && param.chars().filter(ch -> ch == '*').count() == 1) {
                 String lookForStr = "";
 
                 if (param.length() > 1) {
@@ -57,9 +57,9 @@ public class Delete {
                 if (!lookForStr.isEmpty()) {
                     String finalLookForStr = lookForStr;
                     members = members.stream()
-                            .filter(i -> i.getMember().orElse("")
-                                    .startsWith(finalLookForStr))
-                            .collect(Collectors.toList());
+                                     .filter(i -> i.getMember().orElse("")
+                                     .startsWith(finalLookForStr))
+                                     .collect(Collectors.toList());
                 }
 
                 final var membersDeleted = new StringBuilder();
