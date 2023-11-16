@@ -62,14 +62,14 @@ public class Copy {
         if (Util.isMember(secondParam)) {
             if (currDataSet.isBlank()) {
                 return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
-            }            
+            }
             toDataSetName = currDataSet + "(" + secondParam + ")";
         }
 
         if (".".equals(firstParam) || "*".equals(firstParam)) {
             if (currDataSet.isBlank()) {
                 return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
-            }            
+            }
             fromDataSetName = currDataSet;
             if (Util.isDataSet(secondParam)) {
                 toDataSetName = secondParam;
@@ -131,7 +131,7 @@ public class Copy {
     }
 
     private boolean isEqualDatasets(final String currDataSet, final String firstParam,
-                                   final DataSetMember dataSetMemberFirstParam) {
+                                    final DataSetMember dataSetMemberFirstParam) {
         if (firstParam.contains(currDataSet)) {
             int size = firstParam.length();
             if (dataSetMemberFirstParam != null) {
