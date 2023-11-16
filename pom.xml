@@ -70,6 +70,7 @@
                                         <exclude>META-INF/NOTICE</exclude>
                                         <exclude>META-INF/NOTICE.txt</exclude>
                                         <exclude>module-info.class</exclude>
+                                        <exclude>META-INF/versions.9.module-info.class</exclude>
                                         <exclude>META-INF/maven/com.starxg/java-keytar/pom.properties</exclude>
                                         <exclude>META-INF/maven/com.starxg/java-keytar/pom.xml</exclude>
                                     </excludes>
@@ -241,16 +242,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.15.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.10.1</version>
-        </dependency>
-        <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-codec-http</artifactId>
             <version>4.1.90.Final</version>
@@ -264,11 +255,6 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-common</artifactId>
             <version>4.1.90.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>2.0</version>
         </dependency>
     </dependencies>
 

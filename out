@@ -1,0 +1,76 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< org.zosshell:zosshell >------------------------
+[INFO] Building org.zosshell:zosshell 1.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ zosshell ---
+[INFO] org.zosshell:zosshell:jar:1.0
+[INFO] +- org.beryx:text-io:jar:3.4.1:compile
+[INFO] |  +- jline:jline:jar:2.14.6:runtime
+[INFO] |  \- org.beryx:awt-color-factory:jar:1.0.1:runtime
+[INFO] +- org.beryx:text-io-web:jar:3.4.1:compile
+[INFO] +- io.ratpack:ratpack-core:jar:1.9.0:compile
+[INFO] |  +- io.netty:netty-resolver-dns-native-macos:jar:osx-x86_64:4.1.63.Final:compile
+[INFO] |  |  \- io.netty:netty-transport-native-unix-common:jar:4.1.63.Final:compile
+[INFO] |  +- io.ratpack:ratpack-exec:jar:1.9.0:compile
+[INFO] |  |  +- io.ratpack:ratpack-base:jar:1.9.0:compile
+[INFO] |  |  +- io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.63.Final:compile
+[INFO] |  |  +- io.netty:netty-tcnative:jar:linux-x86_64:2.0.38.Final:compile
+[INFO] |  |  \- org.reactivestreams:reactive-streams:jar:1.0.2:compile
+[INFO] |  +- io.netty:netty-handler:jar:4.1.63.Final:compile
+[INFO] |  |  \- io.netty:netty-resolver:jar:4.1.63.Final:compile
+[INFO] |  +- io.netty:netty-handler-proxy:jar:4.1.63.Final:compile
+[INFO] |  |  \- io.netty:netty-codec-socks:jar:4.1.63.Final:compile
+[INFO] |  +- io.netty:netty-resolver-dns:jar:4.1.63.Final:compile
+[INFO] |  |  \- io.netty:netty-codec-dns:jar:4.1.63.Final:compile
+[INFO] |  +- com.sun.activation:javax.activation:jar:1.2.0:compile
+[INFO] |  +- com.github.ben-manes.caffeine:caffeine:jar:2.8.8:compile
+[INFO] |  +- org.javassist:javassist:jar:3.22.0-GA:compile
+[INFO] |  +- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.10.3:compile
+[INFO] |  +- com.fasterxml.jackson.datatype:jackson-datatype-guava:jar:2.10.3:compile
+[INFO] |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.10.3:compile
+[INFO] |  \- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.10.3:compile
+[INFO] +- io.ratpack:ratpack-session:jar:1.9.0:compile
+[INFO] |  \- io.ratpack:ratpack-guice:jar:1.9.0:compile
+[INFO] |     +- com.google.inject:guice:jar:4.1.0:compile
+[INFO] |     |  +- javax.inject:javax.inject:jar:1:compile
+[INFO] |     |  \- aopalliance:aopalliance:jar:1.0:compile
+[INFO] |     \- com.google.inject.extensions:guice-multibindings:jar:4.1.0:compile
+[INFO] +- com.sparkjava:spark-core:jar:2.9.4:compile
+[INFO] |  +- org.eclipse.jetty:jetty-server:jar:9.4.48.v20220622:compile
+[INFO] |  |  +- javax.servlet:javax.servlet-api:jar:3.1.0:compile
+[INFO] |  |  +- org.eclipse.jetty:jetty-http:jar:9.4.48.v20220622:compile
+[INFO] |  |  |  \- org.eclipse.jetty:jetty-util:jar:9.4.48.v20220622:compile
+[INFO] |  |  \- org.eclipse.jetty:jetty-io:jar:9.4.48.v20220622:compile
+[INFO] |  +- org.eclipse.jetty:jetty-webapp:jar:9.4.48.v20220622:compile
+[INFO] |  |  +- org.eclipse.jetty:jetty-xml:jar:9.4.48.v20220622:compile
+[INFO] |  |  \- org.eclipse.jetty:jetty-servlet:jar:9.4.48.v20220622:compile
+[INFO] |  |     +- org.eclipse.jetty:jetty-security:jar:9.4.48.v20220622:compile
+[INFO] |  |     \- org.eclipse.jetty:jetty-util-ajax:jar:9.4.48.v20220622:compile
+[INFO] |  +- org.eclipse.jetty.websocket:websocket-server:jar:9.4.48.v20220622:compile
+[INFO] |  |  +- org.eclipse.jetty.websocket:websocket-common:jar:9.4.48.v20220622:compile
+[INFO] |  |  \- org.eclipse.jetty.websocket:websocket-client:jar:9.4.48.v20220622:compile
+[INFO] |  |     \- org.eclipse.jetty:jetty-client:jar:9.4.48.v20220622:compile
+[INFO] |  \- org.eclipse.jetty.websocket:websocket-servlet:jar:9.4.48.v20220622:compile
+[INFO] |     \- org.eclipse.jetty.websocket:websocket-api:jar:9.4.48.v20220622:compile
+[INFO] +- org.zowe.client.java.sdk:zowe-client-java-sdk:jar:1.1.8:compile
+[INFO] +- org.apache.logging.log4j:log4j-api:jar:2.20.0:compile
+[INFO] +- org.apache.logging.log4j:log4j-core:jar:2.20.0:compile
+[INFO] +- org.apache.logging.log4j:log4j-slf4j-impl:jar:2.20.0:compile
+[INFO] +- com.fasterxml.jackson.core:jackson-databind:jar:2.15.1:compile
+[INFO] |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.15.1:compile
+[INFO] |  \- com.fasterxml.jackson.core:jackson-core:jar:2.15.1:compile
+[INFO] +- com.google.code.gson:gson:jar:2.10.1:compile
+[INFO] +- io.netty:netty-codec-http:jar:4.1.90.Final:compile
+[INFO] |  +- io.netty:netty-buffer:jar:4.1.90.Final:compile
+[INFO] |  \- io.netty:netty-transport:jar:4.1.90.Final:compile
+[INFO] +- io.netty:netty-codec:jar:4.1.90.Final:compile
+[INFO] +- io.netty:netty-common:jar:4.1.90.Final:compile
+[INFO] \- org.yaml:snakeyaml:jar:2.0:compile
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.381 s
+[INFO] Finished at: 2023-11-16T18:24:23-05:00
+[INFO] ------------------------------------------------------------------------
