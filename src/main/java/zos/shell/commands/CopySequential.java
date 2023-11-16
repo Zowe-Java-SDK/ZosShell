@@ -23,47 +23,48 @@ public class CopySequential {
         var fromDataSetName = "";
         var toDataSetName = "";
 
-        final var param1 = params[1].toUpperCase();
-        final var param2 = params[2].toUpperCase();
+        final var firstParam = params[1].toUpperCase();
+        final var secondParam = params[2].toUpperCase();
 
-        if (Util.isMember(param1) && Util.isMember(param2)) {
-            return new ResponseStatus(
-                    "invalid arguments, specify at least one valid sequential dataset, try again...", false);
+        if (Util.isMember(firstParam) && Util.isMember(secondParam)) {
+            final var errMSg = "invalid arguments, specify at least one valid sequential dataset, try again...";
+            return new ResponseStatus(errMSg, false);
         }
 
-        if (Util.isMember(param1) && !Util.isDataSet(param2)) {
-            return new ResponseStatus(
-                    "invalid second argument, specify a valid sequential dataset, try again...", false);
+        if (Util.isMember(firstParam) && !Util.isDataSet(secondParam)) {
+            final var errMSg = "invalid second argument, specify a valid sequential dataset, try again...";
+            return new ResponseStatus(errMSg, false);
         }
 
-        if (!Util.isMember(param1) && !Util.isDataSet(param1) && Util.isDataSet(param2)) {
-            return new ResponseStatus(
-                    "invalid first argument, specify a valid member or sequential dataset, try again...", false);
+        if (!Util.isMember(firstParam) && !Util.isDataSet(firstParam) && Util.isDataSet(secondParam)) {
+            final var errMSg = "invalid first argument, specify a valid member or sequential dataset, try again...";
+            return new ResponseStatus(errMSg, false);
         }
 
-        if (Util.isMember(param2) && !Util.isDataSet(param1)) {
-            return new ResponseStatus(
-                    "invalid first argument, specify a valid sequential dataset, try again...", false);
+        if (Util.isMember(secondParam) && !Util.isDataSet(firstParam)) {
+            final var errMSg = "invalid first argument, specify a valid sequential dataset, try again...";
+            return new ResponseStatus(errMSg, false);
         }
 
-        if (!Util.isMember(param2) && !Util.isDataSet(param2) && Util.isDataSet(param1)) {
-            return new ResponseStatus(
-                    "invalid second argument, specify a valid member or sequential dataset, try again...", false);
+        if (!Util.isMember(secondParam) && !Util.isDataSet(secondParam) && Util.isDataSet(firstParam)) {
+            final var errMSg = "invalid second argument, specify a valid member or sequential dataset, try again...";
+            return new ResponseStatus(errMSg, false);
         }
 
-        if ((!Util.isMember(param1) && !Util.isMember(param2)) && (!Util.isDataSet(param1) && !Util.isDataSet(param2))) {
+        if ((!Util.isMember(firstParam) && !Util.isMember(secondParam)) && (!Util.isDataSet(firstParam) &&
+                !Util.isDataSet(secondParam))) {
             return new ResponseStatus(Constants.INVALID_ARGUMENTS, false);
         }
 
-        if (Util.isDataSet(param1) && Util.isDataSet(param2)) {
-            fromDataSetName = param1;
-            toDataSetName = param2;
-        } else if (Util.isMember(param1) && Util.isDataSet(param2)) {
-            fromDataSetName = currDataSet + "(" + param1 + ")";
-            toDataSetName = param2;
-        } else if (Util.isDataSet(param1) && Util.isMember(param2)) {
-            fromDataSetName = param1;
-            toDataSetName = currDataSet + "(" + param2 + ")";
+        if (Util.isDataSet(firstParam) && Util.isDataSet(secondParam)) {
+            fromDataSetName = firstParam;
+            toDataSetName = secondParam;
+        } else if (Util.isMember(firstParam) && Util.isDataSet(secondParam)) {
+            fromDataSetName = currDataSet + "(" + firstParam + ")";
+            toDataSetName = secondParam;
+        } else if (Util.isDataSet(firstParam) && Util.isMember(secondParam)) {
+            fromDataSetName = firstParam;
+            toDataSetName = currDataSet + "(" + secondParam + ")";
         }
 
         try {
