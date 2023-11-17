@@ -70,7 +70,6 @@
                                         <exclude>META-INF/NOTICE</exclude>
                                         <exclude>META-INF/NOTICE.txt</exclude>
                                         <exclude>module-info.class</exclude>
-                                        <exclude>META-INF/versions.9.module-info.class</exclude>
                                         <exclude>META-INF/maven/com.starxg/java-keytar/pom.properties</exclude>
                                         <exclude>META-INF/maven/com.starxg/java-keytar/pom.xml</exclude>
                                     </excludes>
