@@ -188,7 +188,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             }
 
             if ("rm".equals(command[0])) {
-                if (!currDataSet.isEmpty()) {
+                if (!currDataSet.isBlank()) {
                     terminal.printf("Are you sure you want to delete from " + currDataSet + " y/n");
                 } else {
                     terminal.printf("Are you sure you want to delete y/n");
@@ -306,7 +306,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     currDataSetMax = currDataSet.length();
                 }
                 addVisited();
-                if (!currDataSet.isEmpty()) {
+                if (!currDataSet.isBlank()) {
                     terminal.println("set to " + currDataSet);
                 }
                 break;
@@ -794,7 +794,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static void addVisited() {
         LOG.debug("*** addVisited ***");
         // if hostname and dataset not in datasets multimap add it
-        if (currConnection == null || currConnection.getHost() == null && currDataSet.isEmpty()) {
+        if (currConnection == null || currConnection.getHost() == null && currDataSet.isBlank()) {
             return;
         }
         if (!dataSets.containsEntry(currConnection.getHost(), currDataSet)) {
@@ -822,7 +822,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private static boolean isCurrDataSetNotSpecified() {
         LOG.debug("*** isCurrDataSetNotSpecified ***");
-        if (currDataSet.isEmpty()) {
+        if (currDataSet.isBlank()) {
             terminal.println(Constants.DATASET_NOT_SPECIFIED);
             return true;
         }

@@ -411,9 +411,9 @@ public class Commands {
             return;
         }
 
-        if (!Util.isDataSet(param) && Util.isMember(param) && !currDataSet.isEmpty()) {
+        if (!Util.isDataSet(param) && Util.isMember(param) && !currDataSet.isBlank()) {
             param = currDataSet + "." + param;
-        } else if (Util.isMember(param) && currDataSet.isEmpty()) {
+        } else if (Util.isMember(param) && currDataSet.isBlank()) {
             terminal.println(Constants.DATASET_NOT_SPECIFIED);
             return;
         }

@@ -162,7 +162,7 @@ public class Delete {
 
     private boolean isCurrDataSetEmpty(String currDataSet) {
         LOG.debug("*** isCurrDataSetEmpty ***");
-        if (currDataSet.isEmpty()) {
+        if (currDataSet.isBlank()) {
             terminal.println(Constants.DELETE_NOTHING_ERROR);
             return true;
         }
