@@ -1,18 +1,18 @@
 package zos.shell.future;
 
-import zowe.client.sdk.zosjobs.GetJobs;
 import zowe.client.sdk.zosjobs.input.JobFile;
+import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 
 public class FutureBrowseJob implements Callable<StringBuilder> {
 
-    private final GetJobs getJobs;
+    private final JobGet jobGet;
     private final List<JobFile> files;
 
-    public FutureBrowseJob(GetJobs getJobs, List<JobFile> files) {
-        this.getJobs = getJobs;
+    public FutureBrowseJob(JobGet jobGet, List<JobFile> files) {
+        this.jobGet = jobGet;
         this.files = files;
     }
 
@@ -21,7 +21,7 @@ public class FutureBrowseJob implements Callable<StringBuilder> {
         final var str = new StringBuilder();
         files.forEach(file -> {
             try {
-                str.append(List.of(getJobs.getSpoolContent(file)));
+                str.append(List.of(jobGet.getSpoolContent(file)));
             } catch (Exception ignored) {
             }
         });

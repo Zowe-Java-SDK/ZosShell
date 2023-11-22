@@ -3,7 +3,7 @@ package zos.shell.future;
 import zos.shell.commands.DownloadJob;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
-import zowe.client.sdk.zosjobs.GetJobs;
+import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.concurrent.Callable;
 
@@ -11,8 +11,8 @@ public class FutureDownloadJob extends DownloadJob implements Callable<ResponseS
 
     private final String jobName;
 
-    public FutureDownloadJob(GetJobs getJobs, boolean isAll, long timeout, String jobName) {
-        super(getJobs, isAll, timeout);
+    public FutureDownloadJob(JobGet JobGet, boolean isAll, long timeout, String jobName) {
+        super(JobGet, isAll, timeout);
         this.jobName = jobName;
     }
 

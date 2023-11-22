@@ -72,6 +72,7 @@ public class CircularLinkedList<T> {
     }
 
     public static class Node<T> {
+
         private final T data;
         private Node<T> next;
         private Node<T> prev;
@@ -83,6 +84,7 @@ public class CircularLinkedList<T> {
         public T getData() {
             return data;
         }
+
     }
 
 }

@@ -3,7 +3,7 @@ package zos.shell.future;
 import zos.shell.commands.PurgeJob;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
-import zowe.client.sdk.core.ZOSConnection;
+import zowe.client.sdk.core.ZosConnection;
 
 import java.util.concurrent.Callable;
 
@@ -29,7 +29,7 @@ public class FuturePurgeJob extends PurgeJob implements Callable<ResponseStatus>
 
     private final String item;
 
-    public FuturePurgeJob(ZOSConnection connection, String item) {
+    public FuturePurgeJob(ZosConnection connection, String item) {
         super(connection);
         this.item = item;
     }

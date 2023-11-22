@@ -2,47 +2,58 @@ package zos.shell.commands;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.config.MvsConsoles;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
-import zowe.client.sdk.zosconsole.ConsoleResponse;
-import zowe.client.sdk.zosconsole.IssueCommand;
-import zowe.client.sdk.zosconsole.input.IssueParams;
+import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.zosconsole.input.IssueConsoleParams;
+import zowe.client.sdk.zosconsole.method.IssueConsole;
+import zowe.client.sdk.zosconsole.response.ConsoleResponse;
 
 public class Terminate {
 
     private static final Logger LOG = LoggerFactory.getLogger(Terminate.class);
 
-    private final IssueCommand issueCommand;
+    private final IssueConsole issueConsole;
+    private final MvsConsoles mvsConsoles = new MvsConsoles();
+    private final ZosConnection connection;
 
     public enum Type {
         STOP,
         CANCEL
     }
 
-    public Terminate(IssueCommand issueCommand) {
+    public Terminate(ZosConnection connection, IssueConsole issueConsole) {
         LOG.debug("*** Terminate ***");
-        this.issueCommand = issueCommand;
+        this.connection = connection;
+        this.issueConsole = issueConsole;
     }
 
     public ResponseStatus stopOrCancel(Type type, String jobOrTask) {
         LOG.debug("*** stopOrCancel ***");
-        final var params = new IssueParams();
+        IssueConsoleParams params;
         switch (type) {
             case STOP:
-                params.setCommand("P " + jobOrTask);
+                params = new IssueConsoleParams("P " + jobOrTask);
                 break;
             case CANCEL:
-                params.setCommand("C " + jobOrTask);
+                params = new IssueConsoleParams("C " + jobOrTask);
                 break;
             default:
                 return new ResponseStatus("invalid termination type, try again...", false);
         }
         ConsoleResponse response;
         try {
-            response = issueCommand.issue(params);
+            final var consoleName = mvsConsoles.getConsoleName(connection.getHost());
+            if (consoleName != null) {
+                response = issueConsole.issueCommandCommon(consoleName, params);
+            } else {
+                response = issueConsole.issueCommand(params.getCmd().get());
+            }
             final var result = response.getCommandResponse().orElse(null);
             if (result == null) {
-                return new ResponseStatus("no response from " + (type == Type.STOP ? "stop" : "cancel") + " command, try again...", false);
+                final var errMsg = "no response from " + (type == Type.STOP ? "stop" : "cancel") + " command, try again...";
+                return new ResponseStatus(errMsg, false);
             }
             // remove last newline i.e. \n
             return new ResponseStatus(result.substring(0, result.length() - 1), true);

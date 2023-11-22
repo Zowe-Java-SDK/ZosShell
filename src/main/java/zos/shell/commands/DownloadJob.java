@@ -7,7 +7,7 @@ import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.DirectorySetup;
 import zos.shell.utility.Util;
-import zowe.client.sdk.zosjobs.GetJobs;
+import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.Comparator;
 
@@ -17,9 +17,9 @@ public class DownloadJob {
 
     private final BrowseJob browseJob;
 
-    public DownloadJob(GetJobs getJobs, boolean isAll, long timeOutValue) {
+    public DownloadJob(JobGet JobGet, boolean isAll, long timeOutValue) {
         LOG.debug("*** DownloadJob ***");
-        this.browseJob = new BrowseJob(getJobs, isAll, timeOutValue);
+        this.browseJob = new BrowseJob(JobGet, isAll, timeOutValue);
     }
 
     public ResponseStatus download(String name) {

@@ -4,10 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
-import zowe.client.sdk.core.ZOSConnection;
-import zowe.client.sdk.zosjobs.DeleteJobs;
-import zowe.client.sdk.zosjobs.GetJobs;
+import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosjobs.input.ModifyJobParams;
+import zowe.client.sdk.zosjobs.methods.JobDelete;
+import zowe.client.sdk.zosjobs.methods.JobGet;
 import zowe.client.sdk.zosjobs.response.Job;
 
 import java.util.Comparator;
@@ -17,13 +17,13 @@ public class PurgeJob {
 
     private static final Logger LOG = LoggerFactory.getLogger(PurgeJob.class);
 
-    private final DeleteJobs deleteJobs;
-    private final GetJobs getJobs;
+    private final JobDelete jobDelete;
+    private final JobGet jobGet;
 
-    public PurgeJob(ZOSConnection connection) {
+    public PurgeJob(ZosConnection connection) {
         LOG.debug("*** PurgeJob ***");
-        deleteJobs = new DeleteJobs(connection);
-        getJobs = new GetJobs(connection);
+        jobDelete = new JobDelete(connection);
+        jobGet = new JobGet(connection);
     }
 
     public ResponseStatus purgeJobByJobName(String jobName) {
@@ -34,7 +34,7 @@ public class PurgeJob {
 
         List<Job> jobs;
         try {
-            jobs = getJobs.getJobsByPrefix(jobName);
+            jobs = jobGet.getByPrefix(jobName);
         } catch (Exception e) {
             return new ResponseStatus(Util.getErrorMsg(e + ""), false);
         }
@@ -53,7 +53,7 @@ public class PurgeJob {
         }
         Job job;
         try {
-            job = getJobs.getJob(jobId);
+            job = jobGet.getById(jobId);
         } catch (Exception e) {
             return new ResponseStatus(Util.getErrorMsg(e + ""), false);
         }
@@ -82,7 +82,7 @@ public class PurgeJob {
         try {
             final var modifyJobParams = new ModifyJobParams.Builder(
                     job.getJobName().get(), job.getJobId().get()).version("1.0").build();
-            deleteJobs.deleteJobCommon(modifyJobParams);
+            jobDelete.deleteCommon(modifyJobParams);
             return new ResponseStatus("Job Name: " + job.getJobName().get() +
                     ", Job Id: " + job.getJobId().get() + " purged successfully...", true);
         } catch (Exception e) {

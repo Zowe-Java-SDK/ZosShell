@@ -6,17 +6,17 @@ import zos.shell.Constants;
 import zos.shell.dto.DataSetMember;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
-import zowe.client.sdk.zosfiles.ZosDsnCopy;
+import zowe.client.sdk.zosfiles.dsn.methods.DsnCopy;
 
 public class Copy {
 
     private static final Logger LOG = LoggerFactory.getLogger(Copy.class);
 
-    private final ZosDsnCopy zosDsnCopy;
+    private final DsnCopy DsnCopy;
 
-    public Copy(ZosDsnCopy zosDsnCopy) {
+    public Copy(DsnCopy DsnCopy) {
         LOG.debug("*** Copy ***");
-        this.zosDsnCopy = zosDsnCopy;
+        this.DsnCopy = DsnCopy;
     }
 
     public ResponseStatus copy(String currDataSet, String[] params) {
@@ -120,7 +120,7 @@ public class Copy {
             toDataSetName = secondParam;
         }
         try {
-            zosDsnCopy.copy(fromDataSetName, toDataSetName, true, copyAllMembers);
+            DsnCopy.copy(fromDataSetName, toDataSetName, true, copyAllMembers);
         } catch (Exception e) {
             if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
                 return new ResponseStatus(Constants.SEVERE_ERROR, false);

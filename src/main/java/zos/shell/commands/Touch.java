@@ -6,18 +6,18 @@ import zos.shell.Constants;
 import zos.shell.dto.Member;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
-import zowe.client.sdk.zosfiles.ZosDsn;
+import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
 
 public class Touch {
 
     private static final Logger LOG = LoggerFactory.getLogger(Touch.class);
 
-    private final ZosDsn zosDsn;
+    private final DsnWrite dsnWrite;
     private final Member members;
 
-    public Touch(ZosDsn zosDsn, Member members) {
+    public Touch(DsnWrite dsnWrite, Member members) {
         LOG.debug("*** Touch ***");
-        this.zosDsn = zosDsn;
+        this.dsnWrite = dsnWrite;
         this.members = members;
     }
 
@@ -39,7 +39,7 @@ public class Touch {
 
         try {
             if (!foundExistingMember) {
-                zosDsn.writeDsn(dataSet, member, "");
+                dsnWrite.write(dataSet, member, "");
             } else {
                 return new ResponseStatus(member + " already exists.", true);
             }

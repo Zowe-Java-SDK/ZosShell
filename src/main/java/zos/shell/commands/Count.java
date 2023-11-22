@@ -3,10 +3,10 @@ package zos.shell.commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.dto.ResponseStatus;
-import zowe.client.sdk.zosfiles.ZosDsnList;
-import zowe.client.sdk.zosfiles.input.ListParams;
-import zowe.client.sdk.zosfiles.response.Dataset;
-import zowe.client.sdk.zosfiles.response.Member;
+import zowe.client.sdk.zosfiles.dsn.input.ListParams;
+import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
+import zowe.client.sdk.zosfiles.dsn.response.Dataset;
+import zowe.client.sdk.zosfiles.dsn.response.Member;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +16,12 @@ public class Count {
 
     private static final Logger LOG = LoggerFactory.getLogger(Count.class);
 
-    private final ZosDsnList zosDsnList;
+    private final DsnList dsnList;
     private final ListParams params = new ListParams.Builder().build();
 
-    public Count(ZosDsnList zosDsnList) {
+    public Count(DsnList dsnList) {
         LOG.debug("*** Count ***");
-        this.zosDsnList = zosDsnList;
+        this.dsnList = dsnList;
     }
 
     public ResponseStatus count(String dataSet, String param) {
@@ -31,10 +31,10 @@ public class Count {
         List<Member> members = new ArrayList<>();
         try {
             if ("members".equalsIgnoreCase(param)) {
-                members = zosDsnList.listDsnMembers(dataSet, params);
+                members = dsnList.getMembers(dataSet, params);
             }
             if ("datasets".equalsIgnoreCase(param)) {
-                ds = zosDsnList.listDsn(dataSet, params);
+                ds = dsnList.getDatasets(dataSet, params);
             }
             ds.forEach(item -> {
                 if (!item.getDsname().orElse("n\\a").equalsIgnoreCase(dataSet)) {

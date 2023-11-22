@@ -19,8 +19,8 @@ import zos.shell.data.Environment;
 import zos.shell.data.SearchDictionary;
 import zos.shell.dto.Output;
 import zos.shell.utility.Util;
-import zowe.client.sdk.core.SSHConnection;
-import zowe.client.sdk.core.ZOSConnection;
+import zowe.client.sdk.core.SshConnection;
+import zowe.client.sdk.core.ZosConnection;
 
 import javax.swing.*;
 import java.util.*;
@@ -33,9 +33,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static final ListMultimap<String, String> dataSets = ArrayListMultimap.create();
     private static String currDataSet = "";
     private static int currDataSetMax = 0;
-    private static final List<ZOSConnection> connections = new ArrayList<>();
-    private static final Map<String, SSHConnection> sshConnections = new HashMap<>();
-    private static ZOSConnection currConnection;
+    private static final List<ZosConnection> connections = new ArrayList<>();
+    private static final Map<String, SshConnection> SshConnections = new HashMap<>();
+    private static ZosConnection currConnection;
     private static TextTerminal<?> terminal;
     private static Commands commands;
     private static History history;
@@ -49,7 +49,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     public static void main(String[] args) {
         LOG.debug("*** main ***");
-        Credentials.readCredentials(connections, sshConnections);
+        Credentials.readCredentials(connections, SshConnections);
         if (!connections.isEmpty()) {
             currConnection = connections.get(0);
         }
@@ -731,7 +731,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 final var ussCommandCandidate = getCommandFromParams(params);
                 final var ussCommandCount = ussCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(ussCommandCount, ussCommandCandidate)) {
-                    commands.ussh(terminal, currConnection, sshConnections, ussCommandCandidate.toString());
+                    commands.ussh(terminal, currConnection, SshConnections, ussCommandCandidate.toString());
                 }
                 break;
             case "v":

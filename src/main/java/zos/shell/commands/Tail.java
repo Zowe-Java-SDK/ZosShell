@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
-import zowe.client.sdk.zosjobs.GetJobs;
+import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,8 +17,8 @@ public class Tail extends JobLog {
 
     private final TextTerminal<?> terminal;
 
-    public Tail(TextTerminal<?> terminal, GetJobs getJobs, boolean isAll, long timeOutValue) {
-        super(getJobs, isAll, timeOutValue);
+    public Tail(TextTerminal<?> terminal, JobGet JobGet, boolean isAll, long timeOutValue) {
+        super(JobGet, isAll, timeOutValue);
         LOG.debug("*** Tail ***");
         this.terminal = terminal;
     }

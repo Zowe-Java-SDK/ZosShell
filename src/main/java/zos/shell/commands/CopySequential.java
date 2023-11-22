@@ -5,17 +5,17 @@ import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
-import zowe.client.sdk.zosfiles.ZosDsnCopy;
+import zowe.client.sdk.zosfiles.dsn.methods.DsnCopy;
 
 public class CopySequential {
 
     private static final Logger LOG = LoggerFactory.getLogger(CopySequential.class);
 
-    private final ZosDsnCopy zosDsnCopy;
+    private final DsnCopy DsnCopy;
 
-    public CopySequential(ZosDsnCopy zosDsnCopy) {
+    public CopySequential(DsnCopy DsnCopy) {
         LOG.debug("*** CopySequential ***");
-        this.zosDsnCopy = zosDsnCopy;
+        this.DsnCopy = DsnCopy;
     }
 
     public ResponseStatus copy(String currDataSet, String[] params) {
@@ -68,7 +68,7 @@ public class CopySequential {
         }
 
         try {
-            zosDsnCopy.copy(fromDataSetName, toDataSetName, true, false);
+            DsnCopy.copy(fromDataSetName, toDataSetName, true, false);
         } catch (Exception e) {
             if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
                 return new ResponseStatus(Constants.SEVERE_ERROR, false);

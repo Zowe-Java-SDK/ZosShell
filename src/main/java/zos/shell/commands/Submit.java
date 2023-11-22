@@ -4,25 +4,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
-import zowe.client.sdk.zosjobs.SubmitJobs;
+import zowe.client.sdk.zosjobs.methods.JobSubmit;
 import zowe.client.sdk.zosjobs.response.Job;
 
 public class Submit {
 
     private static final Logger LOG = LoggerFactory.getLogger(Submit.class);
 
-    private final SubmitJobs submitJobs;
+    private final JobSubmit jobSubmit;
 
-    public Submit(SubmitJobs submitJobs) {
+    public Submit(JobSubmit jobSubmit) {
         LOG.debug("*** Submit ***");
-        this.submitJobs = submitJobs;
+        this.jobSubmit = jobSubmit;
     }
 
     public ResponseStatus submitJob(String dataSet, String param) {
         LOG.debug("*** submitJob ***");
         Job job;
         try {
-            job = submitJobs.submitJob(String.format("%s(%s)", dataSet, param));
+            job = jobSubmit.submit(String.format("%s(%s)", dataSet, param));
         } catch (Exception e) {
             return new ResponseStatus(Util.getErrorMsg(e + ""), false);
         }

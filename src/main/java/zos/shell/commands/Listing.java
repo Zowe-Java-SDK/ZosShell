@@ -6,11 +6,11 @@ import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.future.FutureDsnMembers;
 import zos.shell.future.FutureListDsn;
-import zowe.client.sdk.zosfiles.ZosDsnList;
-import zowe.client.sdk.zosfiles.input.ListParams;
-import zowe.client.sdk.zosfiles.response.Dataset;
-import zowe.client.sdk.zosfiles.response.Member;
-import zowe.client.sdk.zosfiles.types.AttributeType;
+import zowe.client.sdk.zosfiles.dsn.input.ListParams;
+import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
+import zowe.client.sdk.zosfiles.dsn.response.Dataset;
+import zowe.client.sdk.zosfiles.dsn.response.Member;
+import zowe.client.sdk.zosfiles.dsn.types.AttributeType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +29,14 @@ public class Listing {
     private final long timeout;
     private List<Member> members = new ArrayList<>();
     private List<Dataset> dataSets = new ArrayList<>();
-    private final ZosDsnList zosDsnList;
+    private final DsnList dsnList;
     private ListParams params;
     private boolean isDataSets = false;
 
-    public Listing(TextTerminal<?> terminal, ZosDsnList zosDsnList, long timeout) {
+    public Listing(TextTerminal<?> terminal, DsnList dsnList, long timeout) {
         LOG.debug("*** Listing ***");
         this.terminal = terminal;
-        this.zosDsnList = zosDsnList;
+        this.dsnList = dsnList;
         this.timeout = timeout;
     }
 
@@ -70,14 +70,14 @@ public class Listing {
             final var searchForMember = index == -1 ? m : m.substring(0, index);
             if (m.equals(searchForMember)) {
                 members = members.stream()
-                                .filter(i -> i.getMember().orElse("")
+                        .filter(i -> i.getMember().orElse("")
                                 .equals(searchForMember))
-                                .collect(Collectors.toList());
+                        .collect(Collectors.toList());
             } else {
                 members = members.stream()
-                                .filter(i -> i.getMember().orElse("")
+                        .filter(i -> i.getMember().orElse("")
                                 .startsWith(searchForMember))
-                                .collect(Collectors.toList());
+                        .collect(Collectors.toList());
             }
         }, () -> displayDataSets(dataSets, dataSet, isColumnView, isAttributes));
         final var membersSize = members.size();
@@ -108,14 +108,14 @@ public class Listing {
     private List<Member> getMembers(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
         LOG.debug("*** getMembers ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureDsnMembers(zosDsnList, dataSet, params));
+        final var submit = pool.submit(new FutureDsnMembers(dsnList, dataSet, params));
         return submit.get(timeout, TimeUnit.SECONDS);
     }
 
     private List<Dataset> getDataSets(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
         LOG.debug("*** getDataSets ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureListDsn(zosDsnList, dataSet, params));
+        final var submit = pool.submit(new FutureListDsn(dsnList, dataSet, params));
         return submit.get(timeout, TimeUnit.SECONDS);
     }
 
