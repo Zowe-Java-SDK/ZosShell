@@ -212,13 +212,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         terminal.printf("Are you sure you want to delete all from " + currDataSet + " y/n");
                     } else if (!currDataSet.isBlank() && !Util.isDataSet(command[1]) && !Util.isMember(command[1])) {
                         terminal.println("No valid dataset, member or dataset(member) value provided, try again...");
-                        continue;
+                        break;
                     } else if (currDataSet.isBlank() && !Util.isDataSet(command[1]) && !Util.isMember(command[1])) {
                         terminal.println("No valid dataset or dataset(member) value provided, try again...");
-                        continue;
+                        break;
                     } else if (currDataSet.isBlank()) {
                         terminal.println(Constants.DATASET_NOT_SPECIFIED);
-                        continue;
+                        break;
                     }
 
                     commandLine = textIO.newStringInputReader().withMaxLength(80).read("?");
