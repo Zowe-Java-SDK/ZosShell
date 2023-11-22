@@ -17,6 +17,7 @@ import zos.shell.config.Config;
 import zos.shell.config.Credentials;
 import zos.shell.data.Environment;
 import zos.shell.data.SearchDictionary;
+import zos.shell.dto.DataSetMember;
 import zos.shell.dto.Output;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SshConnection;
@@ -188,11 +189,36 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             }
 
             if ("rm".equals(command[0])) {
-                if (!currDataSet.isBlank()) {
-                    terminal.printf("Are you sure you want to delete from " + currDataSet + " y/n");
-                } else {
-                    terminal.printf("Are you sure you want to delete y/n");
+                if (isParamsMissing(1, command)) {
+                    continue;
                 }
+                if (isParamsExceeded(2, command)) {
+                    continue;
+                }
+
+                DataSetMember dataSetMember = Util.getDatasetAndMember(command[1]);
+                if (!currDataSet.isBlank() && dataSetMember != null) {
+                    terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
+                } else if (!currDataSet.isBlank() && Util.isMember(command[1])) {
+                    final var candidate = currDataSet + "(" + command[1] + ")";
+                    terminal.printf("Are you sure you want to delete " + candidate + " y/n");
+                } else if (currDataSet.isBlank() && dataSetMember != null) {
+                    terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
+                } else if (currDataSet.isBlank() && Util.isDataSet(command[1])) {
+                    terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
+                } else if (!currDataSet.isBlank() && ("*".equals(command[1]) || ".".equals(command[1]))) {
+                    terminal.printf("Are you sure you want to delete all from " + currDataSet + " y/n");
+                } else if (!currDataSet.isBlank() && !Util.isDataSet(command[1]) && !Util.isMember(command[1])) {
+                    terminal.println("No valid dataset, member or dataset(member) value provided, try again...");
+                    continue;
+                } else if (currDataSet.isBlank() && !Util.isDataSet(command[1]) && !Util.isMember(command[1])) {
+                    terminal.println("No valid dataset or dataset(member) value provided, try again...");
+                    continue;
+                } else if (currDataSet.isBlank()) {
+                    terminal.println(Constants.DATASET_NOT_SPECIFIED);
+                    continue;
+                }
+
                 commandLine = textIO.newStringInputReader().withMaxLength(80).read("?");
                 if (!"y".equalsIgnoreCase(commandLine) && !"yes".equalsIgnoreCase(commandLine)) {
                     terminal.println("delete canceled");
@@ -613,12 +639,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 terminal.println(currDataSet);
                 break;
             case "rm":
-                if (isParamsMissing(1, params)) {
-                    return;
-                }
-                if (isParamsExceeded(2, params)) {
-                    return;
-                }
+                // command parameter check is done before this call
                 param = params[1];
                 commands.rm(currConnection, currDataSet, param);
                 break;
