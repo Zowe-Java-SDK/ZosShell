@@ -132,7 +132,7 @@ public class Listing {
     private void displayDataSets(List<Dataset> dataSets, String ignoreCurrDataSet,
                                  boolean isColumnView, boolean isAttributes) {
         LOG.debug("*** displayDataSets ***");
-        if (dataSets.isEmpty() || (dataSets.size() == 1
+        if (dataSets.isBlank() || (dataSets.size() == 1
                 && ignoreCurrDataSet.equalsIgnoreCase(dataSets.get(0).getDsname().orElse("")))) {
             return;
         }
@@ -162,7 +162,7 @@ public class Listing {
 
     private void displayMembers(List<Member> members, boolean isAttributes) {
         LOG.debug("*** displayMembers ***");
-        if (members.isEmpty()) {
+        if (members.isBlank()) {
             return;
         }
         final var columnFormat = "%-8s %-10s %-10s %-4s %-5s";

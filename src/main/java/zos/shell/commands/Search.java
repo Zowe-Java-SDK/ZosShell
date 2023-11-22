@@ -28,7 +28,7 @@ public class Search {
             final var results = Arrays.stream(value.getOutput().toString().split("\n"))
                     .filter(line -> line.toUpperCase().contains(text.toUpperCase()))
                     .collect(Collectors.toList());
-            if (!results.isEmpty()) {
+            if (!results.isBlank()) {
                 results.forEach(terminal::println);
             } else {
                 terminal.println("no results found...");

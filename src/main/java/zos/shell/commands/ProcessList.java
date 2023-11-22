@@ -39,7 +39,7 @@ public class ProcessList {
         jobs.sort(Comparator.comparing((Job j) -> j.getJobName().orElse(""))
                 .thenComparing(j -> j.getStatus().orElse(""))
                 .thenComparing(j -> j.getJobId().orElse("")));
-        if (jobs.isEmpty()) {
+        if (jobs.isBlank()) {
             return new ResponseStatus(Constants.NO_PROCESS_FOUND, false);
         }
         final var str = new StringBuilder();

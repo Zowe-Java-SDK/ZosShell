@@ -41,7 +41,7 @@ public class JobLog {
             e.printStackTrace();
             return new ResponseStatus("error retrieving job details, try again.", false);
         }
-        if (jobs.isEmpty()) {
+        if (jobs.isBlank()) {
             final var msg = jobParams.getPrefix().orElse("n\\a") + " does not exist, try again...";
             return new ResponseStatus(msg, false);
         }

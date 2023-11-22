@@ -21,7 +21,7 @@ public class LocalFiles {
     public static void listFiles(TextTerminal<?> terminal, String dataSet) {
         LOG.debug("*** listFiles ***");
         final var files = getFiles(terminal, dataSet);
-        if (files.isEmpty()) {
+        if (files.isBlank()) {
             terminal.println(Constants.NO_FILES);
             return;
         }
@@ -34,7 +34,7 @@ public class LocalFiles {
             return new ArrayList<>();
         }
         String path;
-        if (dataSet == null || dataSet.isEmpty()) {
+        if (dataSet == null || dataSet.isBlank()) {
             if (SystemUtils.IS_OS_WINDOWS) {
                 path = Constants.PATH_FILE_DIRECTORY_WINDOWS;
             } else {

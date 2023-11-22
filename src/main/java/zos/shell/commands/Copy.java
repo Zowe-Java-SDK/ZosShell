@@ -112,11 +112,11 @@ public class Copy {
             toDataSetName = secondParam + "(" + firstParam + ")";
         }
 
-        if (fromDataSetName.isEmpty()) {
+        if (fromDataSetName.isBlank()) {
             fromDataSetName = firstParam;
         }
 
-        if (toDataSetName.isEmpty()) {
+        if (toDataSetName.isBlank()) {
             toDataSetName = secondParam;
         }
         try {

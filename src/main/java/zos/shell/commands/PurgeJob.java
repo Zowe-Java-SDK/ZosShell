@@ -39,7 +39,7 @@ public class PurgeJob {
             return new ResponseStatus(Util.getErrorMsg(e + ""), false);
         }
 
-        if (jobs.isEmpty()) {
+        if (jobs.isBlank()) {
             return new ResponseStatus("job not found", false);
         }
         jobs.sort(Comparator.comparing(job -> job.getJobId().orElse(""), Comparator.reverseOrder()));
@@ -66,13 +66,13 @@ public class PurgeJob {
 
     private ResponseStatus purgeJob(Job job) {
         LOG.debug("*** purgeJob ***");
-        if (job.getJobId().isEmpty()) {
+        if (job.getJobId().isBlank()) {
             return new ResponseStatus("job id not found", false);
         }
-        if (job.getJobName().isEmpty()) {
+        if (job.getJobName().isBlank()) {
             return new ResponseStatus("job name not found", false);
         }
-        if (job.getStatus().isEmpty()) {
+        if (job.getStatus().isBlank()) {
             return new ResponseStatus("job status not found", false);
         }
         if (!"OUTPUT".equals(job.getStatus().get())) {
