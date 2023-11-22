@@ -136,7 +136,7 @@ public class Commands {
             final var index = params[1].indexOf("*");
             final var searchForMember = params[1].substring(0, index).toUpperCase();
             members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
-            if (members.isBlank()) {
+            if (members.isEmpty()) {
                 terminal.println(Constants.COPY_NOTHING_WARNING);
                 return;
             }
@@ -197,7 +197,7 @@ public class Commands {
         LOG.debug("*** download ***");
         if ("*".equals(member)) {
             final var members = Util.getMembers(terminal, connection, currDataSet);
-            if (members.isBlank()) {
+            if (members.isEmpty()) {
                 terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
                 return;
             }
@@ -210,7 +210,7 @@ public class Commands {
             final var index = member.indexOf("*");
             final var searchForMember = member.substring(0, index).toUpperCase();
             members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
-            if (members.isBlank()) {
+            if (members.isEmpty()) {
                 terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
                 return;
             }
@@ -246,7 +246,7 @@ public class Commands {
     private List<ResponseStatus> multipleDownload(ZosConnection connection, String dataSet, List<String> members,
                                                   boolean isBinary) {
         LOG.debug("*** multipleDownload ***");
-        if (members.isBlank()) {
+        if (members.isEmpty()) {
             final var rs = new ResponseStatus("", false);
             final var rss = new ArrayList<ResponseStatus>();
             rss.add(rs);
@@ -284,7 +284,7 @@ public class Commands {
     public Output env() {
         LOG.debug("*** env ***");
         final var env = Environment.getInstance();
-        if (env.getVariables().isBlank()) {
+        if (env.getVariables().isEmpty()) {
             terminal.println("no environment variables set, try again...");
         }
         final var str = new StringBuilder();
@@ -354,7 +354,7 @@ public class Commands {
         }
 
         pool.shutdownNow();
-        if (results.isBlank()) {
+        if (results.isEmpty()) {
             results.add("nothing found, try again...");
         }
         return results;
@@ -411,9 +411,9 @@ public class Commands {
             return;
         }
 
-        if (!Util.isDataSet(param) && Util.isMember(param) && !currDataSet.isBlank()) {
+        if (!Util.isDataSet(param) && Util.isMember(param) && !currDataSet.isEmpty()) {
             param = currDataSet + "." + param;
-        } else if (Util.isMember(param) && currDataSet.isBlank()) {
+        } else if (Util.isMember(param) && currDataSet.isEmpty()) {
             terminal.println(Constants.DATASET_NOT_SPECIFIED);
             return;
         }

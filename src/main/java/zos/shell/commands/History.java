@@ -62,7 +62,7 @@ public class History {
             if (commandLst.size() == Constants.HISTORY_SIZE) {
                 commandLst.remove(0);
             }
-            if (commandLst.isBlank() || !getLastHistory().equals(command)) {
+            if (commandLst.isEmpty() || !getLastHistory().equals(command)) {
                 commandLst.add(command);
                 circularLinkedList.add(command);
             }
@@ -86,7 +86,7 @@ public class History {
             return;
         }
 
-        if (this.commandLst.isBlank()) {
+        if (this.commandLst.isEmpty()) {
             terminal.println(Constants.NO_HISTORY);
             return;
         }
@@ -131,7 +131,7 @@ public class History {
 
     public String getHistoryByIndex(int index) {
         LOG.debug("*** getHistoryByIndex ***");
-        if (index > commandLst.size() - 1 || commandLst.isBlank()) {
+        if (index > commandLst.size() - 1 || commandLst.isEmpty()) {
             terminal.println(Constants.NO_HISTORY);
             return null;
         }
@@ -140,7 +140,7 @@ public class History {
 
     public String getLastHistory() {
         LOG.debug("*** getLastHistory ***");
-        if (commandLst.isBlank()) {
+        if (commandLst.isEmpty()) {
             terminal.println(Constants.NO_HISTORY);
             return null;
         }
@@ -150,7 +150,7 @@ public class History {
     public String getLastHistoryByValue(String str) {
         LOG.debug("*** getLastHistoryByValue ***");
         final var lst = commandLst.stream().filter(c -> c.startsWith(str.toLowerCase())).collect(Collectors.toList());
-        if (lst.isBlank()) {
+        if (lst.isEmpty()) {
             terminal.println(Constants.NO_HISTORY);
             return null;
         }

@@ -29,7 +29,7 @@ public class ChangeDir {
         LOG.debug("*** cd ***");
         if (Util.isDataSet(param)) {
             return param;
-        } else if (param.equals("..") && !currDataSet.isBlank()) {
+        } else if (param.equals("..") && !currDataSet.isEmpty()) {
             var tokens = currDataSet.split("\\.");
             final var length = tokens.length - 1;
             if (length == 1) {

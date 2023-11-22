@@ -54,7 +54,7 @@ public class Delete {
                     Util.printError(terminal, e.getMessage());
                 }
 
-                if (!lookForStr.isBlank()) {
+                if (!lookForStr.isEmpty()) {
                     String finalLookForStr = lookForStr;
                     members = members.stream()
                             .filter(i -> i.getMember().orElse("")
@@ -81,9 +81,9 @@ public class Delete {
                         membersNotDeleted.append(" ");
                     }
                 });
-                if (!members.isBlank()) {
+                if (!members.isEmpty()) {
                     terminal.println(membersDeleted + "successfully deleted...");
-                    if (!membersNotDeleted.toString().isBlank()) {
+                    if (!membersNotDeleted.toString().isEmpty()) {
                         terminal.println(membersDeleted + "not deleted...");
                     }
                 } else {
@@ -162,7 +162,7 @@ public class Delete {
 
     private boolean isCurrDataSetEmpty(String currDataSet) {
         LOG.debug("*** isCurrDataSetEmpty ***");
-        if (currDataSet.isBlank()) {
+        if (currDataSet.isEmpty()) {
             terminal.println(Constants.DELETE_NOTHING_ERROR);
             return true;
         }
