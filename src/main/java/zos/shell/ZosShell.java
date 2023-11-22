@@ -196,32 +196,41 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     continue;
                 }
 
-                DataSetMember dataSetMember = Util.getDatasetAndMember(command[1]);
-                if (!currDataSet.isBlank() && dataSetMember != null) {
-                    terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
-                } else if (!currDataSet.isBlank() && Util.isMember(command[1])) {
-                    final var candidate = currDataSet + "(" + command[1] + ")";
-                    terminal.printf("Are you sure you want to delete " + candidate + " y/n");
-                } else if (currDataSet.isBlank() && dataSetMember != null) {
-                    terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
-                } else if (currDataSet.isBlank() && Util.isDataSet(command[1])) {
-                    terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
-                } else if (!currDataSet.isBlank() && ("*".equals(command[1]) || ".".equals(command[1]))) {
-                    terminal.printf("Are you sure you want to delete all from " + currDataSet + " y/n");
-                } else if (!currDataSet.isBlank() && !Util.isDataSet(command[1]) && !Util.isMember(command[1])) {
-                    terminal.println("No valid dataset, member or dataset(member) value provided, try again...");
-                    continue;
-                } else if (currDataSet.isBlank() && !Util.isDataSet(command[1]) && !Util.isMember(command[1])) {
-                    terminal.println("No valid dataset or dataset(member) value provided, try again...");
-                    continue;
-                } else if (currDataSet.isBlank()) {
-                    terminal.println(Constants.DATASET_NOT_SPECIFIED);
-                    continue;
-                }
+                boolean doIt = false;
+                do {
+                    DataSetMember dataSetMember = Util.getDatasetAndMember(command[1]);
+                    if (!currDataSet.isBlank() && dataSetMember != null) {
+                        terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
+                    } else if (!currDataSet.isBlank() && Util.isMember(command[1])) {
+                        final var candidate = currDataSet + "(" + command[1] + ")";
+                        terminal.printf("Are you sure you want to delete " + candidate + " y/n");
+                    } else if (currDataSet.isBlank() && dataSetMember != null) {
+                        terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
+                    } else if (currDataSet.isBlank() && Util.isDataSet(command[1])) {
+                        terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
+                    } else if (!currDataSet.isBlank() && ("*".equals(command[1]) || ".".equals(command[1]))) {
+                        terminal.printf("Are you sure you want to delete all from " + currDataSet + " y/n");
+                    } else if (!currDataSet.isBlank() && !Util.isDataSet(command[1]) && !Util.isMember(command[1])) {
+                        terminal.println("No valid dataset, member or dataset(member) value provided, try again...");
+                        continue;
+                    } else if (currDataSet.isBlank() && !Util.isDataSet(command[1]) && !Util.isMember(command[1])) {
+                        terminal.println("No valid dataset or dataset(member) value provided, try again...");
+                        continue;
+                    } else if (currDataSet.isBlank()) {
+                        terminal.println(Constants.DATASET_NOT_SPECIFIED);
+                        continue;
+                    }
 
-                commandLine = textIO.newStringInputReader().withMaxLength(80).read("?");
-                if (!"y".equalsIgnoreCase(commandLine) && !"yes".equalsIgnoreCase(commandLine)) {
-                    terminal.println("delete canceled");
+                    commandLine = textIO.newStringInputReader().withMaxLength(80).read("?");
+                    if ("y".equalsIgnoreCase(commandLine) || "yes".equalsIgnoreCase(commandLine)) {
+                        doIt = true;
+                        break;
+                    } else if ("n".equalsIgnoreCase(commandLine) || "no".equalsIgnoreCase(commandLine)) {
+                        terminal.println("delete canceled");
+                        break;
+                    }
+                } while (true);
+                if (!doIt) {
                     continue;
                 }
             }
