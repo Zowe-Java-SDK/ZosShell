@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
-import zowe.client.sdk.zosfiles.ZosDsn;
+import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,11 +15,11 @@ public class Save {
 
     private static final Logger LOG = LoggerFactory.getLogger(Save.class);
 
-    private final ZosDsn zosDsn;
+    private final DsnWrite dsnWrite;
 
-    public Save(ZosDsn zosDsn) {
+    public Save(DsnWrite dsnWrite) {
         LOG.debug("*** Save ***");
-        this.zosDsn = zosDsn;
+        this.dsnWrite = dsnWrite;
     }
 
     public ResponseStatus save(String dataSet, String member) {
@@ -56,9 +56,9 @@ public class Save {
             final var content = sb.toString().replaceAll("(\\r)", "");
 
             if (isSequentialDataSet) {
-                zosDsn.writeDsn(member, content);
+                dsnWrite.write(member, content);
             } else {
-                zosDsn.writeDsn(dataSet, member, content);
+                dsnWrite.write(dataSet, member, content);
             }
         } catch (Exception e) {
             return new ResponseStatus(Util.getErrorMsg(e + ""), false);

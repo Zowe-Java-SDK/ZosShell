@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
-import zowe.client.sdk.zosjobs.GetJobs;
 import zowe.client.sdk.zosjobs.input.GetJobParams;
+import zowe.client.sdk.zosjobs.methods.JobGet;
 import zowe.client.sdk.zosjobs.response.Job;
 
 import java.util.Comparator;
@@ -16,12 +16,12 @@ public class ProcessList {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProcessList.class);
 
-    private final GetJobs getJobs;
+    private final JobGet jobGet;
     private final GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");
 
-    public ProcessList(GetJobs getJobs) {
+    public ProcessList(JobGet jobGet) {
         LOG.debug("*** ProcessList ***");
-        this.getJobs = getJobs;
+        this.jobGet = jobGet;
     }
 
     public ResponseStatus ps(String jobOrTask) {
@@ -32,7 +32,7 @@ public class ProcessList {
                 getJobParams.prefix(jobOrTask).build();
             }
             final var params = getJobParams.build();
-            jobs = getJobs.getJobsCommon(params);
+            jobs = jobGet.getCommon(params);
         } catch (Exception e) {
             return new ResponseStatus(Util.getErrorMsg(e + ""), false);
         }

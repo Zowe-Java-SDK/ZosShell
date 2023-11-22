@@ -5,10 +5,10 @@ import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.config.MvsConsoles;
 import zos.shell.dto.ResponseStatus;
-import zowe.client.sdk.core.ZOSConnection;
-import zowe.client.sdk.zosconsole.ConsoleResponse;
-import zowe.client.sdk.zosconsole.IssueCommand;
-import zowe.client.sdk.zosconsole.input.IssueParams;
+import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.zosconsole.input.IssueConsoleParams;
+import zowe.client.sdk.zosconsole.method.IssueConsole;
+import zowe.client.sdk.zosconsole.response.ConsoleResponse;
 
 import java.util.regex.Pattern;
 
@@ -16,19 +16,24 @@ public class MvsCommand {
 
     private static final Logger LOG = LoggerFactory.getLogger(MvsCommand.class);
 
-    private final IssueCommand issueCommand;
-    private final ZOSConnection connection;
+    private final IssueConsole issueConsole;
+    private final ZosConnection connection;
     private final MvsConsoles mvsConsoles = new MvsConsoles();
 
-    public MvsCommand(ZOSConnection connection) {
+    public MvsCommand(ZosConnection connection) {
         LOG.debug("*** MvsCommand ***");
         this.connection = connection;
-        this.issueCommand = new IssueCommand(connection);
+        this.issueConsole = new IssueConsole(connection);
     }
 
-    private ConsoleResponse execute(IssueParams params) throws Exception {
+    private ConsoleResponse execute(IssueConsoleParams params) throws Exception {
         LOG.debug("*** execute ***");
-        return issueCommand.issue(params);
+        return issueConsole.issueCommand(params.getCmd().get());
+    }
+
+    private ConsoleResponse execute(String consoleName, IssueConsoleParams params) throws Exception {
+        LOG.debug("*** execute ***");
+        return issueConsole.issueCommandCommon(consoleName, params);
     }
 
     public ResponseStatus executeCommand(String command) {
@@ -41,23 +46,14 @@ public class MvsCommand {
         }
 
         ConsoleResponse response = null;
-        final var params = new IssueParams();
-        params.setCommand(command);
-        final var mvsConsoleName = mvsConsoles.getConsoleName(connection.getHost());
-        if (mvsConsoleName != null) {
-            params.setConsoleName(mvsConsoleName);
-        }
+        final var params = new IssueConsoleParams(command);
+        final var consoleName = mvsConsoles.getConsoleName(connection.getHost());
         try {
+            if (consoleName != null) {
+                response = execute(consoleName, params);
+            }
             response = execute(params);
         } catch (Exception ignored) {
-        }
-
-        if (response == null) {
-            params.setConsoleName(null);
-            try {
-                response = execute(params);
-            } catch (Exception ignored) {
-            }
         }
 
         if (response == null) {

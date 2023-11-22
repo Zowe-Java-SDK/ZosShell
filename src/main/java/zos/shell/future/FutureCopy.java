@@ -4,7 +4,7 @@ import com.google.common.base.Strings;
 import zos.shell.Constants;
 import zos.shell.commands.Copy;
 import zos.shell.dto.ResponseStatus;
-import zowe.client.sdk.zosfiles.ZosDsnCopy;
+import zowe.client.sdk.zosfiles.dsn.methods.DsnCopy;
 
 import java.util.concurrent.Callable;
 
@@ -14,8 +14,8 @@ public class FutureCopy extends Copy implements Callable<ResponseStatus> {
     private final String toDataSetName;
     private final String member;
 
-    public FutureCopy(ZosDsnCopy zosDsnCopy, String fromDataSetName, String toDataSetName, String member) {
-        super(zosDsnCopy);
+    public FutureCopy(DsnCopy DsnCopy, String fromDataSetName, String toDataSetName, String member) {
+        super(DsnCopy);
         this.fromDataSetName = fromDataSetName;
         this.toDataSetName = toDataSetName;
         this.member = member;

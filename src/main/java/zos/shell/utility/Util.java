@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.DataSetMember;
 import zos.shell.dto.Member;
-import zowe.client.sdk.core.ZOSConnection;
-import zowe.client.sdk.zosfiles.ZosDsnList;
+import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -125,9 +125,9 @@ public class Util {
         return new DataSetMember(dataset, member);
     }
 
-    public static List<String> getMembers(TextTerminal<?> terminal, ZOSConnection connection, String dataSet) {
+    public static List<String> getMembers(TextTerminal<?> terminal, ZosConnection connection, String dataSet) {
         LOG.debug("*** getMembers ***");
-        final var member = new Member(new ZosDsnList(connection));
+        final var member = new Member(new DsnList(connection));
         final List<String> members;
         try {
             members = member.getMembers(dataSet);

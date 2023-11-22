@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.future.FutureBrowseJob;
-import zowe.client.sdk.zosjobs.GetJobs;
 import zowe.client.sdk.zosjobs.input.GetJobParams;
 import zowe.client.sdk.zosjobs.input.JobFile;
+import zowe.client.sdk.zosjobs.methods.JobGet;
 import zowe.client.sdk.zosjobs.response.Job;
 
 import java.util.ArrayList;
@@ -20,14 +20,14 @@ public class JobLog {
 
     private static final Logger LOG = LoggerFactory.getLogger(JobLog.class);
 
-    protected final GetJobs getJobs;
+    protected final JobGet jobGet;
     protected List<Job> jobs = new ArrayList<>();
     private final boolean isAll;
     private final long timeout;
 
-    public JobLog(GetJobs getJobs, boolean isAll, long timeout) {
+    public JobLog(JobGet jobGet, boolean isAll, long timeout) {
         LOG.debug("*** JobLog ***");
-        this.getJobs = getJobs;
+        this.jobGet = jobGet;
         this.isAll = isAll;
         this.timeout = timeout;
     }
@@ -36,7 +36,7 @@ public class JobLog {
         LOG.debug("*** browseJobLog ***");
         final var jobParams = new GetJobParams.Builder("*").prefix(param).build();
         try {
-            jobs = getJobs.getJobsCommon(jobParams);
+            jobs = jobGet.getCommon(jobParams);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseStatus("error retrieving job details, try again.", false);
@@ -53,7 +53,7 @@ public class JobLog {
         final var job = jobStillRunning.orElse(jobs.get(0));
         final List<JobFile> files;
         try {
-            files = getJobs.getSpoolFilesForJob(job);
+            files = jobGet.getSpoolFilesByJob(job);
         } catch (Exception e) {
             e.printStackTrace();
             final var msg = "error retrieving spool content for job id " + job.getJobId().orElse("n\\a");
@@ -61,8 +61,8 @@ public class JobLog {
         }
 
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = isAll ? pool.submit(new FutureBrowseJob(getJobs, files)) :
-                pool.submit(new FutureBrowseJob(getJobs, List.of(files.get(0))));
+        final var submit = isAll ? pool.submit(new FutureBrowseJob(jobGet, files)) :
+                pool.submit(new FutureBrowseJob(jobGet, List.of(files.get(0))));
         try {
             final var result = submit.get(timeout, TimeUnit.SECONDS);
             pool.shutdownNow();

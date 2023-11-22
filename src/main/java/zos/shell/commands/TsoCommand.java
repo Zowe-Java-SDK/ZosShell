@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
-import zowe.client.sdk.core.ZOSConnection;
-import zowe.client.sdk.zostso.IssueResponse;
-import zowe.client.sdk.zostso.IssueTso;
+import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.zostso.method.IssueTso;
+import zowe.client.sdk.zostso.response.IssueResponse;
 
 import java.util.regex.Pattern;
 
@@ -14,18 +14,18 @@ public class TsoCommand {
 
     private static final Logger LOG = LoggerFactory.getLogger(TsoCommand.class);
 
-    private final IssueTso issueCommand;
+    private final IssueTso issueTso;
     private final String accountNumber;
 
-    public TsoCommand(ZOSConnection connection, String accountNumber) {
+    public TsoCommand(ZosConnection connection, String accountNumber) {
         LOG.debug("*** TsoCommand ***");
-        this.issueCommand = new IssueTso(connection);
+        this.issueTso = new IssueTso(connection);
         this.accountNumber = accountNumber;
     }
 
     private IssueResponse execute(String command) throws Exception {
         LOG.debug("*** execute ***");
-        return issueCommand.issueTsoCommand(accountNumber, command);
+        return issueTso.issueCommand(accountNumber, command);
     }
 
     public ResponseStatus executeCommand(String command) {

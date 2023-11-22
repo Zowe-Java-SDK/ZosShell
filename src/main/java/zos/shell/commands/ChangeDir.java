@@ -5,9 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.utility.Util;
-import zowe.client.sdk.zosfiles.ZosDsnList;
-import zowe.client.sdk.zosfiles.input.ListParams;
-import zowe.client.sdk.zosfiles.response.Dataset;
+import zowe.client.sdk.zosfiles.dsn.input.ListParams;
+import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
+import zowe.client.sdk.zosfiles.dsn.response.Dataset;
 
 import java.util.List;
 
@@ -16,13 +16,13 @@ public class ChangeDir {
     private static final Logger LOG = LoggerFactory.getLogger(ChangeDir.class);
 
     private final TextTerminal<?> terminal;
-    private final ZosDsnList zosDsnList;
+    private final DsnList dsnList;
     private final ListParams params = new ListParams.Builder().build();
 
-    public ChangeDir(TextTerminal<?> terminal, ZosDsnList zosDsnList) {
+    public ChangeDir(TextTerminal<?> terminal, DsnList dsnList) {
         LOG.debug("*** ChangeDir ***");
         this.terminal = terminal;
-        this.zosDsnList = zosDsnList;
+        this.dsnList = dsnList;
     }
 
     public String cd(String currDataSet, String param) {
@@ -49,7 +49,7 @@ public class ChangeDir {
         } else {
             List<Dataset> dsLst;
             try {
-                dsLst = zosDsnList.listDsn(currDataSet, params);
+                dsLst = dsnList.getDatasets(currDataSet, params);
             } catch (Exception e) {
                 Util.printError(terminal, e.getMessage());
                 return currDataSet;

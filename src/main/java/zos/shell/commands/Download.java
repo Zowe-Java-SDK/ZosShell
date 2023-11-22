@@ -9,8 +9,8 @@ import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.DirectorySetup;
 import zos.shell.utility.Util;
-import zowe.client.sdk.zosfiles.ZosDsnDownload;
-import zowe.client.sdk.zosfiles.input.DownloadParams;
+import zowe.client.sdk.zosfiles.dsn.input.DownloadParams;
+import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,13 +25,13 @@ public class Download {
 
     public static final String DIRECTORY_PATH_WINDOWS = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\";
     public static final String DIRECTORY_PATH_MAC = Constants.PATH_FILE_DIRECTORY_MAC + "/";
-    private final ZosDsnDownload download;
+    private final DsnGet dsnGet;
     private DownloadParams dlParams;
     private final boolean isBinary;
 
-    public Download(ZosDsnDownload download, boolean isBinary) {
+    public Download(DsnGet dsnGet, boolean isBinary) {
         LOG.debug("*** Download ***");
-        this.download = download;
+        this.dsnGet = dsnGet;
         this.isBinary = isBinary;
     }
 
@@ -95,16 +95,16 @@ public class Download {
         return getInputStream(dataSet, param);
     }
 
-    public InputStream getInputStream(String dataSet, String param) throws Exception {
+    public InputStream getInputStream(String dataSet, String param) {
         LOG.debug("*** getInputStream ***");
         InputStream inputStream;
         if (dlParams == null) {
             dlParams = new DownloadParams.Builder().build();
         }
         if (Util.isDataSet(param)) {
-            inputStream = download.downloadDsn(String.format("%s", param), dlParams);
+            inputStream = dsnGet.get(String.format("%s", param), dlParams);
         } else {
-            inputStream = download.downloadDsn(String.format("%s(%s)", dataSet, param), dlParams);
+            inputStream = dsnGet.get(String.format("%s(%s)", dataSet, param), dlParams);
         }
         return inputStream;
     }

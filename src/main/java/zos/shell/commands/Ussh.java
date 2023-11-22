@@ -3,9 +3,9 @@ package zos.shell.commands;
 import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zowe.client.sdk.core.SSHConnection;
-import zowe.client.sdk.core.ZOSConnection;
-import zowe.client.sdk.zosuss.Shell;
+import zowe.client.sdk.core.SshConnection;
+import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.zosuss.method.IssueUss;
 
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -15,12 +15,12 @@ public class Ussh {
     private static final Logger LOG = LoggerFactory.getLogger(Ussh.class);
 
     private final TextTerminal<?> terminal;
-    private final SSHConnection sshConnection;
+    private final SshConnection sshConnection;
 
-    public Ussh(TextTerminal<?> terminal, ZOSConnection connection, Map<String, SSHConnection> sshConnections) {
+    public Ussh(TextTerminal<?> terminal, ZosConnection connection, Map<String, SshConnection> sshConnection) {
         LOG.debug("*** Ussh ***");
         this.terminal = terminal;
-        this.sshConnection = sshConnections.get(connection.getHost());
+        this.sshConnection = sshConnection.get(connection.getHost());
     }
 
     public void sshCommand(String command) {
@@ -31,9 +31,9 @@ public class Ussh {
             command = m.group(1);
         }
         try {
-            final var shell = new Shell(sshConnection);
+            final var issueUss = new IssueUss(sshConnection);
             // 10000 is the timeout value in milliseconds
-            terminal.println(shell.executeSshCmd(command, 10000));
+            terminal.println(issueUss.issueCommand(command, 10000));
         } catch (Exception e) {
             terminal.println(e + "");
         }

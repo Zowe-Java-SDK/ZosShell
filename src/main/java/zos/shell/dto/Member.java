@@ -1,22 +1,22 @@
 package zos.shell.dto;
 
-import zowe.client.sdk.zosfiles.ZosDsnList;
-import zowe.client.sdk.zosfiles.input.ListParams;
+import zowe.client.sdk.zosfiles.dsn.input.ListParams;
+import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Member {
 
-    private final ZosDsnList zosDsnList;
+    private final DsnList dsnList;
     private final ListParams params = new ListParams.Builder().build();
 
-    public Member(ZosDsnList zosDsnList) {
-        this.zosDsnList = zosDsnList;
+    public Member(DsnList dsnList) {
+        this.dsnList = dsnList;
     }
 
     public List<String> getMembers(String dataSet) throws Exception {
-        List<zowe.client.sdk.zosfiles.response.Member> members = zosDsnList.listDsnMembers(dataSet, params);
+        List<zowe.client.sdk.zosfiles.dsn.response.Member> members = dsnList.getMembers(dataSet, params);
         final var memberNames = new ArrayList<String>();
         members.forEach(m -> memberNames.add(m.getMember().orElse("")));
         return memberNames;
@@ -25,7 +25,7 @@ public class Member {
     @Override
     public String toString() {
         return "Member{" +
-                "zosDsnList=" + zosDsnList +
+                "DsnList=" + dsnList +
                 ", params=" + params +
                 '}';
     }
