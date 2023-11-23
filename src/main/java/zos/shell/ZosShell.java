@@ -198,7 +198,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
                 boolean doIt = false;
                 do {
-                    DataSetMember dataSetMember = Util.getDatasetAndMember(command[1]);
+                    final var dataSetMember = Util.getDatasetAndMember(command[1]);
                     if (!currDataSet.isBlank() && dataSetMember != null) {
                         terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
                     } else if (!currDataSet.isBlank() && Util.isMember(command[1])) {
