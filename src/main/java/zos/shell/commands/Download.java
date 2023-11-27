@@ -84,29 +84,23 @@ public class Download {
         FileUtils.copyInputStreamToFile(input, new File(fileNamePath));
     }
 
-    private String getTextContent(String dataSet, String param) throws Exception {
-        LOG.debug("*** getTextContent ***");
-        final var inputStream = getInputStream(dataSet, param);
+    private String getTextContent(String dataSet, String member) throws Exception {
+        LOG.debug("*** getTextContent member ***");
+        final var inputStream = getInputStream(dataSet, member);
         return getTextStreamData(inputStream);
     }
 
-    private InputStream getBinaryContent(String dataSet, String param) {
-        LOG.debug("*** getBinaryContent ***");
-        return getInputStream(dataSet, param);
+    private InputStream getBinaryContent(String dataSet, String member) {
+        LOG.debug("*** getBinaryContent member ***");
+        return getInputStream(dataSet, member);
     }
 
-    public InputStream getInputStream(String dataSet, String param) {
-        LOG.debug("*** getInputStream ***");
-        InputStream inputStream;
+    public InputStream getInputStream(String dataSet, String member) {
+        LOG.debug("*** getInputStream member ***");
         if (dlParams == null) {
             dlParams = new DownloadParams.Builder().build();
         }
-        if (Util.isDataSet(param)) {
-            inputStream = dsnGet.get(String.format("%s", param), dlParams);
-        } else {
-            inputStream = dsnGet.get(String.format("%s(%s)", dataSet, param), dlParams);
-        }
-        return inputStream;
+        return dsnGet.get(String.format("%s(%s)", dataSet, member), dlParams);
     }
 
     private String getTextStreamData(InputStream inputStream) throws IOException {
