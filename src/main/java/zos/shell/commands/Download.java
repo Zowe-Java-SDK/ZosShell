@@ -90,7 +90,7 @@ public class Download {
         return getTextStreamData(inputStream);
     }
 
-    private InputStream getBinaryContent(String dataSet, String param) throws Exception {
+    private InputStream getBinaryContent(String dataSet, String param) {
         LOG.debug("*** getBinaryContent ***");
         return getInputStream(dataSet, param);
     }
