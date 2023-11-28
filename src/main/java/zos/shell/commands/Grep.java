@@ -70,6 +70,11 @@ public class Grep {
             index = findPosition(content.toString());
         }
 
+        // handle edge case if found on first line only 
+        if (index == 0 && !content.toString().isBlank()) {
+            lines.add(content.toString());
+        }
+
         return lines;
     }
 
