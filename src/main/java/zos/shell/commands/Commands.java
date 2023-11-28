@@ -301,13 +301,13 @@ public class Commands {
         LocalFiles.listFiles(terminal, dataSet);
     }
 
-    public void grep(ZosConnection connection, String pattern, String member, String dataSet) {
+    public void grep(ZosConnection connection, String pattern, String target, String currDataSet) {
         LOG.debug("*** grep ***");
         List<String> result;
 
-        if ("*".equals(member)) {
-            final var members = Util.getMembers(terminal, connection, dataSet);
-            result = multipleGrep(connection, pattern, dataSet, members);
+        if ("*".equals(target)) {
+            final var members = Util.getMembers(terminal, connection, currDataSet);
+            result = multipleGrep(connection, pattern, currDataSet, members);
             result.forEach(terminal::println);
             if (result.isEmpty()) {
                 terminal.println(Constants.NOTHING_FOUND);
@@ -315,11 +315,11 @@ public class Commands {
             return;
         }
 
-        if (member.contains("*") && Util.isMember(member.substring(0, member.indexOf("*")))) {
-            var members = Util.getMembers(terminal, connection, dataSet);
-            final var searchForMember = member.substring(0, member.indexOf("*")).toUpperCase();
+        if (target.contains("*") && Util.isMember(target.substring(0, target.indexOf("*")))) {
+            var members = Util.getMembers(terminal, connection, currDataSet);
+            final var searchForMember = target.substring(0, target.indexOf("*")).toUpperCase();
             members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
-            result = multipleGrep(connection, pattern, dataSet, members);
+            result = multipleGrep(connection, pattern, currDataSet, members);
             result.forEach(terminal::println);
             if (result.isEmpty()) {
                 terminal.println(Constants.NOTHING_FOUND);
@@ -329,7 +329,7 @@ public class Commands {
 
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var concatenate = new Concatenate(new Download(new DsnGet(connection), false));
-        final var submit = pool.submit(new FutureGrep(new Grep(concatenate, pattern), dataSet, member));
+        final var submit = pool.submit(new FutureGrep(new Grep(concatenate, pattern), currDataSet, target));
 
         try {
             result = submit.get(timeOutValue, TimeUnit.SECONDS);
