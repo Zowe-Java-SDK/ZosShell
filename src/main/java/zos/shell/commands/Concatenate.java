@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
+import zos.shell.dto.DataSetMember;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
 
@@ -22,15 +23,19 @@ public class Concatenate {
         this.download = download;
     }
 
-    public ResponseStatus cat(String dataSet, String param) {
+    public ResponseStatus cat(String currDataSet, String target) {
         LOG.debug("*** cat ***");
         InputStream inputStream;
         String result;
         try {
-            inputStream = download.getInputStream(dataSet, param);
+            if (Util.isMember(target)) {
+                inputStream = download.getInputStream(String.format("%s(%s)", currDataSet, target));
+            } else {
+                inputStream = download.getInputStream(target);
+            }
             result = retrieveInfo(inputStream);
         } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e + ""), false);
+            return new ResponseStatus(e.getMessage(), false);
         }
         return new ResponseStatus(result, true);
     }

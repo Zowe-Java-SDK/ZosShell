@@ -80,11 +80,11 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    public Output cat(ZosConnection connection, String dataSet, String member) {
+    public Output cat(ZosConnection connection, String currDataSet, String target) {
         LOG.debug("*** cat ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(
-                new FutureConcatenate(new Download(new DsnGet(connection), false), dataSet, member));
+                new FutureConcatenate(new Download(new DsnGet(connection), false), currDataSet, target));
         final var result = processFuture(pool, submit);
         if (result.isStatus()) {
             return new Output("cat", new StringBuilder(result.getMessage()));

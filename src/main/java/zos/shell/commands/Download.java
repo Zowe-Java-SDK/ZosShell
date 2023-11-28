@@ -36,7 +36,7 @@ public class Download {
     }
 
     public ResponseStatus download(String dataSet, String member) {
-        LOG.debug("*** download ***");
+        LOG.debug("*** download member ***");
         if (!Util.isMember(member)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
@@ -86,21 +86,21 @@ public class Download {
 
     private String getTextContent(String dataSet, String member) throws Exception {
         LOG.debug("*** getTextContent member ***");
-        final var inputStream = getInputStream(dataSet, member);
+        final var inputStream = getInputStream(String.format("%s(%s)", dataSet, member));
         return getTextStreamData(inputStream);
     }
 
     private InputStream getBinaryContent(String dataSet, String member) {
         LOG.debug("*** getBinaryContent member ***");
-        return getInputStream(dataSet, member);
+        return getInputStream(String.format("%s(%s)", dataSet, member));
     }
 
-    public InputStream getInputStream(String dataSet, String member) {
-        LOG.debug("*** getInputStream member ***");
+    public InputStream getInputStream(String target) {
+        LOG.debug("*** getInputStream ***");
         if (dlParams == null) {
             dlParams = new DownloadParams.Builder().build();
         }
-        return dsnGet.get(String.format("%s(%s)", dataSet, member), dlParams);
+        return dsnGet.get(target, dlParams);
     }
 
     private String getTextStreamData(InputStream inputStream) throws IOException {

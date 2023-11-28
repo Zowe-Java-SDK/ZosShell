@@ -33,10 +33,10 @@ public class Grep {
         this.compileMisMatchShiftsTable();
     }
 
-    public List<String> search(String dataSet, String member) {
+    public List<String> search(String currDataSet, String target) {
         LOG.debug("*** search ***");
         final var lines = new ArrayList<String>();
-        final var responseStatus = concatenate.cat(dataSet, member);
+        final var responseStatus = concatenate.cat(currDataSet, target);
         var content = new StringBuilder(responseStatus.getMessage());
 
         var index = findPosition(content.toString());
@@ -59,7 +59,7 @@ public class Grep {
             }
 
             if (entireLine.length() > 0) {
-                final var title = member + ":";
+                final var title = target + ":";
                 lines.add(withMember ? entireLine.insert(0, title).toString() : entireLine.toString());
             }
             final var newIndex = index + pattern.length();
