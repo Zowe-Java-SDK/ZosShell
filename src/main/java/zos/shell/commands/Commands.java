@@ -303,9 +303,15 @@ public class Commands {
 
     public void grep(ZosConnection connection, String pattern, String member, String dataSet) {
         LOG.debug("*** grep ***");
+        List<String> result;
+
         if ("*".equals(member)) {
             final var members = Util.getMembers(terminal, connection, dataSet);
-            multipleGrep(connection, pattern, dataSet, members).forEach(terminal::println);
+            result = multipleGrep(connection, pattern, dataSet, members);
+            result.forEach(terminal::println);
+            if (result.isEmpty()) {
+                terminal.println(Constants.NOTHING_FOUND);
+            }
             return;
         }
 
@@ -313,22 +319,30 @@ public class Commands {
             var members = Util.getMembers(terminal, connection, dataSet);
             final var searchForMember = member.substring(0, member.indexOf("*")).toUpperCase();
             members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
-            multipleGrep(connection, pattern, dataSet, members).forEach(terminal::println);
+            result = multipleGrep(connection, pattern, dataSet, members);
+            result.forEach(terminal::println);
+            if (result.isEmpty()) {
+                terminal.println(Constants.NOTHING_FOUND);
+            }
             return;
         }
 
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var concatenate = new Concatenate(new Download(new DsnGet(connection), false));
         final var submit = pool.submit(new FutureGrep(new Grep(concatenate, pattern), dataSet, member));
-        List<String> result;
+
         try {
             result = submit.get(timeOutValue, TimeUnit.SECONDS);
             result.forEach(terminal::println);
+            if (result.isEmpty()) {
+                terminal.println(Constants.NOTHING_FOUND);
+            }
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
         } catch (ExecutionException | InterruptedException e) {
             terminal.println(Util.getErrorMsg(e + ""));
         }
+
         pool.shutdownNow();
     }
 
