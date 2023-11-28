@@ -17,7 +17,6 @@ import zos.shell.config.Config;
 import zos.shell.config.Credentials;
 import zos.shell.data.Environment;
 import zos.shell.data.SearchDictionary;
-import zos.shell.dto.DataSetMember;
 import zos.shell.dto.Output;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SshConnection;
