@@ -21,20 +21,36 @@ public class Vi {
         this.download = download;
     }
 
-    public ResponseStatus vi(String dataSet, String member) {
+    public ResponseStatus vi(String dataSet, String target) {
         LOG.debug("*** vi ***");
-        final var result = download.download(dataSet, member);
-        final var successMsg = "opening " + member + " in editor...";
-        final var errorMsg = "\ncannot open " + member + ", try again...";
+        ResponseStatus result;
+        final var dataSetMember = Util.getDatasetAndMember(target);
+
+        if (Util.isMember(target)) {
+            // member input specified from current dataset
+            result = download.download(dataSet, target);
+        } else if (dataSetMember != null) {
+            // dataset(member) input specified
+            dataSet = dataSetMember.getDataSet();
+            target = dataSetMember.getMember();
+            result = download.download(dataSet, target);
+        } else {
+            // dataset input specified i.e. sequential dataset
+            result = download.download(target);
+            dataSet = Constants.SEQUENTIAL_DIRECTORY_LOCATION;
+        }
+
+        final var successMsg = "opening " + target + " in editor...";
+        final var errorMsg = "\ncannot open " + target + ", try again...";
         try {
             if (result.isStatus()) {
                 String pathFile;
                 String editorName;
                 if (SystemUtils.IS_OS_WINDOWS) {
-                    pathFile = Download.DIRECTORY_PATH_WINDOWS + dataSet + "\\" + member;
+                    pathFile = Download.DIRECTORY_PATH_WINDOWS + dataSet + "\\" + target;
                     editorName = Constants.WINDOWS_EDITOR_NAME;
                 } else if (SystemUtils.IS_OS_MAC_OSX) {
-                    pathFile = Download.DIRECTORY_PATH_MAC + dataSet + "/" + member;
+                    pathFile = Download.DIRECTORY_PATH_MAC + dataSet + "/" + target;
                     editorName = Constants.MAC_EDITOR_NAME;
                 } else {
                     return new ResponseStatus(Constants.OS_ERROR, false);
@@ -44,7 +60,7 @@ public class Vi {
                 return new ResponseStatus(Util.getMsgAfterArrow(result.getMessage()) + errorMsg, false);
             }
         } catch (IOException e) {
-            return new ResponseStatus(Util.getMsgAfterArrow(e + "") + errorMsg, false);
+            return new ResponseStatus(Util.getMsgAfterArrow(e.getMessage()) + errorMsg, false);
         }
         return new ResponseStatus(successMsg, true);
     }

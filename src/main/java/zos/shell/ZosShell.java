@@ -17,7 +17,6 @@ import zos.shell.config.Config;
 import zos.shell.config.Credentials;
 import zos.shell.data.Environment;
 import zos.shell.data.SearchDictionary;
-import zos.shell.dto.DataSetMember;
 import zos.shell.dto.Output;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SshConnection;
@@ -433,9 +432,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
-                if (isCurrDataSetNotSpecified()) {
-                    return;
-                }
                 param = params[1];
                 boolean isBinary = false;
                 if (params.length == 3) {
@@ -493,9 +489,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (isParamsExceeded(3, params)) {
-                    return;
-                }
-                if (isCurrDataSetNotSpecified()) {
                     return;
                 }
                 commands.grep(currConnection, params[1], params[2], currDataSet);

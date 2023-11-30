@@ -80,11 +80,11 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    public Output cat(ZosConnection connection, String dataSet, String member) {
+    public Output cat(ZosConnection connection, String currDataSet, String target) {
         LOG.debug("*** cat ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(
-                new FutureConcatenate(new Download(new DsnGet(connection), false), dataSet, member));
+                new FutureConcatenate(new Download(new DsnGet(connection), false), currDataSet, target));
         final var result = processFuture(pool, submit);
         if (result.isStatus()) {
             return new Output("cat", new StringBuilder(result.getMessage()));
@@ -193,9 +193,9 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    public void download(ZosConnection connection, String currDataSet, String member, boolean isBinary) {
+    public void download(ZosConnection connection, String currDataSet, String target, boolean isBinary) {
         LOG.debug("*** download ***");
-        if ("*".equals(member)) {
+        if ("*".equals(target)) {
             final var members = Util.getMembers(terminal, connection, currDataSet);
             if (members.isEmpty()) {
                 terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
@@ -205,10 +205,10 @@ public class Commands {
             return;
         }
 
-        if (member.contains("*") && Util.isMember(member.substring(0, member.indexOf("*")))) {
+        if (target.contains("*") && Util.isMember(target.substring(0, target.indexOf("*")))) {
             var members = Util.getMembers(terminal, connection, currDataSet);
-            final var index = member.indexOf("*");
-            final var searchForMember = member.substring(0, index).toUpperCase();
+            final var index = target.indexOf("*");
+            final var searchForMember = target.substring(0, index).toUpperCase();
             members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
             if (members.isEmpty()) {
                 terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
@@ -225,11 +225,20 @@ public class Commands {
             Util.printError(terminal, e.getMessage());
             return;
         }
-        final var result = download.download(currDataSet, member);
+
+        final var dataSetMember = Util.getDatasetAndMember(target);
+        ResponseStatus result;
+        if (dataSetMember != null) {
+            result = download.download(dataSetMember.getDataSet(), dataSetMember.getMember());
+        } else if (Util.isMember(target)) {
+            result = download.download(currDataSet, target);
+        } else {
+            result = download.download(target);
+        }
 
         if (!result.isStatus()) {
             terminal.println(Util.getMsgAfterArrow(result.getMessage()));
-            terminal.println("cannot open " + member + ", try again...");
+            terminal.println("cannot download " + target + ", try again...");
         } else {
             terminal.println(result.getMessage());
             Util.openFileLocation(result.getOptionalData());
@@ -301,34 +310,48 @@ public class Commands {
         LocalFiles.listFiles(terminal, dataSet);
     }
 
-    public void grep(ZosConnection connection, String pattern, String member, String dataSet) {
+    public void grep(ZosConnection connection, String pattern, String target, String currDataSet) {
         LOG.debug("*** grep ***");
-        if ("*".equals(member)) {
-            final var members = Util.getMembers(terminal, connection, dataSet);
-            multipleGrep(connection, pattern, dataSet, members).forEach(terminal::println);
+        List<String> result;
+
+        if ("*".equals(target)) {
+            final var members = Util.getMembers(terminal, connection, currDataSet);
+            result = multipleGrep(connection, pattern, currDataSet, members);
+            result.forEach(terminal::println);
+            if (result.isEmpty()) {
+                terminal.println(Constants.NOTHING_FOUND);
+            }
             return;
         }
 
-        if (member.contains("*") && Util.isMember(member.substring(0, member.indexOf("*")))) {
-            var members = Util.getMembers(terminal, connection, dataSet);
-            final var searchForMember = member.substring(0, member.indexOf("*")).toUpperCase();
+        if (target.contains("*") && Util.isMember(target.substring(0, target.indexOf("*")))) {
+            var members = Util.getMembers(terminal, connection, currDataSet);
+            final var searchForMember = target.substring(0, target.indexOf("*")).toUpperCase();
             members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
-            multipleGrep(connection, pattern, dataSet, members).forEach(terminal::println);
+            result = multipleGrep(connection, pattern, currDataSet, members);
+            result.forEach(terminal::println);
+            if (result.isEmpty()) {
+                terminal.println(Constants.NOTHING_FOUND);
+            }
             return;
         }
 
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var concatenate = new Concatenate(new Download(new DsnGet(connection), false));
-        final var submit = pool.submit(new FutureGrep(new Grep(concatenate, pattern), dataSet, member));
-        List<String> result;
+        final var submit = pool.submit(new FutureGrep(new Grep(concatenate, pattern), currDataSet, target));
+
         try {
             result = submit.get(timeOutValue, TimeUnit.SECONDS);
             result.forEach(terminal::println);
+            if (result.isEmpty()) {
+                terminal.println(Constants.NOTHING_FOUND);
+            }
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
         } catch (ExecutionException | InterruptedException e) {
             terminal.println(Util.getErrorMsg(e + ""));
         }
+
         pool.shutdownNow();
     }
 

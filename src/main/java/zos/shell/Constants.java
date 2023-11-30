@@ -51,6 +51,7 @@ public final class Constants {
     public static final String NO_LISTING =
             "no listing results returned, connection problem or data set may not exist, try again...";
     public static final String NO_MEMBERS = "no members...";
+    public static final String NOTHING_FOUND = "nothing found, try again...";
     public static final String NO_PROCESS_FOUND = "no process found, try again...";
     public static final String MAKE_DIR_EXIT_MSG = "exited mkdir command...";
     public static final String MAC_EDITOR_NAME = "open -a TextEdit";
@@ -61,6 +62,7 @@ public final class Constants {
     public static final String PATH_FILE_DIRECTORY_WINDOWS = "C:\\ZosShell";
     public static final String SECURITY_CONFIG_PATH_FILE_MAC = PATH_FILE_DIRECTORY_MAC + "/credentials.txt";
     public static final String SECURITY_CONFIG_PATH_FILE_WINDOWS = PATH_FILE_DIRECTORY_WINDOWS + "\\credentials.txt";
+    public static final String SEQUENTIAL_DIRECTORY_LOCATION = "SEQUENTIAL_DATASET";
     public static final String CONFIG_PATH_FILE_MAC = PATH_FILE_DIRECTORY_MAC + "/config.txt";
     public static final String CONFIG_PATH_FILE_WINDOWS = PATH_FILE_DIRECTORY_WINDOWS + "\\config.txt";
     public static final String SEVERE_ERROR = "server error, check connection...";

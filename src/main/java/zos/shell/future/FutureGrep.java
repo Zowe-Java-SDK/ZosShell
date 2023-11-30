@@ -8,18 +8,18 @@ import java.util.concurrent.Callable;
 public class FutureGrep implements Callable<List<String>> {
 
     private final Grep grep;
-    private final String dataSet;
-    private final String member;
+    private final String currDataSet;
+    private final String target;
 
-    public FutureGrep(Grep grep, String dataSet, String member) {
+    public FutureGrep(Grep grep, String currDataSet, String target) {
         this.grep = grep;
-        this.dataSet = dataSet;
-        this.member = member;
+        this.currDataSet = currDataSet;
+        this.target = target;
     }
 
     @Override
     public List<String> call() {
-        return grep.search(dataSet, member);
+        return grep.search(currDataSet, target);
     }
 
 }
