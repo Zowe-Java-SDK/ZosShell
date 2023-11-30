@@ -78,6 +78,35 @@ public class Download {
         return new ResponseStatus(message, true, dirSetup.getFileNamePath());
     }
 
+    public ResponseStatus download(String dataSet) {
+        var message = dataSet + " " + Constants.ARROW;
+        final var dirSetup = new DirectorySetup();
+
+        try {
+            dirSetup.initialize(Constants.SEQUENTIAL_DIRECTORY_LOCATION, dataSet);
+        } catch (Exception e) {
+            return new ResponseStatus(message + Constants.OS_ERROR, false);
+        }
+
+        try {
+            dlParams = new DownloadParams.Builder().build();
+            String textContent = getTextContent(dataSet);
+            if (textContent == null) {
+                return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
+            }
+            Util.writeTextFile(textContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
+
+        } catch (Exception e) {
+            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
+                return new ResponseStatus(message + Constants.CONNECTION_REFUSED, false);
+            }
+            return new ResponseStatus(message + e.getMessage(), false);
+        }
+
+        message += "downloaded to " + dirSetup.getFileNamePath();
+        return new ResponseStatus(message, true, dirSetup.getFileNamePath());
+    }
+
     private void writeBinaryFile(InputStream input, String directoryPath, String fileNamePath) throws IOException {
         LOG.debug("*** writeBinaryFile ***");
         Files.createDirectories(Paths.get(directoryPath));
@@ -87,6 +116,12 @@ public class Download {
     private String getTextContent(String dataSet, String member) throws Exception {
         LOG.debug("*** getTextContent member ***");
         final var inputStream = getInputStream(String.format("%s(%s)", dataSet, member));
+        return getTextStreamData(inputStream);
+    }
+
+    private String getTextContent(String dataSet) throws Exception {
+        LOG.debug("*** getTextContent member ***");
+        final var inputStream = getInputStream(dataSet);
         return getTextStreamData(inputStream);
     }
 

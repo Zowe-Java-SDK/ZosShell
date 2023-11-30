@@ -193,9 +193,9 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    public void download(ZosConnection connection, String currDataSet, String member, boolean isBinary) {
+    public void download(ZosConnection connection, String currDataSet, String target, boolean isBinary) {
         LOG.debug("*** download ***");
-        if ("*".equals(member)) {
+        if ("*".equals(target)) {
             final var members = Util.getMembers(terminal, connection, currDataSet);
             if (members.isEmpty()) {
                 terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
@@ -205,10 +205,10 @@ public class Commands {
             return;
         }
 
-        if (member.contains("*") && Util.isMember(member.substring(0, member.indexOf("*")))) {
+        if (target.contains("*") && Util.isMember(target.substring(0, target.indexOf("*")))) {
             var members = Util.getMembers(terminal, connection, currDataSet);
-            final var index = member.indexOf("*");
-            final var searchForMember = member.substring(0, index).toUpperCase();
+            final var index = target.indexOf("*");
+            final var searchForMember = target.substring(0, index).toUpperCase();
             members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
             if (members.isEmpty()) {
                 terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
@@ -225,11 +225,20 @@ public class Commands {
             Util.printError(terminal, e.getMessage());
             return;
         }
-        final var result = download.download(currDataSet, member);
+
+        final var dataSetMember = Util.getDatasetAndMember(target);
+        ResponseStatus result;
+        if (dataSetMember != null) {
+            result = download.download(dataSetMember.getDataSet(), dataSetMember.getMember());
+        } else if (Util.isMember(target)) {
+            result = download.download(currDataSet, target);
+        } else {
+            result = download.download(target);
+        }
 
         if (!result.isStatus()) {
             terminal.println(Util.getMsgAfterArrow(result.getMessage()));
-            terminal.println("cannot open " + member + ", try again...");
+            terminal.println("cannot download " + target + ", try again...");
         } else {
             terminal.println(result.getMessage());
             Util.openFileLocation(result.getOptionalData());

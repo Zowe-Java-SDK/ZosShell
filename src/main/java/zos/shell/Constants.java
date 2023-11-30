@@ -62,6 +62,7 @@ public final class Constants {
     public static final String PATH_FILE_DIRECTORY_WINDOWS = "C:\\ZosShell";
     public static final String SECURITY_CONFIG_PATH_FILE_MAC = PATH_FILE_DIRECTORY_MAC + "/credentials.txt";
     public static final String SECURITY_CONFIG_PATH_FILE_WINDOWS = PATH_FILE_DIRECTORY_WINDOWS + "\\credentials.txt";
+    public static final String SEQUENTIAL_DIRECTORY_LOCATION = "SEQUENTIAL_DATASET";
     public static final String CONFIG_PATH_FILE_MAC = PATH_FILE_DIRECTORY_MAC + "/config.txt";
     public static final String CONFIG_PATH_FILE_WINDOWS = PATH_FILE_DIRECTORY_WINDOWS + "\\config.txt";
     public static final String SEVERE_ERROR = "server error, check connection...";
