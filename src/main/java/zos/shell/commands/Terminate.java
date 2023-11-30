@@ -58,7 +58,7 @@ public class Terminate {
             // remove last newline i.e. \n
             return new ResponseStatus(result.substring(0, result.length() - 1), true);
         } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e + ""), false);
+            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), false);
         }
     }
 

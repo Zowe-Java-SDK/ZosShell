@@ -36,7 +36,7 @@ public class PurgeJob {
         try {
             jobs = jobGet.getByPrefix(jobName);
         } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e + ""), false);
+            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), false);
         }
 
         if (jobs.isEmpty()) {
@@ -55,7 +55,7 @@ public class PurgeJob {
         try {
             job = jobGet.getById(jobId);
         } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e + ""), false);
+            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), false);
         }
 
         if (job == null) {
@@ -86,7 +86,7 @@ public class PurgeJob {
             return new ResponseStatus("Job Name: " + job.getJobName().get() +
                     ", Job Id: " + job.getJobId().get() + " purged successfully...", true);
         } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e + ""), false);
+            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), false);
         }
     }
 

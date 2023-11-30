@@ -34,7 +34,7 @@ public class ProcessList {
             final var params = getJobParams.build();
             jobs = jobGet.getCommon(params);
         } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e + ""), false);
+            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), false);
         }
         jobs.sort(Comparator.comparing((Job j) -> j.getJobName().orElse(""))
                 .thenComparing(j -> j.getStatus().orElse(""))

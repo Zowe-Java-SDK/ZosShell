@@ -61,7 +61,7 @@ public class Save {
                 dsnWrite.write(dataSet, member, content);
             }
         } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e + ""), false);
+            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), false);
         }
 
         return new ResponseStatus(member + " successfully saved...", true);

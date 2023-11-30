@@ -284,7 +284,7 @@ public class Commands {
             } catch (TimeoutException e) {
                 results.add(new ResponseStatus("timeout", false));
             } catch (InterruptedException | ExecutionException e) {
-                results.add(new ResponseStatus(Util.getErrorMsg(e + ""), false));
+                results.add(new ResponseStatus(Util.getErrorMsg(e.getMessage()), false));
             }
         }
         return results;
@@ -349,7 +349,7 @@ public class Commands {
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
         } catch (ExecutionException | InterruptedException e) {
-            terminal.println(Util.getErrorMsg(e + ""));
+            terminal.println(Util.getErrorMsg(e.getMessage()));
         }
 
         pool.shutdownNow();
@@ -372,7 +372,7 @@ public class Commands {
             } catch (TimeoutException e) {
                 results.add("timeout");
             } catch (InterruptedException | ExecutionException e) {
-                results.add(Util.getErrorMsg(e + ""));
+                results.add(Util.getErrorMsg(e.getMessage()));
             }
         }
 
@@ -769,7 +769,7 @@ public class Commands {
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
         } catch (ExecutionException | InterruptedException e) {
-            terminal.println(Util.getErrorMsg(e + ""));
+            terminal.println(Util.getErrorMsg(e.getMessage()));
         }
         pool.shutdownNow();
         return result;
