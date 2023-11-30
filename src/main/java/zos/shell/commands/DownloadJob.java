@@ -28,7 +28,6 @@ public class DownloadJob {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
 
-        final var error = "error retrieving " + name + " log ";
         final var responseStatus = browseJob.browseJob(name);
         if (!responseStatus.isStatus() && responseStatus.getMessage().contains("timeout")) {
             return new ResponseStatus(Constants.BROWSE_TIMEOUT, false);
@@ -44,15 +43,13 @@ public class DownloadJob {
         try {
             dirSetup.initialize(name, id);
         } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseStatus(error, false);
+            return new ResponseStatus(e.getMessage(), false);
         }
 
         try {
             Util.writeTextFile(output, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
         } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseStatus(error, false);
+            return new ResponseStatus(e.getMessage(), false);
         }
 
         final var message = Strings.padStart(name, 8, ' ') + Constants.ARROW

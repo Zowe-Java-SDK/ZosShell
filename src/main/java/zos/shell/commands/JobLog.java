@@ -38,8 +38,7 @@ public class JobLog {
         try {
             jobs = jobGet.getCommon(jobParams);
         } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseStatus("error retrieving job details, try again.", false);
+            return new ResponseStatus(e.getMessage(), false);
         }
         if (jobs.isEmpty()) {
             final var msg = jobParams.getPrefix().orElse("n\\a") + " does not exist, try again...";
@@ -55,7 +54,7 @@ public class JobLog {
         try {
             files = jobGet.getSpoolFilesByJob(job);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("error", e);
             final var msg = "error retrieving spool content for job id " + job.getJobId().orElse("n\\a");
             return new ResponseStatus(msg, false);
         }
@@ -68,7 +67,6 @@ public class JobLog {
             pool.shutdownNow();
             return new ResponseStatus(result.toString(), true);
         } catch (Exception e) {
-            e.printStackTrace();
             pool.shutdownNow();
             return new ResponseStatus(e.getMessage(), false);
         }
