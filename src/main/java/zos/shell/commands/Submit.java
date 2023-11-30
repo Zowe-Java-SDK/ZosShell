@@ -24,7 +24,7 @@ public class Submit {
         try {
             job = jobSubmit.submit(String.format("%s(%s)", dataSet, param));
         } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e + ""), false);
+            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), false);
         }
         return new ResponseStatus("Job Name: " + job.getJobName().orElse("n\\a") +
                 ", Job Id: " + job.getJobId().orElse("n\\a"), true);

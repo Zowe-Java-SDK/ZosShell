@@ -23,7 +23,7 @@ public class MakeDirectory {
         try {
             dsnCreate.create(dataset, params);
         } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e + ""), false);
+            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), false);
         }
 
         return new ResponseStatus(dataset + " created successfully...", true);

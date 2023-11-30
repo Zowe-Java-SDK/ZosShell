@@ -71,7 +71,7 @@ public class Delete {
                         success.set(true);
                     } catch (Exception e) {
                         success.set(false);
-                        terminal.println(e + "");
+                        terminal.println(e.getMessage());
                     }
                     if (success.get()) {
                         membersDeleted.append(m.getMember().orElse("n\\a"));

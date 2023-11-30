@@ -35,7 +35,7 @@ public class Ussh {
             // 10000 is the timeout value in milliseconds
             terminal.println(issueUss.issueCommand(command, 10000));
         } catch (Exception e) {
-            terminal.println(e + "");
+            terminal.println(e.getMessage());
         }
     }
 

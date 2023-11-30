@@ -44,7 +44,7 @@ public class Touch {
                 return new ResponseStatus(member + " already exists.", true);
             }
         } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e + ""), true);
+            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), true);
         }
 
         return new ResponseStatus(member + " successfully created.", true);
