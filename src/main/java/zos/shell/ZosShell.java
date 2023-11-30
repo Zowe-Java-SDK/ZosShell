@@ -432,9 +432,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
-                if (isCurrDataSetNotSpecified()) {
-                    return;
-                }
                 param = params[1];
                 boolean isBinary = false;
                 if (params.length == 3) {
