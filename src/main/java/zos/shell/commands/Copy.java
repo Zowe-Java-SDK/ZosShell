@@ -122,9 +122,6 @@ public class Copy {
         try {
             DsnCopy.copy(fromDataSetName, toDataSetName, true, copyAllMembers);
         } catch (Exception e) {
-            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
-                return new ResponseStatus(Constants.SEVERE_ERROR, false);
-            }
             return new ResponseStatus(e.getMessage(), false);
         }
         return new ResponseStatus("copied to " + toDataSetName, true);

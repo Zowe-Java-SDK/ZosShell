@@ -33,10 +33,7 @@ public class Tail extends JobLog {
                 terminal.println(Constants.BROWSE_TIMEOUT);
                 return null;
             }
-            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
-                terminal.println(Constants.SEVERE_ERROR);
-                return null;
-            }
+            terminal.println(e.getMessage());
             Util.printError(terminal, e.getMessage());
             return null;
         }

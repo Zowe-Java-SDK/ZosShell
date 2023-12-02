@@ -70,9 +70,6 @@ public class Download {
             }
             message += "downloaded to " + dirSetup.getFileNamePath();
         } catch (Exception e) {
-            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
-                return new ResponseStatus(message + Constants.CONNECTION_REFUSED, false);
-            }
             return new ResponseStatus(message + e.getMessage(), false);
         }
         return new ResponseStatus(message, true, dirSetup.getFileNamePath());
@@ -97,9 +94,6 @@ public class Download {
             Util.writeTextFile(textContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
 
         } catch (Exception e) {
-            if (e.getMessage().contains(Constants.CONNECTION_REFUSED)) {
-                return new ResponseStatus(message + Constants.CONNECTION_REFUSED, false);
-            }
             return new ResponseStatus(message + e.getMessage(), false);
         }
 
