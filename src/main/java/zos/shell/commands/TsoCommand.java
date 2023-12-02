@@ -38,13 +38,15 @@ public class TsoCommand {
         }
 
         IssueResponse response = null;
+        var errMsg = "";
         try {
             response = execute(command);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            errMsg = e.getMessage();
         }
 
         if (response == null) {
-            return new ResponseStatus(Constants.COMMAND_EXECUTION_ERROR_MSG, false);
+            return new ResponseStatus(errMsg, false);
         }
         return new ResponseStatus(response.getCommandResponses().orElse("no response"), true);
     }

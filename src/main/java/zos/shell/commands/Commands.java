@@ -721,8 +721,12 @@ public class Commands {
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureTso(connection, accountNumber, command));
         final var response = processFuture(pool, submit);
-        return response != null && response.isStatus() ? new Output("tso",
-                new StringBuilder(response.getMessage())) : null;
+        if (response != null && response.isStatus()) {
+            return new Output("tso", new StringBuilder(response.getMessage()));
+        } else {
+            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+            return null;
+        }
     }
 
     public void uname(ZosConnection currConnection) {
