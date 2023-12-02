@@ -48,16 +48,18 @@ public class MvsCommand {
         ConsoleResponse response = null;
         final var params = new IssueConsoleParams(command);
         final var consoleName = mvsConsoles.getConsoleName(connection.getHost());
+        var errMsg = "";
         try {
             if (consoleName != null) {
                 response = execute(consoleName, params);
             }
             response = execute(params);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            errMsg = e.getMessage();
         }
 
         if (response == null) {
-            return new ResponseStatus(Constants.COMMAND_EXECUTION_ERROR_MSG, false);
+            return new ResponseStatus(errMsg, false);
         }
         return new ResponseStatus(Constants.MVS_EXECUTION_SUCCESS + "\n" +
                 response.getCommandResponse().orElse("no response"), true);

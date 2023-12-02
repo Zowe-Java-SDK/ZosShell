@@ -568,8 +568,12 @@ public class Commands {
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureMvs(connection, command));
         final var response = processFuture(pool, submit);
-        return response != null && response.isStatus() ? new Output("mvs",
-                new StringBuilder(response.getMessage())) : null;
+        if (response != null && response.isStatus()) {
+            return new Output("mvs", new StringBuilder(response.getMessage()));
+        } else {
+            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+            return null;
+        }
     }
 
     public Output ps(ZosConnection connection) {
