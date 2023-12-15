@@ -2,7 +2,6 @@ package zos.shell.commands;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zostso.method.IssueTso;
