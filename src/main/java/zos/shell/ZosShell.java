@@ -589,6 +589,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     commands.ls(currConnection, currDataSet);
                     return;
                 }
+                // not valid input
+                terminal.println(Constants.INVALID_ARGUMENTS);
                 break;
             case "mkdir":
                 if (isParamsMissing(1, params)) {
