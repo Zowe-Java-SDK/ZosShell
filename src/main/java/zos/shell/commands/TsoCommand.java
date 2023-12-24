@@ -3,7 +3,9 @@ package zos.shell.commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.dto.ResponseStatus;
+import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zostso.method.IssueTso;
 import zowe.client.sdk.zostso.response.IssueResponse;
 
@@ -22,7 +24,7 @@ public class TsoCommand {
         this.accountNumber = accountNumber;
     }
 
-    private IssueResponse execute(String command) throws Exception {
+    private IssueResponse execute(String command) throws ZosmfRequestException {
         LOG.debug("*** execute ***");
         return issueTso.issueCommand(accountNumber, command);
     }
@@ -36,17 +38,14 @@ public class TsoCommand {
             command = m.group(1);
         }
 
-        IssueResponse response = null;
-        var errMsg = "";
+        IssueResponse response;
         try {
             response = execute(command);
-        } catch (Exception e) {
-            errMsg = e.getMessage();
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
 
-        if (response == null) {
-            return new ResponseStatus(errMsg, false);
-        }
         return new ResponseStatus(response.getCommandResponses().orElse("no response"), true);
     }
 

@@ -8,6 +8,8 @@ import zos.shell.Constants;
 import zos.shell.dto.DataSetMember;
 import zos.shell.dto.Member;
 import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.rest.Response;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 
 import java.io.IOException;
@@ -131,8 +133,9 @@ public class Util {
         final List<String> members;
         try {
             members = member.getMembers(dataSet);
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            terminal.println((errMsg != null ? errMsg : e.getMessage()));
             return new ArrayList<>();
         }
         return members;
@@ -209,4 +212,10 @@ public class Util {
         }
     }
 
+    public static String getResponsePhrase(Response response) {
+        if (response == null || response.getResponsePhrase().isEmpty()) {
+            return null;
+        }
+        return response.getResponsePhrase().get().toString();
+    }
 }

@@ -71,12 +71,12 @@ public class Listing {
             if (m.equals(searchForMember)) {
                 members = members.stream()
                         .filter(i -> i.getMember().orElse("")
-                                .equals(searchForMember))
+                        .equals(searchForMember))
                         .collect(Collectors.toList());
             } else {
                 members = members.stream()
                         .filter(i -> i.getMember().orElse("")
-                                .startsWith(searchForMember))
+                        .startsWith(searchForMember))
                         .collect(Collectors.toList());
             }
         }, () -> displayDataSets(dataSets, dataSet, isColumnView, isAttributes));

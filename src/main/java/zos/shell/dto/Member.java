@@ -1,5 +1,6 @@
 package zos.shell.dto;
 
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.ListParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 
@@ -15,7 +16,7 @@ public class Member {
         this.dsnList = dsnList;
     }
 
-    public List<String> getMembers(String dataSet) throws Exception {
+    public List<String> getMembers(String dataSet) throws ZosmfRequestException {
         List<zowe.client.sdk.zosfiles.dsn.response.Member> members = dsnList.getMembers(dataSet, params);
         final var memberNames = new ArrayList<String>();
         members.forEach(m -> memberNames.add(m.getMember().orElse("")));

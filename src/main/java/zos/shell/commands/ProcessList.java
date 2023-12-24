@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosjobs.input.GetJobParams;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 import zowe.client.sdk.zosjobs.response.Job;
@@ -33,8 +34,9 @@ public class ProcessList {
             }
             final var params = getJobParams.build();
             jobs = jobGet.getCommon(params);
-        } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), false);
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
         jobs.sort(Comparator.comparing((Job j) -> j.getJobName().orElse(""))
                 .thenComparing(j -> j.getStatus().orElse(""))

@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.future.FutureBrowseJob;
+import zos.shell.utility.Util;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosjobs.input.GetJobParams;
 import zowe.client.sdk.zosjobs.input.JobFile;
 import zowe.client.sdk.zosjobs.methods.JobGet;
@@ -12,8 +14,10 @@ import zowe.client.sdk.zosjobs.response.Job;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
 public class JobLog {
@@ -37,8 +41,9 @@ public class JobLog {
         final var jobParams = new GetJobParams.Builder("*").prefix(param).build();
         try {
             jobs = jobGet.getCommon(jobParams);
-        } catch (Exception e) {
-            return new ResponseStatus(e.getMessage(), false);
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
         if (jobs.isEmpty()) {
             final var msg = jobParams.getPrefix().orElse("n\\a") + " does not exist, try again...";
@@ -53,10 +58,11 @@ public class JobLog {
         final List<JobFile> files;
         try {
             files = jobGet.getSpoolFilesByJob(job);
-        } catch (Exception e) {
-            LOG.error("error", e);
-            final var msg = "error retrieving spool content for job id " + job.getJobId().orElse("n\\a");
-            return new ResponseStatus(msg, false);
+        } catch (ZosmfRequestException e) {
+            final String msg = Util.getResponsePhrase(e.getResponse());
+            final var errMsg = "error retrieving spool content for job id " + job.getJobId().orElse("n\\a") +
+                    ", " + (msg != null ? msg : e.getMessage());
+            return new ResponseStatus(errMsg, false);
         }
 
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
@@ -66,8 +72,7 @@ public class JobLog {
             final var result = submit.get(timeout, TimeUnit.SECONDS);
             pool.shutdownNow();
             return new ResponseStatus(result.toString(), true);
-        } catch (Exception e) {
-            pool.shutdownNow();
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
             return new ResponseStatus(e.getMessage(), false);
         }
     }
