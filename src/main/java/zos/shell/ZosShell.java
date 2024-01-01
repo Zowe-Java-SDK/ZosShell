@@ -597,10 +597,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 disableKeys = true;
-                try {
-                    commands.mkdir(currConnection, mainTextIO, currDataSet, params[1]);
-                } catch (Exception ignore) {
-                }
+                commands.mkdir(currConnection, mainTextIO, currDataSet, params[1]);
                 disableKeys = false;
                 break;
             case "mvs":

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosjobs.input.ModifyJobParams;
 import zowe.client.sdk.zosjobs.methods.JobDelete;
 import zowe.client.sdk.zosjobs.methods.JobGet;
@@ -35,8 +36,9 @@ public class PurgeJob {
         List<Job> jobs;
         try {
             jobs = jobGet.getByPrefix(jobName);
-        } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), false);
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
 
         if (jobs.isEmpty()) {
@@ -54,8 +56,9 @@ public class PurgeJob {
         Job job;
         try {
             job = jobGet.getById(jobId);
-        } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), false);
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
 
         if (job == null) {
@@ -85,8 +88,9 @@ public class PurgeJob {
             jobDelete.deleteCommon(modifyJobParams);
             return new ResponseStatus("Job Name: " + job.getJobName().get() +
                     ", Job Id: " + job.getJobId().get() + " purged successfully...", true);
-        } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), false);
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
     }
 

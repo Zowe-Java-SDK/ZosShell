@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
-import zos.shell.utility.Util;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.Arrays;
@@ -25,18 +24,7 @@ public class Tail extends JobLog {
 
     public ResponseStatus tail(String[] params) {
         LOG.debug("*** tail ***");
-        ResponseStatus result;
-        try {
-            result = browseJobLog(params[1]);
-        } catch (Exception e) {
-            if (e.getMessage().contains("timeout")) {
-                terminal.println(Constants.BROWSE_TIMEOUT);
-                return null;
-            }
-            terminal.println(e.getMessage());
-            Util.printError(terminal, e.getMessage());
-            return null;
-        }
+        final ResponseStatus result = browseJobLog(params[1]);
         if (!result.isStatus()) {
             return result;
         }

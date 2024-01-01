@@ -8,6 +8,8 @@ import zos.shell.Constants;
 import zos.shell.dto.DataSetMember;
 import zos.shell.dto.Member;
 import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.rest.Response;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 
 import java.io.IOException;
@@ -63,35 +65,6 @@ public class Util {
         return isSegment(memberName.toUpperCase(Locale.ROOT));
     }
 
-    public static void printError(TextTerminal<?> terminal, String message) {
-        LOG.debug("*** printError ***");
-        if (message.contains("Not Found")) {
-            final var index = message.indexOf("Not Found");
-            final var msg = message.substring(index);
-            terminal.println(msg);
-        } else if (message.contains(Constants.CONNECTION_REFUSED)) {
-            terminal.println(Constants.SEVERE_ERROR);
-        } else if (message.contains("dataSetName not specified")) {
-            terminal.println(Constants.DATASET_NOT_SPECIFIED);
-        } else {
-            terminal.println(message);
-        }
-    }
-
-    public static String getErrorMsg(String message) {
-        LOG.debug("*** getErrorMsg ***");
-        if (message.contains("Not Found")) {
-            final var index = message.indexOf("Not Found");
-            return message.substring(index);
-        } else if (message.contains(Constants.CONNECTION_REFUSED)) {
-            return Constants.SEVERE_ERROR;
-        } else if (message.contains("dataSetName not specified")) {
-            return Constants.DATASET_NOT_SPECIFIED;
-        } else {
-            return message;
-        }
-    }
-
     public static boolean isStrNum(String strNum) {
         LOG.debug("*** isStrNum ***");
         try {
@@ -131,8 +104,9 @@ public class Util {
         final List<String> members;
         try {
             members = member.getMembers(dataSet);
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            terminal.println((errMsg != null ? errMsg : e.getMessage()));
             return new ArrayList<>();
         }
         return members;
@@ -209,4 +183,10 @@ public class Util {
         }
     }
 
+    public static String getResponsePhrase(Response response) {
+        if (response == null || response.getResponsePhrase().isEmpty()) {
+            return null;
+        }
+        return response.getResponsePhrase().get().toString();
+    }
 }

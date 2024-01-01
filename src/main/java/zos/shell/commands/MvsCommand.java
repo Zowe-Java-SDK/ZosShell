@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.config.MvsConsoles;
 import zos.shell.dto.ResponseStatus;
+import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosconsole.input.IssueConsoleParams;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
 import zowe.client.sdk.zosconsole.response.ConsoleResponse;
@@ -26,12 +28,12 @@ public class MvsCommand {
         this.issueConsole = new IssueConsole(connection);
     }
 
-    private ConsoleResponse execute(IssueConsoleParams params) throws Exception {
+    private ConsoleResponse execute(IssueConsoleParams params) throws ZosmfRequestException {
         LOG.debug("*** execute ***");
         return issueConsole.issueCommand(params.getCmd().get());
     }
 
-    private ConsoleResponse execute(String consoleName, IssueConsoleParams params) throws Exception {
+    private ConsoleResponse execute(String consoleName, IssueConsoleParams params) throws ZosmfRequestException {
         LOG.debug("*** execute ***");
         return issueConsole.issueCommandCommon(consoleName, params);
     }
@@ -45,22 +47,20 @@ public class MvsCommand {
             command = m.group(1);
         }
 
-        ConsoleResponse response = null;
+        ConsoleResponse response;
         final var params = new IssueConsoleParams(command);
         final var consoleName = mvsConsoles.getConsoleName(connection.getHost());
-        var errMsg = "";
         try {
             if (consoleName != null) {
                 response = execute(consoleName, params);
+            } else {
+                response = execute(params);
             }
-            response = execute(params);
-        } catch (Exception e) {
-            errMsg = e.getMessage();
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
 
-        if (response == null) {
-            return new ResponseStatus(errMsg, false);
-        }
         return new ResponseStatus(Constants.MVS_EXECUTION_SUCCESS + "\n" +
                 response.getCommandResponse().orElse("no response"), true);
     }

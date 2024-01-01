@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosjobs.methods.JobSubmit;
 import zowe.client.sdk.zosjobs.response.Job;
 
@@ -23,8 +24,9 @@ public class Submit {
         Job job;
         try {
             job = jobSubmit.submit(String.format("%s(%s)", dataSet, param));
-        } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), false);
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
         return new ResponseStatus("Job Name: " + job.getJobName().orElse("n\\a") +
                 ", Job Id: " + job.getJobId().orElse("n\\a"), true);

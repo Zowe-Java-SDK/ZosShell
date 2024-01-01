@@ -9,6 +9,7 @@ import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.DirectorySetup;
 import zos.shell.utility.Util;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.DownloadParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 
@@ -45,8 +46,8 @@ public class Download {
         final var dirSetup = new DirectorySetup();
         try {
             dirSetup.initialize(dataSet, member);
-        } catch (Exception e) {
-            return new ResponseStatus(message + Constants.OS_ERROR, false);
+        } catch (IllegalStateException e) {
+            return new ResponseStatus(message + e.getMessage(), false);
         }
 
         try {
@@ -69,7 +70,10 @@ public class Download {
                 writeBinaryFile(binaryContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
             }
             message += "downloaded to " + dirSetup.getFileNamePath();
-        } catch (Exception e) {
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            return new ResponseStatus(message + (errMsg != null ? errMsg : e.getMessage()), false);
+        } catch (IOException e) {
             return new ResponseStatus(message + e.getMessage(), false);
         }
         return new ResponseStatus(message, true, dirSetup.getFileNamePath());
@@ -81,8 +85,8 @@ public class Download {
 
         try {
             dirSetup.initialize(Constants.SEQUENTIAL_DIRECTORY_LOCATION, dataSet);
-        } catch (Exception e) {
-            return new ResponseStatus(message + Constants.OS_ERROR, false);
+        } catch (IllegalStateException e) {
+            return new ResponseStatus(message + e.getMessage(), false);
         }
 
         try {
@@ -93,7 +97,10 @@ public class Download {
             }
             Util.writeTextFile(textContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
 
-        } catch (Exception e) {
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            return new ResponseStatus(message + (errMsg != null ? errMsg : e.getMessage()), false);
+        } catch (IOException e) {
             return new ResponseStatus(message + e.getMessage(), false);
         }
 
@@ -107,24 +114,24 @@ public class Download {
         FileUtils.copyInputStreamToFile(input, new File(fileNamePath));
     }
 
-    private String getTextContent(String dataSet, String member) throws Exception {
+    private String getTextContent(String dataSet, String member) throws ZosmfRequestException, IOException {
         LOG.debug("*** getTextContent member ***");
         final var inputStream = getInputStream(String.format("%s(%s)", dataSet, member));
         return getTextStreamData(inputStream);
     }
 
-    private String getTextContent(String dataSet) throws Exception {
+    private String getTextContent(String dataSet) throws ZosmfRequestException, IOException {
         LOG.debug("*** getTextContent member ***");
         final var inputStream = getInputStream(dataSet);
         return getTextStreamData(inputStream);
     }
 
-    private InputStream getBinaryContent(String dataSet, String member) {
+    private InputStream getBinaryContent(String dataSet, String member) throws ZosmfRequestException {
         LOG.debug("*** getBinaryContent member ***");
         return getInputStream(String.format("%s(%s)", dataSet, member));
     }
 
-    public InputStream getInputStream(String target) {
+    public InputStream getInputStream(String target) throws ZosmfRequestException {
         LOG.debug("*** getInputStream ***");
         if (dlParams == null) {
             dlParams = new DownloadParams.Builder().build();

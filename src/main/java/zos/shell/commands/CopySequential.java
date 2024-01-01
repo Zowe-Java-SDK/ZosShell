@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCopy;
 
 public class CopySequential {
@@ -69,8 +70,9 @@ public class CopySequential {
 
         try {
             DsnCopy.copy(fromDataSetName, toDataSetName, true, false);
-        } catch (Exception e) {
-            return new ResponseStatus(e.getMessage(), false);
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
         return new ResponseStatus("copied to " + toDataSetName, true);
     }

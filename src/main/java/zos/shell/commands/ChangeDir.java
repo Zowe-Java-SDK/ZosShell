@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.utility.Util;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.ListParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.response.Dataset;
@@ -50,8 +51,12 @@ public class ChangeDir {
             List<Dataset> dsLst;
             try {
                 dsLst = dsnList.getDatasets(currDataSet, params);
-            } catch (Exception e) {
-                Util.printError(terminal, e.getMessage());
+            } catch (ZosmfRequestException e) {
+                final String errMsg = Util.getResponsePhrase(e.getResponse());
+                terminal.println((errMsg != null ? errMsg : e.getMessage()));
+                return currDataSet;
+            } catch (IllegalArgumentException e) {
+                terminal.println(Constants.DATASET_NOT_SPECIFIED);
                 return currDataSet;
             }
             var findDataSet = currDataSet + "." + param;

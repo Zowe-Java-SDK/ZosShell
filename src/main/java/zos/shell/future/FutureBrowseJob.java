@@ -1,5 +1,6 @@
 package zos.shell.future;
 
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosjobs.input.JobFile;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
@@ -22,7 +23,7 @@ public class FutureBrowseJob implements Callable<StringBuilder> {
         files.forEach(file -> {
             try {
                 str.append(List.of(jobGet.getSpoolContent(file)));
-            } catch (Exception ignored) {
+            } catch (ZosmfRequestException ignored) {
             }
         });
         return str;

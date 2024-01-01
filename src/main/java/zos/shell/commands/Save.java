@@ -6,10 +6,12 @@ import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 
 public class Save {
 
@@ -60,8 +62,11 @@ public class Save {
             } else {
                 dsnWrite.write(dataSet, member, content);
             }
-        } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), false);
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
+        } catch (IOException e) {
+            return new ResponseStatus(e.getMessage(), false);
         }
 
         return new ResponseStatus(member + " successfully saved...", true);

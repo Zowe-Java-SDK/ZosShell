@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.Constants;
 import zos.shell.utility.Util;
 import zowe.client.sdk.rest.Response;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.ListParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnDelete;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
@@ -50,15 +51,16 @@ public class Delete {
                 }
                 try {
                     members = dsnList.getMembers(currDataSet, params);
-                } catch (Exception e) {
-                    Util.printError(terminal, e.getMessage());
+                } catch (ZosmfRequestException e) {
+                    final String errMsg = Util.getResponsePhrase(e.getResponse());
+                    terminal.println(errMsg != null ? errMsg : e.getMessage());
                 }
 
                 if (!lookForStr.isEmpty()) {
                     String finalLookForStr = lookForStr;
                     members = members.stream()
                             .filter(i -> i.getMember().orElse("")
-                                    .startsWith(finalLookForStr))
+                            .startsWith(finalLookForStr))
                             .collect(Collectors.toList());
                 }
 
@@ -69,9 +71,10 @@ public class Delete {
                     try {
                         dsnDelete.delete(currDataSet, m.getMember().orElse(""));
                         success.set(true);
-                    } catch (Exception e) {
+                    } catch (ZosmfRequestException e) {
                         success.set(false);
-                        terminal.println(e.getMessage());
+                        final String errMsg = Util.getResponsePhrase(e.getResponse());
+                        terminal.println(errMsg != null ? errMsg : e.getMessage());
                     }
                     if (success.get()) {
                         membersDeleted.append(m.getMember().orElse("n\\a"));
@@ -105,8 +108,9 @@ public class Delete {
                     if (performMemberDeleteCheckFailedResponse(currDataSet, param)) {
                         return;
                     }
-                } catch (Exception e) {
-                    Util.printError(terminal, e.getMessage());
+                } catch (ZosmfRequestException e) {
+                    final String errMsg = Util.getResponsePhrase(e.getResponse());
+                    terminal.println(errMsg != null ? errMsg : e.getMessage());
                     return;
                 }
                 terminal.println(param.toUpperCase() + " successfully deleted...");
@@ -125,8 +129,9 @@ public class Delete {
                     if (failed(response)) {
                         return;
                     }
-                } catch (Exception e) {
-                    Util.printError(terminal, e.getMessage());
+                } catch (ZosmfRequestException e) {
+                    final String errMsg = Util.getResponsePhrase(e.getResponse());
+                    terminal.println(errMsg != null ? errMsg : e.getMessage());
                     return;
                 }
                 terminal.println(param.toUpperCase() + " successfully deleted...");
@@ -140,7 +145,7 @@ public class Delete {
                 terminal.println(param.toUpperCase() + " successfully deleted...");
                 return;
             }
-        } catch (Exception e) {
+        } catch (ZosmfRequestException e) {
             terminal.println(e.getMessage());
             return;
         }
@@ -148,13 +153,14 @@ public class Delete {
         terminal.println(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR);
     }
 
-    private boolean performMemberDeleteCheckFailedResponse(String currDataSet, String memberName) {
+    private boolean performMemberDeleteCheckFailedResponse(String currDataSet, String memberName)
+            throws ZosmfRequestException {
         LOG.debug("*** performMemberDeleteCheckFailedResponse ***");
         final var response = dsnDelete.delete(currDataSet, memberName);
         return failed(response);
     }
 
-    private boolean performDatasetDeleteCheckFailedResponse(String datasetName) {
+    private boolean performDatasetDeleteCheckFailedResponse(String datasetName) throws ZosmfRequestException {
         LOG.debug("*** performDatasetDeleteCheckFailedResponse ***");
         final var response = dsnDelete.delete(datasetName);
         return failed(response);

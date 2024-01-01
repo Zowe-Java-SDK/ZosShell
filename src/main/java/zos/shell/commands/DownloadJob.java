@@ -9,6 +9,7 @@ import zos.shell.utility.DirectorySetup;
 import zos.shell.utility.Util;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
+import java.io.IOException;
 import java.util.Comparator;
 
 public class DownloadJob {
@@ -42,13 +43,13 @@ public class DownloadJob {
         final var dirSetup = new DirectorySetup();
         try {
             dirSetup.initialize(name, id);
-        } catch (Exception e) {
+        } catch (IllegalStateException e) {
             return new ResponseStatus(e.getMessage(), false);
         }
 
         try {
             Util.writeTextFile(output, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
-        } catch (Exception e) {
+        } catch (IOException e) {
             return new ResponseStatus(e.getMessage(), false);
         }
 

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.zosuss.exception.IssueUssException;
 import zowe.client.sdk.zosuss.method.IssueUss;
 
 import java.util.Map;
@@ -34,7 +35,7 @@ public class Ussh {
             final var issueUss = new IssueUss(sshConnection);
             // 10000 is the timeout value in milliseconds
             terminal.println(issueUss.issueCommand(command, 10000));
-        } catch (Exception e) {
+        } catch (IssueUssException e) {
             terminal.println(e.getMessage());
         }
     }

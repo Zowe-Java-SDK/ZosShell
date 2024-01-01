@@ -14,7 +14,7 @@ public class DirectorySetup {
     private String directoryPath;
     private String fileNamePath;
 
-    public void initialize(String directoryName, String fileName) throws Exception {
+    public void initialize(String directoryName, String fileName) {
         LOG.debug("*** initialize ***");
         if (SystemUtils.IS_OS_WINDOWS) {
             directoryPath = DIRECTORY_PATH_WINDOWS + directoryName;
@@ -23,7 +23,7 @@ public class DirectorySetup {
             directoryPath = DIRECTORY_PATH_MAC + directoryName;
             fileNamePath = directoryPath + "/" + fileName;
         } else {
-            throw new Exception(Constants.OS_ERROR);
+            throw new IllegalStateException(Constants.OS_ERROR);
         }
     }
 

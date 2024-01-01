@@ -3,6 +3,8 @@ package zos.shell.commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.dto.ResponseStatus;
+import zos.shell.utility.Util;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.ListParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.response.Dataset;
@@ -41,8 +43,9 @@ public class Count {
                     dataSetCount.getAndIncrement();
                 }
             });
-        } catch (Exception e) {
-            return new ResponseStatus("0", false);
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
         return new ResponseStatus(String.valueOf(members.size() + dataSetCount.get()), true);
     }

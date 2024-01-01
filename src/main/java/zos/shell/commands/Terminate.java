@@ -6,6 +6,7 @@ import zos.shell.config.MvsConsoles;
 import zos.shell.dto.ResponseStatus;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosconsole.input.IssueConsoleParams;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
 import zowe.client.sdk.zosconsole.response.ConsoleResponse;
@@ -57,8 +58,9 @@ public class Terminate {
             }
             // remove last newline i.e. \n
             return new ResponseStatus(result.substring(0, result.length() - 1), true);
-        } catch (Exception e) {
-            return new ResponseStatus(Util.getErrorMsg(e.getMessage()), false);
+        } catch (ZosmfRequestException e) {
+            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
     }
 
