@@ -14,6 +14,7 @@ import zos.shell.utility.Help;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
 import zowe.client.sdk.zosfiles.dsn.input.CreateParams;
 import zowe.client.sdk.zosfiles.dsn.methods.*;
@@ -52,22 +53,13 @@ public class Commands {
 
     private Output browseAll(ZosConnection connection, String[] params, boolean isAll) {
         LOG.debug("*** browseAll ***");
-        BrowseJob browseJob;
-        try {
-            browseJob = new BrowseJob(new JobGet(connection), isAll, timeOutValue);
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
+        final BrowseJob browseJob = new BrowseJob(new JobGet(connection), isAll, timeOutValue);
+        final ResponseStatus responseStatus = browseJob.browseJob(params[1]);
+        if (!responseStatus.isStatus()) {
+            terminal.println(responseStatus.getMessage());
             return null;
         }
-        ResponseStatus responseStatus = browseJob.browseJob(params[1]);
-        if (!responseStatus.isStatus() && responseStatus.getMessage().contains("timeout")) {
-            terminal.println(Constants.BROWSE_TIMEOUT);
-            return null;
-        } else if (!responseStatus.isStatus()) {
-            Util.printError(terminal, responseStatus.getMessage());
-            return null;
-        }
-        String output = responseStatus.getMessage();
+        final String output = responseStatus.getMessage();
         terminal.println(output);
         return new Output(params[1], new StringBuilder(output));
     }
@@ -94,14 +86,7 @@ public class Commands {
 
     public String cd(ZosConnection connection, String currDataSet, String param) {
         LOG.debug("*** cd ***");
-        ChangeDir changeDir;
-        try {
-            changeDir = new ChangeDir(terminal, new DsnList(connection));
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return currDataSet;
-        }
-        return changeDir.cd(currDataSet, param);
+        return new ChangeDir(terminal, new DsnList(connection)).cd(currDataSet, param);
     }
 
     public ZosConnection change(ZosConnection connection, String[] commands) {
@@ -144,13 +129,8 @@ public class Commands {
             return;
         }
 
-        Copy copy;
-        try {
-            copy = new Copy(new DsnCopy(connection));
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
-        }
+        // TODO use future for one individual
+        final Copy copy = new Copy(new DsnCopy(connection));
         terminal.println(copy.copy(currDataSet, params).getMessage());
     }
 
@@ -176,13 +156,7 @@ public class Commands {
 
     public void copySequential(ZosConnection connection, String currDataSet, String[] params) {
         LOG.debug("*** copySequential ***");
-        CopySequential copy;
-        try {
-            copy = new CopySequential(new DsnCopy(connection));
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
-        }
+        final CopySequential copy = new CopySequential(new DsnCopy(connection));
         terminal.println(copy.copy(currDataSet, params).getMessage());
     }
 
@@ -218,13 +192,7 @@ public class Commands {
             return;
         }
 
-        Download download;
-        try {
-            download = new Download(new DsnGet(connection), isBinary);
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
-        }
+        final Download download = new Download(new DsnGet(connection), isBinary);
 
         final var dataSetMember = Util.getDatasetAndMember(target);
         ResponseStatus result;
@@ -284,7 +252,7 @@ public class Commands {
             } catch (TimeoutException e) {
                 results.add(new ResponseStatus("timeout", false));
             } catch (InterruptedException | ExecutionException e) {
-                results.add(new ResponseStatus(Util.getErrorMsg(e.getMessage()), false));
+                results.add(new ResponseStatus(e.getMessage(), false));
             }
         }
         return results;
@@ -349,7 +317,7 @@ public class Commands {
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
         } catch (ExecutionException | InterruptedException e) {
-            terminal.println(Util.getErrorMsg(e.getMessage()));
+            terminal.println(e.getMessage());
         }
 
         pool.shutdownNow();
@@ -372,7 +340,7 @@ public class Commands {
             } catch (TimeoutException e) {
                 results.add("timeout");
             } catch (InterruptedException | ExecutionException e) {
-                results.add(Util.getErrorMsg(e.getMessage()));
+                results.add(e.getMessage());
             }
         }
 
@@ -546,7 +514,7 @@ public class Commands {
             }
             try {
                 return (Integer.valueOf(input));
-            } catch (Exception ignored) {
+            } catch (NumberFormatException ignored) {
             }
         }
     }
@@ -599,13 +567,7 @@ public class Commands {
 
     public void rm(ZosConnection connection, String currDataSet, String param) {
         LOG.debug("*** rm ***");
-        Delete delete;
-        try {
-            delete = new Delete(terminal, new DsnDelete(connection), new DsnList(connection));
-        } catch (Exception e) {
-            Util.printError(terminal, e.getMessage());
-            return;
-        }
+        Delete delete = new Delete(terminal, new DsnDelete(connection), new DsnList(connection));
         delete.rm(currDataSet, param);
     }
 
@@ -737,12 +699,12 @@ public class Commands {
                 final var IssueConsole = new IssueConsole(currConnection);
                 final var response = IssueConsole.issueCommand("D IPLINFO");
                 final var output = response.getCommandResponse()
-                        .orElseThrow((() -> new Exception("IPLINFO command no response")));
+                        .orElseThrow((() -> new ZosmfRequestException("IPLINFO command no response")));
                 final var index = output.indexOf("RELEASE z/OS ");
                 if (index >= 0) {
                     zosVersion = Optional.of(output.substring(index, index + 22));
                 }
-            } catch (Exception e) {
+            } catch (ZosmfRequestException e) {
                 LOG.debug(e.getMessage());
             }
             terminal.println(
@@ -777,7 +739,7 @@ public class Commands {
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
         } catch (ExecutionException | InterruptedException e) {
-            terminal.println(Util.getErrorMsg(e.getMessage()));
+            terminal.println(e.getMessage());
         }
         pool.shutdownNow();
         return result;

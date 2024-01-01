@@ -62,7 +62,7 @@ public class Listing {
             members = getMembers(dataSet);
         } catch (TimeoutException e) {
             throw new TimeoutException(e.getMessage());
-        } catch (Exception ignored) {
+        } catch (ExecutionException | InterruptedException ignored) {
         }
 
         member.ifPresentOrElse((m) -> {

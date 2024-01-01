@@ -46,7 +46,7 @@ public class Download {
         final var dirSetup = new DirectorySetup();
         try {
             dirSetup.initialize(dataSet, member);
-        } catch (Exception e) {
+        } catch (IllegalStateException e) {
             return new ResponseStatus(message + e.getMessage(), false);
         }
 
@@ -85,7 +85,7 @@ public class Download {
 
         try {
             dirSetup.initialize(Constants.SEQUENTIAL_DIRECTORY_LOCATION, dataSet);
-        } catch (Exception e) {
+        } catch (IllegalStateException e) {
             return new ResponseStatus(message + e.getMessage(), false);
         }
 

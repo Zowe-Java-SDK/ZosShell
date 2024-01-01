@@ -65,35 +65,6 @@ public class Util {
         return isSegment(memberName.toUpperCase(Locale.ROOT));
     }
 
-    public static void printError(TextTerminal<?> terminal, String message) {
-        LOG.debug("*** printError ***");
-        if (message.contains("Not Found")) {
-            final var index = message.indexOf("Not Found");
-            final var msg = message.substring(index);
-            terminal.println(msg);
-        } else if (message.contains(Constants.CONNECTION_REFUSED)) {
-            terminal.println(Constants.SEVERE_ERROR);
-        } else if (message.contains("dataSetName not specified")) {
-            terminal.println(Constants.DATASET_NOT_SPECIFIED);
-        } else {
-            terminal.println(message);
-        }
-    }
-
-    public static String getErrorMsg(String message) {
-        LOG.debug("*** getErrorMsg ***");
-        if (message.contains("Not Found")) {
-            final var index = message.indexOf("Not Found");
-            return message.substring(index);
-        } else if (message.contains(Constants.CONNECTION_REFUSED)) {
-            return Constants.SEVERE_ERROR;
-        } else if (message.contains("dataSetName not specified")) {
-            return Constants.DATASET_NOT_SPECIFIED;
-        } else {
-            return message;
-        }
-    }
-
     public static boolean isStrNum(String strNum) {
         LOG.debug("*** isStrNum ***");
         try {
