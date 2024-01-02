@@ -24,18 +24,10 @@ public class FutureCopy extends Copy implements Callable<ResponseStatus> {
     @Override
     public ResponseStatus call() {
         final var params = new String[]{"cp", member, toDataSetName};
-        var message = Strings.padStart(member, Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW;
-        final var response = this.copy(fromDataSetName, params);
-        var responseMsg = response.getMessage();
-        // TODO remove??
-        if (responseMsg.contains("Http error")) {
-            var index = responseMsg.indexOf(".");
-            responseMsg = responseMsg.substring(0, index + 1);
-            responseMsg += " Perform individual copy for more info.";
-        }
-        message += responseMsg;
-        response.setMessage(message);
-        return response;
+        final var arrowMsg = Strings.padStart(member, Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW;
+        final var responseStatus = this.copy(fromDataSetName, params);
+        responseStatus.setMessage(arrowMsg + responseStatus.getMessage());
+        return responseStatus;
     }
 
 }
