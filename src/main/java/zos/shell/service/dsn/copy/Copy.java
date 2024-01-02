@@ -12,11 +12,11 @@ public class Copy {
 
     private static final Logger LOG = LoggerFactory.getLogger(Copy.class);
 
-    private final DsnCopy DsnCopy;
+    private final DsnCopy dsnCopy;
 
-    public Copy(DsnCopy DsnCopy) {
+    public Copy(final DsnCopy dsnCopy) {
         LOG.debug("*** Copy ***");
-        this.DsnCopy = DsnCopy;
+        this.dsnCopy = dsnCopy;
     }
 
     public ResponseStatus copy(final String currDataSet, final String[] params) {
@@ -109,10 +109,10 @@ public class Copy {
         return new ResponseStatus(Constants.INVALID_ARGUMENTS, false);
     }
 
-    private ResponseStatus doCopy(String target, String destination, boolean isCopyAll) {
+    private ResponseStatus doCopy(final String target, final String destination, boolean isCopyAll) {
         LOG.debug("*** doCopy ***");
         try {
-            DsnCopy.copy(target, destination, true, isCopyAll);
+            dsnCopy.copy(target, destination, true, isCopyAll);
         } catch (ZosmfRequestException e) {
             final String errMsg = Util.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);

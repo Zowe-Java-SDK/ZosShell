@@ -24,7 +24,7 @@ public class CopyCmd {
     private final DsnCopy dsnCopy;
     private final DsnList dsnList;
     private final ListParams listParams = new ListParams.Builder().build();
-    private long timeout;
+    private final long timeout;
 
     public CopyCmd(DsnCopy dsnCopy, DsnList dsnList, long timeout) {
         LOG.debug("*** Copy ***");
