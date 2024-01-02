@@ -19,7 +19,7 @@ public class Concat {
 
     private final DownloadCmd download;
 
-    public Concat(DownloadCmd download) {
+    public Concat(final DownloadCmd download) {
         LOG.debug("*** Concat ***");
         this.download = download;
     }
@@ -47,6 +47,7 @@ public class Concat {
     }
 
     private String retrieveInfo(final InputStream inputStream) throws IOException {
+        LOG.debug("*** retrieveInfo ***");
         if (inputStream != null) {
             final var writer = new StringWriter();
             IOUtils.copy(inputStream, writer, Constants.UTF8);

@@ -18,7 +18,7 @@ public class ConcatCmd {
     private final DownloadCmd download;
     private final long timeout;
 
-    public ConcatCmd(DownloadCmd download, long timeout) {
+    public ConcatCmd(final DownloadCmd download, final long timeout) {
         LOG.debug("*** ConcatCmd ***");
         this.download = download;
         this.timeout = timeout;

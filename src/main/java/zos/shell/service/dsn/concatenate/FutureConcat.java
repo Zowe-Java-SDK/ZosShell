@@ -10,7 +10,7 @@ public class FutureConcat extends Concat implements Callable<ResponseStatus> {
     private final String dataset;
     private final String target;
 
-    public FutureConcat(DownloadCmd download, String dataset, String target) {
+    public FutureConcat(final DownloadCmd download, final String dataset, final String target) {
         super(download);
         this.dataset = dataset;
         this.target = target;
