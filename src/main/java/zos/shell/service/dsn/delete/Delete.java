@@ -23,9 +23,9 @@ public class Delete {
         try {
             final var response = dsnDelete.delete(dataset, member);
             if (response.getResponsePhrase().isPresent()) {
-                return new ResponseStatus(response.getResponsePhrase().get().toString(), true, member);
+                return new ResponseStatus(response.getResponsePhrase().get().toString(), true);
             } else {
-                return new ResponseStatus("no response phrase", true, member);
+                return new ResponseStatus("no response phrase", true);
             }
         } catch (ZosmfRequestException e) {
             final var errMsg = Util.getResponsePhrase(e.getResponse());

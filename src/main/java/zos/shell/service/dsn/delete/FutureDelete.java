@@ -1,5 +1,7 @@
 package zos.shell.service.dsn.delete;
 
+import com.google.common.base.Strings;
+import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnDelete;
 
@@ -23,11 +25,26 @@ public class FutureDelete extends Delete implements Callable<ResponseStatus> {
     }
 
     @Override
+
     public ResponseStatus call() {
+        ResponseStatus responseStatus;
+        String item;
         if (member.isBlank()) {
-            return this.delete(dataset);
+            responseStatus = this.delete(dataset);
+            item = dataset;
+        } else {
+            responseStatus = this.delete(dataset, member);
+            item = member;
         }
-        return this.delete(dataset, member);
+
+        final var arrowMsg = Strings.padStart(item, Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW;
+        if (responseStatus.isStatus()) { // success state has No Content in return phrase
+            responseStatus.setMessage(arrowMsg);
+        } else { // error state
+            responseStatus.setMessage(arrowMsg + responseStatus.getMessage());
+        }
+        return responseStatus;
+
     }
 
 }
