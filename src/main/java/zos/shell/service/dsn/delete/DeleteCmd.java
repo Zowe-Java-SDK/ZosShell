@@ -130,11 +130,12 @@ public class DeleteCmd {
         LOG.debug("*** processResult ***");
         try {
             final var responseStatus = future.get(timeout, TimeUnit.SECONDS);
+            // responseStatus.getOptionalData() contains member name
             if (responseStatus.isStatus()) {
-                result.append(responseStatus.getMessage()).append(" successfully deleted...");
+                result.append(responseStatus.getOptionalData()).append(" successfully deleted...");
             } else {
                 result.append("error deleting ")
-                      .append(responseStatus.getOptionalData()) // member name
+                      .append(responseStatus.getOptionalData()) 
                       .append(", reason: ")
                       .append(responseStatus.getMessage());
             }
