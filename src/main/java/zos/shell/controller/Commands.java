@@ -13,10 +13,10 @@ import zos.shell.service.change.ColorCmd;
 import zos.shell.service.change.ConnCmd;
 import zos.shell.service.change.DirCmd;
 import zos.shell.service.dsn.concatenate.ConcatCmd;
-import zos.shell.service.dsn.CopyCmd;
+import zos.shell.service.dsn.copy.CopyCmd;
 import zos.shell.service.dsn.DownloadCmd;
 import zos.shell.service.dsn.LstCmd;
-import zos.shell.service.dsn.concatenate.FutureConcat;
+import zos.shell.service.dsn.copy.FutureCopy;
 import zos.shell.service.dsn.delete.DeleteCmd;
 import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.grep.GrepCmd;
@@ -120,49 +120,52 @@ public class Commands {
 
     public void copy(ZosConnection connection, String currDataSet, String[] params) {
         LOG.debug("*** copy ***");
-        long count = params[1].chars().filter(ch -> ch == '*').count();
-        if (count > 1) {
-            terminal.println("invalid first argument, try again...");
-            return;
-        }
-
-        if (params[1].contains("*") && Util.isMember(params[1].substring(0, params[1].indexOf("*")))) {
-            var members = Util.getMembers(terminal, connection, currDataSet);
-            final var index = params[1].indexOf("*");
-            final var searchForMember = params[1].substring(0, index).toUpperCase();
-            members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
-            if (members.isEmpty()) {
-                terminal.println(Constants.COPY_NOTHING_WARNING);
-                return;
-            }
-            multipleCopy(connection, currDataSet, params[2], members).forEach(i -> terminal.println(i.getMessage()));
-            return;
-        }
-
-        // TODO use future for one individual
-        final CopyCmd copy = new CopyCmd(new DsnCopy(connection));
+        final CopyCmd copy = new CopyCmd(new DsnCopy(connection), new DsnList(connection), timeOutValue);
         terminal.println(copy.copy(currDataSet, params).getMessage());
+
+//        long count = params[1].chars().filter(ch -> ch == '*').count();
+//        if (count > 1) {
+//            terminal.println("invalid first argument, try again...");
+//            return;
+//        }
+//
+//        if (params[1].contains("*") && Util.isMember(params[1].substring(0, params[1].indexOf("*")))) {
+//            var members = Util.getMembers(terminal, connection, currDataSet);
+//            final var index = params[1].indexOf("*");
+//            final var searchForMember = params[1].substring(0, index).toUpperCase();
+//            members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
+//            if (members.isEmpty()) {
+//                terminal.println(Constants.COPY_NOTHING_WARNING);
+//                return;
+//            }
+//            multipleCopy(connection, currDataSet, params[2], members).forEach(i -> terminal.println(i.getMessage()));
+//            return;
+//        }
+//
+//        // TODO use future for one individual
+//        final CopyCmd copy = new CopyCmd(new DsnCopy(connection), new DsnList(connection), timeOutValue);
+//        terminal.println(copy.copy(currDataSet, params).getMessage());
     }
 
-    private List<ResponseStatus> multipleCopy(ZosConnection connection, String fromDataSetName, String toDataSetName,
-                                              List<String> members) {
-        LOG.debug("*** multipleCopy ***");
-        if (!Util.isDataSet(toDataSetName)) {
-            terminal.println(Constants.INVALID_DATASET);
-            return new ArrayList<>();
-        }
-
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
-        final var futures = new ArrayList<Future<ResponseStatus>>();
-
-        for (final var member : members) {
-            futures.add(pool.submit(new FutureCopy(new DsnCopy(connection), fromDataSetName, toDataSetName, member)));
-        }
-
-        final var result = getFutureResults(futures);
-        pool.shutdownNow();
-        return result;
-    }
+//    private List<ResponseStatus> multipleCopy(ZosConnection connection, String fromDataSetName, String toDataSetName,
+//                                              List<String> members) {
+//        LOG.debug("*** multipleCopy ***");
+//        if (!Util.isDataSet(toDataSetName)) {
+//            terminal.println(Constants.INVALID_DATASET);
+//            return new ArrayList<>();
+//        }
+//
+//        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
+//        final var futures = new ArrayList<Future<ResponseStatus>>();
+//
+//        for (final var member : members) {
+//            futures.add(pool.submit(new FutureCopy(new DsnCopy(connection), fromDataSetName, toDataSetName, member)));
+//        }
+//
+//        final var result = getFutureResults(futures);
+//        pool.shutdownNow();
+//        return result;
+//    }
 
     public void count(ZosConnection connection, String dataSet, String filter) {
         LOG.debug("*** count ***");

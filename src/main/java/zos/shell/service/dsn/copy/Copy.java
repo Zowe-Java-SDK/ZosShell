@@ -1,21 +1,20 @@
-package zos.shell.service.dsn;
+package zos.shell.service.dsn.copy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.dto.DataSetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCopy;
 
-public class CopyCmd {
+public class Copy {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CopyCmd.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Copy.class);
 
     private final DsnCopy DsnCopy;
 
-    public CopyCmd(DsnCopy DsnCopy) {
+    public Copy(DsnCopy DsnCopy) {
         LOG.debug("*** Copy ***");
         this.DsnCopy = DsnCopy;
     }

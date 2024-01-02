@@ -1,14 +1,14 @@
-package zos.shell.future;
+package zos.shell.service.dsn.copy;
 
 import com.google.common.base.Strings;
 import zos.shell.constants.Constants;
-import zos.shell.service.dsn.CopyCmd;
+import zos.shell.service.dsn.copy.CopyCmd;
 import zos.shell.response.ResponseStatus;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCopy;
 
 import java.util.concurrent.Callable;
 
-public class FutureCopy extends CopyCmd implements Callable<ResponseStatus> {
+public class FutureCopy extends Copy implements Callable<ResponseStatus> {
 
     private final String fromDataSetName;
     private final String toDataSetName;
@@ -27,6 +27,7 @@ public class FutureCopy extends CopyCmd implements Callable<ResponseStatus> {
         var message = Strings.padStart(member, Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW;
         final var response = this.copy(fromDataSetName, params);
         var responseMsg = response.getMessage();
+        // TODO remove??
         if (responseMsg.contains("Http error")) {
             var index = responseMsg.indexOf(".");
             responseMsg = responseMsg.substring(0, index + 1);
