@@ -2,7 +2,7 @@ package zos.shell.service.grep;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.service.dsn.ConcatCmd;
+import zos.shell.service.dsn.concatenate.ConcatCmd;
 
 import java.util.ArrayList;
 import java.util.HashMap;

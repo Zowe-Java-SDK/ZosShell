@@ -12,10 +12,11 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.service.change.ColorCmd;
 import zos.shell.service.change.ConnCmd;
 import zos.shell.service.change.DirCmd;
-import zos.shell.service.dsn.ConcatCmd;
+import zos.shell.service.dsn.concatenate.ConcatCmd;
 import zos.shell.service.dsn.CopyCmd;
 import zos.shell.service.dsn.DownloadCmd;
 import zos.shell.service.dsn.LstCmd;
+import zos.shell.service.dsn.concatenate.FutureConcat;
 import zos.shell.service.dsn.delete.DeleteCmd;
 import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.grep.GrepCmd;
@@ -86,16 +87,11 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    public Output cat(ZosConnection connection, String currDataSet, String target) {
+    public Output cat(ZosConnection connection, String dataset, String target) {
         LOG.debug("*** cat ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(
-                new FutureConcatenate(new DownloadCmd(new DsnGet(connection), false), currDataSet, target));
-        final var result = processFuture(pool, submit);
-        if (result.isStatus()) {
-            return new Output("cat", new StringBuilder(result.getMessage()));
-        }
-        return new Output("cat", new StringBuilder());
+        final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeOutValue);
+        final var data = concatCmd.cat(dataset, target).getMessage();
+        return new Output("cat", new StringBuilder(data));
     }
 
     public String cd(ZosConnection connection, String currDataSet, String param) {
@@ -313,8 +309,8 @@ public class Commands {
         }
 
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var concatenate = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false));
-        final var submit = pool.submit(new FutureGrep(new GrepCmd(concatenate, pattern), currDataSet, target));
+        final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeOutValue);
+        final var submit = pool.submit(new FutureGrep(new GrepCmd(concatCmd, pattern), currDataSet, target));
 
         try {
             result = submit.get(timeOutValue, TimeUnit.SECONDS);
@@ -338,8 +334,8 @@ public class Commands {
         final var futures = new ArrayList<Future<List<String>>>();
 
         for (final var member : members) {
-            final var concatenate = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false));
-            futures.add(pool.submit(new FutureGrep(new GrepCmd(concatenate, pattern, true), dataSet, member)));
+            final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeOutValue);
+            futures.add(pool.submit(new FutureGrep(new GrepCmd(concatCmd, pattern, true), dataSet, member)));
         }
 
         for (final var future : futures) {
@@ -575,7 +571,7 @@ public class Commands {
 
     public void rm(ZosConnection connection, String currDataSet, String param) {
         LOG.debug("*** rm ***");
-        DeleteCmd delete = new DeleteCmd(new DsnDelete(connection), new DsnList(connection), timeOutValue);
+        final var delete = new DeleteCmd(new DsnDelete(connection), new DsnList(connection), timeOutValue);
         terminal.println(delete.delete(currDataSet, param).getMessage());
     }
 
