@@ -111,6 +111,7 @@ public class CopyCmd {
     }
 
     private ResponseStatus doCopy(String target, String destination, boolean isCopyAll) {
+        LOG.debug("*** doCopy ***");
         try {
             DsnCopy.copy(target, destination, true, isCopyAll);
         } catch (ZosmfRequestException e) {

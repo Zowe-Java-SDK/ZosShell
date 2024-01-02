@@ -1,4 +1,4 @@
-package zos.shell.service.LocalFile;
+package zos.shell.service.localfile;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;

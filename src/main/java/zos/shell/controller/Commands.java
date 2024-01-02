@@ -5,22 +5,26 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.service.LocalFile.LocalFileCmd;
-import zos.shell.service.change.ConnCmd;
-import zos.shell.service.change.DirCmd;
-import zos.shell.service.change.ColorCmd;
-import zos.shell.service.dsn.*;
-import zos.shell.service.env.EnvVarCmd;
 import zos.shell.dto.Member;
 import zos.shell.dto.Output;
-import zos.shell.response.ResponseStatus;
 import zos.shell.future.*;
+import zos.shell.response.ResponseStatus;
+import zos.shell.service.change.ColorCmd;
+import zos.shell.service.change.ConnCmd;
+import zos.shell.service.change.DirCmd;
+import zos.shell.service.dsn.ConcatCmd;
+import zos.shell.service.dsn.CopyCmd;
+import zos.shell.service.dsn.DownloadCmd;
+import zos.shell.service.dsn.LstCmd;
+import zos.shell.service.dsn.delete.DeleteCmd;
+import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.grep.GrepCmd;
+import zos.shell.service.help.HelpCmd;
 import zos.shell.service.job.BrowseCmd;
 import zos.shell.service.job.TerminateCmd;
+import zos.shell.service.localfile.LocalFileCmd;
 import zos.shell.service.omvs.SshCmd;
 import zos.shell.service.search.SearchCmd;
-import zos.shell.service.help.HelpCmd;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
@@ -571,8 +575,8 @@ public class Commands {
 
     public void rm(ZosConnection connection, String currDataSet, String param) {
         LOG.debug("*** rm ***");
-        DeleteCmd delete = new DeleteCmd(terminal, new DsnDelete(connection), new DsnList(connection));
-        delete.rm(currDataSet, param);
+        DeleteCmd delete = new DeleteCmd(new DsnDelete(connection), new DsnList(connection), timeOutValue);
+        terminal.println(delete.delete(currDataSet, param).getMessage());
     }
 
     public void save(ZosConnection connection, String dataSet, String[] params) {
