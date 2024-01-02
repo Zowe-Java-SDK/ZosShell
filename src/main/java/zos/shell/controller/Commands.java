@@ -574,7 +574,7 @@ public class Commands {
 
     public void rm(ZosConnection connection, String currDataSet, String param) {
         LOG.debug("*** rm ***");
-        final var delete = new DeleteCmd(new DsnDelete(connection), new DsnList(connection), timeOutValue);
+        final var delete = new DeleteCmd(connection, new DsnList(connection), timeOutValue);
         terminal.println(delete.delete(currDataSet, param).getMessage());
     }
 

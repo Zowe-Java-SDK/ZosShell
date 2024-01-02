@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.Util;
+import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.ListParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnDelete;
@@ -20,14 +21,14 @@ public class DeleteCmd {
 
     private static final Logger LOG = LoggerFactory.getLogger(DeleteCmd.class);
 
-    private final DsnDelete dsnDelete;
+    private final ZosConnection connection;
     private final DsnList dsnList;
     private final ListParams params = new ListParams.Builder().build();
     private final long timeout;
 
-    public DeleteCmd(DsnDelete dsnDelete, DsnList dsnList, long timeout) {
+    public DeleteCmd(final ZosConnection connection, final DsnList dsnList, final long timeout) {
         LOG.debug("*** DeleteCmd ***");
-        this.dsnDelete = dsnDelete;
+        this.connection = connection;
         this.dsnList = dsnList;
         this.timeout = timeout;
     }
@@ -68,6 +69,7 @@ public class DeleteCmd {
                 final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
                 final var futureLst = new ArrayList<Future<ResponseStatus>>();
                 members.stream().filter(m -> m.getMember().isPresent()).forEach(m -> {
+                    DsnDelete dsnDelete = new DsnDelete(connection);
                     futureLst.add(pool.submit(new FutureDelete(dsnDelete, currDataSet, m.getMember().get())));
                 });
 
@@ -89,7 +91,7 @@ public class DeleteCmd {
                     return new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
                 }
 
-                final var future = pool.submit(new FutureDelete(dsnDelete, currDataSet, param));
+                final var future = pool.submit(new FutureDelete(new DsnDelete(connection), currDataSet, param));
                 processResult(result, future);
                 pool.shutdown();
                 return new ResponseStatus(result.toString(), true);
@@ -102,7 +104,7 @@ public class DeleteCmd {
                     return new ResponseStatus(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR, false);
                 }
 
-                final var future = pool.submit(new FutureDelete(dsnDelete,
+                final var future = pool.submit(new FutureDelete(new DsnDelete(connection),
                         dataSetMember.getDataSet(), dataSetMember.getMember()));
                 processResult(result, future);
                 pool.shutdown();
@@ -111,7 +113,7 @@ public class DeleteCmd {
 
             // handle sequential dataset
             if (Util.isDataSet(param)) {
-                final var future = pool.submit(new FutureDelete(dsnDelete, param));
+                final var future = pool.submit(new FutureDelete(new DsnDelete(connection), param));
                 processResult(result, future);
                 pool.shutdown();
                 return new ResponseStatus(result.toString(), true);
@@ -126,7 +128,7 @@ public class DeleteCmd {
         return new ResponseStatus(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR, false);
     }
 
-    private void processResult(StringBuilder result, Future<ResponseStatus> future) {
+    private void processResult(final StringBuilder result, final Future<ResponseStatus> future) {
         LOG.debug("*** processResult ***");
         try {
             final var responseStatus = future.get(timeout, TimeUnit.SECONDS);
@@ -144,7 +146,7 @@ public class DeleteCmd {
         }
     }
 
-    private boolean isCurrDataSetEmpty(String currDataSet) {
+    private boolean isCurrDataSetEmpty(final String currDataSet) {
         LOG.debug("*** isCurrDataSetEmpty ***");
         return currDataSet.isBlank();
     }
