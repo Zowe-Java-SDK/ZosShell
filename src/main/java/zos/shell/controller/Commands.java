@@ -120,7 +120,7 @@ public class Commands {
 
     public void copy(ZosConnection connection, String currDataSet, String[] params) {
         LOG.debug("*** copy ***");
-        final CopyCmd copy = new CopyCmd(new DsnCopy(connection), new DsnList(connection), timeOutValue);
+        final CopyCmd copy = new CopyCmd(connection, new DsnList(connection), timeOutValue);
         terminal.println(copy.copy(currDataSet, params).getMessage());
     }
 

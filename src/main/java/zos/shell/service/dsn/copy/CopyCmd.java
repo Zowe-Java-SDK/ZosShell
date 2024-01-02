@@ -21,19 +21,19 @@ public class CopyCmd {
 
     private static final Logger LOG = LoggerFactory.getLogger(CopyCmd.class);
 
-    private final DsnCopy dsnCopy;
+    private final ZosConnection connection;
     private final DsnList dsnList;
     private final ListParams listParams = new ListParams.Builder().build();
     private final long timeout;
 
-    public CopyCmd(DsnCopy dsnCopy, DsnList dsnList, long timeout) {
+    public CopyCmd(final ZosConnection connection, final DsnList dsnList, final long timeout) {
         LOG.debug("*** Copy ***");
-        this.dsnCopy = dsnCopy;
+        this.connection = connection;
         this.dsnList = dsnList;
         this.timeout = timeout;
     }
 
-    public ResponseStatus copy(String dataset, String[] params) {
+    public ResponseStatus copy(final String dataset, final String[] params) {
         LOG.debug("*** copy ***");
         long count = params[1].chars().filter(ch -> ch == '*').count();
         if (count > 1) {
@@ -76,6 +76,7 @@ public class CopyCmd {
             final var futures = new ArrayList<Future<ResponseStatus>>();
             members.forEach(m -> {
                 if (m.getMember().isPresent()) {
+                    DsnCopy dsnCopy = new DsnCopy(connection);
                     futures.add(pool.submit(new FutureCopy(dsnCopy, fromDataSetName, toDataSetName, m.getMember().get())));
                 }
             });
@@ -95,7 +96,7 @@ public class CopyCmd {
 
         boolean isNonException = true;
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
-        final var submit = pool.submit(new FutureCopy(dsnCopy, dataset, params[2], params[1]));
+        final var submit = pool.submit(new FutureCopy(new DsnCopy(connection), dataset, params[2], params[1]));
         try {
             ResponseStatus responseStatus = submit.get(timeout, TimeUnit.SECONDS);
             result.append(responseStatus.getMessage());
