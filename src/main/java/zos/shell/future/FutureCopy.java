@@ -1,14 +1,14 @@
 package zos.shell.future;
 
 import com.google.common.base.Strings;
-import zos.shell.Constants;
-import zos.shell.commands.Copy;
-import zos.shell.dto.ResponseStatus;
+import zos.shell.constants.Constants;
+import zos.shell.service.dsn.CopyCmd;
+import zos.shell.response.ResponseStatus;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCopy;
 
 import java.util.concurrent.Callable;
 
-public class FutureCopy extends Copy implements Callable<ResponseStatus> {
+public class FutureCopy extends CopyCmd implements Callable<ResponseStatus> {
 
     private final String fromDataSetName;
     private final String toDataSetName;

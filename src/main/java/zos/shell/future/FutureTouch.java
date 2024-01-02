@@ -1,13 +1,13 @@
 package zos.shell.future;
 
-import zos.shell.commands.Touch;
+import zos.shell.service.dsn.TouchCmd;
 import zos.shell.dto.Member;
-import zos.shell.dto.ResponseStatus;
+import zos.shell.response.ResponseStatus;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
 
 import java.util.concurrent.Callable;
 
-public class FutureTouch extends Touch implements Callable<ResponseStatus> {
+public class FutureTouch extends TouchCmd implements Callable<ResponseStatus> {
 
     private final String dataSet;
     private final String member;

@@ -1,17 +1,17 @@
 package zos.shell.future;
 
-import zos.shell.commands.Concatenate;
-import zos.shell.commands.Download;
-import zos.shell.dto.ResponseStatus;
+import zos.shell.service.dsn.ConcatCmd;
+import zos.shell.service.dsn.DownloadCmd;
+import zos.shell.response.ResponseStatus;
 
 import java.util.concurrent.Callable;
 
-public class FutureConcatenate extends Concatenate implements Callable<ResponseStatus> {
+public class FutureConcatenate extends ConcatCmd implements Callable<ResponseStatus> {
 
     private final String currDataSet;
     private final String target;
 
-    public FutureConcatenate(Download download, String currDataSet, String target) {
+    public FutureConcatenate(DownloadCmd download, String currDataSet, String target) {
         super(download);
         this.currDataSet = currDataSet;
         this.target = target;

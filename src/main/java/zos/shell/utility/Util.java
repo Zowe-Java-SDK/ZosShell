@@ -4,7 +4,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.Constants;
+import zos.shell.constants.Constants;
 import zos.shell.dto.DataSetMember;
 import zos.shell.dto.Member;
 import zowe.client.sdk.core.ZosConnection;

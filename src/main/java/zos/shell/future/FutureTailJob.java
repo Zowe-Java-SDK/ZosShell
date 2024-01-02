@@ -1,14 +1,14 @@
 package zos.shell.future;
 
 import org.beryx.textio.TextTerminal;
-import zos.shell.commands.Tail;
-import zos.shell.dto.ResponseStatus;
+import zos.shell.service.job.TailCmd;
+import zos.shell.response.ResponseStatus;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.concurrent.Callable;
 
-public class FutureTailJob extends Tail implements Callable<ResponseStatus> {
+public class FutureTailJob extends TailCmd implements Callable<ResponseStatus> {
 
     private final String[] params;
 

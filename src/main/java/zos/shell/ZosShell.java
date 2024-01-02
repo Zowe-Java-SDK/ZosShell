@@ -11,12 +11,13 @@ import org.beryx.textio.swing.SwingTextTerminal;
 import org.beryx.textio.web.RunnerData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.commands.Commands;
-import zos.shell.commands.History;
-import zos.shell.config.Config;
-import zos.shell.config.Credentials;
-import zos.shell.data.Environment;
-import zos.shell.data.SearchDictionary;
+import zos.shell.constants.Constants;
+import zos.shell.controller.Commands;
+import zos.shell.service.history.HistoryCmd;
+import zos.shell.configuration.Config;
+import zos.shell.configuration.Credentials;
+import zos.shell.service.env.EnvVarCmd;
+import zos.shell.service.autocomplete.SearchDictionary;
 import zos.shell.dto.Output;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SshConnection;
@@ -38,7 +39,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static ZosConnection currConnection;
     private static TextTerminal<?> terminal;
     private static Commands commands;
-    private static History history;
+    private static HistoryCmd history;
     private static Output commandOutput;
     private static final SwingTextTerminal mainTerminal = new SwingTextTerminal();
     private static final int defaultFontSize = 10;
@@ -156,7 +157,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             }
         }
         commands = new Commands(connections, terminal);
-        history = new History(terminal);
+        history = new HistoryCmd(terminal);
         if (currConnection == null) {
             terminal.println(Constants.NO_CONNECTIONS);
         } else {
@@ -395,19 +396,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 commands.copy(currConnection, currDataSet, params);
-                break;
-            case "cps":
-            case "copys":
-                if (isParamsMissing(1, params)) {
-                    return;
-                }
-                if (isParamsMissing(2, params)) {
-                    return;
-                }
-                if (isParamsExceeded(3, params)) {
-                    return;
-                }
-                commands.copySequential(currConnection, currDataSet, params);
                 break;
             case "count":
                 if (params.length == 1) {
@@ -733,7 +721,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                final var acctNum = Environment.getInstance().getValueByKeyName("ACCTNUM");
+                final var acctNum = EnvVarCmd.getInstance().getValueByKeyName("ACCTNUM");
                 final var tsoCommandCandidate = getCommandFromParams(params);
                 final var tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {

@@ -1,13 +1,13 @@
 package zos.shell.future;
 
-import zos.shell.commands.PurgeJob;
-import zos.shell.dto.ResponseStatus;
+import zos.shell.service.job.PurgeCmd;
+import zos.shell.response.ResponseStatus;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZosConnection;
 
 import java.util.concurrent.Callable;
 
-public class FuturePurgeJob extends PurgeJob implements Callable<ResponseStatus> {
+public class FuturePurgeJob extends PurgeCmd implements Callable<ResponseStatus> {
 
     private enum JobIdIdentifier {
 

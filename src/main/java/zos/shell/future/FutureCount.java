@@ -1,12 +1,12 @@
 package zos.shell.future;
 
-import zos.shell.commands.Count;
-import zos.shell.dto.ResponseStatus;
+import zos.shell.service.count.CountCmd;
+import zos.shell.response.ResponseStatus;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 
 import java.util.concurrent.Callable;
 
-public class FutureCount extends Count implements Callable<ResponseStatus> {
+public class FutureCount extends CountCmd implements Callable<ResponseStatus> {
 
     private final String dataSet;
     private final String filter;

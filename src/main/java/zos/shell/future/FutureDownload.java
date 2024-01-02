@@ -1,12 +1,12 @@
 package zos.shell.future;
 
-import zos.shell.commands.Download;
-import zos.shell.dto.ResponseStatus;
+import zos.shell.service.dsn.DownloadCmd;
+import zos.shell.response.ResponseStatus;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 
 import java.util.concurrent.Callable;
 
-public class FutureDownload extends Download implements Callable<ResponseStatus> {
+public class FutureDownload extends DownloadCmd implements Callable<ResponseStatus> {
 
     private final String dataSet;
     private final String member;

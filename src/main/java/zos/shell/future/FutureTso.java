@@ -1,12 +1,12 @@
 package zos.shell.future;
 
-import zos.shell.commands.TsoCommand;
-import zos.shell.dto.ResponseStatus;
+import zos.shell.service.tso.TsoCmd;
+import zos.shell.response.ResponseStatus;
 import zowe.client.sdk.core.ZosConnection;
 
 import java.util.concurrent.Callable;
 
-public class FutureTso extends TsoCommand implements Callable<ResponseStatus> {
+public class FutureTso extends TsoCmd implements Callable<ResponseStatus> {
 
     private final String command;
 

@@ -1,12 +1,12 @@
 package zos.shell.future;
 
-import zos.shell.commands.Submit;
-import zos.shell.dto.ResponseStatus;
+import zos.shell.service.job.SubmitCmd;
+import zos.shell.response.ResponseStatus;
 import zowe.client.sdk.zosjobs.methods.JobSubmit;
 
 import java.util.concurrent.Callable;
 
-public class FutureSubmit extends Submit implements Callable<ResponseStatus> {
+public class FutureSubmit extends SubmitCmd implements Callable<ResponseStatus> {
 
     private final String dataSet;
     private final String jobName;

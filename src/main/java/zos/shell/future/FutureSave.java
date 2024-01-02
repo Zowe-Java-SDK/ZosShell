@@ -1,12 +1,12 @@
 package zos.shell.future;
 
-import zos.shell.commands.Save;
-import zos.shell.dto.ResponseStatus;
+import zos.shell.service.dsn.SaveCmd;
+import zos.shell.response.ResponseStatus;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
 
 import java.util.concurrent.Callable;
 
-public class FutureSave extends Save implements Callable<ResponseStatus> {
+public class FutureSave extends SaveCmd implements Callable<ResponseStatus> {
 
     private final String dataSet;
     private final String member;

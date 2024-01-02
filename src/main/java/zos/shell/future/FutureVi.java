@@ -1,17 +1,17 @@
 package zos.shell.future;
 
-import zos.shell.commands.Download;
-import zos.shell.commands.Vi;
-import zos.shell.dto.ResponseStatus;
+import zos.shell.service.dsn.DownloadCmd;
+import zos.shell.service.dsn.ViCmd;
+import zos.shell.response.ResponseStatus;
 
 import java.util.concurrent.Callable;
 
-public class FutureVi extends Vi implements Callable<ResponseStatus> {
+public class FutureVi extends ViCmd implements Callable<ResponseStatus> {
 
     private final String dataSet;
     private final String member;
 
-    public FutureVi(Download download, String dataSet, String member) {
+    public FutureVi(DownloadCmd download, String dataSet, String member) {
         super(download);
         this.dataSet = dataSet;
         this.member = member;
