@@ -25,7 +25,7 @@ public class Delete {
             if (response.getResponsePhrase().isPresent()) {
                 return new ResponseStatus(response.getResponsePhrase().get().toString(), true, member);
             } else {
-                return new ResponseStatus("no response phrase", false, member);
+                return new ResponseStatus("no response phrase", true, member);
             }
         } catch (ZosmfRequestException e) {
             final var errMsg = Util.getResponsePhrase(e.getResponse());
@@ -40,7 +40,7 @@ public class Delete {
             if (response.getResponsePhrase().isPresent()) {
                 return new ResponseStatus(response.getResponsePhrase().get().toString(), true);
             } else {
-                return new ResponseStatus("no response phrase", false);
+                return new ResponseStatus("no response phrase", true);
             }
         } catch (ZosmfRequestException e) {
             final var errMsg = Util.getResponsePhrase(e.getResponse());
