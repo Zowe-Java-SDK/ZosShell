@@ -33,6 +33,8 @@ public class SaveCmd {
             return submit.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             return new ResponseStatus(e.getMessage(), false);
+        } finally {
+            pool.shutdown();
         }
     }
 

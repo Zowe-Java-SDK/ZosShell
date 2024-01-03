@@ -63,9 +63,11 @@ public class TouchCmd {
         try {
             responseStatus = submit.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            pool.shutdown();
             return new ResponseStatus(arrowMsg + e.getMessage(), false);
         }
 
+        pool.shutdown();
         if (responseStatus.isStatus()) {
             return new ResponseStatus(arrowMsg + responseStatus.getMessage(), true);
         } else {

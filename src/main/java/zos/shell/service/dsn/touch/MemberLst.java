@@ -35,9 +35,11 @@ public class MemberLst {
         try {
             members = submit.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            pool.shutdown();
             throw new ZosmfRequestException(e.getMessage());
         }
 
+        pool.shutdown();
         if (members.isEmpty()) {
             return false;
         }
