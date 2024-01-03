@@ -1,2 +1,4 @@
-package zos.shell.service.job.ProcessLst;public class ProcessLst {
+package zos.shell.service.job.ProcessLst;
+
+public class ProcessLst {
 }

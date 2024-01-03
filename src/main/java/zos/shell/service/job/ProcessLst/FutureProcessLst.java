@@ -1,4 +1,4 @@
-package zos.shell.future;
+package zos.shell.service.job.ProcessLst;
 
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.job.ProcessLstCmd;
