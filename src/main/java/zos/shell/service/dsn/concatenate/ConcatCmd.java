@@ -30,8 +30,7 @@ public class ConcatCmd {
         final var future = pool.submit(new FutureConcat(download, dataset, target));
 
         try {
-            final var responseStatus = future.get(timeout, TimeUnit.SECONDS);
-            return new ResponseStatus(responseStatus.getMessage(), false);
+            return future.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             return new ResponseStatus(e.getMessage(), false);
         }
