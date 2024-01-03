@@ -20,7 +20,7 @@ public class Touch {
     }
 
     public ResponseStatus create(final String dataset, final String member) {
-        LOG.debug("*** Touch ***");
+        LOG.debug("*** create ***");
         Response response;
         try {
             response = dsnWrite.write(dataset, member, "");
