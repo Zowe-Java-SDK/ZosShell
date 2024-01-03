@@ -52,8 +52,8 @@ public class TouchCmd {
             return new ResponseStatus(arrowMsg + (errMsg != null ? errMsg : e.getMessage()), false);
         }
 
-        if (!foundMember) {
-            return new ResponseStatus(arrowMsg + "member not found", false);
+        if (foundMember) {
+            return new ResponseStatus(arrowMsg + "member already exists", false);
         }
 
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
