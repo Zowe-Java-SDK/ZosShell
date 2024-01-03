@@ -16,13 +16,13 @@ public class ConnCmd {
     private final TextTerminal<?> terminal;
     private final List<ZosConnection> connections;
 
-    public ConnCmd(TextTerminal<?> terminal, List<ZosConnection> connections) {
+    public ConnCmd(final TextTerminal<?> terminal, final List<ZosConnection> connections) {
         LOG.debug("*** ChangeConn ***");
         this.terminal = terminal;
         this.connections = connections;
     }
 
-    public ZosConnection changeConnection(ZosConnection connection, String[] commands) {
+    public ZosConnection changeConnection(final ZosConnection connection, final String[] commands) {
         LOG.debug("*** changeConnection ***");
         var index = Integer.parseInt(commands[1]);
         if (index-- > connections.size()) {
@@ -34,7 +34,7 @@ public class ConnCmd {
         return newConnection;
     }
 
-    public void displayConnections(ZosConnection connection) {
+    public void displayConnections(final ZosConnection connection) {
         LOG.debug("*** displayConnections ***");
         if (connection != null) {
             var i = new AtomicInteger(1);

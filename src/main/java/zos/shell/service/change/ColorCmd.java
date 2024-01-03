@@ -10,19 +10,19 @@ public class ColorCmd {
 
     private final TextTerminal<?> terminal;
 
-    public ColorCmd(TextTerminal<?> terminal) {
+    public ColorCmd(final TextTerminal<?> terminal) {
         LOG.debug("*** Color ***");
         this.terminal = terminal;
     }
 
-    public void setTextColor(String color) {
+    public void setTextColor(final String color) {
         LOG.debug("*** setTextColor ***");
         terminal.getProperties().setPromptColor(color);
         terminal.getProperties().setInputColor(color);
         display("text color " + color + " set");
     }
 
-    public void setBackGroundColor(String color) {
+    public void setBackGroundColor(final String color) {
         LOG.debug("*** setBackGroundColor ***");
         if (color != null) {
             terminal.getProperties().setPaneBackgroundColor(color);
@@ -30,7 +30,7 @@ public class ColorCmd {
         }
     }
 
-    private void display(String msg) {
+    private void display(final String msg) {
         LOG.debug("*** display ***");
         terminal.println(msg);
     }

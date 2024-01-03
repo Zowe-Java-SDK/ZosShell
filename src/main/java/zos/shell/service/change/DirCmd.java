@@ -20,13 +20,13 @@ public class DirCmd {
     private final DsnList dsnList;
     private final ListParams params = new ListParams.Builder().build();
 
-    public DirCmd(TextTerminal<?> terminal, DsnList dsnList) {
+    public DirCmd(final TextTerminal<?> terminal, final DsnList dsnList) {
         LOG.debug("*** ChangeDir ***");
         this.terminal = terminal;
         this.dsnList = dsnList;
     }
 
-    public String cd(String currDataSet, String param) {
+    public String cd(String currDataSet, final String param) {
         LOG.debug("*** cd ***");
         if (Util.isDataSet(param)) {
             return param;
