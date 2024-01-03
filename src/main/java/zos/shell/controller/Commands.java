@@ -96,6 +96,7 @@ public class Commands {
         LOG.debug("*** cat ***");
         final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeOutValue);
         final var data = concatCmd.cat(dataset, target).getMessage();
+        terminal.println(data);
         return new Output("cat", new StringBuilder(data));
     }
 
