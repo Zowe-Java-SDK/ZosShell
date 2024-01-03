@@ -18,6 +18,7 @@ import zos.shell.service.dsn.LstCmd;
 import zos.shell.service.dsn.concatenate.ConcatCmd;
 import zos.shell.service.dsn.copy.CopyCmd;
 import zos.shell.service.dsn.delete.DeleteCmd;
+import zos.shell.service.dsn.edit.EditCmd;
 import zos.shell.service.dsn.save.SaveCmd;
 import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.grep.GrepCmd;
@@ -689,13 +690,14 @@ public class Commands {
         uss.sshCommand(param);
     }
 
-    public void vi(ZosConnection connection, String dataSet, String[] params) {
+    public void vi(final ZosConnection connection, final String dataset, final String[] params) {
         LOG.debug("*** vi ***");
-        final var member = params[1];
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureVi(
-                new DownloadCmd(new DsnGet(connection), false), dataSet, member));
-        processFuture(pool, submit);
+        EditCmd editCmd = new EditCmd(new DownloadCmd(new DsnGet(connection), false), timeOutValue);
+        ResponseStatus responseStatus = editCmd.open(dataset, params[1]);
+        terminal.println(responseStatus.getMessage());
+        if (!responseStatus.isStatus()) {
+            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+        }
     }
 
     private ResponseStatus processFuture(ExecutorService pool, Future<ResponseStatus> submit) {
