@@ -5,7 +5,6 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.dto.Member;
 import zos.shell.dto.Output;
 import zos.shell.future.*;
 import zos.shell.response.ResponseStatus;
@@ -20,6 +19,7 @@ import zos.shell.service.dsn.copy.CopyCmd;
 import zos.shell.service.dsn.delete.DeleteCmd;
 import zos.shell.service.dsn.edit.EditCmd;
 import zos.shell.service.dsn.save.SaveCmd;
+import zos.shell.service.dsn.touch.TouchCmd;
 import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.grep.GrepCmd;
 import zos.shell.service.help.HelpCmd;
@@ -634,13 +634,14 @@ public class Commands {
         terminal.println("timeout value is " + timeOutValue + " seconds.");
     }
 
-    public void touch(ZosConnection connection, String dataSet, String[] params) {
+    public void touch(ZosConnection connection, String dataset, String[] params) {
         LOG.debug("*** touch ***");
-        final var member = params[1];
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureTouch(new DsnWrite(connection),
-                new Member(new DsnList(connection)), dataSet, member));
-        processFuture(pool, submit);
+        TouchCmd touchCmd = new TouchCmd(new DsnWrite(connection), new DsnList(connection), timeOutValue);
+        ResponseStatus responseStatus = touchCmd.touch(dataset, params[1]);
+        terminal.println(responseStatus.getMessage());
+        if (!responseStatus.isStatus()) {
+            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+        }
     }
 
     public Output tsoCommand(ZosConnection connection, String accountNumber, String command) {
