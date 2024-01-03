@@ -18,9 +18,9 @@ public class DownloadCmd {
 
     private final BrowseCmd browseJob;
 
-    public DownloadCmd(JobGet JobGet, boolean isAll, long timeOutValue) {
+    public DownloadCmd(JobGet JobGet, boolean isAll, long timeout) {
         LOG.debug("*** DownloadJob ***");
-        this.browseJob = new BrowseCmd(JobGet, isAll, timeOutValue);
+        this.browseJob = new BrowseCmd(JobGet, isAll, timeout);
     }
 
     public ResponseStatus download(String name) {

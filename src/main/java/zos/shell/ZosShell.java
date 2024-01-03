@@ -695,10 +695,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 1) {
-                    commands.timeOutValue();
+                    commands.timeout();
                 } else {
                     try {
-                        commands.timeOutValue(Long.parseLong(params[1]));
+                        commands.timeout(Long.parseLong(params[1]));
                     } catch (NumberFormatException e) {
                         terminal.println(Constants.INVALID_VALUE);
                     }

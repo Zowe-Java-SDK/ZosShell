@@ -16,8 +16,8 @@ public class TailCmd extends Log {
 
     private final TextTerminal<?> terminal;
 
-    public TailCmd(TextTerminal<?> terminal, JobGet JobGet, boolean isAll, long timeOutValue) {
-        super(JobGet, isAll, timeOutValue);
+    public TailCmd(TextTerminal<?> terminal, JobGet JobGet, boolean isAll, long timeout) {
+        super(JobGet, isAll, timeout);
         LOG.debug("*** Tail ***");
         this.terminal = terminal;
     }

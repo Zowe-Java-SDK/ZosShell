@@ -52,7 +52,7 @@ public class Commands {
 
     private final List<ZosConnection> connections;
     private final TextTerminal<?> terminal;
-    private long timeOutValue = Constants.FUTURE_TIMEOUT_VALUE;
+    private long timeout = Constants.FUTURE_TIMEOUT_VALUE;
 
     public Commands(List<ZosConnection> connections, TextTerminal<?> terminal) {
         LOG.debug("*** Commands ***");
@@ -74,7 +74,7 @@ public class Commands {
 
     private Output browseAll(ZosConnection connection, String[] params, boolean isAll) {
         LOG.debug("*** browseAll ***");
-        final BrowseCmd browseJob = new BrowseCmd(new JobGet(connection), isAll, timeOutValue);
+        final BrowseCmd browseJob = new BrowseCmd(new JobGet(connection), isAll, timeout);
         final ResponseStatus responseStatus = browseJob.browseJob(params[1]);
         if (!responseStatus.isStatus()) {
             terminal.println(responseStatus.getMessage());
@@ -95,7 +95,7 @@ public class Commands {
 
     public Output cat(ZosConnection connection, String dataset, String target) {
         LOG.debug("*** cat ***");
-        final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeOutValue);
+        final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
         final var data = concatCmd.cat(dataset, target).getMessage();
         terminal.println(data);
         return new Output("cat", new StringBuilder(data));
@@ -127,7 +127,7 @@ public class Commands {
 
     public void copy(ZosConnection connection, String currDataSet, String[] params) {
         LOG.debug("*** copy ***");
-        final CopyCmd copy = new CopyCmd(connection, new DsnList(connection), timeOutValue);
+        final CopyCmd copy = new CopyCmd(connection, new DsnList(connection), timeout);
         terminal.println(copy.copy(currDataSet, params).getMessage());
     }
 
@@ -187,7 +187,7 @@ public class Commands {
     public void downloadJob(ZosConnection currConnection, String param, boolean isAll) {
         LOG.debug("*** downloadJob ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureDownloadJob(new JobGet(currConnection), isAll, timeOutValue, param));
+        final var submit = pool.submit(new FutureDownloadJob(new JobGet(currConnection), isAll, timeout, param));
         processFuture(pool, submit);
     }
 
@@ -219,7 +219,7 @@ public class Commands {
         final var results = new ArrayList<ResponseStatus>();
         for (final var future : futures) {
             try {
-                results.add(future.get(timeOutValue, TimeUnit.SECONDS));
+                results.add(future.get(timeout, TimeUnit.SECONDS));
             } catch (TimeoutException e) {
                 results.add(new ResponseStatus("timeout", false));
             } catch (InterruptedException | ExecutionException e) {
@@ -276,11 +276,11 @@ public class Commands {
         }
 
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeOutValue);
+        final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
         final var submit = pool.submit(new FutureGrep(new GrepCmd(concatCmd, pattern), currDataSet, target));
 
         try {
-            result = submit.get(timeOutValue, TimeUnit.SECONDS);
+            result = submit.get(timeout, TimeUnit.SECONDS);
             result.forEach(terminal::println);
             if (result.isEmpty()) {
                 terminal.println(Constants.NOTHING_FOUND);
@@ -301,13 +301,13 @@ public class Commands {
         final var futures = new ArrayList<Future<List<String>>>();
 
         for (final var member : members) {
-            final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeOutValue);
+            final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
             futures.add(pool.submit(new FutureGrep(new GrepCmd(concatCmd, pattern, true), dataSet, member)));
         }
 
         for (final var future : futures) {
             try {
-                results.addAll(future.get(timeOutValue, TimeUnit.SECONDS));
+                results.addAll(future.get(timeout, TimeUnit.SECONDS));
             } catch (TimeoutException e) {
                 results.add("timeout");
             } catch (InterruptedException | ExecutionException e) {
@@ -329,7 +329,7 @@ public class Commands {
 
     public void ls(ZosConnection connection, String member, String dataSet) {
         LOG.debug("*** ls 1 ***");
-        final var listing = new LstCmd(terminal, new DsnList(connection), timeOutValue);
+        final var listing = new LstCmd(terminal, new DsnList(connection), timeout);
         try {
             listing.ls(member, dataSet, true, false);
         } catch (TimeoutException e) {
@@ -339,7 +339,7 @@ public class Commands {
 
     public void ls(ZosConnection connection, String dataSet) {
         LOG.debug("*** ls 2 ***");
-        final var listing = new LstCmd(terminal, new DsnList(connection), timeOutValue);
+        final var listing = new LstCmd(terminal, new DsnList(connection), timeout);
         try {
             listing.ls(null, dataSet, true, false);
         } catch (TimeoutException e) {
@@ -354,7 +354,7 @@ public class Commands {
 
     public void lsl(ZosConnection connection, String member, String dataSet, boolean isAttributes) {
         LOG.debug("*** lsl 2 ***");
-        final var listing = new LstCmd(terminal, new DsnList(connection), timeOutValue);
+        final var listing = new LstCmd(terminal, new DsnList(connection), timeout);
         try {
             listing.ls(member, dataSet, false, isAttributes);
         } catch (TimeoutException e) {
@@ -504,7 +504,7 @@ public class Commands {
 
     public Output mvsCommand(ZosConnection connection, String command) {
         LOG.debug("*** mvsCommand ***");
-        final var mvsConsoleCmd = new MvsConsoleCmd(connection, timeOutValue);
+        final var mvsConsoleCmd = new MvsConsoleCmd(connection, timeout);
         final var responseStatus = mvsConsoleCmd.issueConsoleCmd(command);
         terminal.println(responseStatus.getMessage());
         if (!responseStatus.isStatus()) {
@@ -527,7 +527,7 @@ public class Commands {
 
     public Output ps(ZosConnection connection, String jobOrTask) {
         LOG.debug("*** ps ***");
-        final var processLstCmd = new ProcessLstCmd(new JobGet(connection), timeOutValue);
+        final var processLstCmd = new ProcessLstCmd(new JobGet(connection), timeout);
         final var responseStatus = processLstCmd.processLst(jobOrTask);
         terminal.println(responseStatus.getMessage());
         return new Output("ps", new StringBuilder(responseStatus.getMessage()));
@@ -535,13 +535,13 @@ public class Commands {
 
     public void rm(ZosConnection connection, String currDataSet, String param) {
         LOG.debug("*** rm ***");
-        final var delete = new DeleteCmd(connection, new DsnList(connection), timeOutValue);
+        final var delete = new DeleteCmd(connection, new DsnList(connection), timeout);
         terminal.println(delete.delete(currDataSet, param).getMessage());
     }
 
     public void save(ZosConnection connection, String dataSet, String[] params) {
         LOG.debug("*** save ***");
-        final var saveCmd = new SaveCmd(new DsnWrite(connection), timeOutValue);
+        final var saveCmd = new SaveCmd(new DsnWrite(connection), timeout);
         final var responseStatus = saveCmd.save(dataSet, params[1]);
         terminal.println(responseStatus.getMessage());
         if (!responseStatus.isStatus()) {
@@ -620,24 +620,24 @@ public class Commands {
     private ResponseStatus tailAll(ZosConnection connection, String[] params, boolean isAll) {
         LOG.debug("*** tailAll ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureTailJob(terminal, connection, isAll, timeOutValue, params));
+        final var submit = pool.submit(new FutureTailJob(terminal, connection, isAll, timeout, params));
         return processFuture(pool, submit);
     }
 
-    public void timeOutValue(long value) {
-        LOG.debug("*** timeOutValue ***");
-        timeOutValue = value;
-        terminal.println("timeout value set to " + timeOutValue + " seconds.");
+    public void timeout(long value) {
+        LOG.debug("*** timeout ***");
+        timeout = value;
+        terminal.println("timeout value set to " + timeout + " seconds.");
     }
 
-    public void timeOutValue() {
-        LOG.debug("*** timeOutValue ***");
-        terminal.println("timeout value is " + timeOutValue + " seconds.");
+    public void timeout() {
+        LOG.debug("*** timeout ***");
+        terminal.println("timeout value is " + timeout + " seconds.");
     }
 
     public void touch(ZosConnection connection, String dataset, String[] params) {
         LOG.debug("*** touch ***");
-        TouchCmd touchCmd = new TouchCmd(new DsnWrite(connection), new DsnList(connection), timeOutValue);
+        TouchCmd touchCmd = new TouchCmd(new DsnWrite(connection), new DsnList(connection), timeout);
         ResponseStatus responseStatus = touchCmd.touch(dataset, params[1]);
         terminal.println(responseStatus.getMessage());
         if (!responseStatus.isStatus()) {
@@ -694,7 +694,7 @@ public class Commands {
 
     public void vi(final ZosConnection connection, final String dataset, final String[] params) {
         LOG.debug("*** vi ***");
-        EditCmd editCmd = new EditCmd(new DownloadCmd(new DsnGet(connection), false), timeOutValue);
+        EditCmd editCmd = new EditCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
         ResponseStatus responseStatus = editCmd.open(dataset, params[1]);
         terminal.println(responseStatus.getMessage());
         if (!responseStatus.isStatus()) {
@@ -706,7 +706,7 @@ public class Commands {
         LOG.debug("*** processFuture ***");
         ResponseStatus result = null;
         try {
-            result = submit.get(timeOutValue, TimeUnit.SECONDS);
+            result = submit.get(timeout, TimeUnit.SECONDS);
             terminal.println(result.getMessage());
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
