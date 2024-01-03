@@ -1,7 +1,7 @@
 package zos.shell.future;
 
-import zos.shell.service.job.DownloadCmd;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.job.DownloadCmd;
 import zos.shell.utility.Util;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 

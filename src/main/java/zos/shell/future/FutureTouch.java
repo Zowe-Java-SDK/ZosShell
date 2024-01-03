@@ -1,8 +1,8 @@
 package zos.shell.future;
 
-import zos.shell.service.dsn.TouchCmd;
 import zos.shell.dto.Member;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.dsn.TouchCmd;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
 
 import java.util.concurrent.Callable;

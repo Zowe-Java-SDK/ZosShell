@@ -1,7 +1,7 @@
 package zos.shell.future;
 
-import zos.shell.service.dsn.DownloadCmd;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.dsn.DownloadCmd;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 
 import java.util.concurrent.Callable;

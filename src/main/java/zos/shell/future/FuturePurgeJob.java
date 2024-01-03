@@ -1,7 +1,7 @@
 package zos.shell.future;
 
-import zos.shell.service.job.PurgeCmd;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.job.PurgeCmd;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZosConnection;
 

@@ -1,7 +1,7 @@
 package zos.shell.future;
 
-import zos.shell.service.job.LstCmd;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.job.LstCmd;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.concurrent.Callable;

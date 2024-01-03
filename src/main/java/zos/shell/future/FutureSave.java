@@ -1,7 +1,7 @@
 package zos.shell.future;
 
-import zos.shell.service.dsn.SaveCmd;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.dsn.SaveCmd;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
 
 import java.util.concurrent.Callable;

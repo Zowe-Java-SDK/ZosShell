@@ -1,8 +1,8 @@
 package zos.shell.future;
 
+import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.DownloadCmd;
 import zos.shell.service.dsn.ViCmd;
-import zos.shell.response.ResponseStatus;
 
 import java.util.concurrent.Callable;
 

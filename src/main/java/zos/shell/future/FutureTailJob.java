@@ -1,8 +1,8 @@
 package zos.shell.future;
 
 import org.beryx.textio.TextTerminal;
-import zos.shell.service.job.TailCmd;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.job.TailCmd;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 

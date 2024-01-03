@@ -3,21 +3,14 @@ package zos.shell.service.console;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.configuration.MvsConsoles;
-import zos.shell.dto.Output;
 import zos.shell.response.ResponseStatus;
-import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZosConnection;
-import zowe.client.sdk.rest.exception.ZosmfRequestException;
-import zowe.client.sdk.zosconsole.input.IssueConsoleParams;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
-import zowe.client.sdk.zosconsole.response.ConsoleResponse;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.regex.Pattern;
 
 public class MvsConsoleCmd {
 

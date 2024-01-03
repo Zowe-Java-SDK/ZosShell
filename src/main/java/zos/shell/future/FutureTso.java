@@ -1,7 +1,7 @@
 package zos.shell.future;
 
-import zos.shell.service.tso.TsoCmd;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.tso.TsoCmd;
 import zowe.client.sdk.core.ZosConnection;
 
 import java.util.concurrent.Callable;

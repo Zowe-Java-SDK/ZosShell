@@ -1,7 +1,7 @@
 package zos.shell.future;
 
-import zos.shell.service.count.CountCmd;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.count.CountCmd;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 
 import java.util.concurrent.Callable;

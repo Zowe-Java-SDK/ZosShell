@@ -1,7 +1,7 @@
 package zos.shell.service.dsn.concatenate;
 
-import zos.shell.service.dsn.DownloadCmd;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.dsn.DownloadCmd;
 
 import java.util.concurrent.Callable;
 

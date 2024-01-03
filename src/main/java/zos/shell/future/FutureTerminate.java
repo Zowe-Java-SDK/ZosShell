@@ -1,7 +1,7 @@
 package zos.shell.future;
 
-import zos.shell.service.job.TerminateCmd;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.job.TerminateCmd;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
 
