@@ -12,11 +12,12 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.service.change.ColorCmd;
 import zos.shell.service.change.ConnCmd;
 import zos.shell.service.change.DirCmd;
+import zos.shell.service.console.FutureMvs;
+import zos.shell.service.console.MvsConsoleCmd;
 import zos.shell.service.dsn.concatenate.ConcatCmd;
 import zos.shell.service.dsn.copy.CopyCmd;
 import zos.shell.service.dsn.DownloadCmd;
 import zos.shell.service.dsn.LstCmd;
-import zos.shell.service.dsn.copy.FutureCopy;
 import zos.shell.service.dsn.delete.DeleteCmd;
 import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.grep.GrepCmd;
@@ -497,15 +498,13 @@ public class Commands {
 
     public Output mvsCommand(ZosConnection connection, String command) {
         LOG.debug("*** mvsCommand ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureMvs(connection, command));
-        final var response = processFuture(pool, submit);
-        if (response != null && response.isStatus()) {
-            return new Output("mvs", new StringBuilder(response.getMessage()));
-        } else {
+        final var mvsConsoleCmd = new MvsConsoleCmd(connection, timeOutValue);
+        final var responseStatus = mvsConsoleCmd.issueConsoleCmd(command);
+        terminal.println(responseStatus.getMessage());
+        if (!responseStatus.isStatus()) {
             terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
-            return null;
         }
+        return new Output("mvs", new StringBuilder(responseStatus.getMessage()));
     }
 
     public Output ps(ZosConnection connection) {
