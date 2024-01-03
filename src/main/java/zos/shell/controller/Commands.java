@@ -24,6 +24,7 @@ import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.grep.GrepCmd;
 import zos.shell.service.help.HelpCmd;
 import zos.shell.service.job.BrowseCmd;
+import zos.shell.service.job.ProcessLst.ProcessLstCmd;
 import zos.shell.service.job.TerminateCmd;
 import zos.shell.service.localfile.LocalFileCmd;
 import zos.shell.service.omvs.SshCmd;
@@ -526,12 +527,10 @@ public class Commands {
 
     public Output ps(ZosConnection connection, String jobOrTask) {
         LOG.debug("*** ps ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-//        final var submit = pool.submit(new FutureProcessList(new JobGet(connection), jobOrTask));
-//        final var response = processFuture(pool, submit);
-//        return response != null && response.isStatus() ? new Output("ps",
-//                new StringBuilder(response.getMessage())) : null;
-        return null;
+        final var processLstCmd = new ProcessLstCmd(new JobGet(connection), timeOutValue);
+        final var responseStatus = processLstCmd.processLst(jobOrTask);
+        terminal.println(responseStatus.getMessage());
+        return new Output("ps", new StringBuilder(responseStatus.getMessage()));
     }
 
     public void rm(ZosConnection connection, String currDataSet, String param) {
