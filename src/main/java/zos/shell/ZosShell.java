@@ -15,7 +15,7 @@ import zos.shell.configuration.Config;
 import zos.shell.configuration.Credentials;
 import zos.shell.constants.Constants;
 import zos.shell.controller.Commands;
-import zos.shell.dto.Output;
+import zos.shell.service.search.SearchCache;
 import zos.shell.service.autocomplete.SearchDictionary;
 import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.history.HistoryCmd;
@@ -40,7 +40,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static TextTerminal<?> terminal;
     private static Commands commands;
     private static HistoryCmd history;
-    private static Output commandOutput;
+    private static SearchCache commandOutput;
     private static final SwingTextTerminal mainTerminal = new SwingTextTerminal();
     private static final int defaultFontSize = 10;
     private static int fontSize = defaultFontSize;

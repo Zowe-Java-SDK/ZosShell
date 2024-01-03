@@ -3,7 +3,7 @@ package zos.shell.service.help;
 import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.dto.Output;
+import zos.shell.service.search.SearchCache;
 
 import java.util.List;
 
@@ -74,14 +74,14 @@ public class HelpCmd {
             "v | visited             - a list of visited datasets",
             "whoami                  - show current connected user name");
 
-    public static Output display(TextTerminal<?> terminal) {
+    public static SearchCache display(TextTerminal<?> terminal) {
         LOG.debug("*** displayHelp ***");
         final var str = new StringBuilder();
         HELP.forEach(item -> {
             str.append(item).append("\n");
             terminal.println(item);
         });
-        return new Output("help", str);
+        return new SearchCache("help", str);
     }
 
 }

@@ -1,11 +1,11 @@
-package zos.shell.dto;
+package zos.shell.service.search;
 
-public class Output {
+public class SearchCache {
 
     private final String name;
     private final StringBuilder output;
 
-    public Output(String name, StringBuilder output) {
+    public SearchCache(String name, StringBuilder output) {
         this.name = name;
         this.output = output;
     }

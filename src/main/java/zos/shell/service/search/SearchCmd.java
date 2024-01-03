@@ -3,7 +3,6 @@ package zos.shell.service.search;
 import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.dto.Output;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -20,7 +19,7 @@ public class SearchCmd {
         this.terminal = terminal;
     }
 
-    public void search(Output output, String text) {
+    public void search(SearchCache output, String text) {
         LOG.debug("*** search ***");
         final var log = Optional.ofNullable(output);
         log.ifPresentOrElse((value) -> {

@@ -5,7 +5,7 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.dto.Output;
+import zos.shell.service.search.SearchCache;
 import zos.shell.future.*;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.change.ColorCmd;
@@ -60,7 +60,7 @@ public class Commands {
         this.terminal = terminal;
     }
 
-    public Output browse(ZosConnection connection, String[] params) {
+    public SearchCache browse(ZosConnection connection, String[] params) {
         LOG.debug("*** browse ***");
         if (params.length == 3) {
             if (!"all".equalsIgnoreCase(params[2])) {
@@ -72,7 +72,7 @@ public class Commands {
         return browseAll(connection, params, false);
     }
 
-    private Output browseAll(ZosConnection connection, String[] params, boolean isAll) {
+    private SearchCache browseAll(ZosConnection connection, String[] params, boolean isAll) {
         LOG.debug("*** browseAll ***");
         final BrowseCmd browseJob = new BrowseCmd(new JobGet(connection), isAll, timeout);
         final ResponseStatus responseStatus = browseJob.browseJob(params[1]);
@@ -82,7 +82,7 @@ public class Commands {
         }
         final String output = responseStatus.getMessage();
         terminal.println(output);
-        return new Output(params[1], new StringBuilder(output));
+        return new SearchCache(params[1], new StringBuilder(output));
     }
 
     public void cancel(ZosConnection connection, String jobOrTask) {
@@ -93,12 +93,12 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    public Output cat(ZosConnection connection, String dataset, String target) {
+    public SearchCache cat(ZosConnection connection, String dataset, String target) {
         LOG.debug("*** cat ***");
         final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
         final var data = concatCmd.cat(dataset, target).getMessage();
         terminal.println(data);
-        return new Output("cat", new StringBuilder(data));
+        return new SearchCache("cat", new StringBuilder(data));
     }
 
     public String cd(ZosConnection connection, String currDataSet, String param) {
@@ -229,7 +229,7 @@ public class Commands {
         return results;
     }
 
-    public Output env() {
+    public SearchCache env() {
         LOG.debug("*** env ***");
         final var env = EnvVarCmd.getInstance();
         if (env.getVariables().isEmpty()) {
@@ -241,7 +241,7 @@ public class Commands {
             str.append(value).append("\n");
             terminal.println(value);
         });
-        return new Output("env", str);
+        return new SearchCache("env", str);
     }
 
     public void files(String dataSet) {
@@ -322,7 +322,7 @@ public class Commands {
         return results;
     }
 
-    public Output help() {
+    public SearchCache help() {
         LOG.debug("*** help ***");
         return HelpCmd.display(terminal);
     }
@@ -502,7 +502,7 @@ public class Commands {
         return input;
     }
 
-    public Output mvsCommand(ZosConnection connection, String command) {
+    public SearchCache mvsCommand(ZosConnection connection, String command) {
         LOG.debug("*** mvsCommand ***");
         final var mvsConsoleCmd = new MvsConsoleCmd(connection, timeout);
         final var responseStatus = mvsConsoleCmd.issueConsoleCmd(command);
@@ -510,10 +510,10 @@ public class Commands {
         if (!responseStatus.isStatus()) {
             terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
         }
-        return new Output("mvs", new StringBuilder(responseStatus.getMessage()));
+        return new SearchCache("mvs", new StringBuilder(responseStatus.getMessage()));
     }
 
-    public Output ps(ZosConnection connection) {
+    public SearchCache ps(ZosConnection connection) {
         LOG.debug("*** ps ***");
         return ps(connection, null);
     }
@@ -525,12 +525,12 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    public Output ps(ZosConnection connection, String jobOrTask) {
+    public SearchCache ps(ZosConnection connection, String jobOrTask) {
         LOG.debug("*** ps ***");
         final var processLstCmd = new ProcessLstCmd(new JobGet(connection), timeout);
         final var responseStatus = processLstCmd.processLst(jobOrTask);
         terminal.println(responseStatus.getMessage());
-        return new Output("ps", new StringBuilder(responseStatus.getMessage()));
+        return new SearchCache("ps", new StringBuilder(responseStatus.getMessage()));
     }
 
     public void rm(ZosConnection connection, String currDataSet, String param) {
@@ -549,7 +549,7 @@ public class Commands {
         }
     }
 
-    public void search(Output output, String text) {
+    public void search(SearchCache output, String text) {
         LOG.debug("*** search ***");
         final var search = new SearchCmd(terminal);
         search.search(output, text);
@@ -581,7 +581,7 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    public Output tailJob(ZosConnection connection, String[] params) {
+    public SearchCache tailJob(ZosConnection connection, String[] params) {
         LOG.debug("*** tailJob ***");
         if (params.length == 4) {
             if (!"all".equalsIgnoreCase(params[3])) {
@@ -610,10 +610,10 @@ public class Commands {
         return processTailJobResponse(connection, params, false);
     }
 
-    private Output processTailJobResponse(ZosConnection connection, String[] params, boolean isAll) {
+    private SearchCache processTailJobResponse(ZosConnection connection, String[] params, boolean isAll) {
         LOG.debug("*** processTailJobResponse ***");
         final var response = tailAll(connection, params, isAll);
-        return response != null && response.isStatus() ? new Output(params[1],
+        return response != null && response.isStatus() ? new SearchCache(params[1],
                 new StringBuilder(response.getMessage())) : null;
     }
 
@@ -645,17 +645,17 @@ public class Commands {
         }
     }
 
-    public Output tsoCommand(ZosConnection connection, String accountNumber, String command) {
+    public SearchCache tsoCommand(ZosConnection connection, String accountNumber, String command) {
         LOG.debug("*** tsoCommand ***");
         if (accountNumber == null) {
             terminal.println("ACCTNUM is not set, try again...");
-            return new Output("tso", new StringBuilder());
+            return new SearchCache("tso", new StringBuilder());
         }
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureTso(connection, accountNumber, command));
         final var response = processFuture(pool, submit);
         if (response != null && response.isStatus()) {
-            return new Output("tso", new StringBuilder(response.getMessage()));
+            return new SearchCache("tso", new StringBuilder(response.getMessage()));
         } else {
             terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
             return null;
