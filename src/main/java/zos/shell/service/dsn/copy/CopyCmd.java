@@ -65,7 +65,6 @@ public class CopyCmd {
                 return new ResponseStatus(Constants.COPY_NOTHING_WARNING, false);
             }
 
-            final var fromDataSetName = dataset;
             final var toDataSetName = params[2];
 
             if (!Util.isDataSet(toDataSetName)) {
@@ -77,7 +76,8 @@ public class CopyCmd {
             members.forEach(m -> {
                 if (m.getMember().isPresent()) {
                     DsnCopy dsnCopy = new DsnCopy(connection);
-                    futures.add(pool.submit(new FutureCopy(dsnCopy, fromDataSetName, toDataSetName, m.getMember().get())));
+                    // dataset == fromDataSetName
+                    futures.add(pool.submit(new FutureCopy(dsnCopy, dataset, toDataSetName, m.getMember().get())));
                 }
             });
 
