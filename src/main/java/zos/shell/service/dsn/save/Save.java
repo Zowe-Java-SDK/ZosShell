@@ -48,6 +48,9 @@ public class Save {
             return new ResponseStatus(Constants.OS_ERROR, false);
         }
 
+        final var arrowMsg = Strings.padStart(memberOrDataset,
+                Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW;
+
         try (final var br = new BufferedReader(new FileReader(fileName))) {
             final var sb = new StringBuilder();
             var line = br.readLine();
@@ -66,14 +69,12 @@ public class Save {
             }
         } catch (ZosmfRequestException e) {
             final var errMsg = Util.getResponsePhrase(e.getResponse());
-            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
+            return new ResponseStatus(arrowMsg + (errMsg != null ? errMsg : e.getMessage()), false);
         } catch (IOException e) {
             return new ResponseStatus(e.getMessage(), false);
         }
 
-        final var successMsg = Strings.padStart(memberOrDataset,
-                Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW + "saved";
-        return new ResponseStatus(successMsg, true);
+        return new ResponseStatus(arrowMsg + "saved", true);
     }
 
 }
