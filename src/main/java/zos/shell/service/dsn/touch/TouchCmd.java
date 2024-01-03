@@ -23,7 +23,7 @@ public class TouchCmd {
     private final DsnList dsnList;
     private final long timeout;
 
-    public TouchCmd(DsnWrite dsnWrite, DsnList dsnList, long timeout) {
+    public TouchCmd(final DsnWrite dsnWrite, final DsnList dsnList, final long timeout) {
         LOG.debug("*** Touch ***");
         this.dsnWrite = dsnWrite;
         this.dsnList = dsnList;

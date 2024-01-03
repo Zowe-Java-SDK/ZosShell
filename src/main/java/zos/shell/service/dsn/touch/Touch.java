@@ -14,12 +14,12 @@ public class Touch {
 
     private final DsnWrite dsnWrite;
 
-    public Touch(DsnWrite dsnWrite) {
+    public Touch(final DsnWrite dsnWrite) {
         LOG.debug("*** Touch ***");
         this.dsnWrite = dsnWrite;
     }
 
-    public ResponseStatus create(String dataset, String member) {
+    public ResponseStatus create(final String dataset, final String member) {
         LOG.debug("*** Touch ***");
         Response response;
         try {
