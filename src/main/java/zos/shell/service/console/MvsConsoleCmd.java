@@ -31,8 +31,7 @@ public class MvsConsoleCmd {
         final var submit = pool.submit(new FutureMvs(connection, new IssueConsole(connection), command));
 
         try {
-            final var responseStatus = submit.get(timeout, TimeUnit.SECONDS);
-            return new ResponseStatus(responseStatus.getMessage(), responseStatus.isStatus());
+            return submit.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             return new ResponseStatus(e.getMessage(), false);
         }

@@ -542,6 +542,9 @@ public class Commands {
         final var saveCmd = new SaveCmd(new DsnWrite(connection), timeOutValue);
         final var responseStatus = saveCmd.save(dataSet, params[1]);
         terminal.println(responseStatus.getMessage());
+        if (!responseStatus.isStatus()) {
+            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+        }
     }
 
     public void search(Output output, String text) {
