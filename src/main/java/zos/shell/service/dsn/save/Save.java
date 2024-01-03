@@ -1,10 +1,12 @@
-package zos.shell.service.dsn;
+package zos.shell.service.dsn.save;
 
+import com.google.common.base.Strings;
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.dsn.DownloadCmd;
 import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
@@ -13,35 +15,35 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class SaveCmd {
+public class Save {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SaveCmd.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Save.class);
 
     private final DsnWrite dsnWrite;
 
-    public SaveCmd(DsnWrite dsnWrite) {
+    public Save(final DsnWrite dsnWrite) {
         LOG.debug("*** Save ***");
         this.dsnWrite = dsnWrite;
     }
 
-    public ResponseStatus save(String dataSet, String member) {
+    public ResponseStatus save(final String dataset, final String memberOrDataset) {
         LOG.debug("*** save ***");
-        if (!Util.isDataSet(dataSet)) {
+        if (!Util.isDataSet(dataset)) {
             return new ResponseStatus(Constants.INVALID_DATASET, false);
         }
 
         var isSequentialDataSet = false;
-        if (Util.isDataSet(member)) {
+        if (Util.isDataSet(memberOrDataset)) {
             isSequentialDataSet = true;
-        } else if (!Util.isMember(member)) {
+        } else if (!Util.isMember(memberOrDataset)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
 
         String fileName;
         if (SystemUtils.IS_OS_WINDOWS) {
-            fileName = DownloadCmd.DIRECTORY_PATH_WINDOWS + dataSet + "\\" + member;
+            fileName = DownloadCmd.DIRECTORY_PATH_WINDOWS + dataset + "\\" + memberOrDataset;
         } else if (SystemUtils.IS_OS_MAC_OSX) {
-            fileName = DownloadCmd.DIRECTORY_PATH_MAC + dataSet + "/" + member;
+            fileName = DownloadCmd.DIRECTORY_PATH_MAC + dataset + "/" + memberOrDataset;
         } else {
             return new ResponseStatus(Constants.OS_ERROR, false);
         }
@@ -58,19 +60,20 @@ public class SaveCmd {
             final var content = sb.toString().replaceAll("(\\r)", "");
 
             if (isSequentialDataSet) {
-                dsnWrite.write(member, content);
+                dsnWrite.write(memberOrDataset, content);
             } else {
-                dsnWrite.write(dataSet, member, content);
+                dsnWrite.write(dataset, memberOrDataset, content);
             }
         } catch (ZosmfRequestException e) {
-            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            final var errMsg = Util.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         } catch (IOException e) {
             return new ResponseStatus(e.getMessage(), false);
         }
 
-        return new ResponseStatus(member + " successfully saved...", true);
+        final var successMsg = Strings.padStart(memberOrDataset,
+                Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW + "saved";
+        return new ResponseStatus(successMsg, true);
     }
 
 }
-

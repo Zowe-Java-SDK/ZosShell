@@ -18,6 +18,7 @@ import zos.shell.service.dsn.LstCmd;
 import zos.shell.service.dsn.concatenate.ConcatCmd;
 import zos.shell.service.dsn.copy.CopyCmd;
 import zos.shell.service.dsn.delete.DeleteCmd;
+import zos.shell.service.dsn.save.SaveCmd;
 import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.grep.GrepCmd;
 import zos.shell.service.help.HelpCmd;
@@ -538,10 +539,9 @@ public class Commands {
 
     public void save(ZosConnection connection, String dataSet, String[] params) {
         LOG.debug("*** save ***");
-        final var member = params[1];
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureSave(new DsnWrite(connection), dataSet, member));
-        processFuture(pool, submit);
+        final var saveCmd = new SaveCmd(new DsnWrite(connection), timeOutValue);
+        final var responseStatus = saveCmd.save(dataSet, params[1]);
+        terminal.println(responseStatus.getMessage());
     }
 
     public void search(Output output, String text) {
