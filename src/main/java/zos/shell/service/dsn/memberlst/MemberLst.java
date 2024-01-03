@@ -7,11 +7,9 @@ import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.response.Member;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 public class MemberLst {
 
@@ -19,6 +17,8 @@ public class MemberLst {
 
     private final DsnList dsnList;
     private final long timeout;
+
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
     public MemberLst(final DsnList dsnList, long timeout) {
         LOG.debug("*** MemberLst ***");
@@ -28,15 +28,15 @@ public class MemberLst {
 
     public boolean memberExist(final String dataset, final String member) throws ZosmfRequestException {
         LOG.debug("*** memberExist ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureMemberLst(dsnList, dataset));
 
         List<Member> members;
         try {
             members = submit.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            pool.shutdown();
             throw new ZosmfRequestException(e.getMessage());
+        } finally {
+            pool.shutdown();
         }
 
         pool.shutdown();
@@ -45,6 +45,22 @@ public class MemberLst {
         }
 
         return members.stream().anyMatch(m -> m.getMember().isPresent() && m.getMember().get().equalsIgnoreCase(member));
+    }
+
+    public List<Member> memberLst(final String dataset) throws ZosmfRequestException {
+        LOG.debug("*** memberLst ***");
+        final var submit = pool.submit(new FutureMemberLst(dsnList, dataset));
+
+        List<Member> members;
+        try {
+            members = submit.get(timeout, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            throw new ZosmfRequestException(e.getMessage());
+        } finally {
+            pool.shutdown();
+        }
+
+        return members;
     }
 
 }

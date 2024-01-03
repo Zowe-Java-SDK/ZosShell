@@ -2,115 +2,121 @@ package zos.shell.service.grep;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.constants.Constants;
+import zos.shell.response.ResponseStatus;
+import zos.shell.service.dsn.DownloadCmd;
 import zos.shell.service.dsn.concatenate.ConcatCmd;
+import zos.shell.service.dsn.memberlst.MemberLst;
+import zos.shell.service.dsn.save.FutureSave;
+import zos.shell.utility.Util;
+import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
+import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
+import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
+import zowe.client.sdk.zosfiles.dsn.response.Member;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 public class GrepCmd {
 
     private static final Logger LOG = LoggerFactory.getLogger(GrepCmd.class);
 
-    private final ConcatCmd concatenate;
+    private final ZosConnection connection;
     private final String pattern;
-    private final boolean withMember;
-    private final Map<Character, Integer> misMatchShiftsTable = new HashMap<>();
+    private final long timeout;
 
-    public GrepCmd(ConcatCmd concatenate, String pattern) {
-        LOG.debug("*** Grep #1 ***");
-        this.concatenate = concatenate;
+    public GrepCmd(final ZosConnection connection, String pattern, long timeout) {
+        LOG.debug("*** GrepCmd ***");
+        this.connection = connection;
         this.pattern = pattern;
-        this.withMember = false;
-        this.compileMisMatchShiftsTable();
+        this.timeout = timeout;
     }
 
-    public GrepCmd(ConcatCmd concatenate, String pattern, boolean withMember) {
-        LOG.debug("*** Grep #2 ***");
-        this.concatenate = concatenate;
-        this.pattern = pattern;
-        this.withMember = withMember;
-        this.compileMisMatchShiftsTable();
-    }
-
-    public List<String> search(String currDataSet, String target) {
+    public List<String> search(String dataset, String target) {
         LOG.debug("*** search ***");
-        final var lines = new ArrayList<String>();
-        final var responseStatus = concatenate.cat(currDataSet, target);
-        var content = new StringBuilder(responseStatus.getMessage());
+        List<String> result = new ArrayList<>();
+        ExecutorService pool = null;
+        final var futures = new ArrayList<Future<List<String>>>();
 
-        var index = findPosition(content.toString());
-        while (index != 0) {
-            final var foundStr = content.substring(index);
-            final var entireLine = new StringBuilder();
+        long count = target.chars().filter(ch -> ch == '*').count();
+        boolean endsWithWildCard = target.endsWith("*");
+        boolean memberWildCard = count == 1 && endsWithWildCard;
+        boolean wildCardOnly = "*".equals(target);
 
-            for (var i = index - 1; i >= 0; i--) {
-                if (content.charAt(i) == '\n') {
-                    break;
-                }
-                entireLine.append(content.charAt(i));
-            }
-            entireLine.reverse();
-            for (var i = 0; i < foundStr.length(); i++) {
-                if (foundStr.charAt(i) == '\n') {
-                    break;
-                }
-                entireLine.append(foundStr.charAt(i));
+        List<Member> members = new ArrayList<>();
+        if (memberWildCard || wildCardOnly) {
+            final var memberLst = new MemberLst(new DsnList(connection), timeout);
+
+            try {
+                members = memberLst.memberLst(dataset);
+            } catch (ZosmfRequestException e) {
+                final var errMsg = Util.getResponsePhrase(e.getResponse());
+                result.add(errMsg != null ? errMsg : e.getMessage());
+                return result;
             }
 
-            if (entireLine.length() > 0) {
-                final var title = target + ":";
-                lines.add(withMember ? entireLine.insert(0, title).toString() : entireLine.toString());
+            if (members.isEmpty()) {
+                result.add("nothing found, try again...");
+                return result;
             }
-            final var newIndex = index + pattern.length();
-            if (newIndex > content.length()) {
-                break;
-            }
-            content = new StringBuilder(content.substring(index + pattern.length()));
-            index = findPosition(content.toString());
+
+            pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
         }
 
-        // handle edge case if found on first line only
-        if (index == 0 && !content.toString().isBlank()) {
-            lines.add(content.toString());
-        }
+        if (wildCardOnly) {
+            for (final var member : members) {
+                final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
+                futures.add(pool.submit(new FutureGrep(concatCmd, dataset, member.getMember().get(), pattern, true)));
+            }
 
-        return lines;
-    }
-
-    private int findPosition(String text) {
-        LOG.debug("*** findPosition ***");
-        final var lengthOfPattern = pattern.length();
-        final var lengthOfText = text.length();
-        int numOfSkips;
-
-        for (var i = 0; i <= lengthOfText - lengthOfPattern; i += numOfSkips) {
-            numOfSkips = 0;
-            for (var j = lengthOfPattern - 1; j >= 0; j--) {  // check starting from right to left
-                if (pattern.charAt(j) != text.charAt(i + j)) {
-                    if (misMatchShiftsTable.get(text.charAt(i + j)) != null) {
-                        numOfSkips = misMatchShiftsTable.get(text.charAt(i + j));
-                    } else {
-                        numOfSkips = misMatchShiftsTable.size();
-                    }
-                    break;
+            for (final var future : futures) {
+                try {
+                    result.addAll(future.get(timeout, TimeUnit.SECONDS));
+                } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                    result.add(e.getMessage());
                 }
             }
 
-            if (numOfSkips == 0) {  // means we found the matching position
-                return i;
+            pool.shutdownNow();
+            return result;
+        } else if (memberWildCard) {
+            final var value = target.substring(0, target.indexOf("*")).toUpperCase();
+            members = members.stream().filter(m -> m.getMember().isPresent() && m.getMember().get().startsWith(value))
+                    .collect(Collectors.toList());
+
+            for (final var member : members) {
+                final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
+                futures.add(pool.submit(new FutureGrep(concatCmd, dataset, member.getMember().get(), pattern, true)));
             }
-        }
 
-        return lengthOfText; // meaning have not found a match
-    }
+            for (final var future : futures) {
+                try {
+                    result.addAll(future.get(timeout, TimeUnit.SECONDS));
+                } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                    result.add(e.getMessage());
+                }
+            }
 
-    private void compileMisMatchShiftsTable() {
-        LOG.debug("*** compileMisMatchShiftsTable ***");
-        final var lengthOfPattern = pattern.length();
-        for (var i = 0; i < lengthOfPattern; i++) {
-            misMatchShiftsTable.put(pattern.charAt(i), Math.max(1, lengthOfPattern - i - 1));
+            pool.shutdownNow();
+            return result;
+        } else {
+            pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+            final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
+            final var submit = pool.submit(new FutureGrep(concatCmd, dataset, target, pattern, false));
+
+            try {
+                result.addAll(submit.get(timeout, TimeUnit.SECONDS));
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                result.add(e.getMessage());
+            }
+
+            pool.shutdownNow();
+            return result;
         }
     }
 
