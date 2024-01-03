@@ -1,4 +1,4 @@
-package zos.shell.service.dsn.memberlst;
+package zos.shell.service.memberlst;
 
 import zowe.client.sdk.zosfiles.dsn.input.ListParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;

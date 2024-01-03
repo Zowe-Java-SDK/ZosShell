@@ -1,4 +1,4 @@
-package zos.shell.service.dsn.memberlst;
+package zos.shell.service.memberlst;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +7,6 @@ import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.response.Member;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 

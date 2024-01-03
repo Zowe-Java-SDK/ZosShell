@@ -3,11 +3,9 @@ package zos.shell.service.grep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.DownloadCmd;
 import zos.shell.service.dsn.concatenate.ConcatCmd;
-import zos.shell.service.dsn.memberlst.MemberLst;
-import zos.shell.service.dsn.save.FutureSave;
+import zos.shell.service.memberlst.MemberLst;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -16,9 +14,7 @@ import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.response.Member;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
