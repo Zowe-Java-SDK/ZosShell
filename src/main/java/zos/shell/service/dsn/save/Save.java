@@ -71,7 +71,7 @@ public class Save {
             final var errMsg = Util.getResponsePhrase(e.getResponse());
             return new ResponseStatus(arrowMsg + (errMsg != null ? errMsg : e.getMessage()), false);
         } catch (IOException e) {
-            return new ResponseStatus(e.getMessage(), false);
+            return new ResponseStatus(arrowMsg + e.getMessage(), false);
         }
 
         return new ResponseStatus(arrowMsg + "saved", true);
