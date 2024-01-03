@@ -13,14 +13,14 @@ import zowe.client.sdk.zosjobs.response.Job;
 import java.util.Comparator;
 import java.util.List;
 
-public class LstCmd {
+public class ProcessLstCmd {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LstCmd.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProcessLstCmd.class);
 
     private final JobGet jobGet;
     private final GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");
 
-    public LstCmd(JobGet jobGet) {
+    public ProcessLstCmd(JobGet jobGet) {
         LOG.debug("*** ProcessList ***");
         this.jobGet = jobGet;
     }

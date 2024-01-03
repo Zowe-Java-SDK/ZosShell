@@ -526,10 +526,11 @@ public class Commands {
     public Output ps(ZosConnection connection, String jobOrTask) {
         LOG.debug("*** ps ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureProcessList(new JobGet(connection), jobOrTask));
-        final var response = processFuture(pool, submit);
-        return response != null && response.isStatus() ? new Output("ps",
-                new StringBuilder(response.getMessage())) : null;
+//        final var submit = pool.submit(new FutureProcessList(new JobGet(connection), jobOrTask));
+//        final var response = processFuture(pool, submit);
+//        return response != null && response.isStatus() ? new Output("ps",
+//                new StringBuilder(response.getMessage())) : null;
+        return null;
     }
 
     public void rm(ZosConnection connection, String currDataSet, String param) {
