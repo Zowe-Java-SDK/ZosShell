@@ -1,4 +1,4 @@
-package zos.shell.dto;
+package zos.shell.record;
 
 public class DataSetMember {
 

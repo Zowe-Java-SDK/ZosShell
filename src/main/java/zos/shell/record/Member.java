@@ -1,4 +1,4 @@
-package zos.shell.dto;
+package zos.shell.record;
 
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.ListParams;
