@@ -84,9 +84,9 @@ public class CopyCmd {
             futures.forEach(f -> {
                 try {
                     final var responseStatus = f.get(timeout, TimeUnit.SECONDS);
-                    result.append(responseStatus.getMessage());
+                    result.append(responseStatus.getMessage()).append("\n");
                 } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    result.append(e.getMessage());
+                    result.append(e.getMessage()).append("\n");
                 }
             });
 
