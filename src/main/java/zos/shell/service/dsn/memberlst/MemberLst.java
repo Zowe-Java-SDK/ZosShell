@@ -1,4 +1,4 @@
-package zos.shell.service.dsn.touch;
+package zos.shell.service.dsn.memberlst;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
