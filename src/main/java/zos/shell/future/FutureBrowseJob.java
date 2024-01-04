@@ -22,7 +22,9 @@ public class FutureBrowseJob implements Callable<StringBuilder> {
         final var str = new StringBuilder();
         files.forEach(file -> {
             try {
-                str.append(List.of(jobGet.getSpoolContent(file)));
+                str.append(List.of(jobGet.getSpoolContent(file)
+                        .replaceAll("[\r\n]+", "\n")
+                        .replaceAll("[\n\n]+", "\n")));
             } catch (ZosmfRequestException ignored) {
             }
         });

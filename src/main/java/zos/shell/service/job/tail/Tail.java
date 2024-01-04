@@ -61,21 +61,13 @@ public class Tail extends BrowseLog {
 
     private void displayAll(final List<String> output) {
         LOG.debug("*** displayAll ***");
-        for (final String str : output) {
-            if (str.isBlank()) {
-                continue;
-            }
-            terminal.println(str);
-        }
+        output.forEach(terminal::println);
     }
 
     private ResponseStatus display(final int lines, final int size, final List<String> output) {
         LOG.debug("*** display ***");
         final var str = new StringBuilder();
         for (var i = size - lines; i < size; i++) {
-            if (output.get(i).isBlank()) {
-                continue;
-            }
             terminal.println(output.get(i));
             str.append(output.get(i)).append("\n");
         }
