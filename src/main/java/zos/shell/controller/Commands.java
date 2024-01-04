@@ -417,6 +417,7 @@ public class Commands {
         final var responseStatus = makeDirCmd.create(param, createParams);
         terminal.println(responseStatus.getMessage());
         if (!responseStatus.isStatus()) {
+            terminal.println(responseStatus.getMessage());
             terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
         }
     }
