@@ -5,7 +5,10 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.future.*;
+import zos.shell.future.FutureDownload;
+import zos.shell.future.FutureDownloadJob;
+import zos.shell.future.FutureMakeDir;
+import zos.shell.future.FutureTailJob;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.change.ColorCmd;
 import zos.shell.service.change.ConnCmd;
@@ -32,6 +35,7 @@ import zos.shell.service.localfile.LocalFileCmd;
 import zos.shell.service.omvs.SshCmd;
 import zos.shell.service.search.SearchCache;
 import zos.shell.service.search.SearchCmd;
+import zos.shell.service.tso.TsoCmd;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
@@ -45,6 +49,7 @@ import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
 import zowe.client.sdk.zosjobs.methods.JobDelete;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 import zowe.client.sdk.zosjobs.methods.JobSubmit;
+import zowe.client.sdk.zostso.method.IssueTso;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -603,19 +608,18 @@ public class Commands {
 
     public SearchCache tsoCommand(ZosConnection connection, String accountNumber, String command) {
         LOG.debug("*** tsoCommand ***");
-        if (accountNumber == null) {
+        if (accountNumber == null || accountNumber.isBlank()) {
             terminal.println("ACCTNUM is not set, try again...");
+            // TODO send null instead to cache how would search command react should not null error out...
             return new SearchCache("tso", new StringBuilder());
         }
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureTso(connection, accountNumber, command));
-        final var response = processFuture(pool, submit);
-        if (response != null && response.isStatus()) {
-            return new SearchCache("tso", new StringBuilder(response.getMessage()));
-        } else {
+        final var tsoCmd = new TsoCmd(new IssueTso(connection), accountNumber, timeout);
+        final var responseStatus = tsoCmd.issueCommand(command);
+        terminal.println(responseStatus.getMessage());
+        if (!responseStatus.isStatus()) {
             terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
-            return null;
         }
+        return new SearchCache("tso", new StringBuilder(responseStatus.getMessage()));
     }
 
     public void uname(ZosConnection currConnection) {

@@ -2,50 +2,42 @@ package zos.shell.service.tso;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.utility.Util;
-import zowe.client.sdk.core.ZosConnection;
-import zowe.client.sdk.rest.exception.ZosmfRequestException;
-import zowe.client.sdk.zostso.response.IssueResponse;
+import zowe.client.sdk.zostso.method.IssueTso;
 
-import java.util.regex.Pattern;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class TsoCmd {
 
     private static final Logger LOG = LoggerFactory.getLogger(TsoCmd.class);
 
-    private final zowe.client.sdk.zostso.method.IssueTso issueTso;
+    private final IssueTso issueTso;
     private final String accountNumber;
+    private final long timeout;
 
-    public TsoCmd(ZosConnection connection, String accountNumber) {
-        LOG.debug("*** TsoCommand ***");
-        this.issueTso = new zowe.client.sdk.zostso.method.IssueTso(connection);
+    public TsoCmd(final IssueTso issueTso, final String accountNumber, final long timeout) {
+        LOG.debug("*** TsoCmd ***");
+        this.issueTso = issueTso;
         this.accountNumber = accountNumber;
+        this.timeout = timeout;
     }
 
-    private IssueResponse execute(String command) throws ZosmfRequestException {
-        LOG.debug("*** execute ***");
-        return issueTso.issueCommand(accountNumber, command);
-    }
+    public ResponseStatus issueCommand(final String command) {
+        LOG.debug("*** issueCommand ***");
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        final var submit = pool.submit(new FutureTso(issueTso, accountNumber, command));
 
-    public ResponseStatus executeCommand(String command) {
-        LOG.debug("*** executeCommand ***");
-
-        final var p = Pattern.compile("\"([^\"]*)\"");
-        final var m = p.matcher(command);
-        while (m.find()) {
-            command = m.group(1);
-        }
-
-        IssueResponse response;
         try {
-            response = execute(command);
-        } catch (ZosmfRequestException e) {
-            final String errMsg = Util.getResponsePhrase(e.getResponse());
-            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
+            return submit.get(timeout, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            return new ResponseStatus(e.getMessage(), false);
+        } finally {
+            pool.shutdown();
         }
-
-        return new ResponseStatus(response.getCommandResponses().orElse("no response"), true);
     }
 
 }
