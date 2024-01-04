@@ -1,11 +1,11 @@
-package zos.shell.service.dsn;
+package zos.shell.service.dsn.list;
 
 import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.future.FutureDsnMembers;
-import zos.shell.future.FutureListDsn;
+import zos.shell.service.datasetlst.FutureDatasetLst;
+import zos.shell.service.memberlst.FutureMemberLst;
 import zowe.client.sdk.zosfiles.dsn.input.ListParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.response.Dataset;
@@ -71,12 +71,12 @@ public class LstCmd {
             if (m.equals(searchForMember)) {
                 members = members.stream()
                         .filter(i -> i.getMember().orElse("")
-                        .equals(searchForMember))
+                                .equals(searchForMember))
                         .collect(Collectors.toList());
             } else {
                 members = members.stream()
                         .filter(i -> i.getMember().orElse("")
-                        .startsWith(searchForMember))
+                                .startsWith(searchForMember))
                         .collect(Collectors.toList());
             }
         }, () -> displayDataSets(dataSets, dataSet, isColumnView, isAttributes));
@@ -105,18 +105,22 @@ public class LstCmd {
         terminal.println(line.toString());
     }
 
-    private List<Member> getMembers(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
+    private List<Member> getMembers(String dataset) throws ExecutionException, InterruptedException, TimeoutException {
         LOG.debug("*** getMembers ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureDsnMembers(dsnList, dataSet, params));
-        return submit.get(timeout, TimeUnit.SECONDS);
+        final var submit = pool.submit(new FutureMemberLst(this.dsnList, dataset));
+        List<Member> members = submit.get(timeout, TimeUnit.SECONDS);
+        pool.shutdown();
+        return members;
     }
 
-    private List<Dataset> getDataSets(String dataSet) throws ExecutionException, InterruptedException, TimeoutException {
+    private List<Dataset> getDataSets(String dataset) throws ExecutionException, InterruptedException, TimeoutException {
         LOG.debug("*** getDataSets ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureListDsn(dsnList, dataSet, params));
-        return submit.get(timeout, TimeUnit.SECONDS);
+        final var submit = pool.submit(new FutureDatasetLst(this.dsnList, dataset));
+        List<Dataset> datasets = submit.get(timeout, TimeUnit.SECONDS);
+        pool.shutdown();
+        return datasets;
     }
 
     private void displayListStatus(int membersSize, int dataSetsSize) {

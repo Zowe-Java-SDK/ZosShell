@@ -14,7 +14,7 @@ import zos.shell.service.change.ConnCmd;
 import zos.shell.service.change.DirCmd;
 import zos.shell.service.console.MvsConsoleCmd;
 import zos.shell.service.dsn.DownloadCmd;
-import zos.shell.service.dsn.LstCmd;
+import zos.shell.service.dsn.list.LstCmd;
 import zos.shell.service.dsn.concatenate.ConcatCmd;
 import zos.shell.service.dsn.copy.CopyCmd;
 import zos.shell.service.dsn.count.CountCmd;
