@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.response.ResponseStatus;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
-public class BrowseCmd extends Log {
+public class BrowseCmd extends BrowseLog {
 
     private static final Logger LOG = LoggerFactory.getLogger(BrowseCmd.class);
 

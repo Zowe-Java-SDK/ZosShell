@@ -20,16 +20,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Predicate;
 
-public class Log {
+public class BrowseLog {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Log.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BrowseLog.class);
 
     protected final JobGet jobGet;
     public List<Job> jobs = new ArrayList<>();
     private final boolean isAll;
     private final long timeout;
 
-    public Log(JobGet jobGet, boolean isAll, long timeout) {
+    public BrowseLog(JobGet jobGet, boolean isAll, long timeout) {
         LOG.debug("*** JobLog ***");
         this.jobGet = jobGet;
         this.isAll = isAll;

@@ -5,13 +5,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.service.job.Log;
+import zos.shell.service.job.BrowseLog;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class Tail extends Log {
+public class Tail extends BrowseLog {
 
     private static final Logger LOG = LoggerFactory.getLogger(Tail.class);
 
