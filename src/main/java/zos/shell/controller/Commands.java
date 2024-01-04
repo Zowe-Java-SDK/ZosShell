@@ -25,6 +25,7 @@ import zos.shell.service.help.HelpCmd;
 import zos.shell.service.job.BrowseCmd;
 import zos.shell.service.job.ProcessLst.ProcessLstCmd;
 import zos.shell.service.job.TerminateCmd;
+import zos.shell.service.job.submit.SubmitCmd;
 import zos.shell.service.localfile.LocalFileCmd;
 import zos.shell.service.omvs.SshCmd;
 import zos.shell.service.search.SearchCache;
@@ -513,11 +514,14 @@ public class Commands {
         processFuture(pool, submit);
     }
 
-    public void submit(ZosConnection connection, String dataSet, String jobName) {
+    public void submit(ZosConnection connection, String dataset, String target) {
         LOG.debug("*** submit ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureSubmit(new JobSubmit(connection), dataSet, jobName));
-        processFuture(pool, submit);
+        SubmitCmd submitCmd = new SubmitCmd(new JobSubmit(connection), timeout);
+        ResponseStatus responseStatus = submitCmd.submit(dataset, target);
+        terminal.println(responseStatus.getMessage());
+        if (!responseStatus.isStatus()) {
+            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+        }
     }
 
     public SearchCache tailJob(ZosConnection connection, String[] params) {

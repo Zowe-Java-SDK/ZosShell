@@ -1,4 +1,4 @@
-package zos.shell.service.job;
+package zos.shell.service.job.submit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,22 +8,22 @@ import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosjobs.methods.JobSubmit;
 import zowe.client.sdk.zosjobs.response.Job;
 
-public class SubmitCmd {
+public class Submit {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SubmitCmd.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Submit.class);
 
-    private final JobSubmit jobSubmit;
+    private final JobSubmit submit;
 
-    public SubmitCmd(JobSubmit jobSubmit) {
+    public Submit(final JobSubmit submit) {
         LOG.debug("*** Submit ***");
-        this.jobSubmit = jobSubmit;
+        this.submit = submit;
     }
 
-    public ResponseStatus submitJob(String dataSet, String param) {
-        LOG.debug("*** submitJob ***");
+    public ResponseStatus submit(final String dataset, final String target) {
+        LOG.debug("*** submit ***");
         Job job;
         try {
-            job = jobSubmit.submit(String.format("%s(%s)", dataSet, param));
+            job = submit.submit(String.format("%s(%s)", dataset, target));
         } catch (ZosmfRequestException e) {
             final String errMsg = Util.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
