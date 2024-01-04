@@ -8,7 +8,6 @@ import zos.shell.constants.Constants;
 import zos.shell.future.FutureDownload;
 import zos.shell.future.FutureDownloadJob;
 import zos.shell.future.FutureMakeDir;
-import zos.shell.future.FutureTailJob;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.change.ColorCmd;
 import zos.shell.service.change.ConnCmd;
@@ -30,6 +29,7 @@ import zos.shell.service.job.BrowseCmd;
 import zos.shell.service.job.processlst.ProcessLstCmd;
 import zos.shell.service.job.purge.PurgeCmd;
 import zos.shell.service.job.submit.SubmitCmd;
+import zos.shell.service.job.tail.TailCmd;
 import zos.shell.service.job.terminate.TerminateCmd;
 import zos.shell.service.localfile.LocalFileCmd;
 import zos.shell.service.omvs.SshCmd;
@@ -580,9 +580,14 @@ public class Commands {
 
     private ResponseStatus tailAll(ZosConnection connection, String[] params, boolean isAll) {
         LOG.debug("*** tailAll ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureTailJob(terminal, connection, isAll, timeout, params));
-        return processFuture(pool, submit);
+        final var tailCmd = new TailCmd(terminal, new JobGet(connection), timeout);
+        final var responseStatus = tailCmd.tail(params, isAll);
+        terminal.println(responseStatus.getMessage());
+        if (!responseStatus.isStatus()) {
+            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+        }
+        // TODO retuen SearchCache instead?...
+        return responseStatus;
     }
 
     public void timeout(long value) {

@@ -1,28 +1,29 @@
-package zos.shell.service.job;
+package zos.shell.service.job.tail;
 
 import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.job.Log;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class TailCmd extends Log {
+public class Tail extends Log {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TailCmd.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Tail.class);
 
     private final TextTerminal<?> terminal;
 
-    public TailCmd(TextTerminal<?> terminal, JobGet JobGet, boolean isAll, long timeout) {
-        super(JobGet, isAll, timeout);
+    public Tail(final TextTerminal<?> terminal, final JobGet retrieve, boolean isAll, final long timeout) {
+        super(retrieve, isAll, timeout);
         LOG.debug("*** Tail ***");
         this.terminal = terminal;
     }
 
-    public ResponseStatus tail(String[] params) {
+    public ResponseStatus tail(final String[] params) {
         LOG.debug("*** tail ***");
         final ResponseStatus result = browseJobLog(params[1]);
         if (!result.isStatus()) {
@@ -69,12 +70,12 @@ public class TailCmd extends Log {
         }
     }
 
-    private void displayAll(List<String> output) {
+    private void displayAll(final List<String> output) {
         LOG.debug("*** displayAll ***");
         output.forEach(terminal::println);
     }
 
-    private ResponseStatus display(int lines, int size, List<String> output) {
+    private ResponseStatus display(final int lines, final int size, final List<String> output) {
         LOG.debug("*** display ***");
         final var str = new StringBuilder();
         for (var i = size - lines; i < size; i++) {
