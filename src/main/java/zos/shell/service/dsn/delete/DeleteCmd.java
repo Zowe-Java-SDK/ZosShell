@@ -138,7 +138,8 @@ public class DeleteCmd {
                 result.append(responseStatus.getMessage()).append("\n");
             }
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            result.append(e.getMessage());
+            result.append(Constants.TIMEOUT_MESSAGE);
+            LOG.debug("error: " + e);
         }
     }
 

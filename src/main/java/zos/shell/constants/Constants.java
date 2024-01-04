@@ -8,7 +8,6 @@ public final class Constants {
 
     public static final String APP_TITLE = "ZosShell";
     public static final String ARROW = " ==> ";
-    public static final String BROWSE_TIMEOUT = "timeout, log may be too large to display, try again...";
     public static final String COMMAND_EXECUTION_ERROR_MSG = "error executing command, try again...";
     public static final String COMMAND_EXTRA_TEXT_INVALID_COMMAND =
             "invalid command, remove extra text beyond second double quote and try again...";
@@ -69,7 +68,7 @@ public final class Constants {
     public static final int STRING_PAD_LENGTH = 8;
     public static final int THREAD_POOL_MIN = 1;
     public static final int THREAD_POOL_MAX = 10;
-    public static final String TIMEOUT_MESSAGE = "command exceeded time out value, double check and try again...";
+    public static final String TIMEOUT_MESSAGE = "command exceeded timeout value, try again by increasing timeout value..";
     public static final String TOO_MANY_PARAMETERS = "too many parameters, try again...";
     public static final String UTF8 = "UTF8";
     public static final String WINDOWS_EDITOR_NAME = "notepad";

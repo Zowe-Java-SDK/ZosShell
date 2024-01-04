@@ -81,7 +81,8 @@ public class GrepCmd {
             try {
                 result.addAll(submit.get(timeout, TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                result.add(e.getMessage());
+                result.add(Constants.TIMEOUT_MESSAGE);
+                LOG.debug("error: " + e);
             }
 
             pool.shutdownNow();
@@ -103,7 +104,8 @@ public class GrepCmd {
             try {
                 result.addAll(future.get(timeout, TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                result.add(e.getMessage());
+                result.add(Constants.TIMEOUT_MESSAGE);
+                LOG.debug("error: " + e);
             }
         }
 

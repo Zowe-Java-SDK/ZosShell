@@ -31,7 +31,7 @@ public class DownloadCmd {
 
         final var responseStatus = browseJob.browseJob(name);
         if (!responseStatus.isStatus() && responseStatus.getMessage().contains("timeout")) {
-            return new ResponseStatus(Constants.BROWSE_TIMEOUT, false);
+            return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
         } else if (!responseStatus.isStatus()) {
             return new ResponseStatus(responseStatus.getMessage(), false);
         }

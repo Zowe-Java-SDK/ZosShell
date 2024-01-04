@@ -234,10 +234,9 @@ public class Commands {
         for (final var future : futures) {
             try {
                 results.add(future.get(timeout, TimeUnit.SECONDS));
-            } catch (TimeoutException e) {
-                results.add(new ResponseStatus("timeout", false));
-            } catch (InterruptedException | ExecutionException e) {
-                results.add(new ResponseStatus(e.getMessage(), false));
+            } catch (InterruptedException | ExecutionException | TimeoutException e ) {
+                future.cancel(true);
+                results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
             }
         }
         return results;

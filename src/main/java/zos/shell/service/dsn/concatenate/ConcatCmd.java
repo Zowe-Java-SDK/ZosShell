@@ -32,7 +32,9 @@ public class ConcatCmd {
         try {
             return future.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            return new ResponseStatus(e.getMessage(), false);
+            future.cancel(true);
+            LOG.debug("error: " + e);
+            return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
         }
     }
 

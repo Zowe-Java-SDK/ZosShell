@@ -33,7 +33,8 @@ public class DatasetLst {
         try {
             datasets = submit.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw new ZosmfRequestException(e.getMessage());
+            LOG.debug("error: " + e);
+            throw new ZosmfRequestException(Constants.TIMEOUT_MESSAGE);
         } finally {
             pool.shutdown();
         }

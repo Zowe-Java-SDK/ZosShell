@@ -32,7 +32,9 @@ public class EditCmd {
         try {
             return submit.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            return new ResponseStatus(e.getMessage(), false);
+            submit.cancel(true);
+            LOG.debug("error: " + e);
+            return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
         } finally {
             pool.shutdown();
         }

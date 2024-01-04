@@ -86,7 +86,8 @@ public class CopyCmd {
                     final var responseStatus = f.get(timeout, TimeUnit.SECONDS);
                     result.append(responseStatus.getMessage()).append("\n");
                 } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    result.append(e.getMessage()).append("\n");
+                    result.append(Constants.TIMEOUT_MESSAGE).append("\n");
+                    LOG.debug("error: " + e);
                 }
             });
 
@@ -101,8 +102,9 @@ public class CopyCmd {
             ResponseStatus responseStatus = submit.get(timeout, TimeUnit.SECONDS);
             result.append(responseStatus.getMessage());
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            result.append(e.getMessage());
+            result.append(Constants.TIMEOUT_MESSAGE);
             isNonException = false;
+            LOG.debug("error: " + e);
         }
 
         return new ResponseStatus(result.toString(), isNonException);
