@@ -76,8 +76,8 @@ public class Commands {
 
     private SearchCache browseAll(ZosConnection connection, String[] params, boolean isAll) {
         LOG.debug("*** browseAll ***");
-        final BrowseCmd browseJob = new BrowseCmd(new JobGet(connection), isAll, timeout);
-        final ResponseStatus responseStatus = browseJob.browseJob(params[1]);
+        final var browseJob = new BrowseCmd(new JobGet(connection), isAll, timeout);
+        final var responseStatus = browseJob.browseJob(params[1]);
         if (!responseStatus.isStatus()) {
             terminal.println(responseStatus.getMessage());
             return null;
@@ -129,7 +129,7 @@ public class Commands {
 
     public void copy(ZosConnection connection, String currDataSet, String[] params) {
         LOG.debug("*** copy ***");
-        final CopyCmd copy = new CopyCmd(connection, new DsnList(connection), timeout);
+        final var copy = new CopyCmd(connection, new DsnList(connection), timeout);
         terminal.println(copy.copy(currDataSet, params).getMessage());
     }
 
@@ -256,7 +256,7 @@ public class Commands {
 
     public void grep(ZosConnection connection, String pattern, String target, String dataset) {
         LOG.debug("*** grep ***");
-        GrepCmd grepCmd = new GrepCmd(connection, pattern, timeout);
+        final var grepCmd = new GrepCmd(connection, pattern, timeout);
         grepCmd.search(dataset, target).forEach(i -> {
             if (i.endsWith("\n")) {
                 terminal.print(i);
@@ -520,8 +520,8 @@ public class Commands {
 
     public void submit(ZosConnection connection, String dataset, String target) {
         LOG.debug("*** submit ***");
-        SubmitCmd submitCmd = new SubmitCmd(new JobSubmit(connection), timeout);
-        ResponseStatus responseStatus = submitCmd.submit(dataset, target);
+        final var submitCmd = new SubmitCmd(new JobSubmit(connection), timeout);
+        final var responseStatus = submitCmd.submit(dataset, target);
         terminal.println(responseStatus.getMessage());
         if (!responseStatus.isStatus()) {
             terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
@@ -584,8 +584,8 @@ public class Commands {
 
     public void touch(ZosConnection connection, String dataset, String[] params) {
         LOG.debug("*** touch ***");
-        TouchCmd touchCmd = new TouchCmd(new DsnWrite(connection), new DsnList(connection), timeout);
-        ResponseStatus responseStatus = touchCmd.touch(dataset, params[1]);
+        final var touchCmd = new TouchCmd(new DsnWrite(connection), new DsnList(connection), timeout);
+        final var responseStatus = touchCmd.touch(dataset, params[1]);
         terminal.println(responseStatus.getMessage());
         if (!responseStatus.isStatus()) {
             terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
@@ -641,8 +641,8 @@ public class Commands {
 
     public void vi(final ZosConnection connection, final String dataset, final String[] params) {
         LOG.debug("*** vi ***");
-        EditCmd editCmd = new EditCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
-        ResponseStatus responseStatus = editCmd.open(dataset, params[1]);
+        final var editCmd = new EditCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
+        final var responseStatus = editCmd.open(dataset, params[1]);
         terminal.println(responseStatus.getMessage());
         if (!responseStatus.isStatus()) {
             terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
