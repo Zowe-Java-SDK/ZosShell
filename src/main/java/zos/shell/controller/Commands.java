@@ -26,6 +26,7 @@ import zos.shell.service.help.HelpCmd;
 import zos.shell.service.job.BrowseCmd;
 import zos.shell.service.job.TerminateCmd;
 import zos.shell.service.job.processlst.ProcessLstCmd;
+import zos.shell.service.job.purge.PurgeCmd;
 import zos.shell.service.job.submit.SubmitCmd;
 import zos.shell.service.localfile.LocalFileCmd;
 import zos.shell.service.omvs.SshCmd;
@@ -41,6 +42,7 @@ import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
+import zowe.client.sdk.zosjobs.methods.JobDelete;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 import zowe.client.sdk.zosjobs.methods.JobSubmit;
 
@@ -462,11 +464,14 @@ public class Commands {
         return ps(connection, null);
     }
 
-    public void purgeJob(ZosConnection connection, String item) {
+    public void purgeJob(ZosConnection connection, String filter) {
         LOG.debug("*** purgeJob ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FuturePurgeJob(connection, item));
-        processFuture(pool, submit);
+        final var purgeCmd = new PurgeCmd(new JobDelete(connection), new JobGet(connection), timeout);
+        final var responseStatus = purgeCmd.purge(filter);
+        terminal.println(responseStatus.getMessage());
+        if (!responseStatus.isStatus()) {
+            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+        }
     }
 
     public SearchCache ps(ZosConnection connection, String jobOrTask) {
