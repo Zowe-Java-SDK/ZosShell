@@ -24,10 +24,10 @@ import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.grep.GrepCmd;
 import zos.shell.service.help.HelpCmd;
 import zos.shell.service.job.BrowseCmd;
-import zos.shell.service.job.TerminateCmd;
 import zos.shell.service.job.processlst.ProcessLstCmd;
 import zos.shell.service.job.purge.PurgeCmd;
 import zos.shell.service.job.submit.SubmitCmd;
+import zos.shell.service.job.terminate.TerminateCmd;
 import zos.shell.service.localfile.LocalFileCmd;
 import zos.shell.service.omvs.SshCmd;
 import zos.shell.service.search.SearchCache;
@@ -89,12 +89,14 @@ public class Commands {
         return new SearchCache(params[1], new StringBuilder(output));
     }
 
-    public void cancel(ZosConnection connection, String jobOrTask) {
+    public void cancel(final ZosConnection connection, final String target) {
         LOG.debug("*** cancel ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(
-                new FutureTerminate(connection, new IssueConsole(connection), TerminateCmd.Type.CANCEL, jobOrTask));
-        processFuture(pool, submit);
+        final var terminateCmd = new TerminateCmd(connection, new IssueConsole(connection), timeout);
+        final var responseStatus = terminateCmd.terminate(TerminateCmd.Type.CANCEL, target);
+        terminal.println(responseStatus.getMessage());
+        if (!responseStatus.isStatus()) {
+            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+        }
     }
 
     public SearchCache cat(ZosConnection connection, String dataset, String target) {
@@ -515,12 +517,14 @@ public class Commands {
         terminal.println(values[0] + "=" + values[1]);
     }
 
-    public void stop(ZosConnection connection, String jobOrTask) {
+    public void stop(final ZosConnection connection, final String target) {
         LOG.debug("*** stop ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(
-                new FutureTerminate(connection, new IssueConsole(connection), TerminateCmd.Type.STOP, jobOrTask));
-        processFuture(pool, submit);
+        final var terminateCmd = new TerminateCmd(connection, new IssueConsole(connection), timeout);
+        final var responseStatus = terminateCmd.terminate(TerminateCmd.Type.STOP, target);
+        terminal.println(responseStatus.getMessage());
+        if (!responseStatus.isStatus()) {
+            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+        }
     }
 
     public void submit(ZosConnection connection, String dataset, String target) {
