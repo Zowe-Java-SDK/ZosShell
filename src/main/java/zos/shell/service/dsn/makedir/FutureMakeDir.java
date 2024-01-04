@@ -1,18 +1,17 @@
-package zos.shell.future;
+package zos.shell.service.dsn.makedir;
 
 import zos.shell.response.ResponseStatus;
-import zos.shell.service.dsn.MakeDirCmd;
 import zowe.client.sdk.zosfiles.dsn.input.CreateParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
 
 import java.util.concurrent.Callable;
 
-public class FutureMakeDir extends MakeDirCmd implements Callable<ResponseStatus> {
+public class FutureMakeDir extends MakeDir implements Callable<ResponseStatus> {
 
     private final String dataset;
     private final CreateParams params;
 
-    public FutureMakeDir(DsnCreate dsnCreate, String dataset, CreateParams params) {
+    public FutureMakeDir(final DsnCreate dsnCreate, final String dataset, final CreateParams params) {
         super(dsnCreate);
         this.dataset = dataset;
         this.params = params;
@@ -20,7 +19,7 @@ public class FutureMakeDir extends MakeDirCmd implements Callable<ResponseStatus
 
     @Override
     public ResponseStatus call() {
-        return this.mkdir(dataset, params);
+        return this.create(dataset, params);
     }
 
 }

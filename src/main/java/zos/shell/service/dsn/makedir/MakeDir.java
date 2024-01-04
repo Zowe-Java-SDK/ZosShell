@@ -1,4 +1,4 @@
-package zos.shell.service.dsn;
+package zos.shell.service.dsn.makedir;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,19 +8,20 @@ import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.CreateParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
 
-public class MakeDirCmd {
+public class MakeDir {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MakeDirCmd.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MakeDir.class);
 
     private final DsnCreate dsnCreate;
 
-    public MakeDirCmd(DsnCreate dsnCreate) {
-        LOG.debug("*** MakeDirectory ***");
+    public MakeDir(final DsnCreate dsnCreate) {
+        LOG.debug("*** MakeDir ***");
         this.dsnCreate = dsnCreate;
     }
 
-    public ResponseStatus mkdir(String dataset, CreateParams params) {
-        LOG.debug("*** mkdir ***");
+    public ResponseStatus create(final String dataset, final CreateParams params) {
+        LOG.debug("*** create ***");
+
         try {
             dsnCreate.create(dataset, params);
         } catch (ZosmfRequestException e) {

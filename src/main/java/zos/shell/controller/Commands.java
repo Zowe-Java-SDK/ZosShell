@@ -7,19 +7,19 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.future.FutureDownload;
 import zos.shell.future.FutureDownloadJob;
-import zos.shell.future.FutureMakeDir;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.change.ColorCmd;
 import zos.shell.service.change.ConnCmd;
 import zos.shell.service.change.DirCmd;
 import zos.shell.service.console.MvsConsoleCmd;
 import zos.shell.service.dsn.DownloadCmd;
-import zos.shell.service.dsn.list.LstCmd;
 import zos.shell.service.dsn.concatenate.ConcatCmd;
 import zos.shell.service.dsn.copy.CopyCmd;
 import zos.shell.service.dsn.count.CountCmd;
 import zos.shell.service.dsn.delete.DeleteCmd;
 import zos.shell.service.dsn.edit.EditCmd;
+import zos.shell.service.dsn.list.LstCmd;
+import zos.shell.service.dsn.makedir.MakeDirCmd;
 import zos.shell.service.dsn.save.SaveCmd;
 import zos.shell.service.dsn.touch.TouchCmd;
 import zos.shell.service.env.EnvVarCmd;
@@ -424,9 +424,12 @@ public class Commands {
             }
         }
 
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureMakeDir(new DsnCreate(connection), param, createParams));
-        processFuture(pool, submit);
+        final var makeDirCmd = new MakeDirCmd(new DsnCreate(connection), timeout);
+        final var responseStatus = makeDirCmd.create(param, createParams);
+        terminal.println(responseStatus.getMessage());
+        if (!responseStatus.isStatus()) {
+            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+        }
     }
 
     private static Integer getMakeDirNum(TextIO mainTextIO, String prompt) {
