@@ -65,41 +65,14 @@ public class GrepCmd {
         }
 
         if (wildCardOnly) {
-            for (final var member : members) {
-                final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
-                futures.add(pool.submit(new FutureGrep(concatCmd, dataset, member.getMember().get(), pattern, true)));
-            }
-
-            for (final var future : futures) {
-                try {
-                    result.addAll(future.get(timeout, TimeUnit.SECONDS));
-                } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    result.add(e.getMessage());
-                }
-            }
-
-            pool.shutdownNow();
-            return result;
+            return futureResults(dataset, result, pool, futures, members);
         } else if (memberWildCard) {
             final var value = target.substring(0, target.indexOf("*")).toUpperCase();
-            members = members.stream().filter(m -> m.getMember().isPresent() && m.getMember().get().startsWith(value))
-                    .collect(Collectors.toList());
+            members = members.stream()
+                             .filter(m -> m.getMember().isPresent() && m.getMember().get().startsWith(value))
+                             .collect(Collectors.toList());
 
-            for (final var member : members) {
-                final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
-                futures.add(pool.submit(new FutureGrep(concatCmd, dataset, member.getMember().get(), pattern, true)));
-            }
-
-            for (final var future : futures) {
-                try {
-                    result.addAll(future.get(timeout, TimeUnit.SECONDS));
-                } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    result.add(e.getMessage());
-                }
-            }
-
-            pool.shutdownNow();
-            return result;
+            return futureResults(dataset, result, pool, futures, members);
         } else {
             pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
             final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
@@ -114,6 +87,28 @@ public class GrepCmd {
             pool.shutdownNow();
             return result;
         }
+    }
+
+    private List<String> futureResults(final String dataset, final List<String> result, final ExecutorService pool,
+                                       final ArrayList<Future<List<String>>> futures, final List<Member> members) {
+        for (final var member : members) {
+            final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
+            if (member.getMember().isPresent()) {
+                final var name = member.getMember().get();
+                futures.add(pool.submit(new FutureGrep(concatCmd, dataset, name, pattern, true)));
+            }
+        }
+
+        for (final var future : futures) {
+            try {
+                result.addAll(future.get(timeout, TimeUnit.SECONDS));
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                result.add(e.getMessage());
+            }
+        }
+
+        pool.shutdownNow();
+        return result;
     }
 
 }

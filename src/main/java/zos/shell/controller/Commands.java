@@ -5,8 +5,6 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.service.grep.FutureGrep;
-import zos.shell.service.search.SearchCache;
 import zos.shell.future.*;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.change.ColorCmd;
@@ -29,6 +27,7 @@ import zos.shell.service.job.ProcessLst.ProcessLstCmd;
 import zos.shell.service.job.TerminateCmd;
 import zos.shell.service.localfile.LocalFileCmd;
 import zos.shell.service.omvs.SshCmd;
+import zos.shell.service.search.SearchCache;
 import zos.shell.service.search.SearchCmd;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SshConnection;
@@ -253,77 +252,14 @@ public class Commands {
     public void grep(ZosConnection connection, String pattern, String target, String dataset) {
         LOG.debug("*** grep ***");
         GrepCmd grepCmd = new GrepCmd(connection, pattern, timeout);
-        grepCmd.search(dataset, target).forEach(terminal::println);
-//        List<String> result;
-//
-//        if ("*".equals(target)) {
-//            final var members = Util.getMembers(terminal, connection, currDataSet);
-//            result = multipleGrep(connection, pattern, currDataSet, members);
-//            result.forEach(terminal::println);
-//            if (result.isEmpty()) {
-//                terminal.println(Constants.NOTHING_FOUND);
-//            }
-//            return;
-//        }
-//
-//        if (target.contains("*") && Util.isMember(target.substring(0, target.indexOf("*")))) {
-//            var members = Util.getMembers(terminal, connection, currDataSet);
-//            final var searchForMember = target.substring(0, target.indexOf("*")).toUpperCase();
-//            members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
-//            result = multipleGrep(connection, pattern, currDataSet, members);
-//            result.forEach(terminal::println);
-//            if (result.isEmpty()) {
-//                terminal.println(Constants.NOTHING_FOUND);
-//            }
-//            return;
-//        }
-//
-//        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-//        final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
-//        final var submit = pool.submit(new FutureGrep(new GrepCmd(concatCmd, pattern), currDataSet, target));
-//
-//        try {
-//            result = submit.get(timeout, TimeUnit.SECONDS);
-//            result.forEach(terminal::println);
-//            if (result.isEmpty()) {
-//                terminal.println(Constants.NOTHING_FOUND);
-//            }
-//        } catch (TimeoutException e) {
-//            terminal.println(Constants.TIMEOUT_MESSAGE);
-//        } catch (ExecutionException | InterruptedException e) {
-//            terminal.println(e.getMessage());
-//        }
-//
-//        pool.shutdownNow();
+        grepCmd.search(dataset, target).forEach(i -> {
+            if (i.endsWith("\n")) {
+                terminal.print(i);
+            } else {
+                terminal.println(i);
+            }
+        });
     }
-
-//    private List<String> multipleGrep(ZosConnection connection, String pattern, String dataSet, List<String> members) {
-//        LOG.debug("*** multipleGrep ***");
-//        final var results = new ArrayList<String>();
-//        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
-//        final var futures = new ArrayList<Future<List<String>>>();
-//
-//        for (final var member : members) {
-//            final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
-//            futures.add(pool.submit(new FutureGrep(new GrepCmd(concatCmd, pattern, true), dataSet, member)));
-//        }
-//
-//        for (final var future : futures) {
-//            try {
-//                results.addAll(future.get(timeout, TimeUnit.SECONDS));
-//            } catch (TimeoutException e) {
-//                results.add("timeout");
-//            } catch (InterruptedException | ExecutionException e) {
-//                results.add(e.getMessage());
-//            }
-//        }
-//
-//        pool.shutdownNow();
-//        if (results.isEmpty()) {
-//            results.add("nothing found, try again...");
-//        }
-//        return results;
-//    }
 
     public SearchCache help() {
         LOG.debug("*** help ***");

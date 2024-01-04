@@ -31,6 +31,7 @@ public class Grep {
         final var lines = new ArrayList<String>();
         final var responseStatus = concatenate.cat(currDataSet, target);
         var content = new StringBuilder(responseStatus.getMessage());
+        final var title = target + ":";
 
         var index = findPosition(content.toString());
         while (index != 0) {
@@ -52,7 +53,6 @@ public class Grep {
             }
 
             if (entireLine.length() > 0) {
-                final var title = target + ":";
                 lines.add(withMember ? entireLine.insert(0, title).toString() : entireLine.toString());
             }
             final var newIndex = index + pattern.length();
@@ -65,7 +65,7 @@ public class Grep {
 
         // handle edge case if found on first line only
         if (index == 0 && !content.toString().isBlank()) {
-            lines.add(content.toString());
+            lines.add(withMember ? content.insert(0, title).toString() : content.toString());
         }
 
         return lines;
