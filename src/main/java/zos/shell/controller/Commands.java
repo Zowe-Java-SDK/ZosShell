@@ -545,17 +545,14 @@ public class Commands {
         }
     }
 
-    public SearchCache tail(ZosConnection connection, String[] params) {
+    public SearchCache tail(final ZosConnection connection, final String[] params) {
         LOG.debug("*** tail ***");
         final var tailCmd = new TailCmd(terminal, new JobGet(connection), timeout);
         long allCount = Arrays.stream(params).filter("ALL"::equalsIgnoreCase).count();
-        if (allCount > 1) {
-            terminal.println(Constants.INVALID_PARAMETER);
-            new SearchCache("tail", new StringBuilder());
-        }
         final var responseStatus = tailCmd.tail(params, allCount == 1);
         if (!responseStatus.isStatus()) {
-            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+            terminal.println(responseStatus.getMessage());
+            return new SearchCache("tail", new StringBuilder());
         }
         return new SearchCache("tail", new StringBuilder(responseStatus.getMessage()));
     }
