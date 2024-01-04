@@ -612,7 +612,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                commands.purgeJob(currConnection, params[1].toUpperCase());
+                commands.purge(currConnection, params[1].toUpperCase());
                 break;
             case "pwd":
                 if (isParamsExceeded(1, params)) {

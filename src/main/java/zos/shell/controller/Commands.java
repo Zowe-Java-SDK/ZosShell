@@ -63,13 +63,13 @@ public class Commands {
     private final TextTerminal<?> terminal;
     private long timeout = Constants.FUTURE_TIMEOUT_VALUE;
 
-    public Commands(List<ZosConnection> connections, TextTerminal<?> terminal) {
+    public Commands(final List<ZosConnection> connections, final TextTerminal<?> terminal) {
         LOG.debug("*** Commands ***");
         this.connections = connections;
         this.terminal = terminal;
     }
 
-    public SearchCache browse(ZosConnection connection, String[] params) {
+    public SearchCache browse(final ZosConnection connection, final String[] params) {
         LOG.debug("*** browse ***");
         if (params.length == 3) {
             if (!"all".equalsIgnoreCase(params[2])) {
@@ -81,7 +81,7 @@ public class Commands {
         return browseAll(connection, params, false);
     }
 
-    private SearchCache browseAll(ZosConnection connection, String[] params, boolean isAll) {
+    private SearchCache browseAll(final ZosConnection connection, final String[] params, boolean isAll) {
         LOG.debug("*** browseAll ***");
         final var browseJob = new BrowseCmd(new JobGet(connection), isAll, timeout);
         final var responseStatus = browseJob.browseJob(params[1]);
@@ -104,7 +104,7 @@ public class Commands {
         }
     }
 
-    public SearchCache cat(ZosConnection connection, String dataset, String target) {
+    public SearchCache cat(final ZosConnection connection, final String dataset, final String target) {
         LOG.debug("*** cat ***");
         final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
         final var data = concatCmd.cat(dataset, target).getMessage();
@@ -112,37 +112,37 @@ public class Commands {
         return new SearchCache("cat", new StringBuilder(data));
     }
 
-    public String cd(ZosConnection connection, String currDataSet, String param) {
+    public String cd(final ZosConnection connection, final String dataset, final String param) {
         LOG.debug("*** cd ***");
-        return new DirCmd(terminal, new DsnList(connection)).cd(currDataSet, param);
+        return new DirCmd(terminal, new DsnList(connection)).cd(dataset, param);
     }
 
-    public ZosConnection change(ZosConnection connection, String[] commands) {
+    public ZosConnection change(final ZosConnection connection, final String[] commands) {
         LOG.debug("*** change ***");
         final var changeConn = new ConnCmd(terminal, connections);
         return changeConn.changeConnection(connection, commands);
     }
 
-    public void color(String arg, String agr2) {
+    public void color(final String arg, final String agr2) {
         LOG.debug("*** color ***");
         final var color = new ColorCmd(terminal);
         color.setTextColor(arg);
         color.setBackGroundColor(agr2);
     }
 
-    public void connections(ZosConnection connection) {
+    public void connections(final ZosConnection connection) {
         LOG.debug("*** connections ***");
         final var changeConn = new ConnCmd(terminal, connections);
         changeConn.displayConnections(connection);
     }
 
-    public void copy(ZosConnection connection, String currDataSet, String[] params) {
+    public void copy(final ZosConnection connection, final String dataset, final String[] params) {
         LOG.debug("*** copy ***");
         final var copy = new CopyCmd(connection, new DsnList(connection), timeout);
-        terminal.println(copy.copy(currDataSet, params).getMessage());
+        terminal.println(copy.copy(dataset, params).getMessage());
     }
 
-    public void count(ZosConnection connection, String dataset, String filter) {
+    public void count(final ZosConnection connection, final String dataset, final String filter) {
         LOG.debug("*** count ***");
         final var countcmd = new CountCmd(new DsnList(connection), timeout);
         final var responseStatus = countcmd.count(dataset, filter);
@@ -152,20 +152,21 @@ public class Commands {
         }
     }
 
-    public void download(ZosConnection connection, String currDataSet, String target, boolean isBinary) {
+    public void download(final ZosConnection connection, final String dataset,
+                         final String target, boolean isBinary) {
         LOG.debug("*** download ***");
         if ("*".equals(target)) {
-            final var members = Util.getMembers(terminal, connection, currDataSet);
+            final var members = Util.getMembers(terminal, connection, dataset);
             if (members.isEmpty()) {
                 terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
                 return;
             }
-            multipleDownload(connection, currDataSet, members, isBinary).forEach(i -> terminal.println(i.getMessage()));
+            multipleDownload(connection, dataset, members, isBinary).forEach(i -> terminal.println(i.getMessage()));
             return;
         }
 
         if (target.contains("*") && Util.isMember(target.substring(0, target.indexOf("*")))) {
-            var members = Util.getMembers(terminal, connection, currDataSet);
+            var members = Util.getMembers(terminal, connection, dataset);
             final var index = target.indexOf("*");
             final var searchForMember = target.substring(0, index).toUpperCase();
             members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
@@ -173,7 +174,7 @@ public class Commands {
                 terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
                 return;
             }
-            multipleDownload(connection, currDataSet, members, isBinary).forEach(i -> terminal.println(i.getMessage()));
+            multipleDownload(connection, dataset, members, isBinary).forEach(i -> terminal.println(i.getMessage()));
             return;
         }
 
@@ -184,7 +185,7 @@ public class Commands {
         if (dataSetMember != null) {
             result = download.download(dataSetMember.getDataSet(), dataSetMember.getMember());
         } else if (Util.isMember(target)) {
-            result = download.download(currDataSet, target);
+            result = download.download(dataset, target);
         } else {
             result = download.download(target);
         }
@@ -198,15 +199,15 @@ public class Commands {
         }
     }
 
-    public void downloadJob(ZosConnection currConnection, String param, boolean isAll) {
+    public void downloadJob(final ZosConnection connection, final String param, boolean isAll) {
         LOG.debug("*** downloadJob ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureDownloadJob(new JobGet(currConnection), isAll, timeout, param));
+        final var submit = pool.submit(new FutureDownloadJob(new JobGet(connection), isAll, timeout, param));
         processFuture(pool, submit);
     }
 
-    private List<ResponseStatus> multipleDownload(ZosConnection connection, String dataSet, List<String> members,
-                                                  boolean isBinary) {
+    private List<ResponseStatus> multipleDownload(final ZosConnection connection, final String dataset,
+                                                  final List<String> members, boolean isBinary) {
         LOG.debug("*** multipleDownload ***");
         if (members.isEmpty()) {
             final var rs = new ResponseStatus("", false);
@@ -219,7 +220,7 @@ public class Commands {
         final var futures = new ArrayList<Future<ResponseStatus>>();
 
         for (final var member : members) {
-            futures.add(pool.submit(new FutureDownload(new DsnGet(connection), dataSet, member, isBinary)));
+            futures.add(pool.submit(new FutureDownload(new DsnGet(connection), dataset, member, isBinary)));
         }
 
         final var result = getFutureResults(futures);
@@ -228,7 +229,7 @@ public class Commands {
         return result;
     }
 
-    private List<ResponseStatus> getFutureResults(List<Future<ResponseStatus>> futures) {
+    private List<ResponseStatus> getFutureResults(final List<Future<ResponseStatus>> futures) {
         LOG.debug("*** getFutureResults ***");
         final var results = new ArrayList<ResponseStatus>();
         for (final var future : futures) {
@@ -262,7 +263,7 @@ public class Commands {
         LocalFileCmd.listFiles(terminal, dataSet);
     }
 
-    public void grep(ZosConnection connection, String pattern, String target, String dataset) {
+    public void grep(final ZosConnection connection, final String pattern, final String target, final String dataset) {
         LOG.debug("*** grep ***");
         final var grepCmd = new GrepCmd(connection, pattern, timeout);
         grepCmd.search(dataset, target).forEach(i -> {
@@ -279,42 +280,43 @@ public class Commands {
         return HelpCmd.display(terminal);
     }
 
-    public void ls(ZosConnection connection, String member, String dataSet) {
+    public void ls(final ZosConnection connection, final String member, final String dataset) {
         LOG.debug("*** ls 1 ***");
         final var listing = new LstCmd(terminal, new DsnList(connection), timeout);
         try {
-            listing.ls(member, dataSet, true, false);
+            listing.ls(member, dataset, true, false);
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
         }
     }
 
-    public void ls(ZosConnection connection, String dataSet) {
+    public void ls(final ZosConnection connection, final String dataset) {
         LOG.debug("*** ls 2 ***");
         final var listing = new LstCmd(terminal, new DsnList(connection), timeout);
         try {
-            listing.ls(null, dataSet, true, false);
+            listing.ls(null, dataset, true, false);
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
         }
     }
 
-    public void lsl(ZosConnection connection, String dataSet, boolean isAttributes) {
+    public void lsl(final ZosConnection connection, final String dataset, boolean isAttributes) {
         LOG.debug("*** lsl 1 ***");
-        this.lsl(connection, null, dataSet, isAttributes);
+        this.lsl(connection, null, dataset, isAttributes);
     }
 
-    public void lsl(ZosConnection connection, String member, String dataSet, boolean isAttributes) {
+    public void lsl(final ZosConnection connection, final String member, final String dataset, boolean isAttributes) {
         LOG.debug("*** lsl 2 ***");
         final var listing = new LstCmd(terminal, new DsnList(connection), timeout);
         try {
-            listing.ls(member, dataSet, false, isAttributes);
+            listing.ls(member, dataset, false, isAttributes);
         } catch (TimeoutException e) {
             terminal.println(Constants.TIMEOUT_MESSAGE);
         }
     }
 
-    public void mkdir(ZosConnection connection, TextIO mainTextIO, String currDataSet, String param) {
+    public void mkdir(final ZosConnection connection, final TextIO mainTextIO,
+                      final String dataset, String param) {
         LOG.debug("*** mkdir ***");
         if (param.contains(".") && !Util.isDataSet(param)) {
             terminal.println("invalid data set character sequence, try again...");
@@ -325,9 +327,9 @@ public class Commands {
             return;
         }
 
-        if (!Util.isDataSet(param) && Util.isMember(param) && !currDataSet.isBlank()) {
-            param = currDataSet + "." + param;
-        } else if (Util.isMember(param) && currDataSet.isBlank()) {
+        if (!Util.isDataSet(param) && Util.isMember(param) && !dataset.isBlank()) {
+            param = dataset + "." + param;
+        } else if (Util.isMember(param) && dataset.isBlank()) {
             terminal.println(Constants.DATASET_NOT_SPECIFIED);
             return;
         }
@@ -431,7 +433,7 @@ public class Commands {
         }
     }
 
-    private static Integer getMakeDirNum(TextIO mainTextIO, String prompt) {
+    private static Integer getMakeDirNum(final TextIO mainTextIO, final String prompt) {
         LOG.debug("*** getMakeDirNum ***");
         while (true) {
             final var input = mainTextIO.newStringInputReader().withMaxLength(80).read(prompt);
@@ -445,7 +447,7 @@ public class Commands {
         }
     }
 
-    private static String getMakeDirStr(TextIO mainTextIO, String prompt) {
+    private static String getMakeDirStr(final TextIO mainTextIO, final String prompt) {
         LOG.debug("*** getMakeDirStr ***");
         String input;
         do {
@@ -457,7 +459,7 @@ public class Commands {
         return input;
     }
 
-    public SearchCache mvsCommand(ZosConnection connection, String command) {
+    public SearchCache mvsCommand(final ZosConnection connection, final String command) {
         LOG.debug("*** mvsCommand ***");
         final var mvsConsoleCmd = new MvsConsoleCmd(connection, timeout);
         final var responseStatus = mvsConsoleCmd.issueConsoleCmd(command);
@@ -468,12 +470,12 @@ public class Commands {
         return new SearchCache("mvs", new StringBuilder(responseStatus.getMessage()));
     }
 
-    public SearchCache ps(ZosConnection connection) {
+    public SearchCache ps(final ZosConnection connection) {
         LOG.debug("*** ps ***");
         return ps(connection, null);
     }
 
-    public void purgeJob(ZosConnection connection, String filter) {
+    public void purge(final ZosConnection connection, final String filter) {
         LOG.debug("*** purgeJob ***");
         final var purgeCmd = new PurgeCmd(new JobDelete(connection), new JobGet(connection), timeout);
         final var responseStatus = purgeCmd.purge(filter);
@@ -483,31 +485,31 @@ public class Commands {
         }
     }
 
-    public SearchCache ps(ZosConnection connection, String jobOrTask) {
+    public SearchCache ps(final ZosConnection connection, final String target) {
         LOG.debug("*** ps ***");
         final var processLstCmd = new ProcessLstCmd(new JobGet(connection), timeout);
-        final var responseStatus = processLstCmd.processLst(jobOrTask);
+        final var responseStatus = processLstCmd.processLst(target);
         terminal.println(responseStatus.getMessage());
         return new SearchCache("ps", new StringBuilder(responseStatus.getMessage()));
     }
 
-    public void rm(ZosConnection connection, String currDataSet, String param) {
+    public void rm(final ZosConnection connection, final String dataset, final String param) {
         LOG.debug("*** rm ***");
         final var delete = new DeleteCmd(connection, new DsnList(connection), timeout);
-        terminal.println(delete.delete(currDataSet, param).getMessage());
+        terminal.println(delete.delete(dataset, param).getMessage());
     }
 
-    public void save(ZosConnection connection, String dataSet, String[] params) {
+    public void save(final ZosConnection connection, final String dataset, final String[] params) {
         LOG.debug("*** save ***");
         final var saveCmd = new SaveCmd(new DsnWrite(connection), timeout);
-        final var responseStatus = saveCmd.save(dataSet, params[1]);
+        final var responseStatus = saveCmd.save(dataset, params[1]);
         terminal.println(responseStatus.getMessage());
         if (!responseStatus.isStatus()) {
             terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
         }
     }
 
-    public void search(SearchCache output, String text) {
+    public void search(final SearchCache output, final String text) {
         LOG.debug("*** search ***");
         final var search = new SearchCmd(terminal);
         search.search(output, text);
@@ -534,7 +536,7 @@ public class Commands {
         }
     }
 
-    public void submit(ZosConnection connection, String dataset, String target) {
+    public void submit(final ZosConnection connection, final String dataset, final String target) {
         LOG.debug("*** submit ***");
         final var submitCmd = new SubmitCmd(new JobSubmit(connection), timeout);
         final var responseStatus = submitCmd.submit(dataset, target);
@@ -556,7 +558,7 @@ public class Commands {
         return new SearchCache("tail", new StringBuilder(responseStatus.getMessage()));
     }
 
-    public void timeout(long value) {
+    public void timeout(final long value) {
         LOG.debug("*** timeout ***");
         timeout = value;
         terminal.println("timeout value set to " + timeout + " seconds.");
@@ -567,7 +569,7 @@ public class Commands {
         terminal.println("timeout value is " + timeout + " seconds.");
     }
 
-    public void touch(ZosConnection connection, String dataset, String[] params) {
+    public void touch(final ZosConnection connection, final String dataset, final String[] params) {
         LOG.debug("*** touch ***");
         final var touchCmd = new TouchCmd(new DsnWrite(connection), new DsnList(connection), timeout);
         final var responseStatus = touchCmd.touch(dataset, params[1]);
@@ -577,14 +579,14 @@ public class Commands {
         }
     }
 
-    public SearchCache tsoCommand(ZosConnection connection, String accountNumber, String command) {
+    public SearchCache tsoCommand(final ZosConnection connection, final String accountNum, final String command) {
         LOG.debug("*** tsoCommand ***");
-        if (accountNumber == null || accountNumber.isBlank()) {
+        if (accountNum == null || accountNum.isBlank()) {
             terminal.println("ACCTNUM is not set, try again...");
             // TODO send null instead to cache how would search command react should not null error out...
             return new SearchCache("tso", new StringBuilder());
         }
-        final var tsoCmd = new TsoCmd(new IssueTso(connection), accountNumber, timeout);
+        final var tsoCmd = new TsoCmd(new IssueTso(connection), accountNum, timeout);
         final var responseStatus = tsoCmd.issueCommand(command);
         terminal.println(responseStatus.getMessage());
         if (!responseStatus.isStatus()) {
@@ -593,12 +595,12 @@ public class Commands {
         return new SearchCache("tso", new StringBuilder(responseStatus.getMessage()));
     }
 
-    public void uname(ZosConnection currConnection) {
+    public void uname(final ZosConnection connection) {
         LOG.debug("*** uname ***");
-        if (currConnection != null) {
+        if (connection != null) {
             Optional<String> zosVersion = Optional.empty();
             try {
-                final var IssueConsole = new IssueConsole(currConnection);
+                final var IssueConsole = new IssueConsole(connection);
                 final var response = IssueConsole.issueCommand("D IPLINFO");
                 final var output = response.getCommandResponse()
                         .orElseThrow((() -> new ZosmfRequestException("IPLINFO command no response")));
@@ -610,16 +612,16 @@ public class Commands {
                 LOG.debug(e.getMessage());
             }
             terminal.println(
-                    "hostname: " + currConnection.getHost() + ", " + zosVersion.orElse("n\\a"));
+                    "hostname: " + connection.getHost() + ", " + zosVersion.orElse("n\\a"));
         } else {
             terminal.println(Constants.NO_INFO);
         }
     }
 
-    public void ussh(TextTerminal<?> terminal, ZosConnection currConnection,
-                     Map<String, SshConnection> SshConnections, String param) {
+    public void ussh(final TextTerminal<?> terminal, final ZosConnection zosConnection,
+                     final Map<String, SshConnection> SshConnections, final String param) {
         LOG.debug("*** ussh ***");
-        final var uss = new SshCmd(terminal, currConnection, SshConnections);
+        final var uss = new SshCmd(terminal, zosConnection, SshConnections);
         uss.sshCommand(param);
     }
 
@@ -633,7 +635,7 @@ public class Commands {
         }
     }
 
-    private ResponseStatus processFuture(ExecutorService pool, Future<ResponseStatus> submit) {
+    private ResponseStatus processFuture(final ExecutorService pool, final Future<ResponseStatus> submit) {
         LOG.debug("*** processFuture ***");
         ResponseStatus result = null;
         try {
