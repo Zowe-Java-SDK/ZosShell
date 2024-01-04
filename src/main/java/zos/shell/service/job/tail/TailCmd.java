@@ -29,6 +29,34 @@ public class TailCmd {
 
     public ResponseStatus tail(String[] params, boolean isAll) {
         LOG.debug("*** tail ***");
+
+        // example: tail ccitcp 25 all
+        if (params.length == 4 && "all".equalsIgnoreCase(params[3])) {
+            try {
+                Integer.parseInt(params[2]);
+            } catch (NumberFormatException e) {
+                return new ResponseStatus(Constants.INVALID_PARAMETER, false);
+            }
+        }
+
+        // example: tail ccitcp 25
+        if (params.length == 3 && !"all".equalsIgnoreCase(params[2])) {
+            try {
+                Integer.parseInt(params[2]);
+            } catch (NumberFormatException e) {
+                return new ResponseStatus(Constants.INVALID_PARAMETER, false);
+            }
+        }
+
+        // example: tail ccitcp 25 25
+        if (params.length == 4 && !"all".equalsIgnoreCase(params[3])) {
+            return new ResponseStatus(Constants.INVALID_PARAMETER, false);
+        }
+
+        return doTail(params, isAll);
+    }
+
+    private ResponseStatus doTail(String[] params, boolean isAll) {
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureTail(terminal, retrieve, isAll, timeout, params));
 

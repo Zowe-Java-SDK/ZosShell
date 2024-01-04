@@ -545,52 +545,19 @@ public class Commands {
         }
     }
 
-    public SearchCache tailJob(ZosConnection connection, String[] params) {
-        LOG.debug("*** tailJob ***");
-        if (params.length == 4) {
-            if (!"all".equalsIgnoreCase(params[3])) {
-                terminal.println(Constants.INVALID_PARAMETER);
-                return null;
-            }
-            try {
-                Integer.parseInt(params[2]);
-            } catch (NumberFormatException e) {
-                terminal.println(Constants.INVALID_PARAMETER);
-                return null;
-            }
-            return processTailJobResponse(connection, params, true);
-        }
-        if (params.length == 3) {
-            if ("all".equalsIgnoreCase(params[2])) {
-                return processTailJobResponse(connection, params, true);
-            }
-            try {
-                Integer.parseInt(params[2]);
-            } catch (NumberFormatException e) {
-                terminal.println(Constants.INVALID_PARAMETER);
-                return null;
-            }
-        }
-        return processTailJobResponse(connection, params, false);
-    }
-
-    private SearchCache processTailJobResponse(ZosConnection connection, String[] params, boolean isAll) {
-        LOG.debug("*** processTailJobResponse ***");
-        final var response = tailAll(connection, params, isAll);
-        return response != null && response.isStatus() ? new SearchCache(params[1],
-                new StringBuilder(response.getMessage())) : null;
-    }
-
-    private ResponseStatus tailAll(ZosConnection connection, String[] params, boolean isAll) {
-        LOG.debug("*** tailAll ***");
+    public SearchCache tail(ZosConnection connection, String[] params) {
+        LOG.debug("*** tail ***");
         final var tailCmd = new TailCmd(terminal, new JobGet(connection), timeout);
-        final var responseStatus = tailCmd.tail(params, isAll);
-        terminal.println(responseStatus.getMessage());
+        long allCount = Arrays.stream(params).filter("ALL"::equalsIgnoreCase).count();
+        if (allCount > 1) {
+            terminal.println(Constants.INVALID_PARAMETER);
+            new SearchCache("tail", new StringBuilder());
+        }
+        final var responseStatus = tailCmd.tail(params, allCount == 1);
         if (!responseStatus.isStatus()) {
             terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
         }
-        // TODO retuen SearchCache instead?...
-        return responseStatus;
+        return new SearchCache("tail", new StringBuilder(responseStatus.getMessage()));
     }
 
     public void timeout(long value) {

@@ -60,7 +60,7 @@ public class HelpCmd {
             "set <arg>               - set environment variable with arg value in the following format: key=value",
             "stop <arg>              - where arg is a task/job name",
             "submit <arg>            - where arg is a member name",
-            "tj | tailjob <arg1> <arg2> <arg3>  - where arg1 is job name and arg2 and arg3 are optional",
+            "tail <arg1> <arg2> <arg3> - where arg1 is job name and arg2 and arg3 are optional",
             "                          use arg2 to specify either line limit or \"all\" value",
             "                          if \"all\" is specified, display output from all of job's spool content",
             "                          line limit is 25 by default if not specified in arg2",

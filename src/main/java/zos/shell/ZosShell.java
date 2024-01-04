@@ -679,15 +679,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 param = params[1];
                 commands.submit(currConnection, currDataSet, param);
                 break;
-            case "tj":
-            case "tailjob":
+            case "tail":
                 if (isParamsMissing(1, params)) {
                     return;
                 }
                 if (isParamsExceeded(4, params)) {
                     return;
                 }
-                commandOutput = commands.tailJob(currConnection, params);
+                commandOutput = commands.tail(currConnection, params);
                 break;
             case "t":
             case "timeout":
