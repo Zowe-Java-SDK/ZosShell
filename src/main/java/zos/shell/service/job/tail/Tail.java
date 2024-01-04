@@ -3,7 +3,6 @@ package zos.shell.service.job.tail;
 import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.job.BrowseLog;
 import zowe.client.sdk.zosjobs.methods.JobGet;
@@ -35,21 +34,11 @@ public class Tail extends BrowseLog {
         var lines = 0;
         if (params.length == 3) {
             if (!"all".equalsIgnoreCase(params[2])) {
-                try {
-                    lines = Integer.parseInt(params[2]);
-                } catch (NumberFormatException e) {
-                    terminal.println(Constants.INVALID_PARAMETER);
-                    return null;
-                }
+                lines = Integer.parseInt(params[2]);
             }
         }
         if (params.length == 4) {
-            try {
-                lines = Integer.parseInt(params[2]);
-            } catch (NumberFormatException e) {
-                terminal.println(Constants.INVALID_PARAMETER);
-                return null;
-            }
+            lines = Integer.parseInt(params[2]);
         }
 
         if (lines > 0) {
