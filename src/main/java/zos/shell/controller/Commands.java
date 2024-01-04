@@ -416,7 +416,7 @@ public class Commands {
         }
 
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureMakeDirectory(new DsnCreate(connection), param, createParams));
+        final var submit = pool.submit(new FutureMakeDir(new DsnCreate(connection), param, createParams));
         processFuture(pool, submit);
     }
 
