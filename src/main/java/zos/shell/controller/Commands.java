@@ -25,7 +25,7 @@ import zos.shell.service.dsn.touch.TouchCmd;
 import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.grep.GrepCmd;
 import zos.shell.service.help.HelpCmd;
-import zos.shell.service.job.BrowseCmd;
+import zos.shell.service.job.browse.BrowseCmd;
 import zos.shell.service.job.processlst.ProcessLstCmd;
 import zos.shell.service.job.purge.PurgeCmd;
 import zos.shell.service.job.submit.SubmitCmd;
@@ -69,29 +69,17 @@ public class Commands {
         this.terminal = terminal;
     }
 
-    public SearchCache browse(final ZosConnection connection, final String[] params) {
+    public SearchCache browse(final ZosConnection connection, final String target, boolean isAll) {
         LOG.debug("*** browse ***");
-        if (params.length == 3) {
-            if (!"all".equalsIgnoreCase(params[2])) {
-                terminal.println(Constants.INVALID_PARAMETER);
-                return null;
-            }
-            return browseAll(connection, params, true);
-        }
-        return browseAll(connection, params, false);
-    }
-
-    private SearchCache browseAll(final ZosConnection connection, final String[] params, boolean isAll) {
-        LOG.debug("*** browseAll ***");
-        final var browseJob = new BrowseCmd(new JobGet(connection), isAll, timeout);
-        final var responseStatus = browseJob.browseJob(params[1]);
+        final var browseCmd = new BrowseCmd(new JobGet(connection), isAll, timeout);
+        final var responseStatus = browseCmd.browseJob(target);
         if (!responseStatus.isStatus()) {
             terminal.println(responseStatus.getMessage());
-            return null;
+            return new SearchCache(target, new StringBuilder());
         }
         final String output = responseStatus.getMessage();
         terminal.println(output);
-        return new SearchCache(params[1], new StringBuilder(output));
+        return new SearchCache(target, new StringBuilder(output));
     }
 
     public void cancel(final ZosConnection connection, final String target) {

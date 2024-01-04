@@ -1,4 +1,4 @@
-package zos.shell.service.job;
+package zos.shell.service.job.browse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,14 +9,14 @@ public class BrowseCmd extends BrowseLog {
 
     private static final Logger LOG = LoggerFactory.getLogger(BrowseCmd.class);
 
-    public BrowseCmd(JobGet jobGet, boolean isAll, long timeout) {
-        super(jobGet, isAll, timeout);
-        LOG.debug("*** BrowseJob ***");
+    public BrowseCmd(final JobGet retrieve, boolean isAll, final long timeout) {
+        super(retrieve, isAll, timeout);
+        LOG.debug("*** BrowseCmd ***");
     }
 
-    public ResponseStatus browseJob(String param) {
+    public ResponseStatus browseJob(final String target) {
         LOG.debug("*** browseJob ***");
-        return browseJobLog(param);
+        return browseLog(target);
     }
 
 }

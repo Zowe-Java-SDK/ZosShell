@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.job.browse.BrowseCmd;
 import zos.shell.utility.DirectorySetup;
 import zos.shell.utility.Util;
 import zowe.client.sdk.zosjobs.methods.JobGet;
@@ -16,11 +17,11 @@ public class DownloadCmd {
 
     private static final Logger LOG = LoggerFactory.getLogger(DownloadCmd.class);
 
-    private final BrowseCmd browseJob;
+    private final BrowseCmd browseCmd;
 
     public DownloadCmd(JobGet JobGet, boolean isAll, long timeout) {
         LOG.debug("*** DownloadJob ***");
-        this.browseJob = new BrowseCmd(JobGet, isAll, timeout);
+        this.browseCmd = new BrowseCmd(JobGet, isAll, timeout);
     }
 
     public ResponseStatus download(String name) {
@@ -29,7 +30,7 @@ public class DownloadCmd {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
 
-        final var responseStatus = browseJob.browseJob(name);
+        final var responseStatus = browseCmd.browseJob(name);
         if (!responseStatus.isStatus() && responseStatus.getMessage().contains("timeout")) {
             return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
         } else if (!responseStatus.isStatus()) {
@@ -37,8 +38,8 @@ public class DownloadCmd {
         }
 
         final var output = responseStatus.getMessage();
-        browseJob.jobs.sort(Comparator.comparing(job -> job.getJobId().orElse(""), Comparator.reverseOrder()));
-        final var id = browseJob.jobs.get(0).getJobId().orElse(null);
+        browseCmd.jobs.sort(Comparator.comparing(job -> job.getJobId().orElse(""), Comparator.reverseOrder()));
+        final var id = browseCmd.jobs.get(0).getJobId().orElse(null);
 
         final var dirSetup = new DirectorySetup();
         try {

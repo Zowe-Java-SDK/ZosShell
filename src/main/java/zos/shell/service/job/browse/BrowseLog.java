@@ -1,9 +1,8 @@
-package zos.shell.service.job;
+package zos.shell.service.job.browse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.future.FutureBrowseJob;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -24,23 +23,23 @@ public class BrowseLog {
 
     private static final Logger LOG = LoggerFactory.getLogger(BrowseLog.class);
 
-    protected final JobGet jobGet;
+    protected final JobGet retrieve;
     public List<Job> jobs = new ArrayList<>();
     private final boolean isAll;
     private final long timeout;
 
-    public BrowseLog(JobGet jobGet, boolean isAll, long timeout) {
-        LOG.debug("*** JobLog ***");
-        this.jobGet = jobGet;
+    public BrowseLog(final JobGet retrieve, boolean isAll, final long timeout) {
+        LOG.debug("*** BrowseLog ***");
+        this.retrieve = retrieve;
         this.isAll = isAll;
         this.timeout = timeout;
     }
 
-    protected ResponseStatus browseJobLog(String param) {
-        LOG.debug("*** browseJobLog ***");
-        final var jobParams = new GetJobParams.Builder("*").prefix(param).build();
+    protected ResponseStatus browseLog(final String target) {
+        LOG.debug("*** browseLog ***");
+        final var jobParams = new GetJobParams.Builder("*").prefix(target).build();
         try {
-            jobs = jobGet.getCommon(jobParams);
+            jobs = retrieve.getCommon(jobParams);
         } catch (ZosmfRequestException e) {
             final String errMsg = Util.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
@@ -57,7 +56,7 @@ public class BrowseLog {
         final var job = jobStillRunning.orElse(jobs.get(0));
         final List<JobFile> files;
         try {
-            files = jobGet.getSpoolFilesByJob(job);
+            files = retrieve.getSpoolFilesByJob(job);
         } catch (ZosmfRequestException e) {
             final String msg = Util.getResponsePhrase(e.getResponse());
             final var errMsg = "error retrieving spool content for job id " + job.getJobId().orElse("n\\a") +
@@ -66,8 +65,8 @@ public class BrowseLog {
         }
 
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = isAll ? pool.submit(new FutureBrowseJob(jobGet, files)) :
-                pool.submit(new FutureBrowseJob(jobGet, List.of(files.get(0))));
+        final var submit = isAll ? pool.submit(new FutureBrowse(retrieve, files)) :
+                pool.submit(new FutureBrowse(retrieve, List.of(files.get(0))));
         try {
             final var result = submit.get(timeout, TimeUnit.SECONDS);
             pool.shutdownNow();

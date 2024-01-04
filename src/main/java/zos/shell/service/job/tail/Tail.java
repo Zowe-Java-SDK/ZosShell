@@ -4,7 +4,7 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.response.ResponseStatus;
-import zos.shell.service.job.BrowseLog;
+import zos.shell.service.job.browse.BrowseLog;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.Arrays;
@@ -24,7 +24,7 @@ public class Tail extends BrowseLog {
 
     public ResponseStatus tail(final String[] params) {
         LOG.debug("*** tail ***");
-        final ResponseStatus result = browseJobLog(params[1]);
+        final ResponseStatus result = browseLog(params[1]);
         if (!result.isStatus()) {
             return result;
         }
