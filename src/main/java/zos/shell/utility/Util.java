@@ -75,11 +75,6 @@ public class Util {
         }
     }
 
-    public static boolean isHttpError(int statusCode) {
-        LOG.debug("*** isHttpError ***");
-        return !((statusCode >= 200 && statusCode <= 299) || (statusCode >= 100 && statusCode <= 199));
-    }
-
     public static DataSetMember getDatasetAndMember(String param) {
         LOG.debug("*** getMemberFromDataSet ***");
         final var index = param.indexOf("(");
@@ -189,4 +184,5 @@ public class Util {
         }
         return response.getResponsePhrase().get().toString();
     }
+    
 }
