@@ -15,6 +15,7 @@ import zos.shell.service.dsn.DownloadCmd;
 import zos.shell.service.dsn.LstCmd;
 import zos.shell.service.dsn.concatenate.ConcatCmd;
 import zos.shell.service.dsn.copy.CopyCmd;
+import zos.shell.service.dsn.count.CountCmd;
 import zos.shell.service.dsn.delete.DeleteCmd;
 import zos.shell.service.dsn.edit.EditCmd;
 import zos.shell.service.dsn.save.SaveCmd;
@@ -132,11 +133,14 @@ public class Commands {
         terminal.println(copy.copy(currDataSet, params).getMessage());
     }
 
-    public void count(ZosConnection connection, String dataSet, String filter) {
+    public void count(ZosConnection connection, String dataset, String filter) {
         LOG.debug("*** count ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureCount(new DsnList(connection), dataSet, filter));
-        processFuture(pool, submit);
+        final var countcmd = new CountCmd(new DsnList(connection), timeout);
+        final var responseStatus = countcmd.count(dataset, filter);
+        terminal.println(responseStatus.getMessage());
+        if (!responseStatus.isStatus()) {
+            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+        }
     }
 
     public void download(ZosConnection connection, String currDataSet, String target, boolean isBinary) {
