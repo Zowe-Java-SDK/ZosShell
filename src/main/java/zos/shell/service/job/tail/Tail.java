@@ -60,9 +60,9 @@ public class Tail extends BrowseLog {
                 return result;
             }
         } else {
-            final var LINES_LIMIT = 25;
-            if (size > LINES_LIMIT) {
-                return display(LINES_LIMIT, size, output);
+            final var LINE_LIMIT = 25;
+            if (size > LINE_LIMIT) {
+                return display(LINE_LIMIT, size, output);
             } else {
                 displayAll(output);
                 return result;
