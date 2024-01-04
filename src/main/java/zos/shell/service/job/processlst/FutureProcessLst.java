@@ -1,4 +1,4 @@
-package zos.shell.service.job.ProcessLst;
+package zos.shell.service.job.processlst;
 
 import zos.shell.response.ResponseStatus;
 import zowe.client.sdk.zosjobs.methods.JobGet;

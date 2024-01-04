@@ -24,7 +24,7 @@ import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.grep.GrepCmd;
 import zos.shell.service.help.HelpCmd;
 import zos.shell.service.job.BrowseCmd;
-import zos.shell.service.job.ProcessLst.ProcessLstCmd;
+import zos.shell.service.job.processlst.ProcessLstCmd;
 import zos.shell.service.job.TerminateCmd;
 import zos.shell.service.job.submit.SubmitCmd;
 import zos.shell.service.localfile.LocalFileCmd;

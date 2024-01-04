@@ -1,4 +1,4 @@
-package zos.shell.service.job.ProcessLst;
+package zos.shell.service.job.processlst;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
