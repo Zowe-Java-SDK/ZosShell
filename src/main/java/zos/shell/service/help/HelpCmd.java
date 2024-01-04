@@ -12,7 +12,7 @@ public class HelpCmd {
     private static final Logger LOG = LoggerFactory.getLogger(HelpCmd.class);
 
     private static final List<String> HELP = List.of(
-            "bj | browsejob <arg1> <arg2> - where arg1 is a job name and arg2 is optional",
+            "b | browse <arg1> <arg2> - where arg1 is a job name and arg2 is optional",
             "                          if arg2 not specified, display job's JESMSGLG spool output",
             "                          if arg2 is equal to \"all\", display all job's spool output",
             "cancel <arg>            - where arg is a task/job name",
@@ -26,8 +26,6 @@ public class HelpCmd {
             "count members           - return member count in dataset",
             "count datasets          - return dataset count in dataset",
             "cp | copy <arg> arg>    - where arg can be \".\", member, dataset or dataset(member)",
-            "cps | copys <arg> arg>  - where at least one argument is a sequential dataset",
-            "                        - for sequential dataset copying",
             "d | download <arg1> <arg2>  - download arg1 to local c:\\ZosShell\\pwd where arg1 is member or sequential dataset",
             "                          and arg2 is optional and only accepts \"-b\" for binary download ",
             "dj | downloadjob <arg1> <arg2> - download the latest job log where <arg1> is job name",
@@ -52,7 +50,7 @@ public class HelpCmd {
             "mvs <arg>               - execute a mvs command where arg is a command string within double quotes",
             "ps                      - display all processes running",
             "ps <arg>                - where arg is a task/job name",
-            "pj | purgejob <arg>     - purge a job name or job is arg can represent either",
+            "p | purge <arg>         - purge a job name or job is arg can represent either",
             "pwd                     - show current working dataset",
             "rm <arg>                - where arg is \"*\", member, dataset, or dataset with member value",
             "save <arg>              - save arg where arg is a file name from files command to the current pwd",

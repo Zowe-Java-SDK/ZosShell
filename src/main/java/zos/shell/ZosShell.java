@@ -608,8 +608,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     commandOutput = commands.ps(currConnection);
                 }
                 break;
-            case "pj":
-            case "purgejob":
+            case "p":
+            case "purge":
                 if (isParamsMissing(1, params)) {
                     return;
                 }
