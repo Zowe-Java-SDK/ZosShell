@@ -2,7 +2,6 @@ package zos.shell.service.job.tail;
 
 import org.beryx.textio.TextTerminal;
 import zos.shell.response.ResponseStatus;
-import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.concurrent.Callable;
