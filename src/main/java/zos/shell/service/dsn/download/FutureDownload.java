@@ -1,25 +1,24 @@
-package zos.shell.future;
+package zos.shell.service.dsn.download;
 
 import zos.shell.response.ResponseStatus;
-import zos.shell.service.dsn.DownloadCmd;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 
 import java.util.concurrent.Callable;
 
 public class FutureDownload extends DownloadCmd implements Callable<ResponseStatus> {
 
-    private final String dataSet;
+    private final String dataset;
     private final String member;
 
-    public FutureDownload(DsnGet download, String dataSet, String member, boolean isBinary) {
+    public FutureDownload(final DsnGet download, final String dataset, final String member, boolean isBinary) {
         super(download, isBinary);
-        this.dataSet = dataSet;
+        this.dataset = dataset;
         this.member = member;
     }
 
     @Override
     public ResponseStatus call() {
-        return this.download(dataSet, member);
+        return this.member(dataset, member);
     }
 
 }

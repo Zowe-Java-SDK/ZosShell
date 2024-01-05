@@ -5,18 +5,18 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.future.FutureDownload;
-import zos.shell.future.FutureDownloadJob;
+import zos.shell.service.job.download.FutureDownloadJob;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.change.ColorCmd;
 import zos.shell.service.change.ConnCmd;
 import zos.shell.service.change.DirCmd;
 import zos.shell.service.console.MvsConsoleCmd;
-import zos.shell.service.dsn.DownloadCmd;
 import zos.shell.service.dsn.concatenate.ConcatCmd;
 import zos.shell.service.dsn.copy.CopyCmd;
 import zos.shell.service.dsn.count.CountCmd;
 import zos.shell.service.dsn.delete.DeleteCmd;
+import zos.shell.service.dsn.download.DownloadCmd;
+import zos.shell.service.dsn.download.FutureDownload;
 import zos.shell.service.dsn.edit.EditCmd;
 import zos.shell.service.dsn.list.LstCmd;
 import zos.shell.service.dsn.makedir.MakeDirCmd;
@@ -171,11 +171,11 @@ public class Commands {
         final var dataSetMember = Util.getDatasetAndMember(target);
         ResponseStatus result;
         if (dataSetMember != null) {
-            result = download.download(dataSetMember.getDataSet(), dataSetMember.getMember());
+            result = download.member(dataSetMember.getDataSet(), dataSetMember.getMember());
         } else if (Util.isMember(target)) {
-            result = download.download(dataset, target);
+            result = download.member(dataset, target);
         } else {
-            result = download.download(target);
+            result = download.dataset(target);
         }
 
         if (!result.isStatus()) {

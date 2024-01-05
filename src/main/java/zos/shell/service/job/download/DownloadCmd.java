@@ -1,4 +1,4 @@
-package zos.shell.service.job;
+package zos.shell.service.job.download;
 
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
@@ -19,12 +19,12 @@ public class DownloadCmd {
 
     private final BrowseCmd browseCmd;
 
-    public DownloadCmd(JobGet JobGet, boolean isAll, long timeout) {
-        LOG.debug("*** DownloadJob ***");
-        this.browseCmd = new BrowseCmd(JobGet, isAll, timeout);
+    public DownloadCmd(final JobGet retrieve, boolean isAll, final long timeout) {
+        LOG.debug("*** DownloadCmd ***");
+        this.browseCmd = new BrowseCmd(retrieve, isAll, timeout);
     }
 
-    public ResponseStatus download(String name) {
+    public ResponseStatus download(final String name) {
         LOG.debug("*** download ***");
         if (!Util.isMember(name)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);

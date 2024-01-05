@@ -1,4 +1,4 @@
-package zos.shell.service.dsn;
+package zos.shell.service.dsn.download;
 
 import com.google.common.base.Strings;
 import org.apache.commons.io.FileUtils;
@@ -30,14 +30,14 @@ public class DownloadCmd {
     private DownloadParams dlParams;
     private final boolean isBinary;
 
-    public DownloadCmd(DsnGet dsnGet, boolean isBinary) {
-        LOG.debug("*** Download ***");
+    public DownloadCmd(final DsnGet dsnGet, boolean isBinary) {
+        LOG.debug("*** DownloadCmd ***");
         this.dsnGet = dsnGet;
         this.isBinary = isBinary;
     }
 
-    public ResponseStatus download(String dataSet, String member) {
-        LOG.debug("*** download member ***");
+    public ResponseStatus member(final String dataset, final String member) {
+        LOG.debug("*** member ***");
         if (!Util.isMember(member)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
@@ -45,7 +45,7 @@ public class DownloadCmd {
 
         final var dirSetup = new DirectorySetup();
         try {
-            dirSetup.initialize(dataSet, member);
+            dirSetup.initialize(dataset, member);
         } catch (IllegalStateException e) {
             return new ResponseStatus(message + e.getMessage(), false);
         }
@@ -56,14 +56,14 @@ public class DownloadCmd {
 
             if (!isBinary) {
                 dlParams = new DownloadParams.Builder().build();
-                textContent = getTextContent(dataSet, member);
+                textContent = getTextContent(dataset, member);
                 if (textContent == null) {
                     return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
                 }
                 Util.writeTextFile(textContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
             } else {
                 dlParams = new DownloadParams.Builder().binary(true).build();
-                binaryContent = getBinaryContent(dataSet, member);
+                binaryContent = getBinaryContent(dataset, member);
                 if (binaryContent == null) {
                     return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
                 }
@@ -79,19 +79,20 @@ public class DownloadCmd {
         return new ResponseStatus(message, true, dirSetup.getFileNamePath());
     }
 
-    public ResponseStatus download(final String dataSet) {
-        var message = dataSet + " " + Constants.ARROW;
+    public ResponseStatus dataset(final String dataset) {
+        LOG.debug("*** dataset ***");
+        var message = dataset + " " + Constants.ARROW;
         final var dirSetup = new DirectorySetup();
 
         try {
-            dirSetup.initialize(Constants.SEQUENTIAL_DIRECTORY_LOCATION, dataSet);
+            dirSetup.initialize(Constants.SEQUENTIAL_DIRECTORY_LOCATION, dataset);
         } catch (IllegalStateException e) {
             return new ResponseStatus(message + e.getMessage(), false);
         }
 
         try {
             dlParams = new DownloadParams.Builder().build();
-            String textContent = getTextContent(dataSet);
+            String textContent = getTextContent(dataset);
             if (textContent == null) {
                 return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
             }
@@ -108,30 +109,32 @@ public class DownloadCmd {
         return new ResponseStatus(message, true, dirSetup.getFileNamePath());
     }
 
-    private void writeBinaryFile(InputStream input, String directoryPath, String fileNamePath) throws IOException {
+    private void writeBinaryFile(final InputStream input, final String directoryPath, final String fileNamePath)
+            throws IOException {
         LOG.debug("*** writeBinaryFile ***");
         Files.createDirectories(Paths.get(directoryPath));
         FileUtils.copyInputStreamToFile(input, new File(fileNamePath));
     }
 
-    private String getTextContent(String dataSet, String member) throws ZosmfRequestException, IOException {
+    private String getTextContent(final String dataset, final String member)
+            throws ZosmfRequestException, IOException {
         LOG.debug("*** getTextContent member ***");
-        final var inputStream = getInputStream(String.format("%s(%s)", dataSet, member));
+        final var inputStream = getInputStream(String.format("%s(%s)", dataset, member));
         return getTextStreamData(inputStream);
     }
 
-    private String getTextContent(String dataSet) throws ZosmfRequestException, IOException {
+    private String getTextContent(final String dataset) throws ZosmfRequestException, IOException {
         LOG.debug("*** getTextContent member ***");
-        final var inputStream = getInputStream(dataSet);
+        final var inputStream = getInputStream(dataset);
         return getTextStreamData(inputStream);
     }
 
-    private InputStream getBinaryContent(String dataSet, String member) throws ZosmfRequestException {
+    private InputStream getBinaryContent(final String dataset, final String member) throws ZosmfRequestException {
         LOG.debug("*** getBinaryContent member ***");
-        return getInputStream(String.format("%s(%s)", dataSet, member));
+        return getInputStream(String.format("%s(%s)", dataset, member));
     }
 
-    public InputStream getInputStream(String target) throws ZosmfRequestException {
+    public InputStream getInputStream(final String target) throws ZosmfRequestException {
         LOG.debug("*** getInputStream ***");
         if (dlParams == null) {
             dlParams = new DownloadParams.Builder().build();
@@ -139,7 +142,7 @@ public class DownloadCmd {
         return dsnGet.get(target, dlParams);
     }
 
-    private String getTextStreamData(InputStream inputStream) throws IOException {
+    private String getTextStreamData(final InputStream inputStream) throws IOException {
         LOG.debug("*** getTextStreamData ***");
         if (inputStream != null) {
             final var writer = new StringWriter();

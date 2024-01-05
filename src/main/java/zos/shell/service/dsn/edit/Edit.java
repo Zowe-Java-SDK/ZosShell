@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.service.dsn.DownloadCmd;
+import zos.shell.service.dsn.download.DownloadCmd;
 import zos.shell.utility.Util;
 
 import java.io.IOException;
@@ -28,17 +28,18 @@ public class Edit {
         ResponseStatus result;
         final var dataSetMember = Util.getDatasetAndMember(target);
 
+        // TODO future for member and dataset download?
         if (Util.isMember(target)) {
             // member input specified from current dataset
-            result = download.download(dataset, target);
+            result = download.member(dataset, target);
         } else if (dataSetMember != null) {
             // dataset(member) input specified
             dataset = dataSetMember.getDataSet();
             target = dataSetMember.getMember();
-            result = download.download(dataset, target);
+            result = download.member(dataset, target);
         } else {
             // target input specified i.e. sequential dataset
-            result = download.download(target);
+            result = download.dataset(target);
             dataset = Constants.SEQUENTIAL_DIRECTORY_LOCATION;
         }
 
