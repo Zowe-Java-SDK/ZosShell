@@ -43,6 +43,7 @@ public class LstCmd {
         }
 
         datasets = getDataSets(dataSet);
+        isDataSets = datasets.size() > 1;
         members = getMembers(dataSet);
 
         member.ifPresentOrElse((m) -> {
