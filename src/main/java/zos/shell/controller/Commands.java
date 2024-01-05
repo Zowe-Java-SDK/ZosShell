@@ -145,7 +145,7 @@ public class Commands {
         DownloadCmd downloadCmd = new DownloadCmd(connection, isBinary, timeout);
         List<ResponseStatus> results = downloadCmd.download(dataset, target);
         results.forEach(r -> terminal.println(r.getMessage()));
-        if (results.size() == 1) {
+        if (results.size() == 1 && !results.get(0).isStatus()) {
             terminal.println("cannot download " + target + ", try again...");
         }
     }
