@@ -36,7 +36,7 @@ public class DownloadCmd {
 
     public List<ResponseStatus> download(final String dataset, final String target) {
         LOG.debug("*** download ***");
-        List<ResponseStatus> result = new ArrayList<>();
+        List<ResponseStatus> results = new ArrayList<>();
         List<Member> members = new ArrayList<>();
 
         // dataset is current dataset
@@ -49,14 +49,15 @@ public class DownloadCmd {
             try {
                 members = memberLst.memberLst(dataset);
             } catch (ZosmfRequestException e) {
-                result.add(new ResponseStatus(e.getMessage(), false));
+                results.add(new ResponseStatus(e.getMessage(), false));
             }
 
             if (members.isEmpty()) {
-                result.add(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
+                results.add(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
             }
 
-            result.addAll(downloadMembers(dataset, members, isBinary));
+            results.addAll(downloadMembers(dataset, members, isBinary));
+            return results;
         }
 
         // download all members that filter by member wild card in dataset
@@ -66,7 +67,7 @@ public class DownloadCmd {
             try {
                 members = memberLst.memberLst(dataset);
             } catch (ZosmfRequestException e) {
-                result.add(new ResponseStatus(e.getMessage(), false));
+                results.add(new ResponseStatus(e.getMessage(), false));
             }
 
             final var index = target.indexOf("*");
@@ -76,10 +77,11 @@ public class DownloadCmd {
                     .collect(Collectors.toList());
 
             if (members.isEmpty()) {
-                result.add(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
+                results.add(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
             }
 
-            result.addAll(downloadMembers(dataset, members, isBinary));
+            results.addAll(downloadMembers(dataset, members, isBinary));
+            return results;
         }
 
         final var dataSetMember = Util.getDatasetAndMember(target);
@@ -90,32 +92,32 @@ public class DownloadCmd {
                 // dataset(member) notation
                 submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), dataSetMember.getDataSet(),
                         dataSetMember.getMember(), isBinary));
-                result.add(submit.get(timeout, TimeUnit.SECONDS));
+                results.add(submit.get(timeout, TimeUnit.SECONDS));
             } else if (Util.isMember(target)) {
                 // member in current dataset
                 submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), dataset, target, isBinary));
-                result.add(submit.get(timeout, TimeUnit.SECONDS));
+                results.add(submit.get(timeout, TimeUnit.SECONDS));
             } else {
                 // sequential dataset
                 submit = pool.submit(new FutureDatasetDownload(new DsnGet(connection), target, isBinary));
-                result.add(submit.get(timeout, TimeUnit.SECONDS));
+                results.add(submit.get(timeout, TimeUnit.SECONDS));
             }
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             submit.cancel(true);
             LOG.debug("error: " + e);
-            result.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
+            results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
         } finally {
             pool.shutdown();
         }
 
-        if (result.get(0).isStatus()) {
-            Util.openFileLocation(result.get(0).getOptionalData());
-            return result;
+        if (results.get(0).isStatus()) {
+            Util.openFileLocation(results.get(0).getOptionalData());
+            return results;
         } else {
-            result.add(0, new ResponseStatus(Util.getMsgAfterArrow(result.get(0).getMessage()), false));
+            results.add(0, new ResponseStatus(Util.getMsgAfterArrow(results.get(0).getMessage()), false));
         }
 
-        return result;
+        return results;
     }
 
     private List<ResponseStatus> downloadMembers(final String dataset, final List<Member> members, boolean isBinary) {
