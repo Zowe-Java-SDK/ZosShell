@@ -23,9 +23,7 @@ import java.nio.file.Paths;
 public class Download {
 
     private static final Logger LOG = LoggerFactory.getLogger(Download.class);
-
-    public static final String DIRECTORY_PATH_WINDOWS = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\";
-    public static final String DIRECTORY_PATH_MAC = Constants.PATH_FILE_DIRECTORY_MAC + "/";
+    
     private final DsnGet dsnGet;
     private DownloadParams dlParams;
     private final boolean isBinary;
