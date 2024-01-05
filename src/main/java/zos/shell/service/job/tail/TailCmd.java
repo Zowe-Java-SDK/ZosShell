@@ -30,7 +30,7 @@ public class TailCmd {
     public ResponseStatus tail(String[] params, boolean isAll) {
         LOG.debug("*** tail ***");
 
-        // example: tail ccitcp 25 all
+        // example: tail jobOrTaskName 25 all
         if (params.length == 4 && "all".equalsIgnoreCase(params[3])) {
             try {
                 Integer.parseInt(params[2]);
@@ -39,7 +39,7 @@ public class TailCmd {
             }
         }
 
-        // example: tail ccitcp 25
+        // example: tail jobOrTaskName 25
         if (params.length == 3 && !"all".equalsIgnoreCase(params[2])) {
             try {
                 Integer.parseInt(params[2]);
@@ -48,7 +48,7 @@ public class TailCmd {
             }
         }
 
-        // example: tail ccitcp 25 25
+        // example: tail jobOrTaskName 25 25
         if (params.length == 4 && !"all".equalsIgnoreCase(params[3])) {
             return new ResponseStatus(Constants.INVALID_PARAMETER, false);
         }

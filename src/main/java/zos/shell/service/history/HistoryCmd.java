@@ -66,7 +66,7 @@ public class HistoryCmd {
                 circularLinkedList.add(command);
             }
         }
-        // reset the currNode pointer used to handle history scrolling..
+        // reset the currNode pointer used to handle history scrolling...
         circularLinkedList.currNode = null;
     }
 
