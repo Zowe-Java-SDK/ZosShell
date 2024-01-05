@@ -5,7 +5,6 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.service.job.download.FutureDownloadJob;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.change.ColorCmd;
 import zos.shell.service.change.ConnCmd;
@@ -15,8 +14,8 @@ import zos.shell.service.dsn.concatenate.ConcatCmd;
 import zos.shell.service.dsn.copy.CopyCmd;
 import zos.shell.service.dsn.count.CountCmd;
 import zos.shell.service.dsn.delete.DeleteCmd;
+import zos.shell.service.dsn.download.Download;
 import zos.shell.service.dsn.download.DownloadCmd;
-import zos.shell.service.dsn.download.FutureDownload;
 import zos.shell.service.dsn.edit.EditCmd;
 import zos.shell.service.dsn.list.LstCmd;
 import zos.shell.service.dsn.makedir.MakeDirCmd;
@@ -26,6 +25,7 @@ import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.grep.GrepCmd;
 import zos.shell.service.help.HelpCmd;
 import zos.shell.service.job.browse.BrowseCmd;
+import zos.shell.service.job.download.FutureDownloadJob;
 import zos.shell.service.job.processlst.ProcessLstCmd;
 import zos.shell.service.job.purge.PurgeCmd;
 import zos.shell.service.job.submit.SubmitCmd;
@@ -53,7 +53,6 @@ import zowe.client.sdk.zostso.method.IssueTso;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 public class Commands {
 
@@ -94,7 +93,7 @@ public class Commands {
 
     public SearchCache cat(final ZosConnection connection, final String dataset, final String target) {
         LOG.debug("*** cat ***");
-        final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
+        final var concatCmd = new ConcatCmd(new Download(new DsnGet(connection), false), timeout);
         final var data = concatCmd.cat(dataset, target).getMessage();
         terminal.println(data);
         return new SearchCache("cat", new StringBuilder(data));
@@ -140,50 +139,14 @@ public class Commands {
         }
     }
 
-    public void download(final ZosConnection connection, final String dataset,
-                         final String target, boolean isBinary) {
-        LOG.debug("*** download ***");
-        if ("*".equals(target)) {
-            final var members = Util.getMembers(terminal, connection, dataset);
-            if (members.isEmpty()) {
-                terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
-                return;
-            }
-            multipleDownload(connection, dataset, members, isBinary).forEach(i -> terminal.println(i.getMessage()));
-            return;
-        }
-
-        if (target.contains("*") && Util.isMember(target.substring(0, target.indexOf("*")))) {
-            var members = Util.getMembers(terminal, connection, dataset);
-            final var index = target.indexOf("*");
-            final var searchForMember = target.substring(0, index).toUpperCase();
-            members = members.stream().filter(i -> i.startsWith(searchForMember)).collect(Collectors.toList());
-            if (members.isEmpty()) {
-                terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
-                return;
-            }
-            multipleDownload(connection, dataset, members, isBinary).forEach(i -> terminal.println(i.getMessage()));
-            return;
-        }
-
-        final DownloadCmd download = new DownloadCmd(new DsnGet(connection), isBinary);
-
-        final var dataSetMember = Util.getDatasetAndMember(target);
-        ResponseStatus result;
-        if (dataSetMember != null) {
-            result = download.member(dataSetMember.getDataSet(), dataSetMember.getMember());
-        } else if (Util.isMember(target)) {
-            result = download.member(dataset, target);
-        } else {
-            result = download.dataset(target);
-        }
-
-        if (!result.isStatus()) {
-            terminal.println(Util.getMsgAfterArrow(result.getMessage()));
+    public void dsnDownload(final ZosConnection connection, final String dataset,
+                            final String target, boolean isBinary) {
+        LOG.debug("*** dsnDownload ***");
+        DownloadCmd downloadCmd = new DownloadCmd(connection, isBinary, timeout);
+        List<ResponseStatus> results = downloadCmd.download(dataset, target);
+        results.forEach(r -> terminal.println(r.getMessage()));
+        if (results.size() == 1) {
             terminal.println("cannot download " + target + ", try again...");
-        } else {
-            terminal.println(result.getMessage());
-            Util.openFileLocation(result.getOptionalData());
         }
     }
 
@@ -192,43 +155,6 @@ public class Commands {
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureDownloadJob(new JobGet(connection), isAll, timeout, param));
         processFuture(pool, submit);
-    }
-
-    private List<ResponseStatus> multipleDownload(final ZosConnection connection, final String dataset,
-                                                  final List<String> members, boolean isBinary) {
-        LOG.debug("*** multipleDownload ***");
-        if (members.isEmpty()) {
-            final var rs = new ResponseStatus("", false);
-            final var rss = new ArrayList<ResponseStatus>();
-            rss.add(rs);
-            terminal.println(Constants.DOWNLOAD_NOTHING_WARNING);
-            return rss;
-        }
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
-        final var futures = new ArrayList<Future<ResponseStatus>>();
-
-        for (final var member : members) {
-            futures.add(pool.submit(new FutureDownload(new DsnGet(connection), dataset, member, isBinary)));
-        }
-
-        final var result = getFutureResults(futures);
-        Util.openFileLocation(result.get(0).getOptionalData());
-        pool.shutdownNow();
-        return result;
-    }
-
-    private List<ResponseStatus> getFutureResults(final List<Future<ResponseStatus>> futures) {
-        LOG.debug("*** getFutureResults ***");
-        final var results = new ArrayList<ResponseStatus>();
-        for (final var future : futures) {
-            try {
-                results.add(future.get(timeout, TimeUnit.SECONDS));
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                future.cancel(true);
-                results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
-            }
-        }
-        return results;
     }
 
     public SearchCache env() {
@@ -619,7 +545,7 @@ public class Commands {
 
     public void vi(final ZosConnection connection, final String dataset, final String[] params) {
         LOG.debug("*** vi ***");
-        final var editCmd = new EditCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
+        final var editCmd = new EditCmd(new Download(new DsnGet(connection), false), timeout);
         final var responseStatus = editCmd.open(dataset, params[1]);
         terminal.println(responseStatus.getMessage());
         if (!responseStatus.isStatus()) {

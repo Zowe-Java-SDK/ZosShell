@@ -430,7 +430,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         return;
                     }
                 }
-                commands.download(currConnection, currDataSet, param, isBinary);
+                commands.dsnDownload(currConnection, currDataSet, param, isBinary);
                 break;
             case "dj":
             case "downloadjob":

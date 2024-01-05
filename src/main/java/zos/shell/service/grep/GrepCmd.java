@@ -3,8 +3,8 @@ package zos.shell.service.grep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.service.dsn.download.DownloadCmd;
 import zos.shell.service.dsn.concatenate.ConcatCmd;
+import zos.shell.service.dsn.download.Download;
 import zos.shell.service.memberlst.MemberLst;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZosConnection;
@@ -69,13 +69,13 @@ public class GrepCmd {
         } else if (memberWildCard) {
             final var value = target.substring(0, target.indexOf("*")).toUpperCase();
             members = members.stream()
-                             .filter(m -> m.getMember().isPresent() && m.getMember().get().startsWith(value))
-                             .collect(Collectors.toList());
+                    .filter(m -> m.getMember().isPresent() && m.getMember().get().startsWith(value))
+                    .collect(Collectors.toList());
 
             return futureResults(dataset, result, pool, futures, members);
         } else {
             pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-            final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
+            final var concatCmd = new ConcatCmd(new Download(new DsnGet(connection), false), timeout);
             final var submit = pool.submit(new FutureGrep(concatCmd, dataset, target, pattern, false));
 
             try {
@@ -93,7 +93,7 @@ public class GrepCmd {
     private List<String> futureResults(final String dataset, final List<String> result, final ExecutorService pool,
                                        final ArrayList<Future<List<String>>> futures, final List<Member> members) {
         for (final var member : members) {
-            final var concatCmd = new ConcatCmd(new DownloadCmd(new DsnGet(connection), false), timeout);
+            final var concatCmd = new ConcatCmd(new Download(new DsnGet(connection), false), timeout);
             if (member.getMember().isPresent()) {
                 final var name = member.getMember().get();
                 futures.add(pool.submit(new FutureGrep(concatCmd, dataset, name, pattern, true)));

@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.service.dsn.download.DownloadCmd;
+import zos.shell.service.dsn.download.Download;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -15,10 +15,10 @@ public class ConcatCmd {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConcatCmd.class);
 
-    private final DownloadCmd download;
+    private final Download download;
     private final long timeout;
 
-    public ConcatCmd(final DownloadCmd download, final long timeout) {
+    public ConcatCmd(final Download download, final long timeout) {
         LOG.debug("*** ConcatCmd ***");
         this.download = download;
         this.timeout = timeout;

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.dsn.download.Download;
 import zos.shell.service.dsn.download.DownloadCmd;
 import zos.shell.utility.Util;
 
@@ -15,10 +16,10 @@ public class Edit {
 
     private static final Logger LOG = LoggerFactory.getLogger(Edit.class);
 
-    private final DownloadCmd download;
+    private final Download download;
     private final Runtime rs = Runtime.getRuntime();
 
-    public Edit(final DownloadCmd download) {
+    public Edit(final Download download) {
         LOG.debug("*** Edit ***");
         this.download = download;
     }

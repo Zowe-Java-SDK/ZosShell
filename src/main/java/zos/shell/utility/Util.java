@@ -1,21 +1,19 @@
 package zos.shell.utility;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.record.DataSetMember;
-import zos.shell.record.Member;
-import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.Response;
-import zowe.client.sdk.rest.exception.ZosmfRequestException;
-import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class Util {
@@ -91,20 +89,6 @@ public class Util {
             return null;
         }
         return new DataSetMember(dataset, member);
-    }
-
-    public static List<String> getMembers(TextTerminal<?> terminal, ZosConnection connection, String dataSet) {
-        LOG.debug("*** getMembers ***");
-        final var member = new Member(new DsnList(connection));
-        final List<String> members;
-        try {
-            members = member.getMembers(dataSet);
-        } catch (ZosmfRequestException e) {
-            final String errMsg = Util.getResponsePhrase(e.getResponse());
-            terminal.println((errMsg != null ? errMsg : e.getMessage()));
-            return new ArrayList<>();
-        }
-        return members;
     }
 
     private static boolean isSegment(String segment) {

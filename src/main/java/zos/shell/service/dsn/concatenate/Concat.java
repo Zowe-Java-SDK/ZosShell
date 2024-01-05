@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.service.dsn.download.DownloadCmd;
+import zos.shell.service.dsn.download.Download;
 import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 
@@ -17,9 +17,9 @@ public class Concat {
 
     private static final Logger LOG = LoggerFactory.getLogger(Concat.class);
 
-    private final DownloadCmd download;
+    private final Download download;
 
-    public Concat(final DownloadCmd download) {
+    public Concat(final Download download) {
         LOG.debug("*** Concat ***");
         this.download = download;
     }
