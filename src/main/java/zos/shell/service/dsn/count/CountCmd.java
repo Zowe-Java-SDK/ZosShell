@@ -4,8 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.service.datasetlst.FutureDatasetLst;
+import zos.shell.service.datasetlst.DatasetLst;
 import zos.shell.service.memberlst.FutureMemberLst;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.response.Dataset;
 import zowe.client.sdk.zosfiles.dsn.response.Member;
@@ -53,15 +54,11 @@ public class CountCmd {
         }
 
         if ("datasets".equalsIgnoreCase(filter)) {
-            final var submit = pool.submit(new FutureDatasetLst(this.dsnList, dataset));
+            final var datasetLst = new DatasetLst(dsnList, timeout);
             try {
-                datasets = submit.get(timeout, TimeUnit.SECONDS);
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                submit.cancel(true);
-                LOG.debug("error: " + e);
-                return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
-            } finally {
-                pool.shutdown();
+                datasets = datasetLst.datasetLst(dataset);
+            } catch (ZosmfRequestException e) {
+                return new ResponseStatus(e.getMessage(), false);
             }
         }
 
