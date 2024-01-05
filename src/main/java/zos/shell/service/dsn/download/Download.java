@@ -23,7 +23,7 @@ import java.nio.file.Paths;
 public class Download {
 
     private static final Logger LOG = LoggerFactory.getLogger(Download.class);
-    
+
     private final DsnGet dsnGet;
     private DownloadParams dlParams;
     private final boolean isBinary;
