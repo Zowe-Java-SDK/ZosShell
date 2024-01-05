@@ -12,15 +12,20 @@ public class FutureDatasetLst implements Callable<List<Dataset>> {
 
     private final String dataset;
     private final DsnList dsnList;
+    private final long timeout;
 
-    public FutureDatasetLst(final DsnList dsnList, final String dataset) {
+    public FutureDatasetLst(final DsnList dsnList, final String dataset, final long timeout) {
         this.dsnList = dsnList;
         this.dataset = dataset;
+        this.timeout = timeout;
     }
 
     @Override
     public List<Dataset> call() throws Exception {
-        return dsnList.getDatasets(dataset, new ListParams.Builder().attribute(AttributeType.BASE).build());
+        return dsnList.getDatasets(dataset,
+                new ListParams.Builder().attribute(AttributeType.BASE)
+                                        .maxLength("0")  // return all
+                                        .responseTimeout(String.valueOf(this.timeout)).build());
     }
 
 }

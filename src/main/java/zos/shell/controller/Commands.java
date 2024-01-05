@@ -273,8 +273,9 @@ public class Commands {
         final var listing = new LstCmd(terminal, new DsnList(connection), timeout);
         try {
             listing.ls(member, dataset, true, false);
-        } catch (TimeoutException e) {
-            terminal.println(Constants.TIMEOUT_MESSAGE);
+        } catch (ZosmfRequestException e) {
+            final var errMsg = Util.getResponsePhrase(e.getResponse());
+            terminal.println(errMsg != null ? errMsg : e.getMessage());
         }
     }
 
@@ -283,8 +284,9 @@ public class Commands {
         final var listing = new LstCmd(terminal, new DsnList(connection), timeout);
         try {
             listing.ls(null, dataset, true, false);
-        } catch (TimeoutException e) {
-            terminal.println(Constants.TIMEOUT_MESSAGE);
+        } catch (ZosmfRequestException e) {
+            final var errMsg = Util.getResponsePhrase(e.getResponse());
+            terminal.println(errMsg != null ? errMsg : e.getMessage());
         }
     }
 
@@ -298,8 +300,9 @@ public class Commands {
         final var listing = new LstCmd(terminal, new DsnList(connection), timeout);
         try {
             listing.ls(member, dataset, false, isAttributes);
-        } catch (TimeoutException e) {
-            terminal.println(Constants.TIMEOUT_MESSAGE);
+        } catch (ZosmfRequestException e) {
+            final var errMsg = Util.getResponsePhrase(e.getResponse());
+            terminal.println(errMsg != null ? errMsg : e.getMessage());
         }
     }
 

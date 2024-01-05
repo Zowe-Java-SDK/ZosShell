@@ -4,21 +4,16 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.service.datasetlst.FutureDatasetLst;
-import zos.shell.service.memberlst.FutureMemberLst;
-import zowe.client.sdk.zosfiles.dsn.input.ListParams;
+import zos.shell.service.datasetlst.DatasetLst;
+import zos.shell.service.memberlst.MemberLst;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.response.Dataset;
 import zowe.client.sdk.zosfiles.dsn.response.Member;
-import zowe.client.sdk.zosfiles.dsn.types.AttributeType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 public class LstCmd {
@@ -28,9 +23,8 @@ public class LstCmd {
     private final TextTerminal<?> terminal;
     private final long timeout;
     private List<Member> members = new ArrayList<>();
-    private List<Dataset> dataSets = new ArrayList<>();
+    private List<Dataset> datasets = new ArrayList<>();
     private final DsnList dsnList;
-    private ListParams params;
     private boolean isDataSets = false;
 
     public LstCmd(TextTerminal<?> terminal, DsnList dsnList, long timeout) {
@@ -41,54 +35,40 @@ public class LstCmd {
     }
 
     public void ls(String memberValue, String dataSet, boolean isColumnView, boolean isAttributes)
-            throws TimeoutException {
+            throws ZosmfRequestException {
         LOG.debug("*** ls ***");
-        final var paramsBuilder = new ListParams.Builder()
-                .maxLength("0")  // return all
-                .responseTimeout(String.valueOf(timeout));
-        if (!isColumnView && isAttributes) { // ls -1
-            params = paramsBuilder.attribute(AttributeType.BASE).build();
-        } else { // ls
-            params = paramsBuilder.build();
-        }
         var member = Optional.ofNullable(memberValue);
         if (member.isPresent()) {
             member = Optional.of(memberValue.toUpperCase());
         }
 
-        try {
-            dataSets = getDataSets(dataSet);
-            isDataSets = dataSets.size() > 1;
-            members = getMembers(dataSet);
-        } catch (TimeoutException e) {
-            throw new TimeoutException(e.getMessage());
-        } catch (ExecutionException | InterruptedException ignored) {
-        }
+        datasets = getDataSets(dataSet);
+        members = getMembers(dataSet);
 
         member.ifPresentOrElse((m) -> {
             final var index = m.indexOf("*");
             final var searchForMember = index == -1 ? m : m.substring(0, index);
             if (m.equals(searchForMember)) {
                 members = members.stream()
-                        .filter(i -> i.getMember().orElse("")
+                                .filter(i -> i.getMember().orElse("")
                                 .equals(searchForMember))
-                        .collect(Collectors.toList());
+                                .collect(Collectors.toList());
             } else {
                 members = members.stream()
-                        .filter(i -> i.getMember().orElse("")
-                                .startsWith(searchForMember))
-                        .collect(Collectors.toList());
+                                 .filter(i -> i.getMember().orElse("")
+                                 .startsWith(searchForMember))
+                                 .collect(Collectors.toList());
             }
-        }, () -> displayDataSets(dataSets, dataSet, isColumnView, isAttributes));
+        }, () -> displayDataSets(dataSet, isColumnView, isAttributes));
         final var membersSize = members.size();
         if (member.isPresent() && membersSize == 0) {
             terminal.println(Constants.NO_MEMBERS);
             return;
         }
-        displayListStatus(membersSize, dataSets.size());
+        displayListStatus(membersSize, datasets.size());
 
         if (!isColumnView) {  // ls -l
-            displayMembers(members, isAttributes);
+            displayMembers(isAttributes);
             return;
         }
 
@@ -105,25 +85,19 @@ public class LstCmd {
         terminal.println(line.toString());
     }
 
-    private List<Member> getMembers(String dataset) throws ExecutionException, InterruptedException, TimeoutException {
+    private List<Member> getMembers(final String member) throws ZosmfRequestException {
         LOG.debug("*** getMembers ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureMemberLst(this.dsnList, dataset));
-        List<Member> members = submit.get(timeout, TimeUnit.SECONDS);
-        pool.shutdown();
-        return members;
+        final var memberLst = new MemberLst(dsnList, timeout);
+        return memberLst.memberLst(member);
     }
 
-    private List<Dataset> getDataSets(String dataset) throws ExecutionException, InterruptedException, TimeoutException {
+    private List<Dataset> getDataSets(final String dataset) throws ZosmfRequestException {
         LOG.debug("*** getDataSets ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureDatasetLst(this.dsnList, dataset));
-        List<Dataset> datasets = submit.get(timeout, TimeUnit.SECONDS);
-        pool.shutdown();
-        return datasets;
+        final var datasetLst = new DatasetLst(dsnList, timeout);
+        return datasetLst.datasetLst(dataset);
     }
 
-    private void displayListStatus(int membersSize, int dataSetsSize) {
+    private void displayListStatus(final int membersSize, final int dataSetsSize) {
         LOG.debug("*** displayListStatus ***");
         if (membersSize == 0 && dataSetsSize == 1) {
             terminal.println(Constants.NO_MEMBERS);
@@ -133,18 +107,17 @@ public class LstCmd {
         }
     }
 
-    private void displayDataSets(List<Dataset> dataSets, String ignoreCurrDataSet,
-                                 boolean isColumnView, boolean isAttributes) {
+    private void displayDataSets(final String ignoreCurrDataSet, boolean isColumnView, boolean isAttributes) {
         LOG.debug("*** displayDataSets ***");
-        if (dataSets.isEmpty() || (dataSets.size() == 1
-                && ignoreCurrDataSet.equalsIgnoreCase(dataSets.get(0).getDsname().orElse("")))) {
+        if (this.datasets.isEmpty() || (this.datasets.size() == 1
+                && ignoreCurrDataSet.equalsIgnoreCase(this.datasets.get(0).getDsname().orElse("")))) {
             return;
         }
         if (!isColumnView && isAttributes) { // ls -l
             final var columnFormat = "%-11s %-11s %-8s %-5s %-5s %-6s %-7s %-5s";
             terminal.println(String.format(columnFormat,
                     "cdate", "rdate", "vol", "dsorg", "recfm", "blksz", "dsntp", "dsname"));
-            dataSets.forEach(ds -> {
+            this.datasets.forEach(ds -> {
                 final var dsname = ds.getDsname().orElse("n\\a");
                 if (!dsname.equalsIgnoreCase(ignoreCurrDataSet)) {
                     terminal.println(String.format(columnFormat, ds.getCdate().orElse("n\\a"),
@@ -155,7 +128,7 @@ public class LstCmd {
                 }
             });
         } else { // ls
-            dataSets.forEach(ds -> {
+            this.datasets.forEach(ds -> {
                 final var dsname = ds.getDsname().orElse("");
                 if (!dsname.equalsIgnoreCase(ignoreCurrDataSet)) {
                     terminal.println(dsname);
@@ -164,9 +137,9 @@ public class LstCmd {
         }
     }
 
-    private void displayMembers(List<Member> members, boolean isAttributes) {
+    private void displayMembers(boolean isAttributes) {
         LOG.debug("*** displayMembers ***");
-        if (members.isEmpty()) {
+        if (this.members.isEmpty()) {
             return;
         }
         final var columnFormat = "%-8s %-10s %-10s %-4s %-5s";
@@ -175,13 +148,13 @@ public class LstCmd {
         }
         if (isAttributes) {
             terminal.println(String.format(columnFormat, "user", "cdate", "mdate", "mod", "member"));
-            for (final var member : members) {
+            for (final var member : this.members) {
                 terminal.println(String.format(columnFormat, member.getUser().orElse("n\\a"),
                         member.getC4date().orElse("n\\a"), member.getM4date().orElse("n\\a"),
                         member.getMod().orElse(0), member.getMember().orElse("n\\a")));
             }
         } else {
-            members.forEach(m -> terminal.println(m.getMember().orElse("")));
+            this.members.forEach(m -> terminal.println(m.getMember().orElse("")));
         }
     }
 

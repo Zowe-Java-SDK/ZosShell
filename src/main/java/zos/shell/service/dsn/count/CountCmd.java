@@ -2,10 +2,9 @@ package zos.shell.service.dsn.count;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.datasetlst.DatasetLst;
-import zos.shell.service.memberlst.FutureMemberLst;
+import zos.shell.service.memberlst.MemberLst;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.response.Dataset;
@@ -13,10 +12,6 @@ import zowe.client.sdk.zosfiles.dsn.response.Member;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CountCmd {
@@ -38,18 +33,12 @@ public class CountCmd {
         List<Dataset> datasets = new ArrayList<>();
         List<Member> members = new ArrayList<>();
 
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-
         if ("members".equalsIgnoreCase(filter)) {
-            final var submit = pool.submit(new FutureMemberLst(this.dsnList, dataset));
+            final var memberLst = new MemberLst(dsnList, timeout);
             try {
-                members = submit.get(timeout, TimeUnit.SECONDS);
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                submit.cancel(true);
-                LOG.debug("error: " + e);
-                return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
-            } finally {
-                pool.shutdown();
+                members = memberLst.memberLst(dataset);
+            } catch (ZosmfRequestException e) {
+                return new ResponseStatus(e.getMessage(), false);
             }
         }
 

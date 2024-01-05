@@ -27,7 +27,7 @@ public class DatasetLst {
 
     public List<Dataset> datasetLst(final String dataset) throws ZosmfRequestException {
         LOG.debug("*** datasetLst ***");
-        final var submit = pool.submit(new FutureDatasetLst(dsnList, dataset));
+        final var submit = pool.submit(new FutureDatasetLst(dsnList, dataset, timeout));
 
         List<Dataset> datasets;
         try {

@@ -27,7 +27,7 @@ public class MemberLst {
 
     public boolean memberExist(final String dataset, final String member) throws ZosmfRequestException {
         LOG.debug("*** memberExist ***");
-        final var submit = pool.submit(new FutureMemberLst(dsnList, dataset));
+        final var submit = pool.submit(new FutureMemberLst(dsnList, dataset, timeout));
 
         List<Member> members;
         try {
@@ -49,7 +49,7 @@ public class MemberLst {
 
     public List<Member> memberLst(final String dataset) throws ZosmfRequestException {
         LOG.debug("*** memberLst ***");
-        final var submit = pool.submit(new FutureMemberLst(dsnList, dataset));
+        final var submit = pool.submit(new FutureMemberLst(dsnList, dataset, timeout));
 
         List<Member> members;
         try {
