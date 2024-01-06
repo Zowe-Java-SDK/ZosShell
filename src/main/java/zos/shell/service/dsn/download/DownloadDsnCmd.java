@@ -7,6 +7,7 @@ import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.memberlst.MemberLst;
 import zos.shell.utility.FileUtil;
+import zos.shell.utility.ResponseUtil;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -116,7 +117,7 @@ public class DownloadDsnCmd {
             FileUtil.openFileLocation(results.get(0).getOptionalData());
             return results;
         } else {
-            results.add(0, new ResponseStatus(Util.getMsgAfterArrow(results.get(0).getMessage()), false));
+            results.add(0, new ResponseStatus(ResponseUtil.getMsgAfterArrow(results.get(0).getMessage()), false));
         }
 
         return results;

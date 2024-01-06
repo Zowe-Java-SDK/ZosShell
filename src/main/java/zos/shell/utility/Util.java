@@ -2,7 +2,6 @@ package zos.shell.utility;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.constants.Constants;
 
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -73,15 +72,6 @@ public class Util {
         final var p = Pattern.compile(PATTERN_STRING_MORE_THAN_ONE_CHAR);
         final var m = p.matcher(segment);
         return m.matches();
-    }
-
-    public static String getMsgAfterArrow(String msg) {
-        LOG.debug("*** getMsgAfterArrow ***");
-        if (!msg.contains(Constants.ARROW)) {
-            return msg;
-        }
-        final var index = msg.indexOf(Constants.ARROW) + Constants.ARROW.length();
-        return msg.substring(index);
     }
 
 }
