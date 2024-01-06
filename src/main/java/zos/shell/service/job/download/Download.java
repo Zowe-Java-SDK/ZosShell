@@ -7,6 +7,7 @@ import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.job.browse.BrowseCmd;
 import zos.shell.utility.DirectorySetup;
+import zos.shell.utility.FileUtil;
 import zos.shell.utility.Util;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
@@ -49,7 +50,7 @@ public class Download {
         }
 
         try {
-            Util.writeTextFile(output, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
+            FileUtil.writeTextFile(output, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
         } catch (IOException e) {
             return new ResponseStatus(e.getMessage(), false);
         }

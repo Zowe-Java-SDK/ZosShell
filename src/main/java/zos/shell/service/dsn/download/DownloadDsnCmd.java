@@ -6,6 +6,7 @@ import zos.shell.constants.Constants;
 import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.memberlst.MemberLst;
+import zos.shell.utility.FileUtil;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -112,7 +113,7 @@ public class DownloadDsnCmd {
         }
 
         if (results.get(0).isStatus()) {
-            Util.openFileLocation(results.get(0).getOptionalData());
+            FileUtil.openFileLocation(results.get(0).getOptionalData());
             return results;
         } else {
             results.add(0, new ResponseStatus(Util.getMsgAfterArrow(results.get(0).getMessage()), false));
@@ -144,7 +145,7 @@ public class DownloadDsnCmd {
             }
         }
 
-        Util.openFileLocation(results.get(0).getOptionalData());
+        FileUtil.openFileLocation(results.get(0).getOptionalData());
         pool.shutdownNow();
         return results;
     }

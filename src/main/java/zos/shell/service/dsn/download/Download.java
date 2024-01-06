@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.DirectorySetup;
+import zos.shell.utility.FileUtil;
 import zos.shell.utility.ResponseUtil;
 import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -59,7 +60,7 @@ public class Download {
                 if (textContent == null) {
                     return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
                 }
-                Util.writeTextFile(textContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
+                FileUtil.writeTextFile(textContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
             } else {
                 dlParams = new DownloadParams.Builder().binary(true).build();
                 binaryContent = getBinaryContent(dataset, member);
@@ -95,7 +96,7 @@ public class Download {
             if (textContent == null) {
                 return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
             }
-            Util.writeTextFile(textContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
+            FileUtil.writeTextFile(textContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
 
         } catch (ZosmfRequestException e) {
             final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
