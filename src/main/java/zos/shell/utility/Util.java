@@ -23,29 +23,29 @@ public class Util {
     private static final String PATTERN_STRING_MORE_THAN_ONE_CHAR = "[A-Z#@\\$][A-Z\\d#@\\$\\-]{1,7}";
     private static final String PATTERN_STRING_FOR_ONE_CHAR = "[A-Z#@\\$]{1}";
 
-    public static boolean isDataSet(String dataSetName) {
+    public static boolean isDataSet(String name) {
         LOG.debug("*** isDataSet ***");
-        dataSetName = dataSetName.toUpperCase(Locale.ROOT);
+        name = name.toUpperCase(Locale.ROOT);
 
         // Check that the dataset contains more than one segment
         // This could be valid for additionalTests
-        final var segments = dataSetName.split("\\.");
+        final var segments = name.split("\\.");
         if (segments.length < 2) {
             return false;
         }
 
         // The length cannot be longer than 44
-        if (dataSetName.length() > 44) {
+        if (name.length() > 44) {
             return false;
         }
 
         // The name cannot contain two successive periods
-        if (dataSetName.contains("..")) {
+        if (name.contains("..")) {
             return false;
         }
 
         // Cannot end in a period
-        if (dataSetName.endsWith(".")) {
+        if (name.endsWith(".")) {
             return false;
         }
 
@@ -58,33 +58,33 @@ public class Util {
         return true;
     }
 
-    public static boolean isMember(String memberName) {
+    public static boolean isMember(String name) {
         LOG.debug("*** isMember ***");
-        return isSegment(memberName.toUpperCase(Locale.ROOT));
+        return isSegment(name.toUpperCase(Locale.ROOT));
     }
 
-    public static boolean isStrNum(String strNum) {
+    public static boolean isStrNum(String str) {
         LOG.debug("*** isStrNum ***");
         try {
-            Integer.parseInt(strNum);
+            Integer.parseInt(str);
             return true;
         } catch (NumberFormatException nfe) {
             return false;
         }
     }
 
-    public static DataSetMember getDatasetAndMember(String param) {
+    public static DataSetMember getDatasetAndMember(String target) {
         LOG.debug("*** getMemberFromDataSet ***");
-        final var index = param.indexOf("(");
+        final var index = target.indexOf("(");
         if (index == -1) {
             return null;
         }
-        final var dataset = param.substring(0, index);
+        final var dataset = target.substring(0, index);
         if (!Util.isDataSet(dataset)) {
             return null;
         }
 
-        final var member = param.substring(index + 1, param.length() - 1);
+        final var member = target.substring(index + 1, target.length() - 1);
         if (!Util.isMember(member)) {
             return null;
         }
