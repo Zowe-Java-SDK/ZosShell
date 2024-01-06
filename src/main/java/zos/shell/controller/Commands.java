@@ -37,6 +37,7 @@ import zos.shell.service.search.SearchCache;
 import zos.shell.service.search.SearchCmd;
 import zos.shell.service.tso.TsoCmd;
 import zos.shell.utility.ResponseUtil;
+import zos.shell.utility.StrUtil;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
@@ -376,7 +377,7 @@ public class Commands {
             if ("q".equalsIgnoreCase(input) || "quit".equalsIgnoreCase(input) || "exit".equalsIgnoreCase(input)) {
                 return null;
             }
-        } while (Util.isStrNum(input));
+        } while (StrUtil.isStrNum(input));
         return input;
     }
 

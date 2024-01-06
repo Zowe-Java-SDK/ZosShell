@@ -21,6 +21,7 @@ import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.history.HistoryCmd;
 import zos.shell.service.search.SearchCache;
 import zos.shell.utility.PromptUtil;
+import zos.shell.utility.StrUtil;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
@@ -177,7 +178,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             }
             command = commandLine.split(" ");
             if (Arrays.stream(command).anyMatch(String::isEmpty)) {  // handle multiple empty spaces specified
-                command = Util.stripEmptyStrings(command);
+                command = StrUtil.stripEmptyStrings(command);
             }
 
             // handle edge case where end user enters prompt as the only input, skip it and continue
@@ -270,7 +271,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             }
 
             final var subStr = cmd.substring(1);
-            final var isStrNum = Util.isStrNum(subStr);
+            final var isStrNum = StrUtil.isStrNum(subStr);
 
             String newCmd;
             if ("!".equals(subStr)) {

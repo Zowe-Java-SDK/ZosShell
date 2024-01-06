@@ -8,9 +8,6 @@ import zos.shell.constants.Constants;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -61,16 +58,6 @@ public class Util {
         return isSegment(name.toUpperCase(Locale.ROOT));
     }
 
-    public static boolean isStrNum(String str) {
-        LOG.debug("*** isStrNum ***");
-        try {
-            Integer.parseInt(str);
-            return true;
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-    }
-
     private static boolean isSegment(String segment) {
         LOG.debug("*** isSegment ***");
         // Each segment cannot be more than 8 characters
@@ -105,14 +92,6 @@ public class Util {
         LOG.debug("*** writeTextFile ***");
         Files.createDirectories(Paths.get(directoryPath));
         Files.write(Paths.get(fileNamePath), content.getBytes());
-    }
-
-    public static String[] stripEmptyStrings(String[] command) {
-        LOG.debug("*** stripEmptyStrings ***");
-        final var list = new ArrayList<>(Arrays.asList(command));
-        list.removeAll(Collections.singleton(""));
-        command = list.toArray(new String[0]);
-        return command;
     }
 
     public static void openFileLocation(String filePath) {

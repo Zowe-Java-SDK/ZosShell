@@ -4,7 +4,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.utility.Util;
+import zos.shell.utility.StrUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,7 +37,7 @@ public class MvsConsoles {
             String str;
             while ((str = br.readLine()) != null) {
                 final var items = str.split(",");
-                if (items.length >= 5 && !Util.isStrNum(items[4])) {
+                if (items.length >= 5 && !StrUtil.isStrNum(items[4])) {
                     consoles.put(items[0], items[4]);
                 }
             }

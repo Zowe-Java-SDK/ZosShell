@@ -4,7 +4,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.utility.Util;
+import zos.shell.utility.StrUtil;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 
@@ -39,10 +39,10 @@ public class Credentials {
                 var ZosConnection = new ZosConnection(items[0], items[1], items[2], items[3]);
                 var SshConnection = new SshConnection(items[0], sshPort, items[2], items[3]);
                 // items[4] can represent a mvsconsolename or sshport value, sshport will be a number
-                if (items.length == 5 && Util.isStrNum(items[4])) {
+                if (items.length == 5 && StrUtil.isStrNum(items[4])) {
                     sshPort = Integer.parseInt(items[4]);
                     SshConnection = new SshConnection(items[0], sshPort, items[2], items[3]);
-                } else if (items.length == 6 && Util.isStrNum(items[5])) { // items[5] is only sshport value
+                } else if (items.length == 6 && StrUtil.isStrNum(items[5])) { // items[5] is only sshport value
                     sshPort = Integer.parseInt(items[5]);
                     SshConnection = new SshConnection(items[0], sshPort, items[2], items[3]);
                 }

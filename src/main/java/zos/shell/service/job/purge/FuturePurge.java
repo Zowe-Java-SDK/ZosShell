@@ -1,7 +1,7 @@
 package zos.shell.service.job.purge;
 
 import zos.shell.response.ResponseStatus;
-import zos.shell.utility.Util;
+import zos.shell.utility.StrUtil;
 import zowe.client.sdk.zosjobs.methods.JobDelete;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
@@ -41,7 +41,7 @@ public class FuturePurge extends Purge implements Callable<ResponseStatus> {
                 filter.startsWith(JobIdIdentifier.STC.getValue()))) {
 
             final var id = filter.substring(3);
-            if (Util.isStrNum(id)) {
+            if (StrUtil.isStrNum(id)) {
                 return this.purgeById(filter);
             }
         }
