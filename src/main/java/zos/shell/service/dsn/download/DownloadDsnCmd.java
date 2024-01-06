@@ -6,9 +6,9 @@ import zos.shell.constants.Constants;
 import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.memberlst.MemberLst;
+import zos.shell.utility.DsnUtil;
 import zos.shell.utility.FileUtil;
 import zos.shell.utility.ResponseUtil;
-import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
@@ -64,7 +64,7 @@ public class DownloadDsnCmd {
         }
 
         // download all members that filter by member wild card in dataset
-        if (target.contains("*") && Util.isMember(target.substring(0, target.indexOf("*")))) {
+        if (target.contains("*") && DsnUtil.isMember(target.substring(0, target.indexOf("*")))) {
 
             final var memberLst = new MemberLst(new DsnList(connection), timeout);
             try {
@@ -96,7 +96,7 @@ public class DownloadDsnCmd {
                 submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), dataSetMember.getDataSet(),
                         dataSetMember.getMember(), isBinary));
                 results.add(submit.get(timeout, TimeUnit.SECONDS));
-            } else if (Util.isMember(target)) {
+            } else if (DsnUtil.isMember(target)) {
                 // member in current dataset
                 submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), dataset, target, isBinary));
                 results.add(submit.get(timeout, TimeUnit.SECONDS));

@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.DownloadDsnCmd;
+import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
-import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
 
@@ -29,14 +29,14 @@ public class Save {
 
     public ResponseStatus save(final String dataset, final String memberOrDataset) {
         LOG.debug("*** save ***");
-        if (!Util.isDataSet(dataset)) {
+        if (!DsnUtil.isDataSet(dataset)) {
             return new ResponseStatus(Constants.INVALID_DATASET, false);
         }
 
         var isSequentialDataSet = false;
-        if (Util.isDataSet(memberOrDataset)) {
+        if (DsnUtil.isDataSet(memberOrDataset)) {
             isSequentialDataSet = true;
-        } else if (!Util.isMember(memberOrDataset)) {
+        } else if (!DsnUtil.isMember(memberOrDataset)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
 

@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
+import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
-import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.ListParams;
@@ -83,7 +83,7 @@ public class DeleteCmd {
             final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
             // handle member
-            if (Util.isMember(param)) {
+            if (DsnUtil.isMember(param)) {
                 if (isCurrDataSetEmpty(currDataSet)) {
                     new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
                 }
@@ -114,7 +114,7 @@ public class DeleteCmd {
             }
 
             // handle sequential dataset
-            if (Util.isDataSet(param)) {
+            if (DsnUtil.isDataSet(param)) {
                 final var future = pool.submit(new FutureDelete(new DsnDelete(connection), param));
                 processResult(result, future);
                 pool.shutdown();

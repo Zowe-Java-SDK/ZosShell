@@ -7,8 +7,8 @@ import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.job.browse.BrowseCmd;
 import zos.shell.utility.DirectorySetup;
+import zos.shell.utility.DsnUtil;
 import zos.shell.utility.FileUtil;
-import zos.shell.utility.Util;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class Download {
 
     public ResponseStatus download(final String target) {
         LOG.debug("*** download ***");
-        if (!Util.isMember(target)) {
+        if (!DsnUtil.isMember(target)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
 

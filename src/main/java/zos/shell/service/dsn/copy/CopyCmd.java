@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
+import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
-import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.ListParams;
@@ -43,7 +43,7 @@ public class CopyCmd {
 
         final var result = new StringBuilder();
 
-        if (params[1].contains("*") && Util.isMember(params[1].substring(0, params[1].indexOf("*")))) {
+        if (params[1].contains("*") && DsnUtil.isMember(params[1].substring(0, params[1].indexOf("*")))) {
 
             List<Member> members;
             try {
@@ -68,7 +68,7 @@ public class CopyCmd {
 
             final var toDataSetName = params[2];
 
-            if (!Util.isDataSet(toDataSetName)) {
+            if (!DsnUtil.isDataSet(toDataSetName)) {
                 return new ResponseStatus(Constants.INVALID_DATASET, false);
             }
 

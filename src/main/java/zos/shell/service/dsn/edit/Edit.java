@@ -9,7 +9,7 @@ import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.service.dsn.download.DownloadDsnCmd;
-import zos.shell.utility.Util;
+import zos.shell.utility.DsnUtil;
 
 import java.io.IOException;
 
@@ -31,7 +31,7 @@ public class Edit {
         final var dataSetMember = DataSetMember.getDatasetAndMember(target);
 
         // TODO future for member and dataset download?
-        if (Util.isMember(target)) {
+        if (DsnUtil.isMember(target)) {
             // member input specified from current dataset
             result = download.member(dataset, target);
         } else if (dataSetMember != null) {

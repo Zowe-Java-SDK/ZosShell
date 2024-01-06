@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.DirectorySetup;
+import zos.shell.utility.DsnUtil;
 import zos.shell.utility.FileUtil;
 import zos.shell.utility.ResponseUtil;
-import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.DownloadParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
@@ -38,7 +38,7 @@ public class Download {
 
     public ResponseStatus member(final String dataset, final String member) {
         LOG.debug("*** member ***");
-        if (!Util.isMember(member)) {
+        if (!DsnUtil.isMember(member)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
         var message = Strings.padStart(member, 8, ' ') + Constants.ARROW;

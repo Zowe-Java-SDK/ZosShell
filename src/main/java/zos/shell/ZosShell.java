@@ -20,9 +20,9 @@ import zos.shell.service.autocomplete.SearchDictionary;
 import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.history.HistoryCmd;
 import zos.shell.service.search.SearchCache;
+import zos.shell.utility.DsnUtil;
 import zos.shell.utility.PromptUtil;
 import zos.shell.utility.StrUtil;
-import zos.shell.utility.Util;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 
@@ -204,12 +204,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     final var dataSetMember = DataSetMember.getDatasetAndMember(command[1]);
                     if (!currDataSet.isBlank() && dataSetMember != null) {
                         terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
-                    } else if (!currDataSet.isBlank() && Util.isMember(command[1])) {
+                    } else if (!currDataSet.isBlank() && DsnUtil.isMember(command[1])) {
                         final var candidate = currDataSet + "(" + command[1] + ")";
                         terminal.printf("Are you sure you want to delete " + candidate + " y/n");
                     } else if (currDataSet.isBlank() && dataSetMember != null) {
                         terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
-                    } else if (currDataSet.isBlank() && Util.isDataSet(command[1])) {
+                    } else if (currDataSet.isBlank() && DsnUtil.isDataSet(command[1])) {
                         terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
                     } else if (!currDataSet.isBlank() && ("*".equals(command[1]) || ".".equals(command[1]))) {
                         terminal.printf("Are you sure you want to delete all from " + currDataSet + " y/n");
@@ -523,19 +523,19 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         }
                         final var index = value.indexOf("*");
                         final var member = value.substring(0, index);
-                        if (Util.isMember(member)) {  // validate member value without wild card char...
+                        if (DsnUtil.isMember(member)) {  // validate member value without wild card char...
                             commands.lsl(currConnection, value, currDataSet, isAttributes);
                         } else {
                             terminal.println(Constants.INVALID_MEMBER);
                         }
                         return;
-                    } else if (Util.isMember(value)) {  // is member without wild card specified...
+                    } else if (DsnUtil.isMember(value)) {  // is member without wild card specified...
                         if (isCurrDataSetNotSpecified()) {
                             return;
                         }
                         commands.lsl(currConnection, value, currDataSet, isAttributes);
                         return;
-                    } else if (Util.isDataSet(value)) {  // is dataset specified at this point...
+                    } else if (DsnUtil.isDataSet(value)) {  // is dataset specified at this point...
                         commands.lsl(currConnection, null, value, isAttributes);
                         return;
                     } else {  // must be an invalid member or dataset specified...
@@ -552,7 +552,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     addVisited();
                     return;
                 }
-                if (params.length == 2 && Util.isDataSet(params[1])) {
+                if (params.length == 2 && DsnUtil.isDataSet(params[1])) {
                     commands.ls(currConnection, params[1]);
                     return;
                 }
@@ -563,12 +563,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     final var value = params[1];
                     final var index = value.indexOf("*");
                     final var member = value.substring(0, index);
-                    if (Util.isMember(member)) {
+                    if (DsnUtil.isMember(member)) {
                         commands.ls(currConnection, value, currDataSet);
                         return;
                     }
                 }
-                if (params.length == 2 && Util.isMember(params[1])) {
+                if (params.length == 2 && DsnUtil.isMember(params[1])) {
                     commands.ls(currConnection, params[1], currDataSet);
                     return;
                 }

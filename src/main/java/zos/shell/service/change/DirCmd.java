@@ -4,8 +4,8 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
-import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.ListParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
@@ -29,7 +29,7 @@ public class DirCmd {
 
     public String cd(String currDataSet, final String param) {
         LOG.debug("*** cd ***");
-        if (Util.isDataSet(param)) {
+        if (DsnUtil.isDataSet(param)) {
             return param;
         } else if (param.equals("..") && !currDataSet.isBlank()) {
             var tokens = currDataSet.split("\\.");

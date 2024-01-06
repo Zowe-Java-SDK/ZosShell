@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-public class Util {
+public class DsnUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Util.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DsnUtil.class);
 
     private static final String PATTERN_STRING_MORE_THAN_ONE_CHAR = "[A-Z#@\\$][A-Z\\d#@\\$\\-]{1,7}";
     private static final String PATTERN_STRING_FOR_ONE_CHAR = "[A-Z#@\\$]{1}";

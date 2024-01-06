@@ -36,9 +36,9 @@ import zos.shell.service.omvs.SshCmd;
 import zos.shell.service.search.SearchCache;
 import zos.shell.service.search.SearchCmd;
 import zos.shell.service.tso.TsoCmd;
+import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
 import zos.shell.utility.StrUtil;
-import zos.shell.utility.Util;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -239,18 +239,18 @@ public class Commands {
     public void mkdir(final ZosConnection connection, final TextIO mainTextIO,
                       final String dataset, String param) {
         LOG.debug("*** mkdir ***");
-        if (param.contains(".") && !Util.isDataSet(param)) {
+        if (param.contains(".") && !DsnUtil.isDataSet(param)) {
             terminal.println("invalid data set character sequence, try again...");
             return;
         }
-        if (!param.contains(".") && !Util.isMember(param)) {
+        if (!param.contains(".") && !DsnUtil.isMember(param)) {
             terminal.println("invalid 8 character sequence, try again...");
             return;
         }
 
-        if (!Util.isDataSet(param) && Util.isMember(param) && !dataset.isBlank()) {
+        if (!DsnUtil.isDataSet(param) && DsnUtil.isMember(param) && !dataset.isBlank()) {
             param = dataset + "." + param;
-        } else if (Util.isMember(param) && dataset.isBlank()) {
+        } else if (DsnUtil.isMember(param) && dataset.isBlank()) {
             terminal.println(Constants.DATASET_NOT_SPECIFIED);
             return;
         }

@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.memberlst.MemberLst;
+import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
-import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
@@ -35,11 +35,11 @@ public class TouchCmd {
     public ResponseStatus touch(final String dataset, final String member) {
         LOG.debug("*** touch ***");
 
-        if (!Util.isDataSet(dataset)) {
+        if (!DsnUtil.isDataSet(dataset)) {
             return new ResponseStatus(Constants.INVALID_DATASET, true);
         }
 
-        if (!Util.isMember(member)) {
+        if (!DsnUtil.isMember(member)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, true);
         }
 

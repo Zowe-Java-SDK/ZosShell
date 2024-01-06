@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.Download;
+import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
-import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class Concat {
         InputStream inputStream;
         String result;
         try {
-            if (Util.isMember(target)) {
+            if (DsnUtil.isMember(target)) {
                 // retrieve member data
                 inputStream = download.getInputStream(String.format("%s(%s)", dataset, target));
             } else {

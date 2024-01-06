@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
+import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
-import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCopy;
 
@@ -49,18 +49,18 @@ public class Copy {
         }
 
         // copy dataset to dataset
-        if (Util.isDataSet(firstParam) && Util.isDataSet(secondParam)) {
+        if (DsnUtil.isDataSet(firstParam) && DsnUtil.isDataSet(secondParam)) {
             return doCopy(firstParam, secondParam, false);
         }
 
-        if (Util.isMember(firstParam)) {
+        if (DsnUtil.isMember(firstParam)) {
             if (currDataSet.isBlank()) {
                 return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
             }
             fromDataSetName = currDataSet + "(" + firstParam + ")";
         }
 
-        if (Util.isMember(secondParam)) {
+        if (DsnUtil.isMember(secondParam)) {
             if (currDataSet.isBlank()) {
                 return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
             }
@@ -78,7 +78,7 @@ public class Copy {
                 return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
             }
             fromDataSetName = currDataSet;
-            if (Util.isDataSet(secondParam)) {
+            if (DsnUtil.isDataSet(secondParam)) {
                 toDataSetName = secondParam;
             } else {
                 return new ResponseStatus("specify valid dataset destination, try again...", false);
@@ -95,16 +95,16 @@ public class Copy {
             if (datasetMemberFirstParam != null) {
                 return doCopy(fromDataSetName, currDataSet, true);
             }
-            if (Util.isMember(firstParam)) {
+            if (DsnUtil.isMember(firstParam)) {
                 return doCopy(currDataSet + "(" + firstParam + ")", currDataSet, true);
             }
-            if (Util.isDataSet(firstParam)) {
+            if (DsnUtil.isDataSet(firstParam)) {
                 return new ResponseStatus(Constants.COPY_NO_MEMBER_ERROR, false);
             }
         }
 
         // copy dataset(member) to currDataSet(member)
-        if (datasetMemberFirstParam != null && Util.isMember(secondParam)) {
+        if (datasetMemberFirstParam != null && DsnUtil.isMember(secondParam)) {
             return doCopy(fromDataSetName, currDataSet + "(" + secondParam + ")", false);
         }
 
