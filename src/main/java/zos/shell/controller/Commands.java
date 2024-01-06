@@ -139,7 +139,7 @@ public class Commands {
         }
     }
 
-    public void dsnDownload(final ZosConnection connection, final String dataset,
+    public void downloadDsn(final ZosConnection connection, final String dataset,
                             final String target, boolean isBinary) {
         LOG.debug("*** dsnDownload ***");
         DownloadCmd downloadCmd = new DownloadCmd(connection, isBinary, timeout);
