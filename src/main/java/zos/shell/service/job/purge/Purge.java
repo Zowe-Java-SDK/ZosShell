@@ -87,7 +87,6 @@ public class Purge {
         }
 
         try {
-            // TODO check response value
             delete.deleteCommon(new ModifyJobParams.Builder(
                     job.getJobName().get(), job.getJobId().get()).version("1.0").build());
             final var msg = "Job Name: " + job.getJobName().get() + ", Job Id: " + job.getJobId().get() +
