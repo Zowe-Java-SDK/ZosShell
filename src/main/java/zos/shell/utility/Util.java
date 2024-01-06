@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.record.DataSetMember;
-import zowe.client.sdk.rest.Response;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -160,13 +159,6 @@ public class Util {
             }
         } catch (IOException ignored) {
         }
-    }
-
-    public static String getResponsePhrase(Response response) {
-        if (response == null || response.getResponsePhrase().isEmpty()) {
-            return null;
-        }
-        return response.getResponsePhrase().get().toString();
     }
 
 }

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
+import zos.shell.utility.ResponseUtil;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -48,7 +49,7 @@ public class CopyCmd {
             try {
                 members = dsnList.getMembers(dataset, listParams);
             } catch (ZosmfRequestException e) {
-                final String errMsg = Util.getResponsePhrase(e.getResponse());
+                final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
                 return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
             }
 

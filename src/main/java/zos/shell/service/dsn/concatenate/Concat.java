@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.Download;
+import zos.shell.utility.ResponseUtil;
 import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 
@@ -38,7 +39,7 @@ public class Concat {
             }
             result = retrieveInfo(inputStream);
         } catch (ZosmfRequestException e) {
-            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         } catch (IOException e) {
             return new ResponseStatus(e.getMessage(), false);

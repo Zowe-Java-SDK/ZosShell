@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.DownloadDsnCmd;
+import zos.shell.utility.ResponseUtil;
 import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
@@ -68,7 +69,7 @@ public class Save {
                 dsnWrite.write(dataset, memberOrDataset, content);
             }
         } catch (ZosmfRequestException e) {
-            final var errMsg = Util.getResponsePhrase(e.getResponse());
+            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus(arrowMsg + (errMsg != null ? errMsg : e.getMessage()), false);
         } catch (IOException e) {
             return new ResponseStatus(arrowMsg + e.getMessage(), false);

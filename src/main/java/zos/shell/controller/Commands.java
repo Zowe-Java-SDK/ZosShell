@@ -36,6 +36,7 @@ import zos.shell.service.omvs.SshCmd;
 import zos.shell.service.search.SearchCache;
 import zos.shell.service.search.SearchCmd;
 import zos.shell.service.tso.TsoCmd;
+import zos.shell.utility.ResponseUtil;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
@@ -202,7 +203,7 @@ public class Commands {
         try {
             listing.ls(member, dataset, true, false);
         } catch (ZosmfRequestException e) {
-            final var errMsg = Util.getResponsePhrase(e.getResponse());
+            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             terminal.println(errMsg != null ? errMsg : e.getMessage());
         }
     }
@@ -213,7 +214,7 @@ public class Commands {
         try {
             listing.ls(null, dataset, true, false);
         } catch (ZosmfRequestException e) {
-            final var errMsg = Util.getResponsePhrase(e.getResponse());
+            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             terminal.println(errMsg != null ? errMsg : e.getMessage());
         }
     }
@@ -229,7 +230,7 @@ public class Commands {
         try {
             listing.ls(member, dataset, false, isAttributes);
         } catch (ZosmfRequestException e) {
-            final var errMsg = Util.getResponsePhrase(e.getResponse());
+            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             terminal.println(errMsg != null ? errMsg : e.getMessage());
         }
     }

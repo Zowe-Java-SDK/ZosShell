@@ -3,7 +3,7 @@ package zos.shell.service.tso;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.response.ResponseStatus;
-import zos.shell.utility.Util;
+import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zostso.method.IssueTso;
 import zowe.client.sdk.zostso.response.IssueResponse;
@@ -36,7 +36,7 @@ public class Tso {
         try {
             response = execute(command);
         } catch (ZosmfRequestException e) {
-            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
 

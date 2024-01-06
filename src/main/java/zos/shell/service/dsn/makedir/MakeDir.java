@@ -3,7 +3,7 @@ package zos.shell.service.dsn.makedir;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.response.ResponseStatus;
-import zos.shell.utility.Util;
+import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.CreateParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
@@ -25,7 +25,7 @@ public class MakeDir {
         try {
             dsnCreate.create(dataset, params);
         } catch (ZosmfRequestException e) {
-            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
 

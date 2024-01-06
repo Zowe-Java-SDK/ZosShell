@@ -24,8 +24,8 @@ public class FutureMemberLst implements Callable<List<Member>> {
     public List<Member> call() throws Exception {
         return dsnList.getMembers(dataset,
                 new ListParams.Builder().attribute(AttributeType.MEMBER)
-                                        .maxLength("0")  // return all
-                                        .responseTimeout(String.valueOf(this.timeout)).build());
+                        .maxLength("0")  // return all
+                        .responseTimeout(String.valueOf(this.timeout)).build());
     }
 
 }

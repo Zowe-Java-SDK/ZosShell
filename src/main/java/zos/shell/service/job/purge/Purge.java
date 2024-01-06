@@ -3,6 +3,7 @@ package zos.shell.service.job.purge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.response.ResponseStatus;
+import zos.shell.utility.ResponseUtil;
 import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosjobs.input.ModifyJobParams;
@@ -36,7 +37,7 @@ public class Purge {
         try {
             jobs = retrieve.getByPrefix(name);
         } catch (ZosmfRequestException e) {
-            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
 
@@ -58,7 +59,7 @@ public class Purge {
         try {
             job = retrieve.getById(id);
         } catch (ZosmfRequestException e) {
-            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
 
@@ -93,7 +94,7 @@ public class Purge {
                     " purged successfully...";
             return new ResponseStatus(msg, true);
         } catch (ZosmfRequestException e) {
-            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
     }

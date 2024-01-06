@@ -51,14 +51,14 @@ public class LstCmd {
             final var searchForMember = index == -1 ? m : m.substring(0, index);
             if (m.equals(searchForMember)) {
                 members = members.stream()
-                                .filter(i -> i.getMember().orElse("")
+                        .filter(i -> i.getMember().orElse("")
                                 .equals(searchForMember))
-                                .collect(Collectors.toList());
+                        .collect(Collectors.toList());
             } else {
                 members = members.stream()
-                                 .filter(i -> i.getMember().orElse("")
-                                 .startsWith(searchForMember))
-                                 .collect(Collectors.toList());
+                        .filter(i -> i.getMember().orElse("")
+                                .startsWith(searchForMember))
+                        .collect(Collectors.toList());
             }
         }, () -> displayDataSets(dataSet, isColumnView, isAttributes));
         final var membersSize = members.size();

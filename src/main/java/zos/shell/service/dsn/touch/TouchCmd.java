@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.memberlst.MemberLst;
+import zos.shell.utility.ResponseUtil;
 import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
@@ -49,7 +50,7 @@ public class TouchCmd {
         try {
             foundMember = memberLst.memberExist(dataset, member);
         } catch (ZosmfRequestException e) {
-            final var errMsg = Util.getResponsePhrase(e.getResponse());
+            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus(arrowMsg + (errMsg != null ? errMsg : e.getMessage()), false);
         }
 

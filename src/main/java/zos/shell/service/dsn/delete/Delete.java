@@ -3,7 +3,7 @@ package zos.shell.service.dsn.delete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.response.ResponseStatus;
-import zos.shell.utility.Util;
+import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnDelete;
 
@@ -28,7 +28,7 @@ public class Delete {
                 return new ResponseStatus("no response phrase", true);
             }
         } catch (ZosmfRequestException e) {
-            final var errMsg = Util.getResponsePhrase(e.getResponse());
+            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
     }
@@ -43,7 +43,7 @@ public class Delete {
                 return new ResponseStatus("no response phrase", true);
             }
         } catch (ZosmfRequestException e) {
-            final var errMsg = Util.getResponsePhrase(e.getResponse());
+            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
     }

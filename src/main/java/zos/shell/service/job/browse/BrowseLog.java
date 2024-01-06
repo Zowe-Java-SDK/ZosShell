@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.utility.Util;
+import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosjobs.input.GetJobParams;
 import zowe.client.sdk.zosjobs.input.JobFile;
@@ -41,7 +41,7 @@ public class BrowseLog {
         try {
             jobs = retrieve.getCommon(jobParams);
         } catch (ZosmfRequestException e) {
-            final String errMsg = Util.getResponsePhrase(e.getResponse());
+            final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
         if (jobs.isEmpty()) {
@@ -58,7 +58,7 @@ public class BrowseLog {
         try {
             files = retrieve.getSpoolFilesByJob(job);
         } catch (ZosmfRequestException e) {
-            final String msg = Util.getResponsePhrase(e.getResponse());
+            final String msg = ResponseUtil.getResponsePhrase(e.getResponse());
             final var errMsg = "error retrieving spool content for job id " + job.getJobId().orElse("n\\a") +
                     ", " + (msg != null ? msg : e.getMessage());
             return new ResponseStatus(errMsg, false);

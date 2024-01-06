@@ -6,7 +6,7 @@ import zos.shell.constants.Constants;
 import zos.shell.service.dsn.concatenate.ConcatCmd;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.service.memberlst.MemberLst;
-import zos.shell.utility.Util;
+import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
@@ -51,7 +51,7 @@ public class GrepCmd {
             try {
                 members = memberLst.memberLst(dataset);
             } catch (ZosmfRequestException e) {
-                final var errMsg = Util.getResponsePhrase(e.getResponse());
+                final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
                 result.add(errMsg != null ? errMsg : e.getMessage());
                 return result;
             }

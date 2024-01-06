@@ -4,6 +4,7 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.utility.ResponseUtil;
 import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.ListParams;
@@ -52,7 +53,7 @@ public class DirCmd {
             try {
                 dsLst = dsnList.getDatasets(currDataSet, params);
             } catch (ZosmfRequestException e) {
-                final String errMsg = Util.getResponsePhrase(e.getResponse());
+                final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
                 terminal.println((errMsg != null ? errMsg : e.getMessage()));
                 return currDataSet;
             } catch (IllegalArgumentException e) {

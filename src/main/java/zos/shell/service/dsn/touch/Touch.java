@@ -3,7 +3,7 @@ package zos.shell.service.dsn.touch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.response.ResponseStatus;
-import zos.shell.utility.Util;
+import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.Response;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
@@ -25,7 +25,7 @@ public class Touch {
         try {
             response = dsnWrite.write(dataset, member, "");
         } catch (ZosmfRequestException e) {
-            final var errMsg = Util.getResponsePhrase(e.getResponse());
+            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
 
