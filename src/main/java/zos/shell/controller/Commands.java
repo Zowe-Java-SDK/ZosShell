@@ -503,7 +503,6 @@ public class Commands {
         LOG.debug("*** tsoCommand ***");
         if (accountNum == null || accountNum.isBlank()) {
             terminal.println("ACCTNUM is not set, try again...");
-            // TODO send null instead to cache how would search command react should not null error out...
             return new SearchCache("tso", new StringBuilder());
         }
         final var tsoCmd = new TsoCmd(new IssueTso(connection), accountNum, timeout);
@@ -511,6 +510,7 @@ public class Commands {
         terminal.println(responseStatus.getMessage());
         if (!responseStatus.isStatus()) {
             terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+            return new SearchCache("tso", new StringBuilder());
         }
         return new SearchCache("tso", new StringBuilder(responseStatus.getMessage()));
     }
