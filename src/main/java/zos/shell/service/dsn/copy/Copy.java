@@ -3,6 +3,7 @@ package zos.shell.service.dsn.copy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.ResponseUtil;
 import zos.shell.utility.Util;
@@ -32,12 +33,12 @@ public class Copy {
             return new ResponseStatus(Constants.INVALID_ARGUMENTS, false);
         }
 
-        final var datasetMemberFirstParam = Util.getDatasetAndMember(firstParam);
+        final var datasetMemberFirstParam = DataSetMember.getDatasetAndMember(firstParam);
         if (datasetMemberFirstParam != null) {
             fromDataSetName = datasetMemberFirstParam.getDataSet() + "(" + datasetMemberFirstParam.getMember() + ")";
         }
 
-        final var datasetMemberSecondParam = Util.getDatasetAndMember(secondParam);
+        final var datasetMemberSecondParam = DataSetMember.getDatasetAndMember(secondParam);
         if (datasetMemberSecondParam != null) {
             toDataSetName = datasetMemberSecondParam.getDataSet() + "(" + datasetMemberSecondParam.getMember() + ")";
         }

@@ -4,7 +4,6 @@ import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.record.DataSetMember;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -70,24 +69,6 @@ public class Util {
         } catch (NumberFormatException nfe) {
             return false;
         }
-    }
-
-    public static DataSetMember getDatasetAndMember(String target) {
-        LOG.debug("*** getMemberFromDataSet ***");
-        final var index = target.indexOf("(");
-        if (index == -1) {
-            return null;
-        }
-        final var dataset = target.substring(0, index);
-        if (!Util.isDataSet(dataset)) {
-            return null;
-        }
-
-        final var member = target.substring(index + 1, target.length() - 1);
-        if (!Util.isMember(member)) {
-            return null;
-        }
-        return new DataSetMember(dataset, member);
     }
 
     private static boolean isSegment(String segment) {

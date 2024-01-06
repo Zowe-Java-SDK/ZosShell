@@ -3,6 +3,7 @@ package zos.shell.service.dsn.delete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.ResponseUtil;
 import zos.shell.utility.Util;
@@ -100,7 +101,7 @@ public class DeleteCmd {
 
             // handle dataset(member) notation
             if (param.contains("(") && param.contains(")")) {
-                final var dataSetMember = Util.getDatasetAndMember(param);
+                final var dataSetMember = DataSetMember.getDatasetAndMember(param);
                 if (dataSetMember == null) {
                     return new ResponseStatus(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR, false);
                 }

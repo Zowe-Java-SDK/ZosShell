@@ -15,6 +15,7 @@ import zos.shell.configuration.Config;
 import zos.shell.configuration.Credentials;
 import zos.shell.constants.Constants;
 import zos.shell.controller.Commands;
+import zos.shell.record.DataSetMember;
 import zos.shell.service.autocomplete.SearchDictionary;
 import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.history.HistoryCmd;
@@ -199,7 +200,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
                 boolean doIt = false;
                 do {
-                    final var dataSetMember = Util.getDatasetAndMember(command[1]);
+                    final var dataSetMember = DataSetMember.getDatasetAndMember(command[1]);
                     if (!currDataSet.isBlank() && dataSetMember != null) {
                         terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
                     } else if (!currDataSet.isBlank() && Util.isMember(command[1])) {

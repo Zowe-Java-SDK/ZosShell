@@ -3,6 +3,7 @@ package zos.shell.service.dsn.download;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.memberlst.MemberLst;
 import zos.shell.utility.Util;
@@ -84,7 +85,7 @@ public class DownloadDsnCmd {
             return results;
         }
 
-        final var dataSetMember = Util.getDatasetAndMember(target);
+        final var dataSetMember = DataSetMember.getDatasetAndMember(target);
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         Future<ResponseStatus> submit = null;
         try {
