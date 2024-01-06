@@ -6,18 +6,18 @@ import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.concurrent.Callable;
 
-public class FutureDownloadJob extends DownloadCmd implements Callable<ResponseStatus> {
+public class FutureDownload extends Download implements Callable<ResponseStatus> {
 
-    private final String name;
+    private final String target;
 
-    public FutureDownloadJob(final JobGet retrieve, boolean isAll, final long timeout, final String name) {
+    public FutureDownload(final JobGet retrieve, final String target, boolean isAll, final long timeout) {
         super(retrieve, isAll, timeout);
-        this.name = name;
+        this.target = target;
     }
 
     @Override
     public ResponseStatus call() {
-        final var responseStatus = this.download(name);
+        final var responseStatus = this.download(target);
         if (responseStatus != null && responseStatus.isStatus()) {
             Util.openFileLocation(responseStatus.getOptionalData());
         }

@@ -25,7 +25,7 @@ import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.grep.GrepCmd;
 import zos.shell.service.help.HelpCmd;
 import zos.shell.service.job.browse.BrowseCmd;
-import zos.shell.service.job.download.FutureDownloadJob;
+import zos.shell.service.job.download.DownloadJobCmd;
 import zos.shell.service.job.processlst.ProcessLstCmd;
 import zos.shell.service.job.purge.PurgeCmd;
 import zos.shell.service.job.submit.SubmitCmd;
@@ -52,7 +52,6 @@ import zowe.client.sdk.zosjobs.methods.JobSubmit;
 import zowe.client.sdk.zostso.method.IssueTso;
 
 import java.util.*;
-import java.util.concurrent.*;
 
 public class Commands {
 
@@ -150,11 +149,14 @@ public class Commands {
         }
     }
 
-    public void downloadJob(final ZosConnection connection, final String param, boolean isAll) {
+    public void downloadJob(final ZosConnection connection, final String target, boolean isAll) {
         LOG.debug("*** downloadJob ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureDownloadJob(new JobGet(connection), isAll, timeout, param));
-        processFuture(pool, submit);
+        DownloadJobCmd downloadCmd = new DownloadJobCmd(new JobGet(connection), isAll, timeout);
+        ResponseStatus responseStatus = downloadCmd.download(target);
+        terminal.println(responseStatus.getMessage());
+        if (!responseStatus.isStatus()) {
+            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+        }
     }
 
     public SearchCache env() {
@@ -529,8 +531,7 @@ public class Commands {
             } catch (ZosmfRequestException e) {
                 LOG.debug(e.getMessage());
             }
-            terminal.println(
-                    "hostname: " + connection.getHost() + ", " + zosVersion.orElse("n\\a"));
+            terminal.println("hostname: " + connection.getHost() + ", " + zosVersion.orElse("n\\a"));
         } else {
             terminal.println(Constants.NO_INFO);
         }
@@ -551,21 +552,6 @@ public class Commands {
         if (!responseStatus.isStatus()) {
             terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
         }
-    }
-
-    private ResponseStatus processFuture(final ExecutorService pool, final Future<ResponseStatus> submit) {
-        LOG.debug("*** processFuture ***");
-        ResponseStatus result = null;
-        try {
-            result = submit.get(timeout, TimeUnit.SECONDS);
-            terminal.println(result.getMessage());
-        } catch (TimeoutException e) {
-            terminal.println(Constants.TIMEOUT_MESSAGE);
-        } catch (ExecutionException | InterruptedException e) {
-            terminal.println(e.getMessage());
-        }
-        pool.shutdownNow();
-        return result;
     }
 
 }

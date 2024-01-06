@@ -13,24 +13,24 @@ import zowe.client.sdk.zosjobs.methods.JobGet;
 import java.io.IOException;
 import java.util.Comparator;
 
-public class DownloadCmd {
+public class Download {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DownloadCmd.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Download.class);
 
     private final BrowseCmd browseCmd;
 
-    public DownloadCmd(final JobGet retrieve, boolean isAll, final long timeout) {
-        LOG.debug("*** DownloadCmd ***");
+    public Download(final JobGet retrieve, boolean isAll, final long timeout) {
+        LOG.debug("*** Download ***");
         this.browseCmd = new BrowseCmd(retrieve, isAll, timeout);
     }
 
-    public ResponseStatus download(final String name) {
+    public ResponseStatus download(final String target) {
         LOG.debug("*** download ***");
-        if (!Util.isMember(name)) {
+        if (!Util.isMember(target)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
 
-        final var responseStatus = browseCmd.browseJob(name);
+        final var responseStatus = browseCmd.browseJob(target);
         if (!responseStatus.isStatus() && responseStatus.getMessage().contains("timeout")) {
             return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
         } else if (!responseStatus.isStatus()) {
@@ -43,7 +43,7 @@ public class DownloadCmd {
 
         final var dirSetup = new DirectorySetup();
         try {
-            dirSetup.initialize(name, id);
+            dirSetup.initialize(target, id);
         } catch (IllegalStateException e) {
             return new ResponseStatus(e.getMessage(), false);
         }
@@ -54,8 +54,8 @@ public class DownloadCmd {
             return new ResponseStatus(e.getMessage(), false);
         }
 
-        final var message = Strings.padStart(name, 8, ' ') + Constants.ARROW
-                + "downloaded to " + dirSetup.getFileNamePath();
+        final var message = Strings.padStart(target, 8, ' ') + Constants.ARROW +
+                "downloaded to " + dirSetup.getFileNamePath();
         return new ResponseStatus(message, true, dirSetup.getFileNamePath());
     }
 
