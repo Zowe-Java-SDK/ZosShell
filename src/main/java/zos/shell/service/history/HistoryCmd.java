@@ -5,7 +5,7 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.utility.Util;
+import zos.shell.utility.PromptUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -111,7 +111,7 @@ public class HistoryCmd {
         list.removeAll(Arrays.asList("", null));
 
         String[] newCommand;
-        if (list.get(0).equals(Util.getPrompt())) {
+        if (list.get(0).equals(PromptUtil.getPrompt())) {
             newCommand = new String[list.size() - 1];
             // remove prompt before sending new command
             for (int i = 1, j = 0; i < list.size(); i++, j++) {

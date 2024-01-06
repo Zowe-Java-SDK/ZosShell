@@ -19,6 +19,7 @@ import zos.shell.service.autocomplete.SearchDictionary;
 import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.history.HistoryCmd;
 import zos.shell.service.search.SearchCache;
+import zos.shell.utility.PromptUtil;
 import zos.shell.utility.Util;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
@@ -82,14 +83,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             if (disableKeys) {
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
-            history.listUpCommands(Util.getPrompt());
+            history.listUpCommands(PromptUtil.getPrompt());
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerminal.registerHandler("DOWN", t -> {
             if (disableKeys) {
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
-            history.listDownCommands(Util.getPrompt());
+            history.listDownCommands(PromptUtil.getPrompt());
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerminal.registerHandler("shift UP", t -> {
@@ -101,7 +102,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             mainTerminal.setPromptFontSize(fontSize);
             mainTerminal.moveToLineStart();
             System.out.println(mainTerminal.getTextPane().getText());
-            mainTerminal.print(Util.getPrompt() + " Increased font size to " + fontSize + ".");
+            mainTerminal.print(PromptUtil.getPrompt() + " Increased font size to " + fontSize + ".");
             fontSizeChanged = true;
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
@@ -114,7 +115,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 mainTerminal.setInputFontSize(fontSize);
                 mainTerminal.setPromptFontSize(fontSize);
                 mainTerminal.moveToLineStart();
-                mainTerminal.print(Util.getPrompt() + " Decreased font size to " + fontSize + ".");
+                mainTerminal.print(PromptUtil.getPrompt() + " Decreased font size to " + fontSize + ".");
                 fontSizeChanged = true;
             }
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
@@ -123,7 +124,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             if (disableKeys) {
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
-            final var items = mainTerminal.getTextPane().getText().split(Util.getPrompt());
+            final var items = mainTerminal.getTextPane().getText().split(PromptUtil.getPrompt());
             var candidateStr = items[items.length - 1].trim();
             candidateStr = candidateStr.replaceAll("[\\p{Cf}]", "");
             if (candidateStr.contains(" ")) {  // invalid look up
@@ -133,10 +134,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             if (!candidateLst.isEmpty()) {
                 mainTerminal.moveToLineStart();
                 if (candidateLst.size() == 1) {
-                    mainTerminal.print(Util.getPrompt() + " " + candidateLst.get(0));
+                    mainTerminal.print(PromptUtil.getPrompt() + " " + candidateLst.get(0));
                 } else {
                     mainTextIO.newStringInputReader().withDefaultValue("hit enter to skip")
-                            .read((Util.getPrompt() + " " + candidateLst));
+                            .read((PromptUtil.getPrompt() + " " + candidateLst));
                 }
             }
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
@@ -167,7 +168,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         String[] command;
         var commandLine = "";
         while (!"end".equalsIgnoreCase(commandLine)) {
-            commandLine = textIO.newStringInputReader().withMaxLength(80).read(Util.getPrompt());
+            commandLine = textIO.newStringInputReader().withMaxLength(80).read(PromptUtil.getPrompt());
             if (fontSizeChanged) {
                 terminal.println("Front size set.");
                 fontSizeChanged = false;
@@ -230,7 +231,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     continue;
                 }
             }
-            executeCommand(history.filterCommand(Util.getPrompt(), command));
+            executeCommand(history.filterCommand(PromptUtil.getPrompt(), command));
         }
 
         textIO.dispose();

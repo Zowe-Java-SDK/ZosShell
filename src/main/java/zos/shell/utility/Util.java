@@ -120,12 +120,6 @@ public class Util {
         return msg.substring(index);
     }
 
-    @SuppressWarnings("SameReturnValue")
-    public static String getPrompt() {
-        LOG.debug("*** getPrompt ***");
-        return Constants.DEFAULT_PROMPT;
-    }
-
     public static void writeTextFile(String content, String directoryPath, String fileNamePath) throws IOException {
         LOG.debug("*** writeTextFile ***");
         Files.createDirectories(Paths.get(directoryPath));
