@@ -151,8 +151,8 @@ public class Commands {
 
     public void downloadJob(final ZosConnection connection, final String target, boolean isAll) {
         LOG.debug("*** downloadJob ***");
-        DownloadJobCmd downloadCmd = new DownloadJobCmd(new JobGet(connection), isAll, timeout);
-        ResponseStatus responseStatus = downloadCmd.download(target);
+        DownloadJobCmd downloadJobCmd = new DownloadJobCmd(new JobGet(connection), isAll, timeout);
+        ResponseStatus responseStatus = downloadJobCmd.download(target);
         terminal.println(responseStatus.getMessage());
         if (!responseStatus.isStatus()) {
             terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
