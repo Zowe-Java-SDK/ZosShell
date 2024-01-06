@@ -24,16 +24,20 @@ public class SaveCmd {
         this.timeout = timeout;
     }
 
-    public ResponseStatus save(final String dataSet, final String memberOrDataset) {
+    public ResponseStatus save(final String dataSet, final String target) {
         LOG.debug("*** save ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureSave(dsnWrite, dataSet, memberOrDataset));
+        final var submit = pool.submit(new FutureSave(dsnWrite, dataSet, target));
 
         try {
             return submit.get(timeout, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            submit.cancel(true);
+        } catch (InterruptedException | ExecutionException e) {
             LOG.debug("error: " + e);
+            submit.cancel(true);
+            return new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
+                    e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG, false);
+        } catch (TimeoutException e) {
+            submit.cancel(true);
             return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
         } finally {
             pool.shutdown();

@@ -105,9 +105,13 @@ public class DownloadDsnCmd {
                 submit = pool.submit(new FutureDatasetDownload(new DsnGet(connection), target, isBinary));
                 results.add(submit.get(timeout, TimeUnit.SECONDS));
             }
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            submit.cancel(true);
+        } catch (InterruptedException | ExecutionException e) {
             LOG.debug("error: " + e);
+            submit.cancel(true);
+            results.add(new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
+                    e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG, false));
+        } catch (TimeoutException e) {
+            submit.cancel(true);
             results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
         } finally {
             pool.shutdown();
@@ -139,9 +143,13 @@ public class DownloadDsnCmd {
         for (final var future : futures) {
             try {
                 results.add(future.get(timeout, TimeUnit.SECONDS));
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                future.cancel(true);
+            } catch (InterruptedException | ExecutionException e) {
                 LOG.debug("error: " + e);
+                future.cancel(true);
+                results.add(new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
+                        e.getMessage() : Constants.EXECUTE_ERROR_MSG, false));
+            } catch (TimeoutException e) {
+                future.cancel(true);
                 results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
             }
         }

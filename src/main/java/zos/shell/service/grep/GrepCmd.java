@@ -80,12 +80,18 @@ public class GrepCmd {
 
             try {
                 result.addAll(submit.get(timeout, TimeUnit.SECONDS));
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                result.add(Constants.TIMEOUT_MESSAGE);
+            } catch (InterruptedException | ExecutionException e) {
                 LOG.debug("error: " + e);
+                submit.cancel(true);
+                result.add(e.getMessage() != null && !e.getMessage().isBlank() ?
+                        e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG);
+            } catch (TimeoutException e) {
+                submit.cancel(true);
+                result.add(Constants.TIMEOUT_MESSAGE);
+            } finally {
+                pool.shutdown();
             }
 
-            pool.shutdownNow();
             return result;
         }
     }
@@ -103,9 +109,14 @@ public class GrepCmd {
         for (final var future : futures) {
             try {
                 result.addAll(future.get(timeout, TimeUnit.SECONDS));
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                result.add(Constants.TIMEOUT_MESSAGE);
+            } catch (InterruptedException | ExecutionException e) {
                 LOG.debug("error: " + e);
+                future.cancel(true);
+                result.add(e.getMessage() != null && !e.getMessage().isBlank() ?
+                        e.getMessage() : Constants.EXECUTE_ERROR_MSG);
+            } catch (TimeoutException e) {
+                future.cancel(true);
+                result.add(Constants.TIMEOUT_MESSAGE);
             }
         }
 

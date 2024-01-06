@@ -27,14 +27,20 @@ public class ConcatCmd {
     public ResponseStatus cat(final String dataset, final String target) {
         LOG.debug("*** cat ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var future = pool.submit(new FutureConcat(download, dataset, target));
+        final var submit = pool.submit(new FutureConcat(download, dataset, target));
 
         try {
-            return future.get(timeout, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            future.cancel(true);
+            return submit.get(timeout, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException e) {
             LOG.debug("error: " + e);
+            submit.cancel(true);
+            return new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
+                    e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG, false);
+        } catch (TimeoutException e) {
+            submit.cancel(true);
             return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
+        } finally {
+            pool.shutdown();
         }
     }
 

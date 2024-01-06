@@ -75,7 +75,7 @@ public class DeleteCmd {
                     futureLst.add(pool.submit(new FutureDelete(dsnDelete, currDataSet, m.getMember().get())));
                 });
 
-                futureLst.forEach(f -> processResult(result, f));
+                futureLst.forEach(f -> processResult(result, f, pool, false));
                 pool.shutdown();
                 return new ResponseStatus(result.toString(), true);
             }
@@ -94,8 +94,7 @@ public class DeleteCmd {
                 }
 
                 final var future = pool.submit(new FutureDelete(new DsnDelete(connection), currDataSet, param));
-                processResult(result, future);
-                pool.shutdown();
+                processResult(result, future, pool, true);
                 return new ResponseStatus(result.toString(), true);
             }
 
@@ -108,16 +107,14 @@ public class DeleteCmd {
 
                 final var future = pool.submit(new FutureDelete(new DsnDelete(connection),
                         dataSetMember.getDataSet(), dataSetMember.getMember()));
-                processResult(result, future);
-                pool.shutdown();
+                processResult(result, future, pool, true);
                 return new ResponseStatus(result.toString(), true);
             }
 
             // handle sequential dataset
             if (DsnUtil.isDataSet(param)) {
                 final var future = pool.submit(new FutureDelete(new DsnDelete(connection), param));
-                processResult(result, future);
-                pool.shutdown();
+                processResult(result, future, pool, true);
                 return new ResponseStatus(result.toString(), true);
             }
 
@@ -130,7 +127,8 @@ public class DeleteCmd {
         return new ResponseStatus(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR, false);
     }
 
-    private void processResult(final StringBuilder result, final Future<ResponseStatus> future) {
+    private void processResult(final StringBuilder result, final Future<ResponseStatus> future,
+                               final ExecutorService pool, boolean once) {
         LOG.debug("*** processResult ***");
         try {
             final var responseStatus = future.get(timeout, TimeUnit.SECONDS);
@@ -139,9 +137,29 @@ public class DeleteCmd {
             } else {
                 result.append(responseStatus.getMessage()).append("\n");
             }
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            result.append(Constants.TIMEOUT_MESSAGE);
+        } catch (InterruptedException | ExecutionException e) {
             LOG.debug("error: " + e);
+            future.cancel(true);
+            String msg;
+            if (once) {
+                msg = Constants.COMMAND_EXECUTION_ERROR_MSG;
+            } else {
+                msg = Constants.EXECUTE_ERROR_MSG;
+            }
+            result.append(e.getMessage() != null && !e.getMessage().isBlank() ? e.getMessage() : msg);
+        } catch (TimeoutException e) {
+            future.cancel(true);
+            String msg;
+            if (once) {
+                msg = "timeout";
+            } else {
+                msg = Constants.TIMEOUT_MESSAGE;
+            }
+            result.append(msg);
+        } finally {
+            if (once) {
+                pool.shutdown();
+            }
         }
     }
 

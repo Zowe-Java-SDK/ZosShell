@@ -44,7 +44,6 @@ public class CopyCmd {
         final var result = new StringBuilder();
 
         if (params[1].contains("*") && DsnUtil.isMember(params[1].substring(0, params[1].indexOf("*")))) {
-
             List<Member> members;
             try {
                 members = dsnList.getMembers(dataset, listParams);
@@ -86,9 +85,14 @@ public class CopyCmd {
                 try {
                     final var responseStatus = f.get(timeout, TimeUnit.SECONDS);
                     result.append(responseStatus.getMessage()).append("\n");
-                } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    result.append(Constants.TIMEOUT_MESSAGE).append("\n");
+                } catch (InterruptedException | ExecutionException e) {
                     LOG.debug("error: " + e);
+                    f.cancel(true);
+                    result.append(e.getMessage() != null && !e.getMessage().isBlank() ?
+                            e.getMessage() : Constants.EXECUTE_ERROR_MSG).append("\n");
+                } catch (TimeoutException e) {
+                    f.cancel(true);
+                    result.append("timeout").append("\n");
                 }
             });
 
@@ -102,10 +106,18 @@ public class CopyCmd {
         try {
             ResponseStatus responseStatus = submit.get(timeout, TimeUnit.SECONDS);
             result.append(responseStatus.getMessage());
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            result.append(Constants.TIMEOUT_MESSAGE);
-            isNonException = false;
+        } catch (InterruptedException | ExecutionException e) {
             LOG.debug("error: " + e);
+            isNonException = false;
+            submit.cancel(true);
+            result.append(e.getMessage() != null && !e.getMessage().isBlank() ?
+                    e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG);
+        } catch (TimeoutException e) {
+            isNonException = false;
+            submit.cancel(true);
+            result.append(Constants.TIMEOUT_MESSAGE);
+        } finally {
+            pool.shutdown();
         }
 
         return new ResponseStatus(result.toString(), isNonException);

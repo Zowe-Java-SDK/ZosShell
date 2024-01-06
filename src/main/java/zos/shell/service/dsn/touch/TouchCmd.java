@@ -64,14 +64,18 @@ public class TouchCmd {
         ResponseStatus responseStatus;
         try {
             responseStatus = submit.get(timeout, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            pool.shutdown();
-            submit.cancel(true);
+        } catch (InterruptedException | ExecutionException e) {
             LOG.debug("error: " + e);
+            submit.cancel(true);
+            return new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
+                    e.getMessage() : arrowMsg + Constants.COMMAND_EXECUTION_ERROR_MSG, false);
+        } catch (TimeoutException e) {
+            submit.cancel(true);
             return new ResponseStatus(arrowMsg + Constants.TIMEOUT_MESSAGE, false);
+        } finally {
+            pool.shutdown();
         }
 
-        pool.shutdown();
         if (responseStatus.isStatus()) {
             return new ResponseStatus(arrowMsg + responseStatus.getMessage(), true);
         } else {

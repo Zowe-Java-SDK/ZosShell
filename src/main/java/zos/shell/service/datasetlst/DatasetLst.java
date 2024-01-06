@@ -32,8 +32,13 @@ public class DatasetLst {
         List<Dataset> datasets;
         try {
             datasets = submit.get(timeout, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+        } catch (InterruptedException | ExecutionException e) {
             LOG.debug("error: " + e);
+            submit.cancel(true);
+            throw new ZosmfRequestException(e.getMessage() != null && !e.getMessage().isBlank() ?
+                    e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG);
+        } catch (TimeoutException e) {
+            submit.cancel(true);
             throw new ZosmfRequestException(Constants.TIMEOUT_MESSAGE);
         } finally {
             pool.shutdown();

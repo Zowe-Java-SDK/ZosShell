@@ -69,10 +69,16 @@ public class BrowseLog {
                 pool.submit(new FutureBrowse(retrieve, List.of(files.get(0))));
         try {
             final var result = submit.get(timeout, TimeUnit.SECONDS);
-            pool.shutdownNow();
             return new ResponseStatus(result.toString(), true);
-        } catch (ExecutionException | InterruptedException | TimeoutException e) {
-            return new ResponseStatus(e.getMessage(), false);
+        } catch (ExecutionException | InterruptedException e) {
+            submit.cancel(true);
+            return new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
+                    e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG, false);
+        } catch (TimeoutException e) {
+            submit.cancel(true);
+            return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
+        } finally {
+            pool.shutdownNow();
         }
     }
 

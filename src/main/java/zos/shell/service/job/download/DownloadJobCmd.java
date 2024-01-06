@@ -33,9 +33,13 @@ public class DownloadJobCmd {
 
         try {
             return submit.get(timeout, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+        } catch (InterruptedException | ExecutionException e) {
             submit.cancel(true);
             LOG.debug("error: " + e);
+            return new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
+                    e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG, false);
+        } catch (TimeoutException e) {
+            submit.cancel(true);
             return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
         } finally {
             pool.shutdown();
