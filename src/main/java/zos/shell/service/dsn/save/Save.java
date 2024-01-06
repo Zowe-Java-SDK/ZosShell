@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.service.dsn.download.DownloadCmd;
+import zos.shell.service.dsn.download.DownloadDsnCmd;
 import zos.shell.utility.Util;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
@@ -41,9 +41,9 @@ public class Save {
 
         String fileName;
         if (SystemUtils.IS_OS_WINDOWS) {
-            fileName = DownloadCmd.DIRECTORY_PATH_WINDOWS + dataset + "\\" + memberOrDataset;
+            fileName = DownloadDsnCmd.DIRECTORY_PATH_WINDOWS + dataset + "\\" + memberOrDataset;
         } else if (SystemUtils.IS_OS_MAC_OSX) {
-            fileName = DownloadCmd.DIRECTORY_PATH_MAC + dataset + "/" + memberOrDataset;
+            fileName = DownloadDsnCmd.DIRECTORY_PATH_MAC + dataset + "/" + memberOrDataset;
         } else {
             return new ResponseStatus(Constants.OS_ERROR, false);
         }

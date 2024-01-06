@@ -15,7 +15,7 @@ import zos.shell.service.dsn.copy.CopyCmd;
 import zos.shell.service.dsn.count.CountCmd;
 import zos.shell.service.dsn.delete.DeleteCmd;
 import zos.shell.service.dsn.download.Download;
-import zos.shell.service.dsn.download.DownloadCmd;
+import zos.shell.service.dsn.download.DownloadDsnCmd;
 import zos.shell.service.dsn.edit.EditCmd;
 import zos.shell.service.dsn.list.LstCmd;
 import zos.shell.service.dsn.makedir.MakeDirCmd;
@@ -141,8 +141,8 @@ public class Commands {
     public void downloadDsn(final ZosConnection connection, final String dataset,
                             final String target, boolean isBinary) {
         LOG.debug("*** dsnDownload ***");
-        DownloadCmd downloadCmd = new DownloadCmd(connection, isBinary, timeout);
-        List<ResponseStatus> results = downloadCmd.download(dataset, target);
+        DownloadDsnCmd downloadDsnCmd = new DownloadDsnCmd(connection, isBinary, timeout);
+        List<ResponseStatus> results = downloadDsnCmd.download(dataset, target);
         results.forEach(r -> terminal.println(r.getMessage()));
         if (results.size() == 1 && !results.get(0).isStatus()) {
             terminal.println("cannot download " + target + ", try again...");

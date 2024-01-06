@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.Download;
-import zos.shell.service.dsn.download.DownloadCmd;
+import zos.shell.service.dsn.download.DownloadDsnCmd;
 import zos.shell.utility.Util;
 
 import java.io.IOException;
@@ -52,10 +52,10 @@ public class Edit {
                 String pathFile;
                 String editorName;
                 if (SystemUtils.IS_OS_WINDOWS) {
-                    pathFile = DownloadCmd.DIRECTORY_PATH_WINDOWS + dataset + "\\" + target;
+                    pathFile = DownloadDsnCmd.DIRECTORY_PATH_WINDOWS + dataset + "\\" + target;
                     editorName = Constants.WINDOWS_EDITOR_NAME;
                 } else if (SystemUtils.IS_OS_MAC_OSX) {
-                    pathFile = DownloadCmd.DIRECTORY_PATH_MAC + dataset + "/" + target;
+                    pathFile = DownloadDsnCmd.DIRECTORY_PATH_MAC + dataset + "/" + target;
                     editorName = Constants.MAC_EDITOR_NAME;
                 } else {
                     return new ResponseStatus(Constants.OS_ERROR, false);
