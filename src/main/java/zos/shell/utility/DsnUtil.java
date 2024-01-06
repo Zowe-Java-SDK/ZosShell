@@ -48,12 +48,12 @@ public class DsnUtil {
         return true;
     }
 
-    public static boolean isMember(String name) {
+    public static boolean isMember(final String name) {
         LOG.debug("*** isMember ***");
         return isSegment(name.toUpperCase(Locale.ROOT));
     }
 
-    private static boolean isSegment(String segment) {
+    private static boolean isSegment(final String segment) {
         LOG.debug("*** isSegment ***");
         // Each segment cannot be more than 8 characters
         // Each segment's first letter is a letter or #, @, $.

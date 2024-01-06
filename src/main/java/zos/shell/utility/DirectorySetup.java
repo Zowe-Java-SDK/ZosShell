@@ -14,7 +14,7 @@ public class DirectorySetup {
     private String directoryPath;
     private String fileNamePath;
 
-    public void initialize(String directoryName, String fileName) {
+    public void initialize(final String directoryName, final String fileName) {
         LOG.debug("*** initialize ***");
         if (SystemUtils.IS_OS_WINDOWS) {
             directoryPath = DIRECTORY_PATH_WINDOWS + directoryName;

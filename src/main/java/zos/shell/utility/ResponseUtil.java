@@ -9,7 +9,7 @@ public final class ResponseUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResponseUtil.class);
 
-    public static String getResponsePhrase(Response response) {
+    public static String getResponsePhrase(final Response response) {
         LOG.debug("*** getResponsePhrase ***");
         if (response == null || response.getResponsePhrase().isEmpty()) {
             return null;
@@ -17,7 +17,7 @@ public final class ResponseUtil {
         return response.getResponsePhrase().get().toString();
     }
 
-    public static String getMsgAfterArrow(String msg) {
+    public static String getMsgAfterArrow(final String msg) {
         LOG.debug("*** getMsgAfterArrow ***");
         if (!msg.contains(Constants.ARROW)) {
             return msg;

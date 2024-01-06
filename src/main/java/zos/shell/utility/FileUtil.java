@@ -12,7 +12,7 @@ public final class FileUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(FileUtil.class);
 
-    public static void openFileLocation(String filePath) {
+    public static void openFileLocation(final String filePath) {
         LOG.debug("*** openFileLocation ***");
         if (filePath == null) {
             return;
@@ -33,7 +33,8 @@ public final class FileUtil {
         }
     }
 
-    public static void writeTextFile(String content, String directoryPath, String fileNamePath) throws IOException {
+    public static void writeTextFile(final String content, final String directoryPath,
+                                     final String fileNamePath) throws IOException {
         LOG.debug("*** writeTextFile ***");
         Files.createDirectories(Paths.get(directoryPath));
         Files.write(Paths.get(fileNamePath), content.getBytes());

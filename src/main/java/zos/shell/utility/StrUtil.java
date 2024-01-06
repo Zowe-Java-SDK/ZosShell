@@ -11,7 +11,7 @@ public final class StrUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(StrUtil.class);
 
-    public static boolean isStrNum(String str) {
+    public static boolean isStrNum(final String str) {
         LOG.debug("*** isStrNum ***");
         try {
             Integer.parseInt(str);
