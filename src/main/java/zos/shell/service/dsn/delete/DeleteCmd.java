@@ -57,11 +57,10 @@ public class DeleteCmd {
                 members = dsnList.getMembers(currDataSet, params);
 
                 if (!lookForStr.isBlank()) {
-                    String finalLookForStr = lookForStr;
+                    final var key = lookForStr;
                     members = members.stream()
-                            .filter(i -> i.getMember().orElse("")
-                                    .startsWith(finalLookForStr))
-                            .collect(Collectors.toList());
+                                     .filter(i -> i.getMember().isPresent() && i.getMember().get().startsWith(key))
+                                     .collect(Collectors.toList());
                 }
 
                 if (members.isEmpty()) {
