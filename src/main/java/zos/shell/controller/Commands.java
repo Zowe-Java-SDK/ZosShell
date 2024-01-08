@@ -87,9 +87,6 @@ public class Commands {
         final var terminateCmd = new TerminateCmd(connection, new IssueConsole(connection), timeout);
         final var responseStatus = terminateCmd.terminate(TerminateCmd.Type.CANCEL, target);
         terminal.println(responseStatus.getMessage());
-        if (!responseStatus.isStatus()) {
-            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
-        }
     }
 
     public SearchCache cat(final ZosConnection connection, final String dataset, final String target) {
@@ -135,9 +132,6 @@ public class Commands {
         final var countcmd = new CountCmd(new DsnList(connection), timeout);
         final var responseStatus = countcmd.count(dataset, filter);
         terminal.println(responseStatus.getMessage());
-        if (!responseStatus.isStatus()) {
-            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
-        }
     }
 
     public void downloadDsn(final ZosConnection connection, final String dataset,
@@ -156,9 +150,6 @@ public class Commands {
         DownloadJobCmd downloadJobCmd = new DownloadJobCmd(new JobGet(connection), isAll, timeout);
         ResponseStatus responseStatus = downloadJobCmd.download(target);
         terminal.println(responseStatus.getMessage());
-        if (!responseStatus.isStatus()) {
-            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
-        }
     }
 
     public SearchCache env() {
@@ -402,9 +393,6 @@ public class Commands {
         final var purgeCmd = new PurgeCmd(new JobDelete(connection), new JobGet(connection), timeout);
         final var responseStatus = purgeCmd.purge(filter);
         terminal.println(responseStatus.getMessage());
-        if (!responseStatus.isStatus()) {
-            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
-        }
     }
 
     public SearchCache ps(final ZosConnection connection, final String target) {
@@ -427,9 +415,6 @@ public class Commands {
         final var saveCmd = new SaveCmd(new DsnWrite(connection), timeout);
         final var responseStatus = saveCmd.save(dataset, params[1]);
         terminal.println(responseStatus.getMessage());
-        if (!responseStatus.isStatus()) {
-            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
-        }
     }
 
     public void search(final SearchCache output, final String text) {
@@ -454,9 +439,6 @@ public class Commands {
         final var terminateCmd = new TerminateCmd(connection, new IssueConsole(connection), timeout);
         final var responseStatus = terminateCmd.terminate(TerminateCmd.Type.STOP, target);
         terminal.println(responseStatus.getMessage());
-        if (!responseStatus.isStatus()) {
-            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
-        }
     }
 
     public void submit(final ZosConnection connection, final String dataset, final String target) {
@@ -464,9 +446,6 @@ public class Commands {
         final var submitCmd = new SubmitCmd(new JobSubmit(connection), timeout);
         final var responseStatus = submitCmd.submit(dataset, target);
         terminal.println(responseStatus.getMessage());
-        if (!responseStatus.isStatus()) {
-            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
-        }
     }
 
     public SearchCache tail(final ZosConnection connection, final String[] params) {
@@ -497,9 +476,6 @@ public class Commands {
         final var touchCmd = new TouchCmd(new DsnWrite(connection), new DsnList(connection), timeout);
         final var responseStatus = touchCmd.touch(dataset, params[1]);
         terminal.println(responseStatus.getMessage());
-        if (!responseStatus.isStatus()) {
-            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
-        }
     }
 
     public SearchCache tsoCommand(final ZosConnection connection, final String accountNum, final String command) {
