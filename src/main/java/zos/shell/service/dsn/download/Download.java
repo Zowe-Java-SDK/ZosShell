@@ -41,7 +41,7 @@ public class Download {
         if (!DsnUtil.isMember(member)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
-        var message = Strings.padStart(member, 8, ' ') + Constants.ARROW;
+        var message = Strings.padStart(member, Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW;
 
         final var dirSetup = new DirectorySetup();
         try {
