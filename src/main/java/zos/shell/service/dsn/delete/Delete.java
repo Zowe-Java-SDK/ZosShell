@@ -33,7 +33,7 @@ public class Delete {
     public ResponseStatus delete(final String dataset) throws ZosmfRequestException {
         LOG.debug("*** delete dataset ***");
         try {
-            final var response = dsnDelete.delete(dataset);
+            dsnDelete.delete(dataset);
             return new ResponseStatus(dataset + SUCCESS_MSG, true, dataset);
         } catch (ZosmfRequestException e) {
             final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
