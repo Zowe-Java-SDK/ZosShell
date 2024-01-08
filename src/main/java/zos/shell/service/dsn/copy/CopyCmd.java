@@ -101,10 +101,12 @@ public class CopyCmd {
                 return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
             }
             if (datasetMemberFirstParam != null) {
-                return processRequest(fromDataSetName, currDataSet, true);
+                return processRequest(fromDataSetName,
+                        currDataSet + "(" + datasetMemberFirstParam.getMember() + ")", false);
             }
             if (DsnUtil.isMember(firstParam)) {
-                return processRequest(currDataSet + "(" + firstParam + ")", currDataSet, true);
+                return processRequest(currDataSet + "(" + firstParam + ")",
+                        currDataSet + "(" + firstParam + ")", false);
             }
             if (DsnUtil.isDataSet(firstParam)) {
                 return new ResponseStatus(Constants.COPY_NO_MEMBER_ERROR, false);
