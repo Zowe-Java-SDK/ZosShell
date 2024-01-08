@@ -29,7 +29,6 @@ public class Edit {
         ResponseStatus result;
         final var dataSetMember = DataSetMember.getDatasetAndMember(target);
 
-        // TODO future for member and dataset download?
         if (DsnUtil.isMember(target)) {
             // member input specified from current dataset
             result = download.member(dataset, target);
