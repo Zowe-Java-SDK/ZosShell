@@ -9,6 +9,7 @@ import zowe.client.sdk.zosfiles.dsn.response.Member;
 
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.function.Predicate;
 
 public class MemberLst {
 
@@ -48,7 +49,9 @@ public class MemberLst {
             return false;
         }
 
-        return members.stream().anyMatch(m -> m.getMember().isPresent() && m.getMember().get().equalsIgnoreCase(member));
+        Predicate<Member> isMemberPresent = m -> m.getMember().isPresent();
+        Predicate<Member> isMemberEquals = m -> m.getMember().get().equalsIgnoreCase(member);
+        return members.stream().anyMatch(isMemberPresent.and(isMemberEquals));
     }
 
     public List<Member> memberLst(final String dataset) throws ZosmfRequestException {
