@@ -15,10 +15,7 @@ import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.DownloadParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -99,8 +96,15 @@ public class Download {
             FileUtil.writeTextFile(textContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
 
         } catch (ZosmfRequestException e) {
-            final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
-            return new ResponseStatus(message + (errMsg != null ? errMsg : e.getMessage()), false);
+            // TODO create helper method and find the other places
+            InputStream errorStream = new ByteArrayInputStream((byte[]) e.getResponse().getResponsePhrase().get());
+            String errMsg;
+            try {
+                errMsg = getTextStreamData(errorStream);
+            } catch (IOException ex) {
+                errMsg = "error processing response";
+            }
+            return new ResponseStatus(errMsg, false);
         } catch (IOException e) {
             return new ResponseStatus(message + e.getMessage(), false);
         }
