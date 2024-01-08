@@ -154,6 +154,7 @@ public class CopyCmd {
             for (final var member : members) {
                 final var name = member.getMember().orElse("");
                 fromDataSetName = currDataSet + "(" + name + ")";
+                toDataSetName += "(" + name + ")";
                 final var dsnCopy = new DsnCopy(connection);
                 final var future = new FutureCopy(dsnCopy, fromDataSetName, toDataSetName, false);
                 futures.add(pool.submit(future));
