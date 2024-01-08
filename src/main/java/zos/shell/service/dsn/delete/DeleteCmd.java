@@ -85,7 +85,7 @@ public class DeleteCmd {
             target = target.substring(0, target.indexOf("*"));
             members = DsnUtil.getMembersByStartsWithFilter(target, members);
             if (members.size() == 1) {
-                return processRequest(currDataSet, target);
+                return processRequest(currDataSet, members.get(0).getMember().get());
             }
 
             final var futures = new ArrayList<Future<ResponseStatus>>();
