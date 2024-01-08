@@ -15,6 +15,7 @@ public final class FutureUtil {
 
     public static ResponseStatus getFutureResponse(final Future<ResponseStatus> future, final ExecutorService pool,
                                                    final long timeout) {
+        LOG.debug("*** getFutureResponse ***");
         try {
             return future.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
@@ -33,6 +34,7 @@ public final class FutureUtil {
 
     public static ResponseStatus getFutureResponses(final List<Future<ResponseStatus>> futures,
                                                     final ExecutorService pool, final long timeout) {
+        LOG.debug("*** getFutureResponses ***");
         final var results = new StringBuilder();
         futures.forEach(future -> {
             ResponseStatus responseStatus;
