@@ -40,7 +40,7 @@ public class Concat {
             result = retrieveInfo(inputStream);
             return new ResponseStatus(result != null ? result : "no data to display", true);
         } catch (ZosmfRequestException e) {
-            InputStream errorStream = new ByteArrayInputStream((byte[]) e.getResponse().getResponsePhrase().get());
+            final var errorStream = new ByteArrayInputStream((byte[]) e.getResponse().getResponsePhrase().get());
             String errMsg;
             try {
                 errMsg = retrieveInfo(errorStream);
