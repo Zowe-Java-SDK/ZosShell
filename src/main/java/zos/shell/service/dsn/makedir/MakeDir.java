@@ -21,14 +21,12 @@ public class MakeDir {
 
     public ResponseStatus create(final String dataset, final CreateParams params) {
         LOG.debug("*** create ***");
-
         try {
             dsnCreate.create(dataset, params);
         } catch (ZosmfRequestException e) {
             final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
-
         return new ResponseStatus(dataset + " created successfully...", true);
     }
 

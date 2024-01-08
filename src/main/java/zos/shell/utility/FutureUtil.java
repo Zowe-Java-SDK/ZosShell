@@ -21,7 +21,8 @@ public final class FutureUtil {
             LOG.debug("error: " + e);
             future.cancel(true);
             final var isErrMsg = e.getMessage() != null && !e.getMessage().isBlank();
-            return new ResponseStatus(isErrMsg ? e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG, false);
+            final var errMsg =  isErrMsg ? e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG;
+            return new ResponseStatus(errMsg, false);
         } catch (TimeoutException e) {
             future.cancel(true);
             return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
@@ -44,7 +45,8 @@ public final class FutureUtil {
                 LOG.debug("error: " + e);
                 future.cancel(true);
                 final var isErrMsg = e.getMessage() != null && !e.getMessage().isBlank();
-                results.append(isErrMsg ? e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG).append("\n");
+                final var errMsg =  isErrMsg ? e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG;
+                results.append(errMsg).append("\n");
             } catch (TimeoutException e) {
                 future.cancel(true);
                 results.append(Constants.TIMEOUT_MESSAGE).append("\n");
