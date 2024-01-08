@@ -6,6 +6,7 @@ import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.memberlst.MemberLst;
 import zos.shell.utility.DsnUtil;
+import zos.shell.utility.FutureUtil;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
@@ -57,22 +58,7 @@ public class TouchCmd {
 
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureTouch(dsnWrite, dataset, target));
-
-        ResponseStatus responseStatus;
-        try {
-            responseStatus = submit.get(timeout, TimeUnit.SECONDS);
-            return new ResponseStatus(responseStatus.getMessage(), true);
-        } catch (InterruptedException | ExecutionException e) {
-            LOG.debug("error: " + e);
-            submit.cancel(true);
-            return new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
-                    e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG, false);
-        } catch (TimeoutException e) {
-            submit.cancel(true);
-            return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
-        } finally {
-            pool.shutdown();
-        }
+        return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 
 }
