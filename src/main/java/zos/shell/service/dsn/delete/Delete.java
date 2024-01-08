@@ -22,7 +22,7 @@ public class Delete {
     public ResponseStatus delete(final String dataset, final String member) throws ZosmfRequestException {
         LOG.debug("*** delete member ***");
         try {
-            final var response = dsnDelete.delete(dataset, member);
+            dsnDelete.delete(dataset, member);
             return new ResponseStatus(member + SUCCESS_MSG, true, member);
         } catch (ZosmfRequestException e) {
             final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
