@@ -11,7 +11,7 @@ public class Delete {
 
     private static final Logger LOG = LoggerFactory.getLogger(Delete.class);
 
-    private static final String SUCCESS_MSG = "deleted";
+    private static final String SUCCESS_MSG = " deleted";
     private final DsnDelete dsnDelete;
 
     public Delete(DsnDelete dsnDelete) {
@@ -23,7 +23,7 @@ public class Delete {
         LOG.debug("*** delete member ***");
         try {
             final var response = dsnDelete.delete(dataset, member);
-            return new ResponseStatus(SUCCESS_MSG, true, member);
+            return new ResponseStatus(member + SUCCESS_MSG, true, member);
         } catch (ZosmfRequestException e) {
             final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             throw new ZosmfRequestException((errMsg != null ? errMsg : e.getMessage()));
@@ -34,7 +34,7 @@ public class Delete {
         LOG.debug("*** delete dataset ***");
         try {
             final var response = dsnDelete.delete(dataset);
-            return new ResponseStatus(SUCCESS_MSG, true, dataset);
+            return new ResponseStatus(dataset + SUCCESS_MSG, true, dataset);
         } catch (ZosmfRequestException e) {
             final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             throw new ZosmfRequestException((errMsg != null ? errMsg : e.getMessage()));

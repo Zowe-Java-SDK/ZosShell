@@ -12,7 +12,7 @@ public class Touch {
 
     private static final Logger LOG = LoggerFactory.getLogger(Touch.class);
 
-    private static final String SUCCESS_MSG = "created";
+    private static final String SUCCESS_MSG = " created";
     private final DsnWrite dsnWrite;
 
     public Touch(final DsnWrite dsnWrite) {
@@ -25,7 +25,7 @@ public class Touch {
         Response response;
         try {
             response = dsnWrite.write(dataset, member, "");
-            return new ResponseStatus(SUCCESS_MSG, true);
+            return new ResponseStatus(member + SUCCESS_MSG, true);
         } catch (ZosmfRequestException e) {
             final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
