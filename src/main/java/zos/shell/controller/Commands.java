@@ -126,7 +126,7 @@ public class Commands {
 
     public void copy(final ZosConnection connection, final String dataset, final String[] params) {
         LOG.debug("*** copy ***");
-        final var copy = new CopyCmd(connection, new DsnList(connection), timeout);
+        final var copy = new CopyCmd(connection, timeout);
         terminal.println(copy.copy(dataset, params).getMessage());
     }
 
@@ -417,8 +417,9 @@ public class Commands {
 
     public void rm(final ZosConnection connection, final String dataset, final String param) {
         LOG.debug("*** rm ***");
-        final var delete = new DeleteCmd(connection, new DsnList(connection), timeout);
-        terminal.println(delete.delete(dataset, param).getMessage());
+        final var delete = new DeleteCmd(connection, timeout);
+        final var responseStatus = delete.delete(dataset, param);
+        terminal.println(responseStatus.getMessage());
     }
 
     public void save(final ZosConnection connection, final String dataset, final String[] params) {

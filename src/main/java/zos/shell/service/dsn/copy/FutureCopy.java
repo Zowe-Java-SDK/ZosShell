@@ -11,23 +11,19 @@ public class FutureCopy extends Copy implements Callable<ResponseStatus> {
 
     private final String fromDataSetName;
     private final String toDataSetName;
-    private final String member;
+    private final boolean isCopyAll;
 
     public FutureCopy(final DsnCopy DsnCopy, final String fromDataSetName,
-                      final String toDataSetName, final String member) {
+                      final String toDataSetName, boolean isCopyAll) {
         super(DsnCopy);
         this.fromDataSetName = fromDataSetName;
         this.toDataSetName = toDataSetName;
-        this.member = member;
+        this.isCopyAll = isCopyAll;
     }
 
     @Override
     public ResponseStatus call() {
-        final var params = new String[]{"cp", member, toDataSetName};
-        final var arrowMsg = Strings.padStart(member, Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW;
-        final var responseStatus = this.copy(fromDataSetName, params);
-        responseStatus.setMessage(arrowMsg + responseStatus.getMessage());
-        return responseStatus;
+        return this.copy(fromDataSetName, toDataSetName, isCopyAll);
     }
 
 }

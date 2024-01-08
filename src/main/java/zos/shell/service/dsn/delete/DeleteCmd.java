@@ -5,166 +5,110 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.memberlst.MemberLst;
 import zos.shell.utility.DsnUtil;
+import zos.shell.utility.FutureUtil;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
-import zowe.client.sdk.zosfiles.dsn.input.ListParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnDelete;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.response.Member;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.function.Predicate;
 
 public class DeleteCmd {
 
     private static final Logger LOG = LoggerFactory.getLogger(DeleteCmd.class);
 
     private final ZosConnection connection;
-    private final DsnList dsnList;
-    private final ListParams params = new ListParams.Builder().build();
     private final long timeout;
 
-    public DeleteCmd(final ZosConnection connection, final DsnList dsnList, final long timeout) {
+    public DeleteCmd(final ZosConnection connection, final long timeout) {
         LOG.debug("*** DeleteCmd ***");
         this.connection = connection;
-        this.dsnList = dsnList;
         this.timeout = timeout;
     }
 
-    public ResponseStatus delete(final String currDataSet, final String param) {
+    public ResponseStatus delete(final String currDataSet, String target) {
         LOG.debug("*** delete ***");
-        try {
-            List<Member> members;
-            final var result = new StringBuilder();
+        List<Member> members;
 
-            // member wild card delete operation
-            if (param.contains("*") && param.chars().filter(ch -> ch == '*').count() == 1) {
-                String lookForStr = "";
-
-                if (param.length() > 1) {
-                    final var index = param.indexOf('*');
-                    lookForStr = param.substring(0, index).toUpperCase();
-                }
-
-                if (isCurrDataSetEmpty(currDataSet)) {
-                    new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
-                }
-
-                members = dsnList.getMembers(currDataSet, params);
-
-                if (!lookForStr.isBlank()) {
-                    final var key = lookForStr;
-                    members = members.stream()
-                                     .filter(i -> i.getMember().isPresent() && i.getMember().get().startsWith(key))
-                                     .collect(Collectors.toList());
-                }
-
-                if (members.isEmpty()) {
-                    return new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
-                }
-
-                final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
-                final var futureLst = new ArrayList<Future<ResponseStatus>>();
-                members.stream().filter(m -> m.getMember().isPresent()).forEach(m -> {
-                    DsnDelete dsnDelete = new DsnDelete(connection);
-                    futureLst.add(pool.submit(new FutureDelete(dsnDelete, currDataSet, m.getMember().get())));
-                });
-
-                futureLst.forEach(f -> processResult(result, f, pool, false));
-                pool.shutdown();
-                return new ResponseStatus(result.toString(), true);
-            }
-
-            final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-
-            // handle member
-            if (DsnUtil.isMember(param)) {
-                if (isCurrDataSetEmpty(currDataSet)) {
-                    new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
-                }
-
-                members = dsnList.getMembers(currDataSet, params);
-                if (members.stream().noneMatch(m -> param.equalsIgnoreCase(m.getMember().orElse("")))) {
-                    return new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
-                }
-
-                final var future = pool.submit(new FutureDelete(new DsnDelete(connection), currDataSet, param));
-                processResult(result, future, pool, true);
-                return new ResponseStatus(result.toString(), true);
-            }
-
-            // handle dataset(member) notation
-            if (param.contains("(") && param.contains(")")) {
-                final var dataSetMember = DataSetMember.getDatasetAndMember(param);
-                if (dataSetMember == null) {
-                    return new ResponseStatus(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR, false);
-                }
-
-                final var future = pool.submit(new FutureDelete(new DsnDelete(connection),
-                        dataSetMember.getDataSet(), dataSetMember.getMember()));
-                processResult(result, future, pool, true);
-                return new ResponseStatus(result.toString(), true);
-            }
-
-            // handle sequential dataset
-            if (DsnUtil.isDataSet(param)) {
-                final var future = pool.submit(new FutureDelete(new DsnDelete(connection), param));
-                processResult(result, future, pool, true);
-                return new ResponseStatus(result.toString(), true);
-            }
-
-            pool.shutdown();
-        } catch (ZosmfRequestException e) {
-            final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
-            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
+        final var datasetMemberTarget = DataSetMember.getDatasetAndMember(target);
+        // delete dataset(member) not in currDataset
+        if (datasetMemberTarget != null) {
+            return processRequest(datasetMemberTarget.getDataSet(), datasetMemberTarget.getMember());
         }
 
-        return new ResponseStatus(Constants.DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR, false);
+        // delete currDataset(member)
+        if (DsnUtil.isMember(target)) {
+            if (currDataSet.isBlank()) {
+                new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
+            }
+
+            try {
+                members = new MemberLst(new DsnList(connection), timeout).memberLst(currDataSet);
+            } catch (ZosmfRequestException e) {
+                final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+                return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
+            }
+            if (DsnUtil.getMembersByFilter(target, members).isEmpty()) {
+                return new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
+            }
+            return processRequest(currDataSet, target);
+        }
+
+        // handle sequential dataset
+        if (DsnUtil.isDataSet(target)) {
+            return processRequest(target, null);
+        }
+
+        long numOfAsterisk = target.chars().filter(ch -> ch == '*').count();
+        boolean copyWildCard = numOfAsterisk == 1 && DsnUtil.isMember(target.substring(0, target.indexOf("*")));
+
+        // copy member wild card to dataset
+        if (copyWildCard) {
+
+            try {
+                members = new MemberLst(new DsnList(connection), timeout).memberLst(currDataSet);
+            } catch (ZosmfRequestException e) {
+                final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+                return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
+            }
+            if (members.isEmpty()) {
+                return new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
+            }
+            // transform target is a member string without * (wild card)
+            target = target.substring(0, target.indexOf("*"));
+            members = DsnUtil.getMembersByStartsWithFilter(target, members);
+            if (members.size() == 1) {
+                return processRequest(currDataSet, target);
+            }
+            final var futures = new ArrayList<Future<ResponseStatus>>();
+            final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
+            for (final var member : members) {
+                final var name = member.getMember().orElse("");
+                final var dsnDelete = new DsnDelete(connection);
+                final var future = new FutureDelete(dsnDelete, currDataSet, name);
+                futures.add(pool.submit(future));
+            }
+            return FutureUtil.getFutureResponses(futures, pool, timeout);
+        }
+
+        return new ResponseStatus(Constants.INVALID_ARGUMENTS, false);
     }
 
-    private void processResult(final StringBuilder result, final Future<ResponseStatus> future,
-                               final ExecutorService pool, boolean once) {
+    private ResponseStatus processRequest(final String dataset, final String member) {
         LOG.debug("*** processResult ***");
-        try {
-            final var responseStatus = future.get(timeout, TimeUnit.SECONDS);
-            if (responseStatus.isStatus()) {
-                result.append(responseStatus.getMessage()).append("deleted.").append("\n");
-            } else {
-                result.append(responseStatus.getMessage()).append("\n");
-            }
-        } catch (InterruptedException | ExecutionException e) {
-            LOG.debug("error: " + e);
-            future.cancel(true);
-            String msg;
-            if (once) {
-                msg = Constants.COMMAND_EXECUTION_ERROR_MSG;
-            } else {
-                msg = Constants.EXECUTE_ERROR_MSG;
-            }
-            result.append(e.getMessage() != null && !e.getMessage().isBlank() ? e.getMessage() : msg);
-        } catch (TimeoutException e) {
-            future.cancel(true);
-            String msg;
-            if (once) {
-                msg = "timeout";
-            } else {
-                msg = Constants.TIMEOUT_MESSAGE;
-            }
-            result.append(msg);
-        } finally {
-            if (once) {
-                pool.shutdown();
-            }
-        }
-    }
-
-    private boolean isCurrDataSetEmpty(final String currDataSet) {
-        LOG.debug("*** isCurrDataSetEmpty ***");
-        return currDataSet.isBlank();
+        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        final var dsnDelete = new DsnDelete(connection);
+        final var futureDelete = new FutureDelete(dsnDelete, dataset, member);
+        final var submit = pool.submit(futureDelete);
+        return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 
 }
