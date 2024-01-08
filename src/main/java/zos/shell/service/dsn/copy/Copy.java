@@ -26,7 +26,7 @@ public class Copy {
             final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
-        final var msg = isCopyAll ? source + " copied all members to " : source + " copied to " + destination;
+        final var msg = isCopyAll ? source + " copied all members to " + destination : source + " copied to " + destination;
         return new ResponseStatus(msg, true, source);
     }
 
