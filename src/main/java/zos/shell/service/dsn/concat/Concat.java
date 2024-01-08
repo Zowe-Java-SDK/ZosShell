@@ -7,9 +7,9 @@ import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.utility.DsnUtil;
-import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -38,13 +38,19 @@ public class Concat {
                 inputStream = download.getInputStream(target);
             }
             result = retrieveInfo(inputStream);
+            return new ResponseStatus(result != null ? result : "no data to display", true);
         } catch (ZosmfRequestException e) {
-            final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
-            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
+            InputStream errorStream = new ByteArrayInputStream((byte[]) e.getResponse().getResponsePhrase().get());
+            String errMsg;
+            try {
+                errMsg = retrieveInfo(errorStream);
+            } catch (IOException ex) {
+                errMsg = "error processing response";
+            }
+            return new ResponseStatus(errMsg, false);
         } catch (IOException e) {
             return new ResponseStatus(e.getMessage(), false);
         }
-        return new ResponseStatus(result != null ? result : "no data to display", true);
     }
 
     private String retrieveInfo(final InputStream inputStream) throws IOException {
