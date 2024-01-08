@@ -18,7 +18,6 @@ import zowe.client.sdk.zosfiles.dsn.response.Member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 public class DownloadDsnCmd {
 
@@ -40,49 +39,38 @@ public class DownloadDsnCmd {
     public List<ResponseStatus> download(final String dataset, final String target) {
         LOG.debug("*** download ***");
         List<ResponseStatus> results = new ArrayList<>();
-        List<Member> members = new ArrayList<>();
+        List<Member> members;
 
         // dataset is current dataset
         // target can be either a member in current dataset or a sequential dataset or dataset(member) notation
 
         // download all members in dataset
         if ("*".equals(target)) {
-
-            final var memberLst = new MemberLst(new DsnList(connection), timeout);
             try {
-                members = memberLst.memberLst(dataset);
+                members = new MemberLst(new DsnList(connection), timeout).memberLst(dataset);
             } catch (ZosmfRequestException e) {
-                results.add(new ResponseStatus(e.getMessage(), false));
+                final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+                return List.of(new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false));
             }
-
             if (members.isEmpty()) {
                 results.add(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
             }
-
             results.addAll(downloadMembers(dataset, members, isBinary));
             return results;
         }
 
         // download all members that filter by member wild card in dataset
         if (target.contains("*") && DsnUtil.isMember(target.substring(0, target.indexOf("*")))) {
-
-            final var memberLst = new MemberLst(new DsnList(connection), timeout);
             try {
-                members = memberLst.memberLst(dataset);
+                members = new MemberLst(new DsnList(connection), timeout).memberLst(dataset);
             } catch (ZosmfRequestException e) {
-                results.add(new ResponseStatus(e.getMessage(), false));
+                final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+                return List.of(new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false));
             }
-
-            final var index = target.indexOf("*");
-            final var searchForMember = target.substring(0, index).toUpperCase();
-            members = members.stream()
-                    .filter(i -> i.getMember().isPresent() && i.getMember().get().startsWith(searchForMember))
-                    .collect(Collectors.toList());
-
+            members = DsnUtil.getMembersByStartsWithFilter(target, members);
             if (members.isEmpty()) {
                 results.add(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
             }
-
             results.addAll(downloadMembers(dataset, members, isBinary));
             return results;
         }
