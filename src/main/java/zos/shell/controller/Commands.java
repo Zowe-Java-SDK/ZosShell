@@ -10,7 +10,7 @@ import zos.shell.service.change.ColorCmd;
 import zos.shell.service.change.ConnCmd;
 import zos.shell.service.change.DirCmd;
 import zos.shell.service.console.MvsConsoleCmd;
-import zos.shell.service.dsn.concatenate.ConcatCmd;
+import zos.shell.service.dsn.concat.ConcatCmd;
 import zos.shell.service.dsn.copy.CopyCmd;
 import zos.shell.service.dsn.count.CountCmd;
 import zos.shell.service.dsn.delete.DeleteCmd;

@@ -1,4 +1,4 @@
-package zos.shell.service.dsn.concatenate;
+package zos.shell.service.dsn.concat;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;

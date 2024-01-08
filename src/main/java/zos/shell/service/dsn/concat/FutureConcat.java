@@ -1,4 +1,4 @@
-package zos.shell.service.dsn.concatenate;
+package zos.shell.service.dsn.concat;
 
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.Download;

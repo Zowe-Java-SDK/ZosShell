@@ -1,6 +1,6 @@
 package zos.shell.service.grep;
 
-import zos.shell.service.dsn.concatenate.ConcatCmd;
+import zos.shell.service.dsn.concat.ConcatCmd;
 
 import java.util.List;
 import java.util.concurrent.Callable;
