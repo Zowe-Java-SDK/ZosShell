@@ -28,7 +28,7 @@ public class Tail extends BrowseLog {
         if (!result.isStatus()) {
             return result;
         }
-        final var output = Arrays.asList(result.toString().split("\n"));
+        final var output = Arrays.asList(result.getMessage().split("\n"));
 
         final var size = output.size();
         var lines = 0;
