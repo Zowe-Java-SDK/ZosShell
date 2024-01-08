@@ -28,22 +28,21 @@ public class Save {
 
     public ResponseStatus save(final String dataset, final String target) {
         LOG.debug("*** save ***");
-        if (!DsnUtil.isDataSet(dataset)) {
-            return new ResponseStatus(Constants.INVALID_DATASET, false);
+        if (DsnUtil.isMember(target) && !DsnUtil.isDataSet(dataset)) {
+            return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
         }
 
-        var isSequentialDataSet = false;
-        if (DsnUtil.isDataSet(target)) {
-            isSequentialDataSet = true;
-        } else if (!DsnUtil.isMember(target)) {
-            return new ResponseStatus(Constants.INVALID_MEMBER, false);
-        }
+        final var isSequentialDataSet = DsnUtil.isDataSet(target);
 
         String fileName;
         if (SystemUtils.IS_OS_WINDOWS) {
-            fileName = DownloadDsnCmd.DIRECTORY_PATH_WINDOWS + dataset + "\\" + target;
+            fileName = isSequentialDataSet ?
+                    DownloadDsnCmd.DIRECTORY_PATH_WINDOWS + Constants.SEQUENTIAL_DIRECTORY_LOCATION + "\\" + target :
+                    DownloadDsnCmd.DIRECTORY_PATH_WINDOWS + dataset + "\\" + target;
         } else if (SystemUtils.IS_OS_MAC_OSX) {
-            fileName = DownloadDsnCmd.DIRECTORY_PATH_MAC + dataset + "/" + target;
+            fileName = isSequentialDataSet ?
+                    DownloadDsnCmd.DIRECTORY_PATH_MAC + Constants.SEQUENTIAL_DIRECTORY_LOCATION + "/" + target :
+                    DownloadDsnCmd.DIRECTORY_PATH_MAC + dataset + "/" + target;
         } else {
             return new ResponseStatus(Constants.OS_ERROR, false);
         }
