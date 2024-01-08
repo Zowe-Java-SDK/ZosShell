@@ -36,7 +36,7 @@ public class DownloadDsnCmd {
         this.timeout = timeout;
     }
 
-    public List<ResponseStatus> download(final String dataset, final String target) {
+    public List<ResponseStatus> download(final String dataset, String target) {
         LOG.debug("*** download ***");
         List<ResponseStatus> results = new ArrayList<>();
         List<Member> members;
@@ -67,6 +67,8 @@ public class DownloadDsnCmd {
                 final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
                 return List.of(new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false));
             }
+            // transform target is a member string without * (wild card)
+            target = target.substring(0, target.indexOf("*"));
             members = DsnUtil.getMembersByStartsWithFilter(target, members);
             if (members.isEmpty()) {
                 results.add(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));

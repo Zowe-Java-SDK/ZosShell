@@ -79,18 +79,14 @@ public class DsnUtil {
     }
 
     public static List<Member> getMembersByFilter(final String filter, final List<Member> members) {
-        final var index = filter.indexOf("*");
-        final var value = filter.substring(0, index).toUpperCase();
         Predicate<Member> isMemberPresent = m -> m.getMember().isPresent();
-        Predicate<Member> isMemberFound = m -> m.getMember().get().equalsIgnoreCase(value);
+        Predicate<Member> isMemberFound = m -> m.getMember().get().equalsIgnoreCase(filter);
         return members.stream().filter(isMemberPresent.and(isMemberFound)).collect(Collectors.toList());
     }
 
     public static List<Member> getMembersByStartsWithFilter(final String filter, final List<Member> members) {
-        final var index = filter.indexOf("*");
-        final var value = filter.substring(0, index).toUpperCase();
         Predicate<Member> isMemberPresent = m -> m.getMember().isPresent();
-        Predicate<Member> isMemberFound = m -> m.getMember().get().startsWith(value);
+        Predicate<Member> isMemberFound = m -> m.getMember().get().startsWith(filter);
         return members.stream().filter(isMemberPresent.and(isMemberFound)).collect(Collectors.toList());
     }
 
