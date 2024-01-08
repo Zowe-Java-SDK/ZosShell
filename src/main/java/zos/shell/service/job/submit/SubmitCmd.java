@@ -7,10 +7,7 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.zosjobs.methods.JobSubmit;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class SubmitCmd {
 
