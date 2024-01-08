@@ -22,9 +22,8 @@ public class Touch {
 
     public ResponseStatus create(final String dataset, final String member) {
         LOG.debug("*** create ***");
-        Response response;
         try {
-            response = dsnWrite.write(dataset, member, "");
+            dsnWrite.write(dataset, member, "");
             return new ResponseStatus(member + SUCCESS_MSG, true);
         } catch (ZosmfRequestException e) {
             final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
