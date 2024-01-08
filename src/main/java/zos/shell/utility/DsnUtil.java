@@ -2,9 +2,13 @@ package zos.shell.utility;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zowe.client.sdk.zosfiles.dsn.response.Member;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class DsnUtil {
 
@@ -72,6 +76,22 @@ public class DsnUtil {
         final var p = Pattern.compile(PATTERN_STRING_MORE_THAN_ONE_CHAR);
         final var m = p.matcher(segment);
         return m.matches();
+    }
+
+    public static List<Member> getMembersByFilter(final String filter, final List<Member> members) {
+        final var index = filter.indexOf("*");
+        final var value = filter.substring(0, index).toUpperCase();
+        Predicate<Member> isMemberPresent = m -> m.getMember().isPresent();
+        Predicate<Member> isMemberFound = m -> m.getMember().get().equalsIgnoreCase(value);
+        return members.stream().filter(isMemberPresent.and(isMemberFound)).collect(Collectors.toList());
+    }
+
+    public static List<Member> getMembersByStartsWithFilter(final String filter, final List<Member> members) {
+        final var index = filter.indexOf("*");
+        final var value = filter.substring(0, index).toUpperCase();
+        Predicate<Member> isMemberPresent = m -> m.getMember().isPresent();
+        Predicate<Member> isMemberFound = m -> m.getMember().get().startsWith(value);
+        return members.stream().filter(isMemberPresent.and(isMemberFound)).collect(Collectors.toList());
     }
 
 }
