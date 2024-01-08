@@ -1,6 +1,5 @@
 package zos.shell.service.dsn.save;
 
-import com.google.common.base.Strings;
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,30 +26,27 @@ public class Save {
         this.dsnWrite = dsnWrite;
     }
 
-    public ResponseStatus save(final String dataset, final String memberOrDataset) {
+    public ResponseStatus save(final String dataset, final String target) {
         LOG.debug("*** save ***");
         if (!DsnUtil.isDataSet(dataset)) {
             return new ResponseStatus(Constants.INVALID_DATASET, false);
         }
 
         var isSequentialDataSet = false;
-        if (DsnUtil.isDataSet(memberOrDataset)) {
+        if (DsnUtil.isDataSet(target)) {
             isSequentialDataSet = true;
-        } else if (!DsnUtil.isMember(memberOrDataset)) {
+        } else if (!DsnUtil.isMember(target)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
 
         String fileName;
         if (SystemUtils.IS_OS_WINDOWS) {
-            fileName = DownloadDsnCmd.DIRECTORY_PATH_WINDOWS + dataset + "\\" + memberOrDataset;
+            fileName = DownloadDsnCmd.DIRECTORY_PATH_WINDOWS + dataset + "\\" + target;
         } else if (SystemUtils.IS_OS_MAC_OSX) {
-            fileName = DownloadDsnCmd.DIRECTORY_PATH_MAC + dataset + "/" + memberOrDataset;
+            fileName = DownloadDsnCmd.DIRECTORY_PATH_MAC + dataset + "/" + target;
         } else {
             return new ResponseStatus(Constants.OS_ERROR, false);
         }
-
-        final var arrowMsg = Strings.padStart(memberOrDataset,
-                Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW;
 
         try (final var br = new BufferedReader(new FileReader(fileName))) {
             final var sb = new StringBuilder();
@@ -64,18 +60,18 @@ public class Save {
             final var content = sb.toString().replaceAll("(\\r)", "");
 
             if (isSequentialDataSet) {
-                dsnWrite.write(memberOrDataset, content);
+                dsnWrite.write(target, content);
             } else {
-                dsnWrite.write(dataset, memberOrDataset, content);
+                dsnWrite.write(dataset, target, content);
             }
         } catch (ZosmfRequestException e) {
             final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
-            return new ResponseStatus(arrowMsg + (errMsg != null ? errMsg : e.getMessage()), false);
+            return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         } catch (IOException e) {
-            return new ResponseStatus(arrowMsg + e.getMessage(), false);
+            return new ResponseStatus(e.getMessage(), false);
         }
 
-        return new ResponseStatus(arrowMsg + "saved", true);
+        return new ResponseStatus(target + " saved", true);
     }
 
 }

@@ -1,6 +1,5 @@
 package zos.shell.service.dsn.touch;
 
-import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
@@ -32,34 +31,32 @@ public class TouchCmd {
         this.timeout = timeout;
     }
 
-    public ResponseStatus touch(final String dataset, final String member) {
+    public ResponseStatus touch(final String dataset, final String target) {
         LOG.debug("*** touch ***");
 
         if (!DsnUtil.isDataSet(dataset)) {
             return new ResponseStatus(Constants.INVALID_DATASET, true);
         }
 
-        if (!DsnUtil.isMember(member)) {
+        if (!DsnUtil.isMember(target)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, true);
         }
-
-        final var arrowMsg = Strings.padStart(member, Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW;
 
         boolean foundMember;
         MemberLst memberLst = new MemberLst(dsnList, timeout);
         try {
-            foundMember = memberLst.memberExist(dataset, member);
+            foundMember = memberLst.memberExist(dataset, target);
         } catch (ZosmfRequestException e) {
             final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
-            return new ResponseStatus(arrowMsg + (errMsg != null ? errMsg : e.getMessage()), false);
+            return new ResponseStatus(errMsg != null ? errMsg : e.getMessage(), false);
         }
 
         if (foundMember) {
-            return new ResponseStatus(arrowMsg + "member already exists", false);
+            return new ResponseStatus(target + " already exists", false);
         }
 
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureTouch(dsnWrite, dataset, member));
+        final var submit = pool.submit(new FutureTouch(dsnWrite, dataset, target));
 
         ResponseStatus responseStatus;
         try {
@@ -68,18 +65,18 @@ public class TouchCmd {
             LOG.debug("error: " + e);
             submit.cancel(true);
             return new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
-                    e.getMessage() : arrowMsg + Constants.COMMAND_EXECUTION_ERROR_MSG, false);
+                    e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG, false);
         } catch (TimeoutException e) {
             submit.cancel(true);
-            return new ResponseStatus(arrowMsg + Constants.TIMEOUT_MESSAGE, false);
+            return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
         } finally {
             pool.shutdown();
         }
 
         if (responseStatus.isStatus()) {
-            return new ResponseStatus(arrowMsg + responseStatus.getMessage(), true);
+            return new ResponseStatus(responseStatus.getMessage(), true);
         } else {
-            return new ResponseStatus(arrowMsg + responseStatus.getMessage(), false);
+            return new ResponseStatus(responseStatus.getMessage(), false);
         }
     }
 

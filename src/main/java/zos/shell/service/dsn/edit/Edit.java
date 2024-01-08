@@ -1,6 +1,5 @@
 package zos.shell.service.dsn.edit;
 
-import com.google.common.base.Strings;
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,9 +44,6 @@ public class Edit {
             dataset = Constants.SEQUENTIAL_DIRECTORY_LOCATION;
         }
 
-        final var arrowMsg = Strings.padStart(target,
-                Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW;
-
         try {
             if (result.isStatus()) {
                 String pathFile;
@@ -63,13 +59,13 @@ public class Edit {
                 }
                 rs.exec(editorName + " " + pathFile);
             } else {
-                return new ResponseStatus(arrowMsg + result.getMessage(), false);
+                return new ResponseStatus(result.getMessage(), false);
             }
         } catch (IOException e) {
-            return new ResponseStatus(arrowMsg + result.getMessage(), false);
+            return new ResponseStatus(result.getMessage(), false);
         }
 
-        return new ResponseStatus(arrowMsg + "opened in editor", true);
+        return new ResponseStatus("opened in editor", true);
     }
 
 }
