@@ -1,7 +1,5 @@
 package zos.shell.service.dsn.copy;
 
-import com.google.common.base.Strings;
-import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCopy;
 

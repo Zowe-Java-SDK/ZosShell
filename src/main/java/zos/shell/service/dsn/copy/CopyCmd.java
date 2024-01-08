@@ -131,10 +131,12 @@ public class CopyCmd {
             if (members.isEmpty()) {
                 return new ResponseStatus(Constants.COPY_NOTHING_WARNING, false);
             }
+
             toDataSetName = secondParam;
             if (!DsnUtil.isDataSet(toDataSetName)) {
                 return new ResponseStatus("specify valid dataset destination, try again...", false);
             }
+
             // target is a member string without * (wild card)
             final var target = firstParam.substring(0, firstParam.indexOf("*"));
             members = DsnUtil.getMembersByStartsWithFilter(target, members);
@@ -143,6 +145,7 @@ public class CopyCmd {
                 fromDataSetName = currDataSet + "(" + name + ")";
                 return processRequest(fromDataSetName, toDataSetName, false);
             }
+
             final var futures = new ArrayList<Future<ResponseStatus>>();
             final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
             for (final var member : members) {

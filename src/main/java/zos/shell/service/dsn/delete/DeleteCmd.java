@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.function.Predicate;
 
 public class DeleteCmd {
 
@@ -72,7 +71,6 @@ public class DeleteCmd {
 
         // copy member wild card to dataset
         if (copyWildCard) {
-
             try {
                 members = new MemberLst(new DsnList(connection), timeout).memberLst(currDataSet);
             } catch (ZosmfRequestException e) {
@@ -82,12 +80,14 @@ public class DeleteCmd {
             if (members.isEmpty()) {
                 return new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
             }
+
             // transform target is a member string without * (wild card)
             target = target.substring(0, target.indexOf("*"));
             members = DsnUtil.getMembersByStartsWithFilter(target, members);
             if (members.size() == 1) {
                 return processRequest(currDataSet, target);
             }
+
             final var futures = new ArrayList<Future<ResponseStatus>>();
             final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
             for (final var member : members) {
