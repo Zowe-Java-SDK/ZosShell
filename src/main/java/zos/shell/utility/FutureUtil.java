@@ -33,7 +33,8 @@ public final class FutureUtil {
     }
 
     public static ResponseStatus getFutureResponses(final List<Future<ResponseStatus>> futures,
-                                                    final ExecutorService pool, final long timeout) {
+                                                    final ExecutorService pool, final long timeout,
+                                                    final int padLength) {
         LOG.debug("*** getFutureResponses ***");
         final var results = new StringBuilder();
         futures.forEach(future -> {
@@ -41,7 +42,7 @@ public final class FutureUtil {
             try {
                 responseStatus = future.get(timeout, TimeUnit.SECONDS);
                 final var arrowMsg = Strings.padStart(responseStatus.getOptionalData(),
-                        Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW;
+                        padLength, ' ') + Constants.ARROW;
                 results.append(arrowMsg).append(responseStatus.getMessage()).append("\n");
             } catch (InterruptedException | ExecutionException e) {
                 LOG.debug("error: " + e);

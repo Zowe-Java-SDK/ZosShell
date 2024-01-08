@@ -159,7 +159,8 @@ public class CopyCmd {
                 final var future = new FutureCopy(dsnCopy, fromDataSetName, toDataSetName, false);
                 futures.add(pool.submit(future));
             }
-            return FutureUtil.getFutureResponses(futures, pool, timeout);
+            return FutureUtil.getFutureResponses(futures, pool, timeout,
+                    toDataSetName.length() + Constants.STRING_PAD_LENGTH);
         }
 
         return new ResponseStatus(Constants.INVALID_ARGUMENTS, false);
