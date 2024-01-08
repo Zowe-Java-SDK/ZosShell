@@ -73,10 +73,6 @@ public class Commands {
         LOG.debug("*** browse ***");
         final var browseCmd = new BrowseCmd(new JobGet(connection), isAll, timeout);
         final var responseStatus = browseCmd.browseJob(target);
-        if (!responseStatus.isStatus()) {
-            terminal.println(responseStatus.getMessage());
-            return new SearchCache(target, new StringBuilder());
-        }
         final String output = responseStatus.getMessage();
         terminal.println(output);
         return new SearchCache(target, new StringBuilder(output));
@@ -377,9 +373,6 @@ public class Commands {
         final var mvsConsoleCmd = new MvsConsoleCmd(connection, timeout);
         final var responseStatus = mvsConsoleCmd.issueConsoleCmd(command);
         terminal.println(responseStatus.getMessage());
-        if (!responseStatus.isStatus()) {
-            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
-        }
         return new SearchCache("mvs", new StringBuilder(responseStatus.getMessage()));
     }
 
@@ -453,10 +446,6 @@ public class Commands {
         final var tailCmd = new TailCmd(terminal, new JobGet(connection), timeout);
         long allCount = Arrays.stream(params).filter("ALL"::equalsIgnoreCase).count();
         final var responseStatus = tailCmd.tail(params, allCount == 1);
-        if (!responseStatus.isStatus()) {
-            terminal.println(responseStatus.getMessage());
-            return new SearchCache("tail", new StringBuilder());
-        }
         return new SearchCache("tail", new StringBuilder(responseStatus.getMessage()));
     }
 
@@ -487,10 +476,6 @@ public class Commands {
         final var tsoCmd = new TsoCmd(new IssueTso(connection), accountNum, timeout);
         final var responseStatus = tsoCmd.issueCommand(command);
         terminal.println(responseStatus.getMessage());
-        if (!responseStatus.isStatus()) {
-            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
-            return new SearchCache("tso", new StringBuilder());
-        }
         return new SearchCache("tso", new StringBuilder(responseStatus.getMessage()));
     }
 
