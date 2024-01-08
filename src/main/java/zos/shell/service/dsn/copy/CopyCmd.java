@@ -130,9 +130,6 @@ public class CopyCmd {
                 final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
                 return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
             }
-            if (members.isEmpty()) {
-                return new ResponseStatus(Constants.COPY_NOTHING_WARNING, false);
-            }
 
             toDataSetName = secondParam;
             if (!DsnUtil.isDataSet(toDataSetName)) {
@@ -146,6 +143,10 @@ public class CopyCmd {
                 final var name = members.get(0).getMember().orElse("");
                 fromDataSetName = currDataSet + "(" + name + ")";
                 return processRequest(fromDataSetName, toDataSetName, false);
+            }
+
+            if (members.isEmpty()) {
+                return new ResponseStatus(Constants.COPY_NOTHING_WARNING, false);
             }
 
             final var futures = new ArrayList<Future<ResponseStatus>>();
