@@ -516,9 +516,6 @@ public class Commands {
         final var editCmd = new EditCmd(new Download(new DsnGet(connection), false), timeout);
         final var responseStatus = editCmd.open(dataset, params[1]);
         terminal.println(responseStatus.getMessage());
-        if (!responseStatus.isStatus()) {
-            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
-        }
     }
 
 }
