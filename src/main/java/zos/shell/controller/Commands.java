@@ -163,9 +163,9 @@ public class Commands {
         return new SearchCache("env", str);
     }
 
-    public void files(String dataSet) {
+    public void files(String dataset) {
         LOG.debug("*** files ***");
-        LocalFileCmd.listFiles(terminal, dataSet);
+        LocalFileCmd.listFiles(terminal, dataset);
     }
 
     public void grep(final ZosConnection connection, final String pattern, final String target, final String dataset) {

@@ -7,18 +7,18 @@ import java.util.concurrent.Callable;
 
 public class FutureSubmit extends Submit implements Callable<ResponseStatus> {
 
-    private final String dataSet;
+    private final String dataset;
     private final String target;
 
-    public FutureSubmit(final JobSubmit submit, final String dataSet, final String target) {
+    public FutureSubmit(final JobSubmit submit, final String dataset, final String target) {
         super(submit);
-        this.dataSet = dataSet;
+        this.dataset = dataset;
         this.target = target;
     }
 
     @Override
     public ResponseStatus call() {
-        return this.submit(dataSet, target);
+        return this.submit(dataset, target);
     }
 
 }

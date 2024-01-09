@@ -45,9 +45,9 @@ public class DirCmd {
                 str.append(".");
             }
 
-            var dataSet = str.toString();
-            dataSet = dataSet.substring(0, str.length() - 1);
-            return dataSet;
+            var dataset = str.toString();
+            dataset = dataset.substring(0, str.length() - 1);
+            return dataset;
         } else {
             List<Dataset> dsLst;
             try {
