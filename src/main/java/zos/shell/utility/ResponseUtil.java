@@ -15,6 +15,7 @@ public final class ResponseUtil {
     private static final Logger LOG = LoggerFactory.getLogger(ResponseUtil.class);
 
     public static ResponseStatus getByteResponseStatus(ZosmfRequestException e) {
+        LOG.debug("*** getByteResponseStatus ***");
         final var byteMsg = (byte[]) e.getResponse().getResponsePhrase().get();
         final var errorStream = new ByteArrayInputStream(byteMsg);
         String errMsg;

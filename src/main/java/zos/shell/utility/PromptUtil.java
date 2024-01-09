@@ -8,7 +8,6 @@ public final class PromptUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(PromptUtil.class);
 
-
     @SuppressWarnings("SameReturnValue")
     public static String getPrompt() {
         LOG.debug("*** getPrompt ***");
