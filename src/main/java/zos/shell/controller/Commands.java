@@ -135,7 +135,11 @@ public class Commands {
         LOG.debug("*** dsnDownload ***");
         DownloadDsnCmd downloadDsnCmd = new DownloadDsnCmd(connection, isBinary, timeout);
         List<ResponseStatus> results = downloadDsnCmd.download(dataset, target);
-        results.forEach(r -> terminal.println(r.getMessage()));
+        if (results.size() > 1) {
+            results.forEach(r -> terminal.println(r.getMessage()));
+        } else {
+            terminal.println(ResponseUtil.getMsgAfterArrow(results.get(0).getMessage()));
+        }
         if (results.size() == 1 && !results.get(0).isStatus()) {
             terminal.println("cannot download " + target + ", try again...");
         }
