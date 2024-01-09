@@ -453,13 +453,13 @@ public class Commands {
     }
 
     public void timeout(final long value) {
-        LOG.debug("*** timeout ***");
+        LOG.debug("*** timeout set value ***");
         timeout = value;
         terminal.println("timeout value set to " + timeout + " seconds.");
     }
 
     public void timeout() {
-        LOG.debug("*** timeout ***");
+        LOG.debug("*** timeout display ***");
         terminal.println("timeout value is " + timeout + " seconds.");
     }
 
