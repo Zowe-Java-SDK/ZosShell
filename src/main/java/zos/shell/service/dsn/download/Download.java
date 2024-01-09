@@ -100,7 +100,7 @@ public class Download {
         message += "downloaded to " + dirSetup.getFileNamePath();
         return new ResponseStatus(message, true, dirSetup.getFileNamePath());
     }
-    
+
     private String getTextContent(final String dataset, final String member)
             throws ZosmfRequestException, IOException {
         LOG.debug("*** getTextContent member ***");
