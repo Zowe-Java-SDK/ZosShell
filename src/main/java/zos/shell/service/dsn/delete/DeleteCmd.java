@@ -99,7 +99,14 @@ public class DeleteCmd {
             return FutureUtil.getFutureResponses(futures, pool, timeout, Constants.STRING_PAD_LENGTH);
         }
 
-        return new ResponseStatus(Constants.INVALID_ARGUMENTS, false);
+        String errMsg;
+        if ("*".equals(target)) {
+            errMsg = "no support for removal of all members for now, try again...";
+        } else {
+            errMsg = Constants.INVALID_ARGUMENTS;
+        }
+
+        return new ResponseStatus(errMsg, false);
     }
 
     private ResponseStatus processRequest(final String dataset, final String member) {

@@ -46,7 +46,7 @@ The shell performs the following Linux like commands:
     ps                      - display all processes running
     ps <arg>                - where arg is a task/job name   
     pwd                     - show current working dataset
-    rm <arg>                - where arg is "*", member, member with wildcard "*", dataset, or dataset with member value
+    rm <arg>                - where arg is member with wildcard "*", member, dataset, or dataset with member value
     set <arg>               - set environment variable with arg value in the following format: key=value
     touch <arg>             - create member arg if it does not already exist
     uname                   - show current connected host name
