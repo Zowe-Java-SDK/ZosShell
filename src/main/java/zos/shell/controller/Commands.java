@@ -380,7 +380,7 @@ public class Commands {
     }
 
     public SearchCache ps(final ZosConnection connection) {
-        LOG.debug("*** ps ***");
+        LOG.debug("*** ps all ***");
         return ps(connection, null);
     }
 
@@ -392,7 +392,7 @@ public class Commands {
     }
 
     public SearchCache ps(final ZosConnection connection, final String target) {
-        LOG.debug("*** ps ***");
+        LOG.debug("*** ps target ***");
         final var processLstCmd = new ProcessLstCmd(new JobGet(connection), timeout);
         final var responseStatus = processLstCmd.processLst(target);
         terminal.println(responseStatus.getMessage());
