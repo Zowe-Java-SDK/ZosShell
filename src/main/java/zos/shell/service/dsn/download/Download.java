@@ -97,7 +97,7 @@ public class Download {
 
         } catch (ZosmfRequestException e) {
             // TODO create helper method and find the other places
-            return getByteResponseStatus(e);
+            return ResponseUtil.getByteResponseStatus(e);
         } catch (IOException e) {
             return new ResponseStatus(message + e.getMessage(), false);
         }
@@ -106,16 +106,7 @@ public class Download {
         return new ResponseStatus(message, true, dirSetup.getFileNamePath());
     }
 
-    private ResponseStatus getByteResponseStatus(ZosmfRequestException e) {
-        InputStream errorStream = new ByteArrayInputStream((byte[]) e.getResponse().getResponsePhrase().get());
-        String errMsg;
-        try {
-            errMsg = FileUtil.getTextStreamData(errorStream);
-        } catch (IOException ex) {
-            errMsg = "error processing response";
-        }
-        return new ResponseStatus(errMsg, false);
-    }
+
 
     private String getTextContent(final String dataset, final String member)
             throws ZosmfRequestException, IOException {

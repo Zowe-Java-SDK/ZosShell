@@ -3,11 +3,29 @@ package zos.shell.utility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.response.ResponseStatus;
 import zowe.client.sdk.rest.Response;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public final class ResponseUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResponseUtil.class);
+
+    public static ResponseStatus getByteResponseStatus(ZosmfRequestException e) {
+        final var byteMsg = (byte[]) e.getResponse().getResponsePhrase().get();
+        final var errorStream = new ByteArrayInputStream(byteMsg);
+        String errMsg;
+        try {
+            errMsg = FileUtil.getTextStreamData(errorStream);
+        } catch (IOException ex) {
+            errMsg = "error processing response";
+        }
+        return new ResponseStatus(errMsg, false);
+    }
 
     public static String getResponsePhrase(final Response response) {
         LOG.debug("*** getResponsePhrase ***");
