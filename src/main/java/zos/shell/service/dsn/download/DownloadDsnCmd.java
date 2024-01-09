@@ -144,6 +144,7 @@ public class DownloadDsnCmd {
             }
         }
 
+        // results.get(0) not possible if we used FutureUtil.getFutureResponses
         FileUtil.openFileLocation(results.get(0).getOptionalData());
         pool.shutdownNow();
         return results;
