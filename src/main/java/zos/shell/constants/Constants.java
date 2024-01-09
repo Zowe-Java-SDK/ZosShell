@@ -16,8 +16,6 @@ public final class Constants {
     public static final String COPY_NOTHING_WARNING = "nothing to copy, try again...";
     public static final String COPY_NO_MEMBER_ERROR =
             "first argument invalid for copy, specified a member, try again...";
-    public static final String COPY_NO_MEMBER_AND_DATASET_ERROR =
-            "first argument invalid for copy, specified valid dataset or member or dataset(member), try again...";
     public static final String DATASET_OR_HIGH_QUALIFIER_ERROR =
             "invalid dataset or cant change to high qualifier level, try again...";
     public static final String DATASET_NOT_SPECIFIED = "no dataset specified, try again...";
