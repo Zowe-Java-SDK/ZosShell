@@ -64,7 +64,7 @@ public class Download {
                 if (binaryContent == null) {
                     return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
                 }
-                writeBinaryFile(binaryContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
+                FileUtil.writeBinaryFile(binaryContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
             }
             message += "downloaded to " + dirSetup.getFileNamePath();
         } catch (ZosmfRequestException e) {
@@ -97,14 +97,7 @@ public class Download {
 
         } catch (ZosmfRequestException e) {
             // TODO create helper method and find the other places
-            InputStream errorStream = new ByteArrayInputStream((byte[]) e.getResponse().getResponsePhrase().get());
-            String errMsg;
-            try {
-                errMsg = getTextStreamData(errorStream);
-            } catch (IOException ex) {
-                errMsg = "error processing response";
-            }
-            return new ResponseStatus(errMsg, false);
+            return getByteResponseStatus(e);
         } catch (IOException e) {
             return new ResponseStatus(message + e.getMessage(), false);
         }
@@ -113,11 +106,15 @@ public class Download {
         return new ResponseStatus(message, true, dirSetup.getFileNamePath());
     }
 
-    private void writeBinaryFile(final InputStream input, final String directoryPath, final String fileNamePath)
-            throws IOException {
-        LOG.debug("*** writeBinaryFile ***");
-        Files.createDirectories(Paths.get(directoryPath));
-        FileUtils.copyInputStreamToFile(input, new File(fileNamePath));
+    private ResponseStatus getByteResponseStatus(ZosmfRequestException e) {
+        InputStream errorStream = new ByteArrayInputStream((byte[]) e.getResponse().getResponsePhrase().get());
+        String errMsg;
+        try {
+            errMsg = getTextStreamData(errorStream);
+        } catch (IOException ex) {
+            errMsg = "error processing response";
+        }
+        return new ResponseStatus(errMsg, false);
     }
 
     private String getTextContent(final String dataset, final String member)
