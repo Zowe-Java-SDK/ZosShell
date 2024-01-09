@@ -26,6 +26,9 @@ public class Edit {
 
     public ResponseStatus open(String dataset, String target) {
         LOG.debug("*** open ***");
+        if (DsnUtil.isMember(target) && !DsnUtil.isDataSet(dataset)) {
+            return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
+        }
         ResponseStatus result;
         final var dataSetMember = DataSetMember.getDatasetAndMember(target);
 
@@ -38,7 +41,7 @@ public class Edit {
             target = dataSetMember.getMember();
             result = download.member(dataset, target);
         } else {
-            // target input specified i.e. sequential dataset
+            // target input specified must be sequential dataset
             result = download.dataset(target);
             dataset = Constants.SEQUENTIAL_DIRECTORY_LOCATION;
         }
