@@ -2,9 +2,11 @@ package zos.shell.service.dsn.count;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.datasetlst.DatasetLst;
 import zos.shell.service.memberlst.MemberLst;
+import zos.shell.utility.DsnUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.response.Dataset;
@@ -29,6 +31,9 @@ public class CountCmd {
 
     public ResponseStatus count(final String dataset, final String filter) {
         LOG.debug("*** count ***");
+        if (!DsnUtil.isDataSet(dataset)) {
+            return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
+        }
         final var dataSetCount = new AtomicInteger();
         List<Dataset> datasets = new ArrayList<>();
         List<Member> members = new ArrayList<>();

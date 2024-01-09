@@ -26,9 +26,6 @@ public class Edit {
 
     public ResponseStatus open(String dataset, String target) {
         LOG.debug("*** open ***");
-        if (DsnUtil.isMember(target) && !DsnUtil.isDataSet(dataset)) {
-            return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
-        }
         ResponseStatus result;
         final var dataSetMember = DataSetMember.getDatasetAndMember(target);
 

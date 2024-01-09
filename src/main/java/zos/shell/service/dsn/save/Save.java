@@ -28,10 +28,6 @@ public class Save {
 
     public ResponseStatus save(final String dataset, final String target) {
         LOG.debug("*** save ***");
-        if (DsnUtil.isMember(target) && !DsnUtil.isDataSet(dataset)) {
-            return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
-        }
-
         final var isSequentialDataSet = DsnUtil.isDataSet(target);
 
         String fileName;
