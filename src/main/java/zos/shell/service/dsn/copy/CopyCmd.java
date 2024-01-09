@@ -168,7 +168,20 @@ public class CopyCmd {
                     toDataSetName.length() + Constants.STRING_PAD_LENGTH);
         }
 
-        return new ResponseStatus(Constants.INVALID_ARGUMENTS, false);
+        String errMsg;
+        if (DsnUtil.isDataSet(firstParam)) {
+            errMsg = "invalid second argument, enter valid sequential dataset and try again...";
+        } else if (DsnUtil.isMember(firstParam)) {
+            errMsg = "invalid second argument, enter valid dataset or dataset(member) and try again...";
+        } else if (DsnUtil.isDataSet(secondParam)) {
+            errMsg = "invalid first argument, enter valid member or sequential dataset and try again...";
+        } else if (DsnUtil.isMember(secondParam)) {
+            errMsg = "invalid first argument, enter valid member or dataset(member) and try again...";
+        } else {
+            errMsg = Constants.INVALID_ARGUMENTS;
+        }
+
+        return new ResponseStatus(errMsg, false);
     }
 
     private ResponseStatus processRequest(final String source, final String destination, boolean isCopyAll) {
