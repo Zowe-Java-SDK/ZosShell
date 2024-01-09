@@ -133,8 +133,8 @@ public class Commands {
     public void downloadDsn(final ZosConnection connection, final String dataset,
                             final String target, boolean isBinary) {
         LOG.debug("*** dsnDownload ***");
-        DownloadDsnCmd downloadDsnCmd = new DownloadDsnCmd(connection, isBinary, timeout);
-        List<ResponseStatus> results = downloadDsnCmd.download(dataset, target);
+        final var downloadDsnCmd = new DownloadDsnCmd(connection, isBinary, timeout);
+        final var results = downloadDsnCmd.download(dataset, target);
         if (results.size() > 1) {
             results.forEach(r -> terminal.println(r.getMessage()));
         } else {
@@ -147,8 +147,8 @@ public class Commands {
 
     public void downloadJob(final ZosConnection connection, final String target, boolean isAll) {
         LOG.debug("*** downloadJob ***");
-        DownloadJobCmd downloadJobCmd = new DownloadJobCmd(new JobGet(connection), isAll, timeout);
-        ResponseStatus responseStatus = downloadJobCmd.download(target);
+        final var downloadJobCmd = new DownloadJobCmd(new JobGet(connection), isAll, timeout);
+        final var responseStatus = downloadJobCmd.download(target);
         terminal.println(responseStatus.getMessage());
     }
 
