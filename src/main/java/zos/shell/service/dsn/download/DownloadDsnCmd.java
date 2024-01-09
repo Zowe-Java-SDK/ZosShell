@@ -55,7 +55,7 @@ public class DownloadDsnCmd {
             if (members.isEmpty()) {
                 results.add(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
             }
-            results.addAll(downloadMembers(dataset, members, isBinary));
+            results.addAll(downloadMembers(dataset, members));
             return results;
         }
 
@@ -73,7 +73,7 @@ public class DownloadDsnCmd {
             if (members.isEmpty()) {
                 results.add(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
             }
-            results.addAll(downloadMembers(dataset, members, isBinary));
+            results.addAll(downloadMembers(dataset, members));
             return results;
         }
 
@@ -117,7 +117,7 @@ public class DownloadDsnCmd {
         return results;
     }
 
-    private List<ResponseStatus> downloadMembers(final String dataset, final List<Member> members, boolean isBinary) {
+    private List<ResponseStatus> downloadMembers(final String dataset, final List<Member> members) {
         LOG.debug("*** downloadMembers ***");
         final var results = new ArrayList<ResponseStatus>();
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
