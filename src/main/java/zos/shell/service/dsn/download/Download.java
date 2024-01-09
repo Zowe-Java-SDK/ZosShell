@@ -1,8 +1,6 @@
 package zos.shell.service.dsn.download;
 
 import com.google.common.base.Strings;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
@@ -15,9 +13,8 @@ import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.DownloadParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class Download {
 
@@ -103,9 +100,7 @@ public class Download {
         message += "downloaded to " + dirSetup.getFileNamePath();
         return new ResponseStatus(message, true, dirSetup.getFileNamePath());
     }
-
-
-
+    
     private String getTextContent(final String dataset, final String member)
             throws ZosmfRequestException, IOException {
         LOG.debug("*** getTextContent member ***");

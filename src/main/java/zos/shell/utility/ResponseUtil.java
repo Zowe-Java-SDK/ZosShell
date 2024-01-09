@@ -9,7 +9,6 @@ import zowe.client.sdk.rest.exception.ZosmfRequestException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 public final class ResponseUtil {
 
