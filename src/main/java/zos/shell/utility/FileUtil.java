@@ -58,9 +58,8 @@ public final class FileUtil {
         if (inputStream != null) {
             final var writer = new StringWriter();
             IOUtils.copy(inputStream, writer, Constants.UTF8);
-            final var content = writer.toString();
             inputStream.close();
-            return content;
+            return writer.toString();
         }
         return null;
     }

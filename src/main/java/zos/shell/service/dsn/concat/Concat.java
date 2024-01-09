@@ -7,6 +7,7 @@ import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.utility.DsnUtil;
+import zos.shell.utility.FileUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 
 import java.io.ByteArrayInputStream;
@@ -37,13 +38,13 @@ public class Concat {
                 // retrieve sequential dataset data
                 inputStream = download.getInputStream(target);
             }
-            result = retrieveInfo(inputStream);
+            result = FileUtil.getTextStreamData(inputStream);
             return new ResponseStatus(result != null ? result : "no data to display", true);
         } catch (ZosmfRequestException e) {
             final var errorStream = new ByteArrayInputStream((byte[]) e.getResponse().getResponsePhrase().get());
             String errMsg;
             try {
-                errMsg = retrieveInfo(errorStream);
+                errMsg = FileUtil.getTextStreamData(errorStream);
             } catch (IOException ex) {
                 errMsg = "error processing response";
             }
@@ -51,17 +52,6 @@ public class Concat {
         } catch (IOException e) {
             return new ResponseStatus(e.getMessage(), false);
         }
-    }
-
-    private String retrieveInfo(final InputStream inputStream) throws IOException {
-        LOG.debug("*** retrieveInfo ***");
-        if (inputStream != null) {
-            final var writer = new StringWriter();
-            IOUtils.copy(inputStream, writer, Constants.UTF8);
-            inputStream.close();
-            return writer.toString();
-        }
-        return null;
     }
 
 }
