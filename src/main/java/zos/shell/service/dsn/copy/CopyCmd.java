@@ -118,6 +118,11 @@ public class CopyCmd {
             return processRequest(fromDataSetName, currDataSet + "(" + secondParam + ")", false);
         }
 
+        // copy member to dataset
+        if (!fromDataSetName.isBlank() && DsnUtil.isDataSet(secondParam)) {
+            return processRequest(fromDataSetName, secondParam + "(" + firstParam + ")", false);
+        }
+
         long numOfAsterisk = firstParam.chars().filter(ch -> ch == '*').count();
         boolean copyWildCard = numOfAsterisk == 1 && DsnUtil.isMember(firstParam.substring(0, firstParam.indexOf("*")));
 
