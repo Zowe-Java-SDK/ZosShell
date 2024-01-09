@@ -11,12 +11,9 @@ public final class Constants {
     public static final String COMMAND_EXECUTION_ERROR_MSG = "error executing command, try again...";
     public static final String COMMAND_EXTRA_TEXT_INVALID_COMMAND =
             "invalid command, remove extra text beyond second double quote and try again...";
-    public static final String CONNECTION_REFUSED = "connection refused";
     public static final String COMMAND_INVALID_COMMAND =
             "invalid command, please use two double quotes only around the command string and try again...";
     public static final String COPY_NOTHING_WARNING = "nothing to copy, try again...";
-    public static final String COPY_ITSELF_ERROR =
-            "first argument invalid for copy, cant copy from same location, try again...";
     public static final String COPY_NO_MEMBER_ERROR =
             "first argument invalid for copy, specified a member, try again...";
     public static final String COPY_NO_MEMBER_AND_DATASET_ERROR =
@@ -24,8 +21,6 @@ public final class Constants {
     public static final String DATASET_OR_HIGH_QUALIFIER_ERROR =
             "invalid dataset or cant change to high qualifier level, try again...";
     public static final String DATASET_NOT_SPECIFIED = "no dataset specified, try again...";
-    public static final String DELETE_OPS_NO_MEMBER_AND_DATASET_ERROR =
-            "first argument invalid for rm operation, specified valid dataset or member or dataset(member), try again...";
     public static final String DEFAULT_PROMPT = ">";
     public static final String DELETE_NOTHING_ERROR = "nothing to delete, try again...";
     public static final String DOWNLOAD_FAIL = "download failed, try again...";
@@ -51,7 +46,6 @@ public final class Constants {
     public static final String NO_LISTING =
             "no listing results returned, connection problem or data set may not exist, try again...";
     public static final String NO_MEMBERS = "no members...";
-    public static final String NOTHING_FOUND = "nothing found, try again...";
     public static final String NO_PROCESS_FOUND = "no process found, try again...";
     public static final String MAKE_DIR_EXIT_MSG = "exited mkdir command...";
     public static final String MAC_EDITOR_NAME = "open -a TextEdit";
@@ -65,7 +59,6 @@ public final class Constants {
     public static final String SEQUENTIAL_DIRECTORY_LOCATION = "SEQUENTIAL_DATASET";
     public static final String CONFIG_PATH_FILE_MAC = PATH_FILE_DIRECTORY_MAC + "/config.txt";
     public static final String CONFIG_PATH_FILE_WINDOWS = PATH_FILE_DIRECTORY_WINDOWS + "\\config.txt";
-    public static final String SEVERE_ERROR = "server error, check connection...";
     public static final int STRING_PAD_LENGTH = 8;
     public static final int THREAD_POOL_MIN = 1;
     public static final int THREAD_POOL_MAX = 10;
