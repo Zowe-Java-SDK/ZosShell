@@ -1,13 +1,16 @@
 package zos.shell.utility;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.constants.Constants;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -48,6 +51,18 @@ public final class FileUtil {
         LOG.debug("*** writeBinaryFile ***");
         Files.createDirectories(Paths.get(directoryPath));
         FileUtils.copyInputStreamToFile(input, new File(fileNamePath));
+    }
+
+    public static String getTextStreamData(final InputStream inputStream) throws IOException {
+        LOG.debug("*** getTextStreamData ***");
+        if (inputStream != null) {
+            final var writer = new StringWriter();
+            IOUtils.copy(inputStream, writer, Constants.UTF8);
+            final var content = writer.toString();
+            inputStream.close();
+            return content;
+        }
+        return null;
     }
 
 }

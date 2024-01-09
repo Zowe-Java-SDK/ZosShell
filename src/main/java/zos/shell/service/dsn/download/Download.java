@@ -110,7 +110,7 @@ public class Download {
         InputStream errorStream = new ByteArrayInputStream((byte[]) e.getResponse().getResponsePhrase().get());
         String errMsg;
         try {
-            errMsg = getTextStreamData(errorStream);
+            errMsg = FileUtil.getTextStreamData(errorStream);
         } catch (IOException ex) {
             errMsg = "error processing response";
         }
@@ -121,13 +121,13 @@ public class Download {
             throws ZosmfRequestException, IOException {
         LOG.debug("*** getTextContent member ***");
         final var inputStream = getInputStream(String.format("%s(%s)", dataset, member));
-        return getTextStreamData(inputStream);
+        return FileUtil.getTextStreamData(inputStream);
     }
 
     private String getTextContent(final String dataset) throws ZosmfRequestException, IOException {
         LOG.debug("*** getTextContent member ***");
         final var inputStream = getInputStream(dataset);
-        return getTextStreamData(inputStream);
+        return FileUtil.getTextStreamData(inputStream);
     }
 
     private InputStream getBinaryContent(final String dataset, final String member) throws ZosmfRequestException {
@@ -141,18 +141,6 @@ public class Download {
             dlParams = new DownloadParams.Builder().build();
         }
         return dsnGet.get(target, dlParams);
-    }
-
-    private String getTextStreamData(final InputStream inputStream) throws IOException {
-        LOG.debug("*** getTextStreamData ***");
-        if (inputStream != null) {
-            final var writer = new StringWriter();
-            IOUtils.copy(inputStream, writer, Constants.UTF8);
-            final var content = writer.toString();
-            inputStream.close();
-            return content;
-        }
-        return null;
     }
 
 
