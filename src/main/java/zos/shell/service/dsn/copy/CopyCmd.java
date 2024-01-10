@@ -43,12 +43,12 @@ public class CopyCmd {
 
         final var datasetMemberFirstParam = DataSetMember.getDatasetAndMember(firstParam);
         if (datasetMemberFirstParam != null) {
-            fromDataSetName = datasetMemberFirstParam.getDataSet() + "(" + datasetMemberFirstParam.getMember() + ")";
+            fromDataSetName = datasetMemberFirstParam.getDataset() + "(" + datasetMemberFirstParam.getMember() + ")";
         }
 
         final var datasetMemberSecondParam = DataSetMember.getDatasetAndMember(secondParam);
         if (datasetMemberSecondParam != null) {
-            toDataSetName = datasetMemberSecondParam.getDataSet() + "(" + datasetMemberSecondParam.getMember() + ")";
+            toDataSetName = datasetMemberSecondParam.getDataset() + "(" + datasetMemberSecondParam.getMember() + ")";
         }
 
         // copy dataset(member) to dataset(member)

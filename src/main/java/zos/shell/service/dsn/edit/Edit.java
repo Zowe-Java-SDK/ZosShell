@@ -34,7 +34,7 @@ public class Edit {
             result = download.member(dataset, target);
         } else if (dataSetMember != null) {
             // dataset(member) input specified
-            dataset = dataSetMember.getDataSet();
+            dataset = dataSetMember.getDataset();
             target = dataSetMember.getMember();
             result = download.member(dataset, target);
         } else {

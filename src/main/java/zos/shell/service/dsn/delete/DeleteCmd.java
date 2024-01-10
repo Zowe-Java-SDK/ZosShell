@@ -40,7 +40,7 @@ public class DeleteCmd {
         final var datasetMemberTarget = DataSetMember.getDatasetAndMember(target);
         // delete dataset(member) not in currDataset
         if (datasetMemberTarget != null) {
-            return processRequest(datasetMemberTarget.getDataSet(), datasetMemberTarget.getMember());
+            return processRequest(datasetMemberTarget.getDataset(), datasetMemberTarget.getMember());
         }
 
         // delete currDataset(member)

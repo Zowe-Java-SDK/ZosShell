@@ -8,16 +8,16 @@ public class DataSetMember {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataSetMember.class);
 
-    private final String dataSet;
+    private final String dataset;
     private final String member;
 
-    public DataSetMember(String dataSet, String member) {
-        this.dataSet = dataSet;
+    public DataSetMember(String dataset, String member) {
+        this.dataset = dataset;
         this.member = member;
     }
 
-    public String getDataSet() {
-        return dataSet;
+    public String getDataset() {
+        return dataset;
     }
 
     public String getMember() {
@@ -45,7 +45,7 @@ public class DataSetMember {
     @Override
     public String toString() {
         return "DataSetMember{" +
-                "dataSet='" + dataSet + '\'' +
+                "dataSet='" + dataset + '\'' +
                 ", member='" + member + '\'' +
                 '}';
     }

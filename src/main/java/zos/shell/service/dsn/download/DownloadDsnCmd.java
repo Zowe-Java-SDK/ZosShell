@@ -83,7 +83,7 @@ public class DownloadDsnCmd {
         try {
             if (dataSetMember != null) {
                 // dataset(member) notation
-                submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), dataSetMember.getDataSet(),
+                submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), dataSetMember.getDataset(),
                         dataSetMember.getMember(), isBinary));
                 results.add(submit.get(timeout, TimeUnit.SECONDS));
             } else if (DsnUtil.isMember(target)) {
