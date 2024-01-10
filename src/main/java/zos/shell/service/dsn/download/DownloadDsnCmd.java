@@ -110,10 +110,7 @@ public class DownloadDsnCmd {
         if (results.get(0).isStatus()) {
             FileUtil.openFileLocation(results.get(0).getOptionalData());
             return results;
-        } else {
-            final var msg = ResponseUtil.getMsgAfterArrow(results.get(0).getMessage());
-            results.add(0, new ResponseStatus(msg, false));
-        }
+        } 
 
         return results;
     }
