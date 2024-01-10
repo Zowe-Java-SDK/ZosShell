@@ -63,7 +63,7 @@ public class Download {
                 }
                 FileUtil.writeBinaryFile(binaryContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
             }
-            message += "downloaded to " + dirSetup.getFileNamePath();
+            message += member + " downloaded to " + dirSetup.getFileNamePath();
         } catch (ZosmfRequestException e) {
             return ResponseUtil.getByteResponseStatus(e);
         } catch (IOException e) {
@@ -97,7 +97,7 @@ public class Download {
             return new ResponseStatus(message + e.getMessage(), false);
         }
 
-        message += "downloaded to " + dirSetup.getFileNamePath();
+        message += dataset + " downloaded to " + dirSetup.getFileNamePath();
         return new ResponseStatus(message, true, dirSetup.getFileNamePath());
     }
 
