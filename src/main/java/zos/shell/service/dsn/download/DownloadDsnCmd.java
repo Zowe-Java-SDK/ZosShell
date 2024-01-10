@@ -94,6 +94,8 @@ public class DownloadDsnCmd {
                 // sequential dataset
                 submit = pool.submit(new FutureDatasetDownload(new DsnGet(connection), target, isBinary));
                 results.add(submit.get(timeout, TimeUnit.SECONDS));
+            } else {
+                results.add(new ResponseStatus(Constants.INVALID_DATASET_AND_MEMBER, false));
             }
         } catch (InterruptedException | ExecutionException e) {
             LOG.debug("error: " + e);
