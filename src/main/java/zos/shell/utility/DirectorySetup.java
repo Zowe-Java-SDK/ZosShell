@@ -3,7 +3,7 @@ package zos.shell.utility;
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.Constants;
+import zos.shell.constants.Constants;
 
 public class DirectorySetup {
 
@@ -14,7 +14,7 @@ public class DirectorySetup {
     private String directoryPath;
     private String fileNamePath;
 
-    public void initialize(String directoryName, String fileName) {
+    public void initialize(final String directoryName, final String fileName) {
         LOG.debug("*** initialize ***");
         if (SystemUtils.IS_OS_WINDOWS) {
             directoryPath = DIRECTORY_PATH_WINDOWS + directoryName;

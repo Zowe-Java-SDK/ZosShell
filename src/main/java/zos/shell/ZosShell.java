@@ -11,14 +11,18 @@ import org.beryx.textio.swing.SwingTextTerminal;
 import org.beryx.textio.web.RunnerData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.commands.Commands;
-import zos.shell.commands.History;
-import zos.shell.config.Config;
-import zos.shell.config.Credentials;
-import zos.shell.data.Environment;
-import zos.shell.data.SearchDictionary;
-import zos.shell.dto.Output;
-import zos.shell.utility.Util;
+import zos.shell.configuration.Config;
+import zos.shell.configuration.Credentials;
+import zos.shell.constants.Constants;
+import zos.shell.controller.Commands;
+import zos.shell.record.DataSetMember;
+import zos.shell.service.autocomplete.SearchDictionary;
+import zos.shell.service.env.EnvVarCmd;
+import zos.shell.service.history.HistoryCmd;
+import zos.shell.service.search.SearchCache;
+import zos.shell.utility.DsnUtil;
+import zos.shell.utility.PromptUtil;
+import zos.shell.utility.StrUtil;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 
@@ -38,8 +42,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static ZosConnection currConnection;
     private static TextTerminal<?> terminal;
     private static Commands commands;
-    private static History history;
-    private static Output commandOutput;
+    private static HistoryCmd history;
+    private static SearchCache commandOutput;
     private static final SwingTextTerminal mainTerminal = new SwingTextTerminal();
     private static final int defaultFontSize = 10;
     private static int fontSize = defaultFontSize;
@@ -81,14 +85,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             if (disableKeys) {
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
-            history.listUpCommands(Util.getPrompt());
+            history.listUpCommands(PromptUtil.getPrompt());
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerminal.registerHandler("DOWN", t -> {
             if (disableKeys) {
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
-            history.listDownCommands(Util.getPrompt());
+            history.listDownCommands(PromptUtil.getPrompt());
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerminal.registerHandler("shift UP", t -> {
@@ -100,7 +104,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             mainTerminal.setPromptFontSize(fontSize);
             mainTerminal.moveToLineStart();
             System.out.println(mainTerminal.getTextPane().getText());
-            mainTerminal.print(Util.getPrompt() + " Increased font size to " + fontSize + ".");
+            mainTerminal.print(PromptUtil.getPrompt() + " Increased font size to " + fontSize + ".");
             fontSizeChanged = true;
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
@@ -113,7 +117,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 mainTerminal.setInputFontSize(fontSize);
                 mainTerminal.setPromptFontSize(fontSize);
                 mainTerminal.moveToLineStart();
-                mainTerminal.print(Util.getPrompt() + " Decreased font size to " + fontSize + ".");
+                mainTerminal.print(PromptUtil.getPrompt() + " Decreased font size to " + fontSize + ".");
                 fontSizeChanged = true;
             }
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
@@ -122,7 +126,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             if (disableKeys) {
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
-            final var items = mainTerminal.getTextPane().getText().split(Util.getPrompt());
+            final var items = mainTerminal.getTextPane().getText().split(PromptUtil.getPrompt());
             var candidateStr = items[items.length - 1].trim();
             candidateStr = candidateStr.replaceAll("[\\p{Cf}]", "");
             if (candidateStr.contains(" ")) {  // invalid look up
@@ -132,10 +136,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             if (!candidateLst.isEmpty()) {
                 mainTerminal.moveToLineStart();
                 if (candidateLst.size() == 1) {
-                    mainTerminal.print(Util.getPrompt() + " " + candidateLst.get(0));
+                    mainTerminal.print(PromptUtil.getPrompt() + " " + candidateLst.get(0));
                 } else {
                     mainTextIO.newStringInputReader().withDefaultValue("hit enter to skip")
-                            .read((Util.getPrompt() + " " + candidateLst));
+                            .read((PromptUtil.getPrompt() + " " + candidateLst));
                 }
             }
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
@@ -156,7 +160,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             }
         }
         commands = new Commands(connections, terminal);
-        history = new History(terminal);
+        history = new HistoryCmd(terminal);
         if (currConnection == null) {
             terminal.println(Constants.NO_CONNECTIONS);
         } else {
@@ -166,7 +170,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         String[] command;
         var commandLine = "";
         while (!"end".equalsIgnoreCase(commandLine)) {
-            commandLine = textIO.newStringInputReader().withMaxLength(80).read(Util.getPrompt());
+            commandLine = textIO.newStringInputReader().withMaxLength(80).read(PromptUtil.getPrompt());
             if (fontSizeChanged) {
                 terminal.println("Front size set.");
                 fontSizeChanged = false;
@@ -174,7 +178,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             }
             command = commandLine.split(" ");
             if (Arrays.stream(command).anyMatch(String::isEmpty)) {  // handle multiple empty spaces specified
-                command = Util.stripEmptyStrings(command);
+                command = StrUtil.stripEmptyStrings(command);
             }
 
             // handle edge case where end user enters prompt as the only input, skip it and continue
@@ -197,27 +201,23 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
                 boolean doIt = false;
                 do {
-                    final var dataSetMember = Util.getDatasetAndMember(command[1]);
+                    final var dataSetMember = DataSetMember.getDatasetAndMember(command[1]);
                     if (!currDataSet.isBlank() && dataSetMember != null) {
                         terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
-                    } else if (!currDataSet.isBlank() && Util.isMember(command[1])) {
+                    } else if (!currDataSet.isBlank() && DsnUtil.isMember(command[1])) {
                         final var candidate = currDataSet + "(" + command[1] + ")";
                         terminal.printf("Are you sure you want to delete " + candidate + " y/n");
                     } else if (currDataSet.isBlank() && dataSetMember != null) {
                         terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
-                    } else if (currDataSet.isBlank() && Util.isDataSet(command[1])) {
+                    } else if (currDataSet.isBlank() && DsnUtil.isDataSet(command[1])) {
                         terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
                     } else if (!currDataSet.isBlank() && ("*".equals(command[1]) || ".".equals(command[1]))) {
                         terminal.printf("Are you sure you want to delete all from " + currDataSet + " y/n");
-                    } else if (!currDataSet.isBlank() && !Util.isDataSet(command[1]) && !Util.isMember(command[1])) {
-                        terminal.println("No valid dataset, member or dataset(member) value provided, try again...");
-                        break;
-                    } else if (currDataSet.isBlank() && !Util.isDataSet(command[1]) && !Util.isMember(command[1])) {
-                        terminal.println("No valid dataset or dataset(member) value provided, try again...");
-                        break;
                     } else if (currDataSet.isBlank()) {
                         terminal.println(Constants.DATASET_NOT_SPECIFIED);
                         break;
+                    } else {
+                        terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
                     }
 
                     commandLine = textIO.newStringInputReader().withMaxLength(80).read("?");
@@ -233,7 +233,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     continue;
                 }
             }
-            executeCommand(history.filterCommand(Util.getPrompt(), command));
+            executeCommand(history.filterCommand(PromptUtil.getPrompt(), command));
         }
 
         textIO.dispose();
@@ -271,7 +271,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             }
 
             final var subStr = cmd.substring(1);
-            final var isStrNum = Util.isStrNum(subStr);
+            final var isStrNum = StrUtil.isStrNum(subStr);
 
             String newCmd;
             if ("!".equals(subStr)) {
@@ -298,15 +298,19 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         history.addHistory(params);
 
         switch (command.toLowerCase()) {
-            case "bj":
-            case "browsejob":
+            case "b":
+            case "browse":
                 if (isParamsMissing(1, params)) {
                     return;
                 }
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
-                commandOutput = commands.browse(currConnection, params);
+                if (params.length == 3 && !"all".equalsIgnoreCase(params[2])) {
+                    terminal.println(Constants.INVALID_PARAMETER);
+                    return;
+                }
+                commandOutput = commands.browse(currConnection, params[1], params.length == 3);
                 break;
             case "cancel":
                 if (isParamsMissing(1, params)) {
@@ -396,19 +400,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 commands.copy(currConnection, currDataSet, params);
                 break;
-            case "cps":
-            case "copys":
-                if (isParamsMissing(1, params)) {
-                    return;
-                }
-                if (isParamsMissing(2, params)) {
-                    return;
-                }
-                if (isParamsExceeded(3, params)) {
-                    return;
-                }
-                commands.copySequential(currConnection, currDataSet, params);
-                break;
             case "count":
                 if (params.length == 1) {
                     terminal.println(Constants.MISSING_COUNT_PARAM);
@@ -442,7 +433,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         return;
                     }
                 }
-                commands.download(currConnection, currDataSet, param, isBinary);
+                commands.downloadDsn(currConnection, currDataSet, param, isBinary);
                 break;
             case "dj":
             case "downloadjob":
@@ -532,19 +523,19 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         }
                         final var index = value.indexOf("*");
                         final var member = value.substring(0, index);
-                        if (Util.isMember(member)) {  // validate member value without wild card char...
+                        if (DsnUtil.isMember(member)) {  // validate member value without wild card char...
                             commands.lsl(currConnection, value, currDataSet, isAttributes);
                         } else {
                             terminal.println(Constants.INVALID_MEMBER);
                         }
                         return;
-                    } else if (Util.isMember(value)) {  // is member without wild card specified...
+                    } else if (DsnUtil.isMember(value)) {  // is member without wild card specified...
                         if (isCurrDataSetNotSpecified()) {
                             return;
                         }
                         commands.lsl(currConnection, value, currDataSet, isAttributes);
                         return;
-                    } else if (Util.isDataSet(value)) {  // is dataset specified at this point...
+                    } else if (DsnUtil.isDataSet(value)) {  // is dataset specified at this point...
                         commands.lsl(currConnection, null, value, isAttributes);
                         return;
                     } else {  // must be an invalid member or dataset specified...
@@ -561,7 +552,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     addVisited();
                     return;
                 }
-                if (params.length == 2 && Util.isDataSet(params[1])) {
+                if (params.length == 2 && DsnUtil.isDataSet(params[1])) {
                     commands.ls(currConnection, params[1]);
                     return;
                 }
@@ -572,12 +563,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     final var value = params[1];
                     final var index = value.indexOf("*");
                     final var member = value.substring(0, index);
-                    if (Util.isMember(member)) {
+                    if (DsnUtil.isMember(member)) {
                         commands.ls(currConnection, value, currDataSet);
                         return;
                     }
                 }
-                if (params.length == 2 && Util.isMember(params[1])) {
+                if (params.length == 2 && DsnUtil.isMember(params[1])) {
                     commands.ls(currConnection, params[1], currDataSet);
                     return;
                 }
@@ -620,15 +611,15 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     commandOutput = commands.ps(currConnection);
                 }
                 break;
-            case "pj":
-            case "purgejob":
+            case "p":
+            case "purge":
                 if (isParamsMissing(1, params)) {
                     return;
                 }
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                commands.purgeJob(currConnection, params[1].toUpperCase());
+                commands.purge(currConnection, params[1].toUpperCase());
                 break;
             case "pwd":
                 if (isParamsExceeded(1, params)) {
@@ -695,15 +686,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 param = params[1];
                 commands.submit(currConnection, currDataSet, param);
                 break;
-            case "tj":
-            case "tailjob":
+            case "tail":
                 if (isParamsMissing(1, params)) {
                     return;
                 }
                 if (isParamsExceeded(4, params)) {
                     return;
                 }
-                commandOutput = commands.tailJob(currConnection, params);
+                commandOutput = commands.tail(currConnection, params);
                 break;
             case "t":
             case "timeout":
@@ -711,10 +701,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 1) {
-                    commands.timeOutValue();
+                    commands.timeout();
                 } else {
                     try {
-                        commands.timeOutValue(Long.parseLong(params[1]));
+                        commands.timeout(Long.parseLong(params[1]));
                     } catch (NumberFormatException e) {
                         terminal.println(Constants.INVALID_VALUE);
                     }
@@ -733,7 +723,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                final var acctNum = Environment.getInstance().getValueByKeyName("ACCTNUM");
+                final var acctNum = EnvVarCmd.getInstance().getValueByKeyName("ACCTNUM");
                 final var tsoCommandCandidate = getCommandFromParams(params);
                 final var tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {
