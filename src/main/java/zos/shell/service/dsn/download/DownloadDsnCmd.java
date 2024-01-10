@@ -90,7 +90,7 @@ public class DownloadDsnCmd {
                 // member in current dataset
                 submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), dataset, target, isBinary));
                 results.add(submit.get(timeout, TimeUnit.SECONDS));
-            } else {
+            } else if (DsnUtil.isDataSet(target)) {
                 // sequential dataset
                 submit = pool.submit(new FutureDatasetDownload(new DsnGet(connection), target, isBinary));
                 results.add(submit.get(timeout, TimeUnit.SECONDS));
@@ -110,7 +110,7 @@ public class DownloadDsnCmd {
         if (results.get(0).isStatus()) {
             FileUtil.openFileLocation(results.get(0).getOptionalData());
             return results;
-        } 
+        }
 
         return results;
     }
