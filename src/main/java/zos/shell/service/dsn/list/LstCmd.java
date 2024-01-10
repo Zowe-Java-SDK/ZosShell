@@ -34,7 +34,7 @@ public class LstCmd {
         this.timeout = timeout;
     }
 
-    public void ls(final String memberValue, final String dataSet, boolean isColumnView, boolean isAttributes)
+    public void ls(final String memberValue, final String dataset, boolean isColumnView, boolean isAttributes)
             throws ZosmfRequestException {
         LOG.debug("*** ls ***");
         var member = Optional.ofNullable(memberValue);
@@ -42,9 +42,9 @@ public class LstCmd {
             member = Optional.of(memberValue.toUpperCase());
         }
 
-        datasets = getDataSets(dataSet);
+        datasets = getDataSets(dataset);
         isDataSets = datasets.size() > 1;
-        members = getMembers(dataSet);
+        members = getMembers(dataset);
 
         member.ifPresentOrElse((m) -> {
             final var index = m.indexOf("*");
@@ -60,7 +60,7 @@ public class LstCmd {
                                  .startsWith(searchForMember))
                                  .collect(Collectors.toList());
             }
-        }, () -> displayDataSets(dataSet, isColumnView, isAttributes));
+        }, () -> displayDataSets(dataset, isColumnView, isAttributes));
         final var membersSize = members.size();
         if (member.isPresent() && membersSize == 0) {
             terminal.println(Constants.NO_MEMBERS);
