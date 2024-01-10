@@ -15,7 +15,6 @@ import zowe.client.sdk.zosfiles.dsn.response.Member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class LstCmd {
 
@@ -28,7 +27,7 @@ public class LstCmd {
     private final DsnList dsnList;
     private boolean isDataSets = false;
 
-    public LstCmd(final TextTerminal<?> terminal, final  DsnList dsnList, final long timeout) {
+    public LstCmd(final TextTerminal<?> terminal, final DsnList dsnList, final long timeout) {
         LOG.debug("*** Listing ***");
         this.terminal = terminal;
         this.dsnList = dsnList;
