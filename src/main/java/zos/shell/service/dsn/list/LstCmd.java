@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.datasetlst.DatasetLst;
 import zos.shell.service.memberlst.MemberLst;
+import zos.shell.utility.DsnUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.response.Dataset;
@@ -50,15 +51,9 @@ public class LstCmd {
             final var index = m.indexOf("*");
             final var searchForMember = index == -1 ? m : m.substring(0, index);
             if (m.equals(searchForMember)) {
-                members = members.stream()
-                                 .filter(i -> i.getMember().orElse("")
-                                 .equals(searchForMember))
-                                 .collect(Collectors.toList());
+                members = DsnUtil.getMembersByFilter(searchForMember, members);
             } else {
-                members = members.stream()
-                                 .filter(i -> i.getMember().orElse("")
-                                 .startsWith(searchForMember))
-                                 .collect(Collectors.toList());
+                members = DsnUtil.getMembersByStartsWithFilter(searchForMember, members);
             }
         }, () -> displayDataSets(dataset, isColumnView, isAttributes));
         final var membersSize = members.size();
