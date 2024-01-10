@@ -11,7 +11,7 @@ public class DataSetMember {
     private final String dataset;
     private final String member;
 
-    public DataSetMember(String dataset, String member) {
+    public DataSetMember(final String dataset, final String member) {
         this.dataset = dataset;
         this.member = member;
     }
@@ -24,7 +24,7 @@ public class DataSetMember {
         return member;
     }
 
-    public static DataSetMember getDatasetAndMember(String target) {
+    public static DataSetMember getDatasetAndMember(final String target) {
         LOG.debug("*** getMemberFromDataSet ***");
         final var index = target.indexOf("(");
         if (index == -1) {

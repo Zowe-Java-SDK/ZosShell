@@ -6,12 +6,12 @@ public class ResponseStatus {
     private final boolean status;
     private String optionalData;
 
-    public ResponseStatus(String message, boolean status) {
+    public ResponseStatus(final String message, boolean status) {
         this.message = message;
         this.status = status;
     }
 
-    public ResponseStatus(String message, boolean status, String optionalData) {
+    public ResponseStatus(final String message, boolean status, final String optionalData) {
         this.message = message;
         this.status = status;
         this.optionalData = optionalData;
@@ -21,7 +21,7 @@ public class ResponseStatus {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(final String message) {
         this.message = message;
     }
 
