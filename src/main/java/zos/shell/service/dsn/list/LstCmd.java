@@ -27,14 +27,14 @@ public class LstCmd {
     private final DsnList dsnList;
     private boolean isDataSets = false;
 
-    public LstCmd(TextTerminal<?> terminal, DsnList dsnList, long timeout) {
+    public LstCmd(final TextTerminal<?> terminal, final  DsnList dsnList, final long timeout) {
         LOG.debug("*** Listing ***");
         this.terminal = terminal;
         this.dsnList = dsnList;
         this.timeout = timeout;
     }
 
-    public void ls(String memberValue, String dataSet, boolean isColumnView, boolean isAttributes)
+    public void ls(final String memberValue, final String dataSet, boolean isColumnView, boolean isAttributes)
             throws ZosmfRequestException {
         LOG.debug("*** ls ***");
         var member = Optional.ofNullable(memberValue);
