@@ -53,7 +53,16 @@ public class ConfigSingleton {
         } else {
             throw new RuntimeException(Constants.OS_ERROR);
         }
-        this.profiles = Arrays.asList(mapper.readValue(file, Profile[].class));
+        try {
+            this.profiles = Arrays.asList(mapper.readValue(file, Profile[].class));
+        } catch (IOException e) {
+            if (SystemUtils.IS_OS_WINDOWS) {
+                file = Paths.get("C:\\ZosShell\\config.json").toFile();
+            } else {
+                file = Paths.get("/ZosShell/config.json").toFile();
+            }
+            this.profiles = Arrays.asList(mapper.readValue(file, Profile[].class));
+        }
         this.createZosConnections();
         this.createSshConnections();
         this.createCurrConfigSettings();
