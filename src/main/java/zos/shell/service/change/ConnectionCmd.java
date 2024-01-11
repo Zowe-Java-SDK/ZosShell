@@ -47,7 +47,7 @@ public class ConnectionCmd {
 
     public void displayConnections() {
         LOG.debug("*** displayConnections ***");
-        var i = new AtomicInteger(1);
+        final var i = new AtomicInteger(1);
         configSingleton.getZosConnections().forEach(c -> terminal.println(i.getAndIncrement() + " " + "hostname: " +
                 c.getHost() + ", port: " + c.getZosmfPort() + ", user: " + c.getUser()));
         if (configSingleton.getZosConnections().isEmpty()) {
