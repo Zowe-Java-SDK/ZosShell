@@ -6,8 +6,6 @@ import org.apache.commons.lang3.SystemUtils;
 import zos.shell.configuration.model.Profile;
 import zos.shell.configuration.record.ConfigSettings;
 import zos.shell.constants.Constants;
-import zos.shell.response.ResponseStatus;
-import zos.shell.service.dsn.download.DownloadDsnCmd;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 
@@ -17,6 +15,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class ConfigSingleton {
 
@@ -39,15 +38,22 @@ public class ConfigSingleton {
 
     public void readConfig() throws IOException {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        File path;
+        Map<String, String> env = System.getenv();
+        String path = "";
+        for (String envName : env.keySet()) {
+            if ("ZOSSHELL_CONFIG_PATH".equalsIgnoreCase(envName)) {
+                path = env.get("ZOSSHELL_CONFIG_PATH");
+            }
+        }
+        File file;
         if (SystemUtils.IS_OS_WINDOWS) {
-            path = Paths.get("C:\\ZosShell\\config.json").toFile();
+            file = Paths.get(!path.isBlank() ? path : "C:\\ZosShell\\config.json").toFile();
         } else if (SystemUtils.IS_OS_MAC_OSX) {
-            path = Paths.get("/ZosShell/config.json").toFile();
+            file = Paths.get(!path.isBlank() ? path : "/ZosShell/config.json").toFile();
         } else {
             throw new RuntimeException(Constants.OS_ERROR);
         }
-        this.profiles = Arrays.asList(mapper.readValue(path, Profile[].class));
+        this.profiles = Arrays.asList(mapper.readValue(file, Profile[].class));
         this.createZosConnections();
         this.createSshConnections();
         this.createCurrConfigSettings();
