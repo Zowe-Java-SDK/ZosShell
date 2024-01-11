@@ -3,12 +3,12 @@ package zos.shell.configuration.model;
 public class Profile {
 
     private String hostname;
-    private String zosmfport;
+    private String zosmfPort;
     private String sshport;
     private String username;
     private String password;
-    private String downloadpath;
-    private String consolename;
+    private String downloadPath;
+    private String consoleName;
     private Window window;
 
     public Profile() {
@@ -23,11 +23,11 @@ public class Profile {
     }
 
     public String getZosmfport() {
-        return zosmfport;
+        return zosmfPort;
     }
 
-    public void setZosmfport(String zosmfport) {
-        this.zosmfport = zosmfport;
+    public void setZosmfport(String zosmfPort) {
+        this.zosmfPort = zosmfPort;
     }
 
     public String getSshport() {
@@ -55,19 +55,19 @@ public class Profile {
     }
 
     public String getDownloadpath() {
-        return downloadpath;
+        return downloadPath;
     }
 
-    public void setDownloadpath(String downloadpath) {
-        this.downloadpath = downloadpath;
+    public void setDownloadpath(String downloadPath) {
+        this.downloadPath = downloadPath;
     }
 
     public String getConsolename() {
-        return consolename;
+        return consoleName;
     }
 
     public void setConsolename(String consolename) {
-        this.consolename = consolename;
+        this.consoleName = consolename;
     }
 
     public Window getWindow() {
@@ -82,12 +82,12 @@ public class Profile {
     public String toString() {
         return "Profile{" +
                 "hostname='" + hostname + '\'' +
-                ", zosmfport='" + zosmfport + '\'' +
+                ", zosmfPort='" + zosmfPort + '\'' +
                 ", sshport='" + sshport + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", downloadpath='" + downloadpath + '\'' +
-                ", consolename='" + consolename + '\'' +
+                ", downloadPath='" + downloadPath + '\'' +
+                ", consoleName='" + consoleName + '\'' +
                 ", window=" + window +
                 '}';
     }

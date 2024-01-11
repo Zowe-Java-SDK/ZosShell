@@ -3,11 +3,9 @@ package zos.shell.configuration.model;
 public class Window {
 
     private String fontsize;
-
-    private String fontbold;
-
-    private String textcolor;
-    private String backgroundcolor;
+    private String fontBold;
+    private String textColor;
+    private String backGroundColor;
 
     public String getFontsize() {
         return fontsize;
@@ -18,36 +16,36 @@ public class Window {
     }
 
     public String getFontbold() {
-        return fontbold;
+        return fontBold;
     }
 
     public void setFontbold(final String fontbold) {
-        this.fontbold = fontbold;
+        this.fontBold = fontbold;
     }
 
     public String getTextcolor() {
-        return textcolor;
+        return textColor;
     }
 
-    public void setTextcolor(final String textcolor) {
-        this.textcolor = textcolor;
+    public void setTextcolor(final String textColor) {
+        this.textColor = textColor;
     }
 
     public String getBackgroundcolor() {
-        return backgroundcolor;
+        return backGroundColor;
     }
 
-    public void setBackgroundcolor(final String backgroundcolor) {
-        this.backgroundcolor = backgroundcolor;
+    public void setBackgroundcolor(final String backGroundColor) {
+        this.backGroundColor = backGroundColor;
     }
 
     @Override
     public String toString() {
         return "Window{" +
                 "fontsize='" + fontsize + '\'' +
-                ", fontbold='" + fontbold + '\'' +
-                ", textcolor='" + textcolor + '\'' +
-                ", backgroundcolor='" + backgroundcolor + '\'' +
+                ", fontBold='" + fontBold + '\'' +
+                ", textColor='" + textColor + '\'' +
+                ", backGroundColor='" + backGroundColor + '\'' +
                 '}';
     }
 
