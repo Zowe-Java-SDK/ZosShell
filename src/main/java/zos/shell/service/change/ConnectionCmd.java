@@ -19,7 +19,7 @@ public class ConnectionCmd {
     private final ConfigSingleton configSingleton = ConfigSingleton.getInstance();
 
     public ConnectionCmd(final TextTerminal<?> terminal) {
-        LOG.debug("*** ChangeConn ***");
+        LOG.debug("*** ConnectionCmd ***");
         this.terminal = terminal;
     }
 

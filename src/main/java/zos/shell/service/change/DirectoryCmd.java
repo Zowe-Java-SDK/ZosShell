@@ -22,7 +22,7 @@ public class DirectoryCmd {
     private final ListParams params = new ListParams.Builder().build();
 
     public DirectoryCmd(final TextTerminal<?> terminal, final DsnList dsnList) {
-        LOG.debug("*** ChangeDir ***");
+        LOG.debug("*** DirectoryCmd ***");
         this.terminal = terminal;
         this.dsnList = dsnList;
     }

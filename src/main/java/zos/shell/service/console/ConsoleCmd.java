@@ -18,7 +18,7 @@ public class ConsoleCmd {
     private final long timeout;
 
     public ConsoleCmd(ZosConnection connection, long timeout) {
-        LOG.debug("*** MvsConsoleCmd ***");
+        LOG.debug("*** ConsoleCmd ***");
         this.connection = connection;
         this.timeout = timeout;
     }

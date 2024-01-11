@@ -11,7 +11,7 @@ public class WindowCmd {
     private final TextTerminal<?> terminal;
 
     public WindowCmd(final TextTerminal<?> terminal) {
-        LOG.debug("*** Color ***");
+        LOG.debug("*** WindowCmd ***");
         this.terminal = terminal;
     }
 
@@ -40,6 +40,7 @@ public class WindowCmd {
     }
 
     public void setFontSize(final String size) {
+        LOG.debug("*** setFontSize ***");
         if (size != null) {
             final var tp = terminal.getProperties();
             tp.put("prompt.font.size", Integer.valueOf(size));

@@ -23,7 +23,7 @@ public class Console {
     private final IssueConsole issueConsole;
 
     public Console(final ZosConnection connection, final IssueConsole issueConsole) {
-        LOG.debug("*** MvsConsole ***");
+        LOG.debug("*** Console ***");
         this.issueConsole = issueConsole;
         this.connection = connection;
     }
