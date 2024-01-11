@@ -5,10 +5,10 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.service.change.ConnCmd;
-import zos.shell.service.change.DirCmd;
+import zos.shell.service.change.ConnectionCmd;
+import zos.shell.service.change.DirectoryCmd;
 import zos.shell.service.change.WindowCmd;
-import zos.shell.service.console.MvsConsoleCmd;
+import zos.shell.service.console.ConsoleCmd;
 import zos.shell.service.dsn.concat.ConcatCmd;
 import zos.shell.service.dsn.copy.CopyCmd;
 import zos.shell.service.dsn.count.CountCmd;
@@ -94,18 +94,18 @@ public class Commands {
 
     public String cd(final ZosConnection connection, final String dataset, final String param) {
         LOG.debug("*** cd ***");
-        return new DirCmd(terminal, new DsnList(connection)).cd(dataset, param);
+        return new DirectoryCmd(terminal, new DsnList(connection)).cd(dataset, param);
     }
 
     public ZosConnection changeZosConnection(final ZosConnection connection, final String[] commands) {
         LOG.debug("*** changeZosConnection ***");
-        final var changeConn = new ConnCmd(terminal);
+        final var changeConn = new ConnectionCmd(terminal);
         return changeConn.changeZosConnection(connection, commands);
     }
 
     public SshConnection changeSshConnection(final SshConnection connection, final String[] commands) {
         LOG.debug("*** changeSshConnection ***");
-        final var changeConn = new ConnCmd(terminal);
+        final var changeConn = new ConnectionCmd(terminal);
         return changeConn.changeSshConnection(connection, commands);
     }
 
@@ -131,7 +131,7 @@ public class Commands {
 
     public void displayConnections() {
         LOG.debug("*** displayConnections ***");
-        new ConnCmd(terminal).displayConnections();
+        new ConnectionCmd(terminal).displayConnections();
     }
 
     public void downloadDsn(final ZosConnection connection, final String dataset,
@@ -365,7 +365,7 @@ public class Commands {
 
     public SearchCache mvsCommand(final ZosConnection connection, final String command) {
         LOG.debug("*** mvsCommand ***");
-        final var mvsConsoleCmd = new MvsConsoleCmd(connection, timeout);
+        final var mvsConsoleCmd = new ConsoleCmd(connection, timeout);
         final var responseStatus = mvsConsoleCmd.issueConsoleCmd(command);
         terminal.println(responseStatus.getMessage());
         return new SearchCache("mvs", new StringBuilder(responseStatus.getMessage()));

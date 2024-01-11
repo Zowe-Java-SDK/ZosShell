@@ -13,15 +13,15 @@ import zowe.client.sdk.zosfiles.dsn.response.Dataset;
 
 import java.util.List;
 
-public class DirCmd {
+public class DirectoryCmd {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DirCmd.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DirectoryCmd.class);
 
     private final TextTerminal<?> terminal;
     private final DsnList dsnList;
     private final ListParams params = new ListParams.Builder().build();
 
-    public DirCmd(final TextTerminal<?> terminal, final DsnList dsnList) {
+    public DirectoryCmd(final TextTerminal<?> terminal, final DsnList dsnList) {
         LOG.debug("*** ChangeDir ***");
         this.terminal = terminal;
         this.dsnList = dsnList;

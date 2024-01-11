@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.service.console.FutureMvs;
+import zos.shell.service.console.FutureConsole;
 import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
@@ -46,7 +46,7 @@ public class TerminateCmd {
         }
 
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureMvs(connection, issueConsole, command));
+        final var submit = pool.submit(new FutureConsole(connection, issueConsole, command));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

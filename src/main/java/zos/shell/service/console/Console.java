@@ -15,14 +15,14 @@ import zowe.client.sdk.zosconsole.response.ConsoleResponse;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public class MvsConsole {
+public class Console {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MvsConsole.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Console.class);
 
     private final ZosConnection connection;
     private final IssueConsole issueConsole;
 
-    public MvsConsole(final ZosConnection connection, final IssueConsole issueConsole) {
+    public Console(final ZosConnection connection, final IssueConsole issueConsole) {
         LOG.debug("*** MvsConsole ***");
         this.issueConsole = issueConsole;
         this.connection = connection;
