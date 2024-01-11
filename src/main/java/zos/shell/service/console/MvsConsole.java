@@ -2,7 +2,7 @@ package zos.shell.service.console;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.configuration.MvsConsoles;
+import zos.shell.configuration.ConfigSingleton;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.ResponseUtil;
@@ -39,8 +39,9 @@ public class MvsConsole {
 
         ConsoleResponse consoleResponse;
         final var params = new IssueConsoleParams(command);
-        final var mvsConsole = new MvsConsoles();
-        final var consoleName = Optional.ofNullable(mvsConsole.getConsoleName(connection.getHost()));
+        final var configSettings = ConfigSingleton.getInstance().getConfigSettings();
+        final var consoleName = Optional.ofNullable(configSettings != null && configSettings.getConsoleName() != null ?
+                configSettings.getConsoleName() : null);
         try {
             consoleResponse = consoleName.isPresent() ? execute(consoleName.get(), params) : execute(params);
         } catch (ZosmfRequestException e) {

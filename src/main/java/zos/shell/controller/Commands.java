@@ -5,7 +5,7 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.service.change.ColorCmd;
+import zos.shell.service.change.WindowCmd;
 import zos.shell.service.change.ConnCmd;
 import zos.shell.service.change.DirCmd;
 import zos.shell.service.console.MvsConsoleCmd;
@@ -52,19 +52,19 @@ import zowe.client.sdk.zosjobs.methods.JobGet;
 import zowe.client.sdk.zosjobs.methods.JobSubmit;
 import zowe.client.sdk.zostso.method.IssueTso;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.TreeMap;
 
 public class Commands {
 
     private static final Logger LOG = LoggerFactory.getLogger(Commands.class);
 
-    private final List<ZosConnection> connections;
     private final TextTerminal<?> terminal;
     private long timeout = Constants.FUTURE_TIMEOUT_VALUE;
 
-    public Commands(final List<ZosConnection> connections, final TextTerminal<?> terminal) {
+    public Commands(final TextTerminal<?> terminal) {
         LOG.debug("*** Commands ***");
-        this.connections = connections;
         this.terminal = terminal;
     }
 
@@ -97,23 +97,23 @@ public class Commands {
         return new DirCmd(terminal, new DsnList(connection)).cd(dataset, param);
     }
 
-    public ZosConnection change(final ZosConnection connection, final String[] commands) {
-        LOG.debug("*** change ***");
-        final var changeConn = new ConnCmd(terminal, connections);
-        return changeConn.changeConnection(connection, commands);
+    public ZosConnection changeZosConnection(final ZosConnection connection, final String[] commands) {
+        LOG.debug("*** changeZosConnection ***");
+        final var changeConn = new ConnCmd(terminal);
+        return changeConn.changeZosConnection(connection, commands);
+    }
+
+    public SshConnection changeSshConnection(final SshConnection connection, final String[] commands) {
+        LOG.debug("*** changeSshConnection ***");
+        final var changeConn = new ConnCmd(terminal);
+        return changeConn.changeSshConnection(connection, commands);
     }
 
     public void color(final String arg, final String agr2) {
         LOG.debug("*** color ***");
-        final var color = new ColorCmd(terminal);
+        final var color = new WindowCmd(terminal);
         color.setTextColor(arg);
         color.setBackGroundColor(agr2);
-    }
-
-    public void connections(final ZosConnection connection) {
-        LOG.debug("*** connections ***");
-        final var changeConn = new ConnCmd(terminal, connections);
-        changeConn.displayConnections(connection);
     }
 
     public void copy(final ZosConnection connection, final String dataset, final String[] params) {
@@ -127,6 +127,11 @@ public class Commands {
         final var countcmd = new CountCmd(new DsnList(connection), timeout);
         final var responseStatus = countcmd.count(dataset, filter);
         terminal.println(responseStatus.getMessage());
+    }
+
+    public void displayConnections() {
+        LOG.debug("*** displayConnections ***");
+        new ConnCmd(terminal).displayConnections();
     }
 
     public void downloadDsn(final ZosConnection connection, final String dataset,
@@ -237,17 +242,14 @@ public class Commands {
             terminal.println("invalid 8 character sequence, try again...");
             return;
         }
-
         if (!DsnUtil.isDataSet(param) && DsnUtil.isMember(param) && !dataset.isBlank()) {
             param = dataset + "." + param;
         } else if (DsnUtil.isMember(param) && dataset.isBlank()) {
             terminal.println(Constants.DATASET_NOT_SPECIFIED);
             return;
         }
-
         final var createParamsBuilder = new CreateParams.Builder();
         var isSequential = false;
-
         terminal.println("To quit, enter 'q', 'quit' or 'exit' at any prompt.");
         String input;
         while (true) {
@@ -265,21 +267,18 @@ public class Commands {
             }
         }
         createParamsBuilder.dsorg(input);
-
         var num = getMakeDirNum(mainTextIO, "Enter primary quantity number:");
         if (num == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.primary(num);
-
         num = getMakeDirNum(mainTextIO, "Enter secondary quantity number:");
         if (num == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.secondary(num);
-
         if (!isSequential) {
             num = getMakeDirNum(mainTextIO, "Enter number of directory blocks:");
             if (num == null) {
@@ -290,28 +289,24 @@ public class Commands {
         } else {
             createParamsBuilder.dirblk(0);
         }
-
         input = getMakeDirStr(mainTextIO, "Enter record format, FB, VB, U, etc:");
         if (input == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.recfm(input);
-
         num = getMakeDirNum(mainTextIO, "Enter block size number:");
         if (num == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.blksize(num);
-
         num = getMakeDirNum(mainTextIO, "Enter record length number:");
         if (num == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.lrecl(num);
-
         input = getMakeDirStr(mainTextIO, "Enter volume name ('s' to skip):");
         if (input == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
@@ -320,10 +315,8 @@ public class Commands {
         if (!"s".equalsIgnoreCase(input) && !"skip".equalsIgnoreCase(input)) {
             createParamsBuilder.volser(input);
         }
-
         createParamsBuilder.alcunit("CYL");
         final var createParams = createParamsBuilder.build();
-
         param = param.toUpperCase();
         while (true) {
             input = getMakeDirStr(mainTextIO, "Create " + param + " (y/n)?:");
@@ -335,7 +328,6 @@ public class Commands {
                 return;
             }
         }
-
         final var makeDirCmd = new MakeDirCmd(new DsnCreate(connection), timeout);
         final var responseStatus = makeDirCmd.create(param, createParams);
         terminal.println(responseStatus.getMessage());
@@ -504,10 +496,9 @@ public class Commands {
         }
     }
 
-    public void ussh(final TextTerminal<?> terminal, final ZosConnection zosConnection,
-                     final Map<String, SshConnection> SshConnections, final String param) {
+    public void ussh(final TextTerminal<?> terminal, final SshConnection sshConnection, final String param) {
         LOG.debug("*** ussh ***");
-        final var uss = new SshCmd(terminal, zosConnection, SshConnections);
+        final var uss = new SshCmd(terminal, sshConnection);
         uss.sshCommand(param);
     }
 
