@@ -6,7 +6,6 @@ import zos.shell.configuration.ConfigSingleton;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.ResponseUtil;
-import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosconsole.input.IssueConsoleParams;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
@@ -19,13 +18,11 @@ public class Console {
 
     private static final Logger LOG = LoggerFactory.getLogger(Console.class);
 
-    private final ZosConnection connection;
     private final IssueConsole issueConsole;
 
-    public Console(final ZosConnection connection, final IssueConsole issueConsole) {
+    public Console(final IssueConsole issueConsole) {
         LOG.debug("*** Console ***");
         this.issueConsole = issueConsole;
-        this.connection = connection;
     }
 
     public ResponseStatus issueConsole(String command) {

@@ -46,7 +46,7 @@ public class TerminateCmd {
         }
 
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureConsole(connection, issueConsole, command));
+        final var submit = pool.submit(new FutureConsole(issueConsole, command));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

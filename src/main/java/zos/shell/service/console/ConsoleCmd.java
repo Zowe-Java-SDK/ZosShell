@@ -26,7 +26,7 @@ public class ConsoleCmd {
     public ResponseStatus issueConsoleCmd(String command) {
         LOG.debug("*** issueConsoleCmd ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureConsole(connection, new IssueConsole(connection), command));
+        final var submit = pool.submit(new FutureConsole(new IssueConsole(connection), command));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 
