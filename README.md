@@ -141,24 +141,17 @@ If you are planning to browse large job output you may want to set the JVM memor
   
 ### Terminal configuration properties (optional)
   
-By default, the terminal will display its text in green on a black background. If you want to change those settings and more, follow the instructions bellow.  
+By default, the configuration file name is config.json located in C:\ZosShell directory for Windows or /ZosShell for macOS.  
   
-Create a config.txt file under "C:\ZosShell" for Windows or "/ZosShell" on Max OSX directory location that contains one line of two comma delimiter values.  
+You can override the default file name and its location by setting the following OS environment variable:  
   
-Config property values specify in order on the same line separated by comma.   
-   
-    First value will set the following properties input.color and prompt.color
-    Second value will control the color of the background panel.
-    Third value will set the following properties: input.font.size and prompt.font.size
-    Forth value will trigger text to be bold   
+    ZOSSHELL_CONFIG_PATH  
   
-Format:  
+The configuration file is a JSON string that defined an array of profile types. Each profile contains Zosmf and ssh connection details.  
+    
+In addition, each profile contains additional configuration settings to control path for download directory and the Window's font and color properties.   
   
-    colornameornumbervalue,colornameornumbervalue,fontnumbersizenumbervalue,anyvalue  
-  
-Example:  
-  
-    yellow,green,19,yes
+
 
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/colors.gif)    
 
