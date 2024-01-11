@@ -11,7 +11,8 @@ public class Profile {
     private String consolename;
     private Window window;
 
-    public Profile() {}
+    public Profile() {
+    }
 
     public String getHostname() {
         return hostname;

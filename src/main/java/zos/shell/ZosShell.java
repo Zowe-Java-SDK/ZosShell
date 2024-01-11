@@ -28,7 +28,9 @@ import zowe.client.sdk.core.ZosConnection;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
