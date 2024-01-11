@@ -10,7 +10,7 @@ public class FutureConsole extends Console implements Callable<ResponseStatus> {
 
     private final String command;
 
-    public FutureConsole(final ZosConnection connection, final IssueConsole issueConsole, String command) {
+    public FutureConsole(final ZosConnection connection, final IssueConsole issueConsole, final String command) {
         super(connection, issueConsole);
         this.command = command;
     }
