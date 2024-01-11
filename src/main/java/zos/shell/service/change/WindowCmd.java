@@ -39,7 +39,7 @@ public class WindowCmd {
         tp.put("input.bold", value);
     }
 
-    public void setFontSize(String size) {
+    public void setFontSize(final String size) {
         if (size != null) {
             final var tp = terminal.getProperties();
             tp.put("prompt.font.size", Integer.valueOf(size));

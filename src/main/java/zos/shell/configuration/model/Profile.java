@@ -18,7 +18,7 @@ public class Profile {
         return hostname;
     }
 
-    public void setHostname(String hostname) {
+    public void setHostname(final String hostname) {
         this.hostname = hostname;
     }
 
@@ -26,7 +26,7 @@ public class Profile {
         return zosmfPort;
     }
 
-    public void setZosmfport(String zosmfPort) {
+    public void setZosmfport(final String zosmfPort) {
         this.zosmfPort = zosmfPort;
     }
 
@@ -34,7 +34,7 @@ public class Profile {
         return sshport;
     }
 
-    public void setSshport(String sshport) {
+    public void setSshport(final String sshport) {
         this.sshport = sshport;
     }
 
@@ -42,7 +42,7 @@ public class Profile {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
     }
 
@@ -50,7 +50,7 @@ public class Profile {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
@@ -58,7 +58,7 @@ public class Profile {
         return downloadPath;
     }
 
-    public void setDownloadpath(String downloadPath) {
+    public void setDownloadpath(final String downloadPath) {
         this.downloadPath = downloadPath;
     }
 
@@ -66,7 +66,7 @@ public class Profile {
         return consoleName;
     }
 
-    public void setConsolename(String consolename) {
+    public void setConsolename(final String consolename) {
         this.consoleName = consolename;
     }
 
