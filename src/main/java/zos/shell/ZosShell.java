@@ -16,7 +16,6 @@ import zos.shell.constants.Constants;
 import zos.shell.controller.Commands;
 import zos.shell.record.DataSetMember;
 import zos.shell.service.autocomplete.SearchDictionary;
-import zos.shell.service.change.WindowCmd;
 import zos.shell.service.env.EnvVarCmd;
 import zos.shell.service.history.HistoryCmd;
 import zos.shell.service.search.SearchCache;
@@ -165,15 +164,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         LOG.debug("*** accept ***");
         terminal = textIO.getTextTerminal();
         terminal.setBookmark("top");
-
-        final var windowCmd = new WindowCmd(terminal);
-        final var configSettings = ConfigSingleton.getInstance().getConfigSettings();
-        final var window = configSettings.getWindow();
-        windowCmd.setFontSize(window != null ? configSettings.getWindow().getFontsize() : null);
-        windowCmd.setBold(window != null && "true".equalsIgnoreCase(configSettings.getWindow().getFontbold()));
-        windowCmd.setTextColor(window != null ? configSettings.getWindow().getTextcolor() : null);
-        windowCmd.setBackGroundColor(window != null ? configSettings.getWindow().getBackgroundcolor() : null);
-
+        ConfigSingleton.getInstance().updateWindowSittings(terminal);
         commands = new Commands(terminal);
         history = new HistoryCmd(terminal);
         if (currConnection == null) {

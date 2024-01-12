@@ -15,42 +15,46 @@ public class WindowCmd {
         this.terminal = terminal;
     }
 
-    public void setTextColor(final String color) {
+    public String setTextColor(final String color) {
         LOG.debug("*** setTextColor ***");
         if (color != null) {
             terminal.getProperties().setPromptColor(color);
             terminal.getProperties().setInputColor(color);
-            display("text color " + color + " set");
+            return "text color " + color + " set";
         }
+        return null;
     }
 
-    public void setBackGroundColor(final String color) {
+    public String setBackGroundColor(final String color) {
         LOG.debug("*** setBackGroundColor ***");
         if (color != null) {
             terminal.getProperties().setPaneBackgroundColor(color);
-            display("background color " + color + " set");
+            return "background color " + color + " set";
         }
+        return null;
     }
 
-    public void setBold(boolean value) {
+    public String setBold(boolean value) {
         LOG.debug("*** setBold ***");
         final var tp = terminal.getProperties();
         tp.put("prompt.bold", value);
         tp.put("input.bold", value);
+        if (value) {
+            return "font bold set";
+        }
+        return null;
     }
 
-    public void setFontSize(final String size) {
+    public String setFontSize(final String size) {
         LOG.debug("*** setFontSize ***");
         if (size != null) {
             final var tp = terminal.getProperties();
             tp.put("prompt.font.size", Integer.valueOf(size));
             tp.put("input.font.size", Integer.valueOf(size));
+            return "increased font size to " + size;
         }
-    }
-
-    private void display(final String msg) {
-        LOG.debug("*** display ***");
-        terminal.println(msg);
+        return null;
     }
 
 }
+

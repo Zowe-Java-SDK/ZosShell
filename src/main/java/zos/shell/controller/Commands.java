@@ -112,8 +112,13 @@ public class Commands {
     public void color(final String arg, final String agr2) {
         LOG.debug("*** color ***");
         final var color = new WindowCmd(terminal);
-        color.setTextColor(arg);
-        color.setBackGroundColor(agr2);
+        final var str = new StringBuilder();
+        String result;
+        result = color.setTextColor(arg);
+        str.append(result != null ? result + "\n" : "");
+        result = color.setBackGroundColor(agr2);
+        str.append(result != null ? result : "");
+        terminal.println(str.toString());
     }
 
     public void copy(final ZosConnection connection, final String dataset, final String[] params) {

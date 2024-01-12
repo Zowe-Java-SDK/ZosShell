@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.service.dsn.download.DownloadDsnCmd;
+import zos.shell.utility.DirectorySetup;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -31,17 +31,31 @@ public class Save {
         final var isSequentialDataSet = DsnUtil.isDataSet(target);
 
         String fileName;
-        if (SystemUtils.IS_OS_WINDOWS) {
-            fileName = isSequentialDataSet ?
-                    DownloadDsnCmd.DIRECTORY_PATH_WINDOWS + Constants.SEQUENTIAL_DIRECTORY_LOCATION + "\\" + target :
-                    DownloadDsnCmd.DIRECTORY_PATH_WINDOWS + dataset + "\\" + target;
-        } else if (SystemUtils.IS_OS_MAC_OSX) {
-            fileName = isSequentialDataSet ?
-                    DownloadDsnCmd.DIRECTORY_PATH_MAC + Constants.SEQUENTIAL_DIRECTORY_LOCATION + "/" + target :
-                    DownloadDsnCmd.DIRECTORY_PATH_MAC + dataset + "/" + target;
-        } else {
+
+        if (!SystemUtils.IS_OS_WINDOWS && !SystemUtils.IS_OS_MAC_OSX) {
             return new ResponseStatus(Constants.OS_ERROR, false);
         }
+
+        DirectorySetup directorySetup = new DirectorySetup();
+        directorySetup.initialize(dataset, target);
+
+        DirectorySetup directorySetup2 = new DirectorySetup();
+        directorySetup.initialize(Constants.SEQUENTIAL_DIRECTORY_LOCATION, target);
+
+        fileName = isSequentialDataSet ? directorySetup2.getFileNamePath() :
+                directorySetup.getFileNamePath();
+
+//        if (SystemUtils.IS_OS_WINDOWS) {
+//            fileName = isSequentialDataSet ?
+//                    DownloadDsnCmd.DIRECTORY_PATH_WINDOWS + Constants.SEQUENTIAL_DIRECTORY_LOCATION + "\\" + target :
+//                    DownloadDsnCmd.DIRECTORY_PATH_WINDOWS + dataset + "\\" + target;
+//        } else if (SystemUtils.IS_OS_MAC_OSX) {
+//            fileName = isSequentialDataSet ?
+//                    DownloadDsnCmd.DIRECTORY_PATH_MAC + Constants.SEQUENTIAL_DIRECTORY_LOCATION + "/" + target :
+//                    DownloadDsnCmd.DIRECTORY_PATH_MAC + dataset + "/" + target;
+//        } else {
+//            return new ResponseStatus(Constants.OS_ERROR, false);
+//        }
 
         try (final var br = new BufferedReader(new FileReader(fileName))) {
             final var sb = new StringBuilder();

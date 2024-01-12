@@ -141,23 +141,65 @@ If you are planning to browse large job output you may want to set the JVM memor
   
 ### Terminal configuration properties (optional)
   
-By default, the configuration file name is config.json located in C:\ZosShell directory for Windows or /ZosShell for macOS.  
+By default, the configuration file name is config.json located within C:\ZosShell directory for Windows or /ZosShell for macOS.  
   
 You can override the default file name and its location by setting the following OS environment variable:  
   
     ZOSSHELL_CONFIG_PATH  
   
-The configuration file is a JSON string that defined an array of profile types. Each profile contains Zosmf and ssh connection details.  
-    
-In addition, each profile contains additional configuration settings to control path for download directory and the Window's font and color properties.   
+The configuration file consists of JSON data. The configuration JSON string is defined as a JSON array structure. The array will consist of one or more profile(s).
   
+A profile is a one-to-one relationship of Profile.java file within the project. It contains variables as a placeholder for configuration information, such as z/OSMF and ssh connection information and properties to control the Window environment.  
+    
+In addition, each profile contains path variable to control location for download directory.  
+  
+Example of config.json:  
 
-
+    [
+    {
+    "hostname": "usilCA31.lvn.broadcom.net",
+    "zosmfport": "1443",
+    "sshport" : "22",
+    "username": "FG892105",
+    "password": "sbosbo1",
+    "downloadpath": "/ZosShell",
+    "consolename": "",
+    "window": {
+    "fontsize": "21",
+    "fontbold": "true",
+    "textcolor": "yellow",
+    "backgroundcolor": "green"
+    }		
+    },
+    {
+    "hostname": "usilCA31.lvn.broadcom.net",
+    "zosmfport": "1443",
+    "sshport" : "22",
+    "username": "CCSAUTO",
+    "password": "QA2016",
+    "downloadpath": "C:\\ZosShell3",
+    "consolename": "",
+    "window": {}		
+    },
+    {
+    "hostname": "usilCA32.lvn.broadcom.net",
+    "zosmfport": "1443",
+    "sshport" : "123",
+    "username": "FG892105",
+    "password": "sbosbo1",
+    "downloadpath": "C:\\ZosShell",
+    "consolename": "",
+    "window": {}		
+    }
+    ]
+  
+Configuration json formatted file is required for the application to work properly. Any error in finding the file or parsing the JSON string will result in the application starting itself and displaying the error related and won't allow you to continue on.  
+  
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/colors.gif)    
 
-## Trouble Shooting
+## Troubleshooting
     
-log4j2 logging is set up and configuration is located under src/main/resources/log4j2.xml  
+Logging framework log4j2 is configured for the project. log4j2 configuration is located under src/main/resources/log4j2.xml.  
     
 It is configured to produce output logging while application is running under the running directory where the application was kicked off.
       

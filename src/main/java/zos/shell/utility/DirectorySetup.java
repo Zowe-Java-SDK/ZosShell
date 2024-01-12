@@ -10,8 +10,8 @@ public class DirectorySetup {
 
     private static final Logger LOG = LoggerFactory.getLogger(DirectorySetup.class);
 
-    private static final String DIRECTORY_PATH_WINDOWS = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\";
-    private static final String DIRECTORY_PATH_MAC = Constants.PATH_FILE_DIRECTORY_MAC + "/";
+    private static final String DIRECTORY_PATH_WINDOWS = Constants.DEFAULT_DOWNLOAD_PATH_WINDOWS + "\\";
+    private static final String DIRECTORY_PATH_MAC = Constants.DEFAULT_DOWNLOAD_PATH_MAC + "/";
     private String directoryPath;
     private String fileNamePath;
 

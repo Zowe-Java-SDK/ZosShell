@@ -33,6 +33,7 @@ public class ConnectionCmd {
         final var profile = configSingleton.getProfileByIndex(index);
         ConfigSingleton.getInstance().setConfigSettings(new ConfigSettings(profile.getDownloadpath(),
                 profile.getConsolename(), profile.getWindow()));
+        ConfigSingleton.getInstance().updateWindowSittings(terminal);
         return configSingleton.getZosConnectionByIndex(index);
     }
 

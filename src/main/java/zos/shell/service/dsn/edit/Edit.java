@@ -7,7 +7,7 @@ import zos.shell.constants.Constants;
 import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.Download;
-import zos.shell.service.dsn.download.DownloadDsnCmd;
+import zos.shell.utility.DirectorySetup;
 import zos.shell.utility.DsnUtil;
 
 import java.io.IOException;
@@ -43,15 +43,18 @@ public class Edit {
             dataset = Constants.SEQUENTIAL_DIRECTORY_LOCATION;
         }
 
+        DirectorySetup directorySetup = new DirectorySetup();
+        directorySetup.initialize(dataset, target);
         try {
             if (result.isStatus()) {
                 String pathFile;
                 String editorName;
+                pathFile = directorySetup.getFileNamePath();
                 if (SystemUtils.IS_OS_WINDOWS) {
-                    pathFile = DownloadDsnCmd.DIRECTORY_PATH_WINDOWS + dataset + "\\" + target;
+//                    pathFile = DownloadDsnCmd.DIRECTORY_PATH_WINDOWS + dataset + "\\" + target;
                     editorName = Constants.WINDOWS_EDITOR_NAME;
                 } else if (SystemUtils.IS_OS_MAC_OSX) {
-                    pathFile = DownloadDsnCmd.DIRECTORY_PATH_MAC + dataset + "/" + target;
+//                    pathFile = DownloadDsnCmd.DIRECTORY_PATH_MAC + dataset + "/" + target;
                     editorName = Constants.MAC_EDITOR_NAME;
                 } else {
                     return new ResponseStatus(Constants.OS_ERROR, false);
