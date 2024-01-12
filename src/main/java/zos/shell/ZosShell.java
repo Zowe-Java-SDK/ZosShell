@@ -118,7 +118,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             mainTerminal.setInputFontSize(fontSize);
             mainTerminal.setPromptFontSize(fontSize);
             mainTerminal.moveToLineStart();
-            System.out.println(mainTerminal.getTextPane().getText());
             mainTerminal.print(PromptUtil.getPrompt() + " Increased font size to " + fontSize + ".");
             fontSizeChanged = true;
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
