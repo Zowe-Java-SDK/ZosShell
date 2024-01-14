@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.utility.DirectorySetup;
+import zos.shell.service.path.PathService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.FileUtil;
 import zos.shell.utility.ResponseUtil;
@@ -37,13 +37,7 @@ public class Download {
         }
         var message = Strings.padStart(member, Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW;
 
-        final var dirSetup = new DirectorySetup();
-        try {
-            dirSetup.initialize(dataset, member);
-        } catch (IllegalStateException e) {
-            return new ResponseStatus(message + e.getMessage(), false);
-        }
-
+        PathService pathService = new PathService(dataset, member);
         try {
             String textContent;
             InputStream binaryContent;
@@ -54,42 +48,36 @@ public class Download {
                 if (textContent == null) {
                     return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
                 }
-                FileUtil.writeTextFile(textContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
+                FileUtil.writeTextFile(textContent, pathService.getPath(), pathService.getPathWithFile());
             } else {
                 dlParams = new DownloadParams.Builder().binary(true).build();
                 binaryContent = getBinaryContent(dataset, member);
                 if (binaryContent == null) {
                     return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
                 }
-                FileUtil.writeBinaryFile(binaryContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
+                FileUtil.writeBinaryFile(binaryContent, pathService.getPath(), pathService.getPathWithFile());
             }
-            message += member + " downloaded to " + dirSetup.getFileNamePath();
+            message += member + " downloaded to " + pathService.getPathWithFile();
         } catch (ZosmfRequestException e) {
             return ResponseUtil.getByteResponseStatus(e);
         } catch (IOException e) {
             return new ResponseStatus(message + e.getMessage(), false);
         }
-        return new ResponseStatus(message, true, dirSetup.getFileNamePath());
+        return new ResponseStatus(message, true, pathService.getPathWithFile());
     }
 
     public ResponseStatus dataset(final String dataset) {
         LOG.debug("*** dataset ***");
         var message = dataset + " " + Constants.ARROW;
-        final var dirSetup = new DirectorySetup();
 
-        try {
-            dirSetup.initialize(Constants.SEQUENTIAL_DIRECTORY_LOCATION, dataset);
-        } catch (IllegalStateException e) {
-            return new ResponseStatus(message + e.getMessage(), false);
-        }
-
+        final var pathService = new PathService(dataset);
         try {
             dlParams = new DownloadParams.Builder().build();
             String textContent = getTextContent(dataset);
             if (textContent == null) {
                 return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
             }
-            FileUtil.writeTextFile(textContent, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
+            FileUtil.writeTextFile(textContent, pathService.getPath(), pathService.getPathWithFile());
 
         } catch (ZosmfRequestException e) {
             return ResponseUtil.getByteResponseStatus(e);
@@ -97,8 +85,8 @@ public class Download {
             return new ResponseStatus(message + e.getMessage(), false);
         }
 
-        message += dataset + " downloaded to " + dirSetup.getFileNamePath();
-        return new ResponseStatus(message, true, dirSetup.getFileNamePath());
+        message += dataset + " downloaded to " + pathService.getPath();
+        return new ResponseStatus(message, true, pathService.getPathWithFile());
     }
 
     private String getTextContent(final String dataset, final String member)

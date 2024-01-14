@@ -10,15 +10,15 @@ import zowe.client.sdk.zosconsole.method.IssueConsole;
 
 import java.util.concurrent.Executors;
 
-public class MvsConsoleCmd {
+public class ConsoleCmd {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MvsConsoleCmd.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConsoleCmd.class);
 
     private final ZosConnection connection;
     private final long timeout;
 
-    public MvsConsoleCmd(ZosConnection connection, long timeout) {
-        LOG.debug("*** MvsConsoleCmd ***");
+    public ConsoleCmd(ZosConnection connection, long timeout) {
+        LOG.debug("*** ConsoleCmd ***");
         this.connection = connection;
         this.timeout = timeout;
     }
@@ -26,7 +26,7 @@ public class MvsConsoleCmd {
     public ResponseStatus issueConsoleCmd(String command) {
         LOG.debug("*** issueConsoleCmd ***");
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureMvs(connection, new IssueConsole(connection), command));
+        final var submit = pool.submit(new FutureConsole(new IssueConsole(connection), command));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

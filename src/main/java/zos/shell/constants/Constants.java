@@ -16,6 +16,10 @@ public final class Constants {
     public static final String COPY_NOTHING_WARNING = "nothing to copy, try again...";
     public static final String COPY_NO_MEMBER_ERROR =
             "first argument invalid for copy, specified a member, try again...";
+    public static final String DEFAULT_CONFIG_MAC = "/ZosShell/config.json";
+    public static final String DEFAULT_CONFIG_WINDOWS = "C:\\ZosShell\\config.json";
+    public static final String DEFAULT_DOWNLOAD_PATH_MAC = "/ZosShell";
+    public static final String DEFAULT_DOWNLOAD_PATH_WINDOWS = "C:\\ZosShell";
     public static final String DATASET_OR_HIGH_QUALIFIER_ERROR =
             "invalid dataset or cant change to high qualifier level, try again...";
     public static final String DATASET_NOT_SPECIFIED = "no dataset specified, try again...";
@@ -38,7 +42,7 @@ public final class Constants {
     public static final String NO_CONNECTIONS = "no connection(s) made or defined...";
     public static final String NO_CONNECTION_INFO = "no info, check connection settings...";
     public static final String NO_CONNECTION = "no connection to change too...";
-    public static final String NO_FILES = "no files within " + Constants.PATH_FILE_DIRECTORY_WINDOWS + ", try again...";
+    public static final String NO_FILES = "no files, try again...";
     public static final String NO_HISTORY = "no history, try again...";
     public static final String NO_INFO = "no info...";
     public static final String NO_LISTING =
@@ -50,13 +54,7 @@ public final class Constants {
     public static final String MISSING_COUNT_PARAM = "specified either \"count members\" or \"count datasets\"";
     public static final String MISSING_PARAMETERS = "missing parameter(s), try again...";
     public static final String MVS_EXECUTION_SUCCESS = "mvs command executed...";
-    public static final String PATH_FILE_DIRECTORY_MAC = "/ZosShell";
-    public static final String PATH_FILE_DIRECTORY_WINDOWS = "C:\\ZosShell";
-    public static final String SECURITY_CONFIG_PATH_FILE_MAC = PATH_FILE_DIRECTORY_MAC + "/credentials.txt";
-    public static final String SECURITY_CONFIG_PATH_FILE_WINDOWS = PATH_FILE_DIRECTORY_WINDOWS + "\\credentials.txt";
     public static final String SEQUENTIAL_DIRECTORY_LOCATION = "SEQUENTIAL_DATASET";
-    public static final String CONFIG_PATH_FILE_MAC = PATH_FILE_DIRECTORY_MAC + "/config.txt";
-    public static final String CONFIG_PATH_FILE_WINDOWS = PATH_FILE_DIRECTORY_WINDOWS + "\\config.txt";
     public static final int STRING_PAD_LENGTH = 8;
     public static final int THREAD_POOL_MIN = 1;
     public static final int THREAD_POOL_MAX = 10;

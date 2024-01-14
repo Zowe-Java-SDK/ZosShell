@@ -141,30 +141,65 @@ If you are planning to browse large job output you may want to set the JVM memor
   
 ### Terminal configuration properties (optional)
   
-By default, the terminal will display its text in green on a black background. If you want to change those settings and more, follow the instructions bellow.  
+By default, the configuration file name is config.json located within C:\ZosShell directory for Windows or /ZosShell for macOS.  
   
-Create a config.txt file under "C:\ZosShell" for Windows or "/ZosShell" on Max OSX directory location that contains one line of two comma delimiter values.  
+You can override the default file name and its location by setting the following OS environment variable:  
   
-Config property values specify in order on the same line separated by comma.   
-   
-    First value will set the following properties input.color and prompt.color
-    Second value will control the color of the background panel.
-    Third value will set the following properties: input.font.size and prompt.font.size
-    Forth value will trigger text to be bold   
+    ZOSSHELL_CONFIG_PATH  
   
-Format:  
+The configuration file consists of JSON data. The configuration JSON string is defined as a JSON array structure. The array will consist of one or more profile(s).
   
-    colornameornumbervalue,colornameornumbervalue,fontnumbersizenumbervalue,anyvalue  
+A profile is a one-to-one relationship of Profile.java file within the project. It contains variables as a placeholder for configuration information, such as z/OSMF and ssh connection information and properties to control the Window environment.  
+    
+In addition, each profile contains path variable to control location for download directory.  
   
-Example:  
-  
-    yellow,green,19,yes
+Example of config.json:  
 
+    [
+    {
+    "hostname": "usilCA31.lvn.broadcom.net",
+    "zosmfport": "1443",
+    "sshport" : "22",
+    "username": "FG892105",
+    "password": "sbosbo1",
+    "downloadpath": "/ZosShell",
+    "consolename": "",
+    "window": {
+    "fontsize": "21",
+    "fontbold": "true",
+    "textcolor": "yellow",
+    "backgroundcolor": "green"
+    }		
+    },
+    {
+    "hostname": "usilCA31.lvn.broadcom.net",
+    "zosmfport": "1443",
+    "sshport" : "22",
+    "username": "CCSAUTO",
+    "password": "QA2016",
+    "downloadpath": "C:\\ZosShell3",
+    "consolename": "",
+    "window": {}		
+    },
+    {
+    "hostname": "usilCA32.lvn.broadcom.net",
+    "zosmfport": "1443",
+    "sshport" : "123",
+    "username": "FG892105",
+    "password": "sbosbo1",
+    "downloadpath": "C:\\ZosShell",
+    "consolename": "",
+    "window": {}		
+    }
+    ]
+  
+Configuration json formatted file is required for the application to work properly. Any error in finding the file or parsing the JSON string will result in the application starting itself and displaying the error related and won't allow you to continue on.  
+  
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/colors.gif)    
 
-## Trouble Shooting
+## Troubleshooting
     
-log4j2 logging is set up and configuration is located under src/main/resources/log4j2.xml  
+Logging framework log4j2 is configured for the project. log4j2 configuration is located under src/main/resources/log4j2.xml.  
     
 It is configured to produce output logging while application is running under the running directory where the application was kicked off.
       

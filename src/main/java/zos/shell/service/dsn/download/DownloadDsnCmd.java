@@ -23,8 +23,6 @@ public class DownloadDsnCmd {
 
     private static final Logger LOG = LoggerFactory.getLogger(DownloadDsnCmd.class);
 
-    public static final String DIRECTORY_PATH_WINDOWS = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\";
-    public static final String DIRECTORY_PATH_MAC = Constants.PATH_FILE_DIRECTORY_MAC + "/";
     private final ZosConnection connection;
     private final boolean isBinary;
     private final long timeout;

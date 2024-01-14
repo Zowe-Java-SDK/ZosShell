@@ -11,8 +11,7 @@ import org.beryx.textio.swing.SwingTextTerminal;
 import org.beryx.textio.web.RunnerData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.configuration.Config;
-import zos.shell.configuration.Credentials;
+import zos.shell.configuration.ConfigSingleton;
 import zos.shell.constants.Constants;
 import zos.shell.controller.Commands;
 import zos.shell.record.DataSetMember;
@@ -27,7 +26,10 @@ import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 
 import javax.swing.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
@@ -38,7 +40,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static String currDataSet = "";
     private static int currDataSetMax = 0;
     private static final List<ZosConnection> connections = new ArrayList<>();
-    private static final Map<String, SshConnection> SshConnections = new HashMap<>();
+    private static SshConnection currSshConnection;
     private static ZosConnection currConnection;
     private static TextTerminal<?> terminal;
     private static Commands commands;
@@ -53,13 +55,25 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     public static void main(String[] args) {
         LOG.debug("*** main ***");
-        Credentials.readCredentials(connections, SshConnections);
-        if (!connections.isEmpty()) {
-            currConnection = connections.get(0);
-        }
         mainTerminal.init();
         setTerminalProperties();
         mainTextIO = new TextIO(mainTerminal);
+        try {
+            ConfigSingleton configSingleton = ConfigSingleton.getInstance();
+            configSingleton.readConfig();
+            currConnection = configSingleton.getZosConnectionByIndex(0);
+            currSshConnection = configSingleton.getSshConnectionByIndex(0);
+            if (configSingleton.getConfigSettings().getWindow() != null &&
+                    configSingleton.getConfigSettings().getWindow().getFontsize() != null) {
+                fontSize = Integer.parseInt(configSingleton.getConfigSettings().getWindow().getFontsize());
+            }
+        } catch (NumberFormatException | IOException e) {
+            mainTerminal.println("Error reading or parsing console.json file, try again...");
+            mainTerminal.println("Error: " + e.getMessage());
+            mainTerminal.read(true);
+            mainTerminal.dispose();
+            throw new RuntimeException(e);
+        }
         new ZosShell().accept(mainTextIO, null);
     }
 
@@ -103,7 +117,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             mainTerminal.setInputFontSize(fontSize);
             mainTerminal.setPromptFontSize(fontSize);
             mainTerminal.moveToLineStart();
-            System.out.println(mainTerminal.getTextPane().getText());
             mainTerminal.print(PromptUtil.getPrompt() + " Increased font size to " + fontSize + ".");
             fontSizeChanged = true;
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
@@ -151,15 +164,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         LOG.debug("*** accept ***");
         terminal = textIO.getTextTerminal();
         terminal.setBookmark("top");
-        final var config = new Config(terminal);
-        if (config.getFrontSize() != null) {
-            try {
-                fontSize = Integer.parseInt(config.getFrontSize());
-            } catch (NumberFormatException ignore) {
-                // might want to log bad frontSize value from configuration
-            }
-        }
-        commands = new Commands(connections, terminal);
+        ConfigSingleton.getInstance().updateWindowSittings(terminal);
+        commands = new Commands(terminal);
         history = new HistoryCmd(terminal);
         if (currConnection == null) {
             terminal.println(Constants.NO_CONNECTIONS);
@@ -355,7 +361,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                currConnection = commands.change(currConnection, params);
+                currConnection = commands.changeZosConnection(currConnection, params);
+                currSshConnection = commands.changeSshConnection(currSshConnection, params);
+                terminal.println("Connected to " + currConnection.getHost() + " with user " + currConnection.getUser() + ".");
                 mainTerminal.setPaneTitle(Constants.APP_TITLE + " - " + currConnection.getHost().toUpperCase());
                 break;
             case "clear":
@@ -385,7 +393,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(1, params)) {
                     return;
                 }
-                commands.connections(currConnection);
+                commands.displayConnections();
                 break;
             case "cp":
             case "copy":
@@ -743,7 +751,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 final var ussCommandCandidate = getCommandFromParams(params);
                 final var ussCommandCount = ussCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(ussCommandCount, ussCommandCandidate)) {
-                    commands.ussh(terminal, currConnection, SshConnections, ussCommandCandidate.toString());
+                    commands.ussh(terminal, currSshConnection, ussCommandCandidate.toString());
                 }
                 break;
             case "v":

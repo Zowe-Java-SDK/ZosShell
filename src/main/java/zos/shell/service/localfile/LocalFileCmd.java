@@ -4,13 +4,13 @@ import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.configuration.ConfigSingleton;
 import zos.shell.constants.Constants;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,7 +18,10 @@ public class LocalFileCmd {
 
     private static final Logger LOG = LoggerFactory.getLogger(LocalFileCmd.class);
 
-    public static void listFiles(TextTerminal<?> terminal, String dataSet) {
+    private static final String DIRECTORY_PATH_WINDOWS = Constants.DEFAULT_DOWNLOAD_PATH_WINDOWS + "\\";
+    private static final String DIRECTORY_PATH_MAC = Constants.DEFAULT_DOWNLOAD_PATH_MAC + "/";
+
+    public static void listFiles(final TextTerminal<?> terminal, final String dataSet) {
         LOG.debug("*** listFiles ***");
         final var files = getFiles(terminal, dataSet);
         if (files.isEmpty()) {
@@ -28,34 +31,29 @@ public class LocalFileCmd {
         files.forEach(terminal::println);
     }
 
-    private static List<String> getFiles(TextTerminal<?> terminal, String dataSet) {
+    private static List<String> getFiles(final TextTerminal<?> terminal, final String dataset) {
         LOG.debug("*** getFiles ***");
         if (!SystemUtils.IS_OS_WINDOWS && !SystemUtils.IS_OS_MAC_OSX) {
             return new ArrayList<>();
         }
         String path;
-        if (dataSet == null || dataSet.isEmpty()) {
-            if (SystemUtils.IS_OS_WINDOWS) {
-                path = Constants.PATH_FILE_DIRECTORY_WINDOWS;
-            } else {
-                path = Constants.PATH_FILE_DIRECTORY_MAC;
-            }
+        final var configSettings = ConfigSingleton.getInstance().getConfigSettings();
+        final var configPath = configSettings != null ? configSettings.getDownloadPath() : "";
+        final String datasetValue = dataset != null && !dataset.isBlank() ? dataset : "";
+        if (SystemUtils.IS_OS_WINDOWS) {
+            final String configPathValue = configPath + (!configPath.endsWith("\\") ? "\\" : "") + datasetValue;
+            path = !configPathValue.isBlank() ? configPathValue : DIRECTORY_PATH_WINDOWS + datasetValue;
         } else {
-            if (SystemUtils.IS_OS_WINDOWS) {
-                path = Constants.PATH_FILE_DIRECTORY_WINDOWS + "\\" + dataSet;
-            } else {
-                path = Constants.PATH_FILE_DIRECTORY_MAC + "\\" + dataSet;
-            }
+            final String configPathValue = configPath + (!configPath.endsWith("/") ? "/" : "") + datasetValue;
+            path = !configPathValue.isBlank() ? configPathValue : DIRECTORY_PATH_MAC + datasetValue;
         }
-        terminal.println(path + ":");
-        final Predicate<String> isNotCredentials = name -> !name.equalsIgnoreCase("credentials.txt");
-        final Predicate<String> isNotColors = name -> !name.equalsIgnoreCase("colors.txt");
+        if (!path.isBlank()) {
+            terminal.println(path + ":");
+        } else {
+            return new ArrayList<>();
+        }
         final var files = Optional.ofNullable(new File(path).listFiles());
-        return Stream.of(files.orElse(new File[]{}))
-                .map(File::getName)
-                .filter(isNotCredentials.and(isNotColors))
-                .sorted()
-                .collect(Collectors.toList());
+        return Stream.of(files.orElse(new File[]{})).map(File::getName).sorted().collect(Collectors.toList());
     }
 
 }

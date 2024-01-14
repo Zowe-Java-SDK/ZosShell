@@ -2,11 +2,10 @@ package zos.shell.service.console;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.configuration.MvsConsoles;
+import zos.shell.configuration.ConfigSingleton;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.ResponseUtil;
-import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosconsole.input.IssueConsoleParams;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
@@ -15,17 +14,15 @@ import zowe.client.sdk.zosconsole.response.ConsoleResponse;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public class MvsConsole {
+public class Console {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MvsConsole.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Console.class);
 
-    private final ZosConnection connection;
     private final IssueConsole issueConsole;
 
-    public MvsConsole(final ZosConnection connection, final IssueConsole issueConsole) {
-        LOG.debug("*** MvsConsole ***");
+    public Console(final IssueConsole issueConsole) {
+        LOG.debug("*** Console ***");
         this.issueConsole = issueConsole;
-        this.connection = connection;
     }
 
     public ResponseStatus issueConsole(String command) {
@@ -39,8 +36,9 @@ public class MvsConsole {
 
         ConsoleResponse consoleResponse;
         final var params = new IssueConsoleParams(command);
-        final var mvsConsole = new MvsConsoles();
-        final var consoleName = Optional.ofNullable(mvsConsole.getConsoleName(connection.getHost()));
+        final var configSettings = ConfigSingleton.getInstance().getConfigSettings();
+        final var consoleName = Optional.ofNullable(configSettings != null && configSettings.getConsoleName() != null ?
+                configSettings.getConsoleName() : null);
         try {
             consoleResponse = consoleName.isPresent() ? execute(consoleName.get(), params) : execute(params);
         } catch (ZosmfRequestException e) {

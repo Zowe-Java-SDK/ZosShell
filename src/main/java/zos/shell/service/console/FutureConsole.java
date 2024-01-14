@@ -1,17 +1,16 @@
 package zos.shell.service.console;
 
 import zos.shell.response.ResponseStatus;
-import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
 
 import java.util.concurrent.Callable;
 
-public class FutureMvs extends MvsConsole implements Callable<ResponseStatus> {
+public class FutureConsole extends Console implements Callable<ResponseStatus> {
 
     private final String command;
 
-    public FutureMvs(final ZosConnection connection, final IssueConsole issueConsole, String command) {
-        super(connection, issueConsole);
+    public FutureConsole(final IssueConsole issueConsole, final String command) {
+        super(issueConsole);
         this.command = command;
     }
 
