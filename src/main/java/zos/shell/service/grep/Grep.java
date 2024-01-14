@@ -2,7 +2,7 @@ package zos.shell.service.grep;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.service.dsn.concat.ConcatCmd;
+import zos.shell.service.dsn.concat.ConcatService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,12 +13,12 @@ public class Grep {
 
     private static final Logger LOG = LoggerFactory.getLogger(Grep.class);
 
-    private final ConcatCmd concatenate;
+    private final ConcatService concatenate;
     private final String pattern;
     private final boolean withMember;
     private final Map<Character, Integer> misMatchShiftsTable = new HashMap<>();
 
-    public Grep(final ConcatCmd concatenate, final String pattern, boolean withMember) {
+    public Grep(final ConcatService concatenate, final String pattern, boolean withMember) {
         LOG.debug("*** Grep ***");
         this.concatenate = concatenate;
         this.pattern = pattern;

@@ -65,8 +65,8 @@ public class BrowseLog {
         }
 
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = isAll ? pool.submit(new FutureBrowse(retrieve, files)) :
-                pool.submit(new FutureBrowse(retrieve, List.of(files.get(0))));
+        final var submit = isAll ? pool.submit(new FutureBrowseLog(retrieve, files)) :
+                pool.submit(new FutureBrowseLog(retrieve, List.of(files.get(0))));
         try {
             final var result = submit.get(timeout, TimeUnit.SECONDS);
             return new ResponseStatus(result.toString(), true);
