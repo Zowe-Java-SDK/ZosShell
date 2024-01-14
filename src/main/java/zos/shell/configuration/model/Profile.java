@@ -11,6 +11,8 @@ public class Profile {
     private String consoleName;
     private Window window;
 
+    //TODO add account num
+
     public Profile() {
     }
 

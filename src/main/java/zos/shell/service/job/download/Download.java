@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.job.browse.BrowseCmd;
-import zos.shell.utility.DirectorySetup;
+import zos.shell.service.path.PathService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.FileUtil;
 import zowe.client.sdk.zosjobs.methods.JobGet;
@@ -42,22 +42,16 @@ public class Download {
         browseCmd.jobs.sort(Comparator.comparing(job -> job.getJobId().orElse(""), Comparator.reverseOrder()));
         final var id = browseCmd.jobs.get(0).getJobId().orElse(null);
 
-        final var dirSetup = new DirectorySetup();
+        final var pathService = new PathService(target, id);
         try {
-            dirSetup.initialize(target, id);
-        } catch (IllegalStateException e) {
-            return new ResponseStatus(e.getMessage(), false);
-        }
-
-        try {
-            FileUtil.writeTextFile(output, dirSetup.getDirectoryPath(), dirSetup.getFileNamePath());
+            FileUtil.writeTextFile(output, pathService.getPath(), pathService.getPathWithFile());
         } catch (IOException e) {
             return new ResponseStatus(e.getMessage(), false);
         }
 
         final var message = Strings.padStart(target, 8, ' ') + Constants.ARROW +
-                "downloaded to " + dirSetup.getFileNamePath();
-        return new ResponseStatus(message, true, dirSetup.getFileNamePath());
+                "downloaded to " + pathService.getPath();
+        return new ResponseStatus(message, true, pathService.getPathWithFile());
     }
 
 }

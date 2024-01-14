@@ -7,7 +7,7 @@ import zos.shell.constants.Constants;
 import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.Download;
-import zos.shell.utility.DirectorySetup;
+import zos.shell.service.path.PathService;
 import zos.shell.utility.DsnUtil;
 
 import java.io.IOException;
@@ -29,32 +29,31 @@ public class Edit {
         ResponseStatus result;
         final var dataSetMember = DataSetMember.getDatasetAndMember(target);
 
+        PathService pathService;
         if (DsnUtil.isMember(target)) {
             // member input specified from current dataset
             result = download.member(dataset, target);
+            pathService = new PathService(dataset, target);
         } else if (dataSetMember != null) {
             // dataset(member) input specified
             dataset = dataSetMember.getDataset();
             target = dataSetMember.getMember();
             result = download.member(dataset, target);
+            pathService = new PathService(dataset, target);
         } else {
             // target input specified must be sequential dataset
             result = download.dataset(target);
-            dataset = Constants.SEQUENTIAL_DIRECTORY_LOCATION;
+            pathService = new PathService(target);
         }
 
-        DirectorySetup directorySetup = new DirectorySetup();
-        directorySetup.initialize(dataset, target);
         try {
             if (result.isStatus()) {
                 String pathFile;
                 String editorName;
-                pathFile = directorySetup.getFileNamePath();
+                pathFile = pathService.getPathWithFile();
                 if (SystemUtils.IS_OS_WINDOWS) {
-//                    pathFile = DownloadDsnCmd.DIRECTORY_PATH_WINDOWS + dataset + "\\" + target;
                     editorName = Constants.WINDOWS_EDITOR_NAME;
                 } else if (SystemUtils.IS_OS_MAC_OSX) {
-//                    pathFile = DownloadDsnCmd.DIRECTORY_PATH_MAC + dataset + "/" + target;
                     editorName = Constants.MAC_EDITOR_NAME;
                 } else {
                     return new ResponseStatus(Constants.OS_ERROR, false);
