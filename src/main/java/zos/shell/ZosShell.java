@@ -39,7 +39,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static final ListMultimap<String, String> dataSets = ArrayListMultimap.create();
     private static String currDataSet = "";
     private static int currDataSetMax = 0;
-    private static final List<ZosConnection> connections = new ArrayList<>();
     private static SshConnection currSshConnection;
     private static ZosConnection currConnection;
     private static TextTerminal<?> terminal;
