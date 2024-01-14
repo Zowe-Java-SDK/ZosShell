@@ -176,9 +176,12 @@ public class Commands {
         return new SearchCache("env", str);
     }
 
-    public void files(String dataset) {
+    public SearchCache files(String dataset) {
         LOG.debug("*** files ***");
-        LocalFileService.listFiles(terminal, dataset);
+        LocalFileService localFileService = new LocalFileService();
+        StringBuilder result = localFileService.listFiles(dataset);
+        terminal.println(result.toString());
+        return new SearchCache("files", result);
     }
 
     public void grep(final ZosConnection connection, final String pattern, final String target, final String dataset) {
