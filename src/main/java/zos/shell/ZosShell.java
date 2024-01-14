@@ -47,6 +47,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static HistoryService history;
     private static SearchCache commandOutput;
     private static final SwingTextTerminal mainTerminal = new SwingTextTerminal();
+    private static final SearchCommandService searchCommandService = new SearchCommandService();
     private static final int defaultFontSize = 10;
     private static int fontSize = defaultFontSize;
     private static boolean fontSizeChanged = false;
@@ -145,7 +146,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             if (candidateStr.contains(" ")) {  // invalid look up
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
-            final var candidateLst = SearchCommandService.search(candidateStr);
+            final var candidateLst = searchCommandService.search(candidateStr);
             if (!candidateLst.isEmpty()) {
                 mainTerminal.moveToLineStart();
                 if (candidateLst.size() == 1) {
