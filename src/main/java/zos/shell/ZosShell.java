@@ -15,9 +15,9 @@ import zos.shell.configuration.ConfigSingleton;
 import zos.shell.constants.Constants;
 import zos.shell.controller.Commands;
 import zos.shell.record.DataSetMember;
-import zos.shell.service.autocomplete.SearchDictionary;
-import zos.shell.service.env.EnvVarCmd;
-import zos.shell.service.history.HistoryCmd;
+import zos.shell.service.autocomplete.SearchCommandService;
+import zos.shell.service.env.EnvVariableService;
+import zos.shell.service.history.HistoryService;
 import zos.shell.service.search.SearchCache;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.PromptUtil;
@@ -44,7 +44,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static ZosConnection currConnection;
     private static TextTerminal<?> terminal;
     private static Commands commands;
-    private static HistoryCmd history;
+    private static HistoryService history;
     private static SearchCache commandOutput;
     private static final SwingTextTerminal mainTerminal = new SwingTextTerminal();
     private static final int defaultFontSize = 10;
@@ -145,7 +145,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             if (candidateStr.contains(" ")) {  // invalid look up
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
-            final var candidateLst = SearchDictionary.search(candidateStr);
+            final var candidateLst = SearchCommandService.search(candidateStr);
             if (!candidateLst.isEmpty()) {
                 mainTerminal.moveToLineStart();
                 if (candidateLst.size() == 1) {
@@ -166,7 +166,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         terminal.setBookmark("top");
         ConfigSingleton.getInstance().updateWindowSittings(terminal);
         commands = new Commands(terminal);
-        history = new HistoryCmd(terminal);
+        history = new HistoryService(terminal);
         if (currConnection == null) {
             terminal.println(Constants.NO_CONNECTIONS);
         } else {
@@ -731,7 +731,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                final var acctNum = EnvVarCmd.getInstance().getValueByKeyName("ACCTNUM");
+                final var acctNum = EnvVariableService.getInstance().getValueByKeyName("ACCTNUM");
                 final var tsoCommandCandidate = getCommandFromParams(params);
                 final var tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {
