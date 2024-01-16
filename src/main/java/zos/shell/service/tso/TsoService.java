@@ -26,6 +26,9 @@ public class TsoService {
 
     public ResponseStatus issueCommand(final String command) {
         LOG.debug("*** issueCommand ***");
+        if (accountNumber == null || accountNumber.isBlank()) {
+            return new ResponseStatus("ACCTNUM is not set, try again...", false);
+        }
         final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         final var submit = pool.submit(new FutureTso(issueTso, accountNumber, command));
         return FutureUtil.getFutureResponse(submit, pool, timeout);

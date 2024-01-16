@@ -8,33 +8,22 @@ import zos.shell.constants.Constants;
 import zos.shell.service.change.ChangeConnectionService;
 import zos.shell.service.change.ChangeDirectoryService;
 import zos.shell.service.change.ChangeWindowService;
-import zos.shell.service.console.ConsoleService;
 import zos.shell.service.dsn.concat.ConcatService;
 import zos.shell.service.dsn.copy.CopyService;
 import zos.shell.service.dsn.count.CountService;
 import zos.shell.service.dsn.delete.DeleteService;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.service.dsn.download.DownloadDsnService;
-import zos.shell.service.dsn.edit.EditService;
 import zos.shell.service.dsn.list.ListingService;
 import zos.shell.service.dsn.makedir.MakeDirectoryService;
-import zos.shell.service.dsn.save.SaveService;
-import zos.shell.service.dsn.touch.TouchService;
 import zos.shell.service.env.EnvVariableService;
-import zos.shell.service.grep.GrepService;
 import zos.shell.service.help.HelpService;
 import zos.shell.service.job.browse.BrowseLogService;
 import zos.shell.service.job.download.DownloadJobService;
-import zos.shell.service.job.processlst.ProcessListingService;
-import zos.shell.service.job.purge.PurgeService;
-import zos.shell.service.job.submit.SubmitService;
 import zos.shell.service.job.tail.TailService;
-import zos.shell.service.job.terminate.TerminateService;
 import zos.shell.service.localfile.LocalFileService;
-import zos.shell.service.omvs.SshService;
 import zos.shell.service.search.SearchCache;
 import zos.shell.service.search.SearchCacheService;
-import zos.shell.service.tso.TsoService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
 import zos.shell.utility.StrUtil;
@@ -46,11 +35,7 @@ import zowe.client.sdk.zosfiles.dsn.input.CreateParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
-import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
-import zowe.client.sdk.zosjobs.methods.JobDelete;
 import zowe.client.sdk.zosjobs.methods.JobGet;
-import zowe.client.sdk.zosjobs.methods.JobSubmit;
-import zowe.client.sdk.zostso.method.IssueTso;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -75,13 +60,6 @@ public class Commands {
         final String output = responseStatus.getMessage();
         terminal.println(output);
         return new SearchCache(target, new StringBuilder(output));
-    }
-
-    public void cancel(final ZosConnection connection, final String target) {
-        LOG.debug("*** cancel ***");
-        final var terminateCmd = new TerminateService(new IssueConsole(connection), timeout);
-        final var responseStatus = terminateCmd.terminate(TerminateService.Type.CANCEL, target);
-        terminal.println(responseStatus.getMessage());
     }
 
     public SearchCache cat(final ZosConnection connection, final String dataset, final String target) {
@@ -182,18 +160,6 @@ public class Commands {
         StringBuilder result = localFileService.listFiles(dataset);
         terminal.println(result.toString());
         return new SearchCache("files", result);
-    }
-
-    public void grep(final ZosConnection connection, final String pattern, final String target, final String dataset) {
-        LOG.debug("*** grep ***");
-        final var grepCmd = new GrepService(connection, pattern, timeout);
-        grepCmd.search(dataset, target).forEach(i -> {
-            if (i.endsWith("\n")) {
-                terminal.print(i);
-            } else {
-                terminal.println(i);
-            }
-        });
     }
 
     public SearchCache help() {
@@ -371,45 +337,10 @@ public class Commands {
         return input;
     }
 
-    public SearchCache mvsCommand(final ZosConnection connection, final String command) {
-        LOG.debug("*** mvsCommand ***");
-        final var mvsConsoleCmd = new ConsoleService(connection, timeout);
-        final var responseStatus = mvsConsoleCmd.issueConsole(command);
-        terminal.println(responseStatus.getMessage());
-        return new SearchCache("mvs", new StringBuilder(responseStatus.getMessage()));
-    }
-
-    public SearchCache ps(final ZosConnection connection) {
-        LOG.debug("*** ps all ***");
-        return ps(connection, null);
-    }
-
-    public void purge(final ZosConnection connection, final String filter) {
-        LOG.debug("*** purgeJob ***");
-        final var purgeCmd = new PurgeService(new JobDelete(connection), new JobGet(connection), timeout);
-        final var responseStatus = purgeCmd.purge(filter);
-        terminal.println(responseStatus.getMessage());
-    }
-
-    public SearchCache ps(final ZosConnection connection, final String target) {
-        LOG.debug("*** ps target ***");
-        final var processLstCmd = new ProcessListingService(new JobGet(connection), timeout);
-        final var responseStatus = processLstCmd.processLst(target);
-        terminal.println(responseStatus.getMessage());
-        return new SearchCache("ps", new StringBuilder(responseStatus.getMessage()));
-    }
-
     public void rm(final ZosConnection connection, final String dataset, final String param) {
         LOG.debug("*** rm ***");
         final var delete = new DeleteService(connection, timeout);
         final var responseStatus = delete.delete(dataset, param);
-        terminal.println(responseStatus.getMessage());
-    }
-
-    public void save(final ZosConnection connection, final String dataset, final String[] params) {
-        LOG.debug("*** save ***");
-        final var saveCmd = new SaveService(new DsnWrite(connection), timeout);
-        final var responseStatus = saveCmd.save(dataset, params[1]);
         terminal.println(responseStatus.getMessage());
     }
 
@@ -430,20 +361,6 @@ public class Commands {
         terminal.println(values[0] + "=" + values[1]);
     }
 
-    public void stop(final ZosConnection connection, final String target) {
-        LOG.debug("*** stop ***");
-        final var terminateCmd = new TerminateService(new IssueConsole(connection), timeout);
-        final var responseStatus = terminateCmd.terminate(TerminateService.Type.STOP, target);
-        terminal.println(responseStatus.getMessage());
-    }
-
-    public void submit(final ZosConnection connection, final String dataset, final String target) {
-        LOG.debug("*** submit ***");
-        final var submitCmd = new SubmitService(new JobSubmit(connection), timeout);
-        final var responseStatus = submitCmd.submit(dataset, target);
-        terminal.println(responseStatus.getMessage());
-    }
-
     public SearchCache tail(final ZosConnection connection, final String[] params) {
         LOG.debug("*** tail ***");
         final var tailCmd = new TailService(terminal, new JobGet(connection), timeout);
@@ -461,25 +378,6 @@ public class Commands {
     public void timeout() {
         LOG.debug("*** timeout display ***");
         terminal.println("timeout value is " + timeout + " seconds.");
-    }
-
-    public void touch(final ZosConnection connection, final String dataset, final String[] params) {
-        LOG.debug("*** touch ***");
-        final var touchCmd = new TouchService(new DsnWrite(connection), new DsnList(connection), timeout);
-        final var responseStatus = touchCmd.touch(dataset, params[1]);
-        terminal.println(responseStatus.getMessage());
-    }
-
-    public SearchCache tsoCommand(final ZosConnection connection, final String accountNum, final String command) {
-        LOG.debug("*** tsoCommand ***");
-        if (accountNum == null || accountNum.isBlank()) {
-            terminal.println("ACCTNUM is not set, try again...");
-            return new SearchCache("tso", new StringBuilder());
-        }
-        final var tsoCmd = new TsoService(new IssueTso(connection), accountNum, timeout);
-        final var responseStatus = tsoCmd.issueCommand(command);
-        terminal.println(responseStatus.getMessage());
-        return new SearchCache("tso", new StringBuilder(responseStatus.getMessage()));
     }
 
     public void uname(final ZosConnection connection) {
@@ -502,19 +400,6 @@ public class Commands {
         } else {
             terminal.println(Constants.NO_INFO);
         }
-    }
-
-    public void ussh(final TextTerminal<?> terminal, final SshConnection sshConnection, final String param) {
-        LOG.debug("*** ussh ***");
-        final var uss = new SshService(terminal, sshConnection);
-        uss.sshCommand(param);
-    }
-
-    public void vi(final ZosConnection connection, final String dataset, final String[] params) {
-        LOG.debug("*** vi ***");
-        final var editCmd = new EditService(new Download(new DsnGet(connection), false), timeout);
-        final var responseStatus = editCmd.open(dataset, params[1]);
-        terminal.println(responseStatus.getMessage());
     }
 
 }
