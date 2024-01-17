@@ -15,6 +15,7 @@ import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.response.Member;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -108,7 +109,8 @@ public class DownloadDsnService {
         }
 
         if (results.get(0).isStatus()) {
-            FileUtil.openFileLocation(results.get(0).getOptionalData());
+            var file = new File(results.get(0).getOptionalData());
+            FileUtil.openFileLocation(file.getAbsolutePath());
             return results;
         }
 
@@ -143,7 +145,8 @@ public class DownloadDsnService {
         }
 
         // results.get(0) not possible if we used FutureUtil.getFutureResponses
-        FileUtil.openFileLocation(results.get(0).getOptionalData());
+        var file = new File(results.get(0).getOptionalData());
+        FileUtil.openFileLocation(file.getAbsolutePath());
         pool.shutdownNow();
         return results;
     }
