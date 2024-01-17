@@ -31,6 +31,7 @@ import zos.shell.service.job.download.DownloadJobService;
 import zos.shell.service.job.processlst.ProcessListingService;
 import zos.shell.service.job.purge.PurgeService;
 import zos.shell.service.job.submit.SubmitService;
+import zos.shell.service.job.tail.TailService;
 import zos.shell.service.job.terminate.TerminateService;
 import zos.shell.service.omvs.SshService;
 import zos.shell.service.search.SearchCache;
@@ -768,7 +769,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(4, params)) {
                     return;
                 }
-                commandOutput = commands.tail(currConnection, params);
+                jobGet = new JobGet(currConnection);
+                var tailService = new TailService(terminal, jobGet, timeout);
+                var tailController = new TailController(tailService);
+                commandOutput = tailController.tail(params);
                 break;
             case "t":
             case "timeout":

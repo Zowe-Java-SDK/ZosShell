@@ -16,7 +16,6 @@ import zos.shell.service.dsn.download.DownloadDsnService;
 import zos.shell.service.dsn.list.ListingService;
 import zos.shell.service.dsn.makedir.MakeDirectoryService;
 import zos.shell.service.env.EnvVariableService;
-import zos.shell.service.job.tail.TailService;
 import zos.shell.service.localfile.LocalFileService;
 import zos.shell.service.search.SearchCache;
 import zos.shell.service.search.SearchCacheService;
@@ -30,9 +29,7 @@ import zowe.client.sdk.zosfiles.dsn.input.CreateParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
-import zowe.client.sdk.zosjobs.methods.JobGet;
 
-import java.util.Arrays;
 import java.util.TreeMap;
 
 public class Commands {
@@ -327,13 +324,13 @@ public class Commands {
         terminal.println(values[0] + "=" + values[1]);
     }
 
-    public SearchCache tail(final ZosConnection connection, final String[] params) {
-        LOG.debug("*** tail ***");
-        final var tailCmd = new TailService(terminal, new JobGet(connection), timeout);
-        long allCount = Arrays.stream(params).filter("ALL"::equalsIgnoreCase).count();
-        final var responseStatus = tailCmd.tail(params, allCount == 1);
-        return new SearchCache("tail", new StringBuilder(responseStatus.getMessage()));
-    }
+//    public SearchCache tail(final ZosConnection connection, final String[] params) {
+//        LOG.debug("*** tail ***");
+//        final var tailCmd = new TailService(terminal, new JobGet(connection), timeout);
+//        long allCount = Arrays.stream(params).filter("ALL"::equalsIgnoreCase).count();
+//        final var responseStatus = tailCmd.tail(params, allCount == 1);
+//        return new SearchCache("tail", new StringBuilder(responseStatus.getMessage()));
+//    }
 
     public void timeout(final long value) {
         LOG.debug("*** timeout set value ***");
