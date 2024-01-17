@@ -24,6 +24,7 @@ import zos.shell.service.dsn.copy.CopyService;
 import zos.shell.service.dsn.count.CountService;
 import zos.shell.service.dsn.delete.DeleteService;
 import zos.shell.service.dsn.download.Download;
+import zos.shell.service.dsn.download.DownloadDsnService;
 import zos.shell.service.dsn.edit.EditService;
 import zos.shell.service.dsn.save.SaveService;
 import zos.shell.service.dsn.touch.TouchService;
@@ -490,7 +491,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
-                param = params[1];
                 boolean isBinary = false;
                 if (params.length == 3) {
                     if (params[2].equalsIgnoreCase("-b")) {
@@ -500,7 +500,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         return;
                     }
                 }
-                commands.downloadDsn(currConnection, currDataSet, param, isBinary);
+                var downloadDsnService = new DownloadDsnService(currConnection, isBinary, timeout);
+                var downloadDsnController = new DownloadDsnController(downloadDsnService);
+                List<String> downloadResults = downloadDsnController.download(currDataSet, params[1]);
+                downloadResults.forEach(terminal::println);
                 break;
             case "dj":
             case "downloadjob":

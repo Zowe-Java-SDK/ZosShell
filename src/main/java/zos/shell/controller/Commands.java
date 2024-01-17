@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.change.ChangeConnService;
 import zos.shell.service.change.ChangeWinService;
-import zos.shell.service.dsn.download.DownloadDsnService;
 import zos.shell.service.dsn.list.ListingService;
 import zos.shell.service.dsn.makedir.MakeDirectoryService;
 import zos.shell.service.env.EnvVariableService;
@@ -65,21 +64,6 @@ public class Commands {
     public void displayConnections() {
         LOG.debug("*** displayConnections ***");
         new ChangeConnService(terminal).displayConnections();
-    }
-
-    public void downloadDsn(final ZosConnection connection, final String dataset,
-                            final String target, boolean isBinary) {
-        LOG.debug("*** dsnDownload ***");
-        final var downloadDsnCmd = new DownloadDsnService(connection, isBinary, timeout);
-        final var results = downloadDsnCmd.download(dataset, target);
-        if (results.size() > 1) {
-            results.forEach(r -> terminal.println(r.getMessage()));
-        } else {
-            terminal.println(ResponseUtil.getMsgAfterArrow(results.get(0).getMessage()));
-        }
-        if (results.size() == 1 && !results.get(0).isStatus()) {
-            terminal.println("cannot download " + target + ", try again...");
-        }
     }
 
     public SearchCache env() {
