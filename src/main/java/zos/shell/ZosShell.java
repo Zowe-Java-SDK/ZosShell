@@ -17,6 +17,7 @@ import zos.shell.controller.*;
 import zos.shell.record.DataSetMember;
 import zos.shell.service.autocomplete.SearchCommandService;
 import zos.shell.service.console.ConsoleService;
+import zos.shell.service.dsn.concat.ConcatService;
 import zos.shell.service.dsn.count.CountService;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.service.dsn.edit.EditService;
@@ -368,8 +369,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                param = params[1];
-                commandOutput = commands.cat(currConnection, currDataSet, param);
+                var dsnGet = new DsnGet(currConnection);
+                var download = new Download(dsnGet, false);
+                var concatService = new ConcatService(download, timeout);
+                var concatController = new ConcatController(concatService);
+                String concatResult = concatController.cat(currDataSet, params[1]);
+                terminal.println(concatResult);
+                commandOutput = new SearchCache("cat", new StringBuilder(concatResult));
                 break;
             case "cd":
                 if (isParamsMissing(1, params)) {
@@ -542,7 +548,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 if (params.length == 1) {
                     commandOutput = HelpService.display(terminal);
-                    ;
                 }
                 break;
             case "history":
@@ -864,8 +869,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                var dsnGet = new DsnGet(currConnection);
-                var download = new Download(dsnGet, false);
+                dsnGet = new DsnGet(currConnection);
+                download = new Download(dsnGet, false);
                 var editService = new EditService(download, timeout);
                 var editController = new EditController(editService);
                 String editResult = editController.edit(currDataSet, params[1]);

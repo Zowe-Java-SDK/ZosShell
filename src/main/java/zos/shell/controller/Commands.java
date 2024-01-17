@@ -8,10 +8,8 @@ import zos.shell.constants.Constants;
 import zos.shell.service.change.ChangeConnectionService;
 import zos.shell.service.change.ChangeDirectoryService;
 import zos.shell.service.change.ChangeWindowService;
-import zos.shell.service.dsn.concat.ConcatService;
 import zos.shell.service.dsn.copy.CopyService;
 import zos.shell.service.dsn.delete.DeleteService;
-import zos.shell.service.dsn.download.Download;
 import zos.shell.service.dsn.download.DownloadDsnService;
 import zos.shell.service.dsn.list.ListingService;
 import zos.shell.service.dsn.makedir.MakeDirectoryService;
@@ -27,7 +25,6 @@ import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.CreateParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
-import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 
 import java.util.TreeMap;
@@ -37,20 +34,20 @@ public class Commands {
     private static final Logger LOG = LoggerFactory.getLogger(Commands.class);
 
     private final TextTerminal<?> terminal;
-    private long timeout = Constants.FUTURE_TIMEOUT_VALUE;
+    private final long timeout = Constants.FUTURE_TIMEOUT_VALUE;
 
     public Commands(final TextTerminal<?> terminal) {
         LOG.debug("*** Commands ***");
         this.terminal = terminal;
     }
 
-    public SearchCache cat(final ZosConnection connection, final String dataset, final String target) {
-        LOG.debug("*** cat ***");
-        final var concatCmd = new ConcatService(new Download(new DsnGet(connection), false), timeout);
-        final var data = concatCmd.cat(dataset, target).getMessage();
-        terminal.println(data);
-        return new SearchCache("cat", new StringBuilder(data));
-    }
+//    public SearchCache cat(final ZosConnection connection, final String dataset, final String target) {
+//        LOG.debug("*** cat ***");
+//        final var concatCmd = new ConcatService(new Download(new DsnGet(connection), false), timeout);
+//        final var data = concatCmd.cat(dataset, target).getMessage();
+//        terminal.println(data);
+//        return new SearchCache("cat", new StringBuilder(data));
+//    }
 
     public String cd(final ZosConnection connection, final String dataset, final String param) {
         LOG.debug("*** cd ***");
