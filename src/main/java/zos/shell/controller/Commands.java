@@ -324,23 +324,4 @@ public class Commands {
         terminal.println(values[0] + "=" + values[1]);
     }
 
-//    public SearchCache tail(final ZosConnection connection, final String[] params) {
-//        LOG.debug("*** tail ***");
-//        final var tailCmd = new TailService(terminal, new JobGet(connection), timeout);
-//        long allCount = Arrays.stream(params).filter("ALL"::equalsIgnoreCase).count();
-//        final var responseStatus = tailCmd.tail(params, allCount == 1);
-//        return new SearchCache("tail", new StringBuilder(responseStatus.getMessage()));
-//    }
-
-    public void timeout(final long value) {
-        LOG.debug("*** timeout set value ***");
-        timeout = value;
-        terminal.println("timeout value set to " + timeout + " seconds.");
-    }
-
-    public void timeout() {
-        LOG.debug("*** timeout display ***");
-        terminal.println("timeout value is " + timeout + " seconds.");
-    }
-
 }

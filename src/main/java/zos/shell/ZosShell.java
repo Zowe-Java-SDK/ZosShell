@@ -76,7 +76,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static boolean fontSizeChanged = false;
     private static boolean disableKeys = false;
     private static TextIO mainTextIO;
-    private static final long timeout = Constants.FUTURE_TIMEOUT_VALUE;
+    private static long timeout = Constants.FUTURE_TIMEOUT_VALUE;
 
     public static void main(String[] args) {
         LOG.debug("*** main ***");
@@ -780,10 +780,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 1) {
-                    commands.timeout();
+                    LOG.debug("*** timeout display ***");
+                    terminal.println("timeout value is " + timeout + " seconds.");
                 } else {
                     try {
-                        commands.timeout(Long.parseLong(params[1]));
+                        LOG.debug("*** timeout set value ***");
+                        timeout = Long.parseLong(params[1]);
+                        terminal.println("timeout value set to " + timeout + " seconds.");
                     } catch (NumberFormatException e) {
                         terminal.println(Constants.INVALID_VALUE);
                     }
