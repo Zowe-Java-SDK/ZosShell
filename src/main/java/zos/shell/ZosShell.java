@@ -632,7 +632,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 final var mvsCommandCandidate = getCommandFromParams(params);
                 final var mvsCommandCount = mvsCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(mvsCommandCount, mvsCommandCandidate)) {
-                    var consoleController = new ConsoleController(new ConsoleService(currConnection, timeout));
+                    var consoleService = new ConsoleService(currConnection, timeout);
+                    var consoleController = new ConsoleController(consoleService);
                     String result = consoleController.issueConsole(mvsCommandCandidate.toString());
                     terminal.println(result);
                     commandOutput = new SearchCache("mvs", new StringBuilder(result));
@@ -800,7 +801,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(1, params)) {
                     return;
                 }
-                commands.uname(currConnection);
+                var consoleService = new ConsoleService(currConnection, timeout);
+                var unameController = new UnameController(consoleService);
+                String unameResult = unameController.uname(currConnection);
+                terminal.println(unameResult);
                 break;
             case "ussh":
                 if (isParamsMissing(1, params)) {

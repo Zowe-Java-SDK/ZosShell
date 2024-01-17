@@ -30,7 +30,6 @@ import zos.shell.utility.StrUtil;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
-import zowe.client.sdk.zosconsole.method.IssueConsole;
 import zowe.client.sdk.zosfiles.dsn.input.CreateParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
@@ -38,7 +37,6 @@ import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.TreeMap;
 
 public class Commands {
@@ -378,28 +376,6 @@ public class Commands {
     public void timeout() {
         LOG.debug("*** timeout display ***");
         terminal.println("timeout value is " + timeout + " seconds.");
-    }
-
-    public void uname(final ZosConnection connection) {
-        LOG.debug("*** uname ***");
-        if (connection != null) {
-            Optional<String> zosVersion = Optional.empty();
-            try {
-                final var IssueConsole = new IssueConsole(connection);
-                final var response = IssueConsole.issueCommand("D IPLINFO");
-                final var output = response.getCommandResponse()
-                        .orElseThrow((() -> new ZosmfRequestException("IPLINFO command no response")));
-                final var index = output.indexOf("RELEASE z/OS ");
-                if (index >= 0) {
-                    zosVersion = Optional.of(output.substring(index, index + 22));
-                }
-            } catch (ZosmfRequestException e) {
-                LOG.debug(e.getMessage());
-            }
-            terminal.println("hostname: " + connection.getHost() + ", " + zosVersion.orElse("n\\a"));
-        } else {
-            terminal.println(Constants.NO_INFO);
-        }
     }
 
 }
