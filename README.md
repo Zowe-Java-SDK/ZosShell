@@ -56,7 +56,7 @@ The shell performs the following Linux like commands:
   
 Along with following custom commands:  
 
-    b | browse <arg1> <arg2>            - where arg1 is a job name and arg2 is optional
+    bj | browsejob <arg1> <arg2>        - where arg1 is a job name and arg2 is optional
                                           if arg2 not specified, display job's JESMSGLG spool output
                                           if arg2 is equal to "all", display all job's spool output
     cancel <arg>                        - where arg is a task/job name  
