@@ -37,7 +37,7 @@ public class EnvVariableController {
         if (values.length != 2) {
             return Constants.INVALID_COMMAND;
         }
-        envVariableService.getEnvVariables().put(values[0], values[1]);
+        envVariableService.setEnvVariable(values[0], values[1]);
         return values[0] + "=" + values[1];
     }
 
