@@ -16,7 +16,6 @@ import zos.shell.service.dsn.download.DownloadDsnService;
 import zos.shell.service.dsn.list.ListingService;
 import zos.shell.service.dsn.makedir.MakeDirectoryService;
 import zos.shell.service.env.EnvVariableService;
-import zos.shell.service.job.browse.BrowseLogService;
 import zos.shell.service.job.tail.TailService;
 import zos.shell.service.localfile.LocalFileService;
 import zos.shell.service.search.SearchCache;
@@ -46,15 +45,6 @@ public class Commands {
     public Commands(final TextTerminal<?> terminal) {
         LOG.debug("*** Commands ***");
         this.terminal = terminal;
-    }
-
-    public SearchCache browse(final ZosConnection connection, final String target, boolean isAll) {
-        LOG.debug("*** browse ***");
-        final var browseCmd = new BrowseLogService(new JobGet(connection), isAll, timeout);
-        final var responseStatus = browseCmd.browseJob(target);
-        final String output = responseStatus.getMessage();
-        terminal.println(output);
-        return new SearchCache(target, new StringBuilder(output));
     }
 
     public SearchCache cat(final ZosConnection connection, final String dataset, final String target) {

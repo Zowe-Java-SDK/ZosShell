@@ -26,6 +26,7 @@ import zos.shell.service.env.EnvVariableService;
 import zos.shell.service.grep.GrepService;
 import zos.shell.service.help.HelpService;
 import zos.shell.service.history.HistoryService;
+import zos.shell.service.job.browse.BrowseLogService;
 import zos.shell.service.job.download.DownloadJobService;
 import zos.shell.service.job.processlst.ProcessListingService;
 import zos.shell.service.job.purge.PurgeService;
@@ -339,7 +340,12 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     terminal.println(Constants.INVALID_PARAMETER);
                     return;
                 }
-                commandOutput = commands.browse(currConnection, params[1], params.length == 3);
+                var jobGet = new JobGet(currConnection);
+                var browseJobService = new BrowseLogService(jobGet, params.length == 3, timeout);
+                var browseJobController = new BrowseJobController(browseJobService);
+                String browseJobResult = browseJobController.browseJob(params[1]);
+                terminal.println(browseJobResult);
+                commandOutput = new SearchCache("browsejob", new StringBuilder(browseJobResult));
                 break;
             case "cancel":
                 if (isParamsMissing(1, params)) {
@@ -489,7 +495,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     }
                     isAll = true;
                 }
-                var jobGet = new JobGet(currConnection);
+                jobGet = new JobGet(currConnection);
                 var downloadJobService = new DownloadJobService(jobGet, isAll, timeout);
                 var downloadJobController = new DownloadJobController(downloadJobService);
                 String downloadJobResult = downloadJobController.downloadJob(param);
