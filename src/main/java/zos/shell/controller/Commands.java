@@ -6,20 +6,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.change.ChangeWinService;
-import zos.shell.service.dsn.list.ListingService;
 import zos.shell.service.dsn.makedir.MakeDirectoryService;
 import zos.shell.service.env.EnvVariableService;
 import zos.shell.service.localfile.LocalFileService;
 import zos.shell.service.search.SearchCache;
 import zos.shell.service.search.SearchCacheService;
 import zos.shell.utility.DsnUtil;
-import zos.shell.utility.ResponseUtil;
 import zos.shell.utility.StrUtil;
 import zowe.client.sdk.core.ZosConnection;
-import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.CreateParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
-import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 
 import java.util.TreeMap;
 
@@ -68,44 +64,6 @@ public class Commands {
         StringBuilder result = localFileService.listFiles(dataset);
         terminal.println(result.toString());
         return new SearchCache("files", result);
-    }
-
-    public void ls(final ZosConnection connection, final String member, final String dataset) {
-        LOG.debug("*** ls 1 ***");
-        final var listing = new ListingService(terminal, new DsnList(connection), timeout);
-        try {
-            listing.ls(member, dataset, true, false);
-        } catch (ZosmfRequestException e) {
-            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
-            terminal.println(errMsg != null ? errMsg : e.getMessage());
-        }
-    }
-
-    public void ls(final ZosConnection connection, final String dataset) {
-        LOG.debug("*** ls 2 ***");
-        final var listing = new ListingService(terminal, new DsnList(connection), timeout);
-        try {
-            listing.ls(null, dataset, true, false);
-        } catch (ZosmfRequestException e) {
-            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
-            terminal.println(errMsg != null ? errMsg : e.getMessage());
-        }
-    }
-
-    public void lsl(final ZosConnection connection, final String dataset, boolean isAttributes) {
-        LOG.debug("*** lsl 1 ***");
-        this.lsl(connection, null, dataset, isAttributes);
-    }
-
-    public void lsl(final ZosConnection connection, final String member, final String dataset, boolean isAttributes) {
-        LOG.debug("*** lsl 2 ***");
-        final var listing = new ListingService(terminal, new DsnList(connection), timeout);
-        try {
-            listing.ls(member, dataset, false, isAttributes);
-        } catch (ZosmfRequestException e) {
-            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
-            terminal.println(errMsg != null ? errMsg : e.getMessage());
-        }
     }
 
     public void mkdir(final ZosConnection connection, final TextIO mainTextIO,

@@ -27,6 +27,7 @@ import zos.shell.service.dsn.delete.DeleteService;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.service.dsn.download.DownloadDsnService;
 import zos.shell.service.dsn.edit.EditService;
+import zos.shell.service.dsn.list.ListingService;
 import zos.shell.service.dsn.save.SaveService;
 import zos.shell.service.dsn.touch.TouchService;
 import zos.shell.service.env.EnvVariableService;
@@ -595,6 +596,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
+                dsnList = new DsnList(currConnection);
+                var listingService = new ListingService(terminal, dsnList, timeout);
+                var listingController = new ListingController(listingService);
                 if (params.length == 3 && ("-l".equals(params[1]) || "--l".equals(params[1]))) {
                     boolean isAttributes = !"--l".equals(params[1]);
                     var value = params[2];
@@ -606,7 +610,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         int index = value.indexOf("*");
                         var member = value.substring(0, index);
                         if (DsnUtil.isMember(member)) {  // validate member value without wild card char...
-                            commands.lsl(currConnection, value, currDataSet, isAttributes);
+                            responseStatus = listingController.lsl(value, currDataSet, isAttributes);
+                            if (!responseStatus.isStatus()) {
+                                terminal.println(responseStatus.getMessage());
+                            }
                         } else {
                             terminal.println(Constants.INVALID_MEMBER);
                         }
@@ -615,10 +622,16 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         if (isCurrDataSetNotSpecified()) {
                             return;
                         }
-                        commands.lsl(currConnection, value, currDataSet, isAttributes);
+                        responseStatus = listingController.lsl(value, currDataSet, isAttributes);
+                        if (!responseStatus.isStatus()) {
+                            terminal.println(responseStatus.getMessage());
+                        }
                         return;
                     } else if (DsnUtil.isDataSet(value)) {  // is dataset specified at this point...
-                        commands.lsl(currConnection, null, value, isAttributes);
+                        responseStatus = listingController.lsl(null, value, isAttributes);
+                        if (!responseStatus.isStatus()) {
+                            terminal.println(responseStatus.getMessage());
+                        }
                         return;
                     } else {  // must be an invalid member or dataset specified...
                         terminal.println(Constants.INVALID_DATASET_AND_MEMBER);
@@ -630,12 +643,18 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         return;
                     }
                     boolean isAttributes = !"--l".equals(params[1]);
-                    commands.lsl(currConnection, currDataSet, isAttributes);
+                    responseStatus = listingController.lsl(currDataSet, isAttributes);
+                    if (!responseStatus.isStatus()) {
+                        terminal.println(responseStatus.getMessage());
+                    }
                     addVisited();
                     return;
                 }
                 if (params.length == 2 && DsnUtil.isDataSet(params[1])) {
-                    commands.ls(currConnection, params[1]);
+                    responseStatus = listingController.ls(params[1]);
+                    if (!responseStatus.isStatus()) {
+                        terminal.println(responseStatus.getMessage());
+                    }
                     return;
                 }
                 if (isCurrDataSetNotSpecified()) {
@@ -646,12 +665,18 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     int index = value.indexOf("*");
                     var member = value.substring(0, index);
                     if (DsnUtil.isMember(member)) {
-                        commands.ls(currConnection, value, currDataSet);
+                        responseStatus = listingController.ls(value, currDataSet);
+                        if (!responseStatus.isStatus()) {
+                            terminal.println(responseStatus.getMessage());
+                        }
                         return;
                     }
                 }
                 if (params.length == 2 && DsnUtil.isMember(params[1])) {
-                    commands.ls(currConnection, params[1], currDataSet);
+                    responseStatus = listingController.ls(params[1], currDataSet);
+                    if (!responseStatus.isStatus()) {
+                        terminal.println(responseStatus.getMessage());
+                    }
                     return;
                 }
                 if (params.length == 2) {
@@ -659,7 +684,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 1) {
-                    commands.ls(currConnection, currDataSet);
+                    responseStatus = listingController.ls(currDataSet);
+                    if (!responseStatus.isStatus()) {
+                        terminal.println(responseStatus.getMessage());
+                    }
                     return;
                 }
                 // not valid input
