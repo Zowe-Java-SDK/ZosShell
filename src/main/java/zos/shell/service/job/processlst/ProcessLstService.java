@@ -9,15 +9,15 @@ import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.concurrent.Executors;
 
-public class ProcessListingService {
+public class ProcessLstService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ProcessListingService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProcessLstService.class);
 
     private final JobGet jobGet;
     private final long timeout;
 
-    public ProcessListingService(final JobGet jobGet, long timeout) {
-        LOG.debug("*** ProcessListingService ***");
+    public ProcessLstService(final JobGet jobGet, long timeout) {
+        LOG.debug("*** ProcessLstService ***");
         this.jobGet = jobGet;
         this.timeout = timeout;
     }

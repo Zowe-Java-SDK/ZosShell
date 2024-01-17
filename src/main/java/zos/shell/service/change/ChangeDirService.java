@@ -13,14 +13,14 @@ import zowe.client.sdk.zosfiles.dsn.response.Dataset;
 
 import java.util.List;
 
-public class ChangeDirectoryService {
+public class ChangeDirService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChangeDirectoryService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChangeDirService.class);
 
     private final DsnList dsnList;
     private final ListParams params = new ListParams.Builder().build();
 
-    public ChangeDirectoryService(final DsnList dsnList) {
+    public ChangeDirService(final DsnList dsnList) {
         LOG.debug("*** ChangeDirectoryService ***");
         this.dsnList = dsnList;
     }

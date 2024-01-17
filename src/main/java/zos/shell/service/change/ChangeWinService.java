@@ -4,13 +4,13 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ChangeWindowService {
+public class ChangeWinService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChangeWindowService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChangeWinService.class);
 
     private final TextTerminal<?> terminal;
 
-    public ChangeWindowService(final TextTerminal<?> terminal) {
+    public ChangeWinService(final TextTerminal<?> terminal) {
         LOG.debug("*** ChangeWindowService ***");
         this.terminal = terminal;
     }

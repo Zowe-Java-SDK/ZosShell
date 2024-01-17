@@ -17,7 +17,7 @@ import zos.shell.controller.*;
 import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.autocomplete.SearchCommandService;
-import zos.shell.service.change.ChangeDirectoryService;
+import zos.shell.service.change.ChangeDirService;
 import zos.shell.service.console.ConsoleService;
 import zos.shell.service.dsn.concat.ConcatService;
 import zos.shell.service.dsn.copy.CopyService;
@@ -32,7 +32,7 @@ import zos.shell.service.help.HelpService;
 import zos.shell.service.history.HistoryService;
 import zos.shell.service.job.browse.BrowseLogService;
 import zos.shell.service.job.download.DownloadJobService;
-import zos.shell.service.job.processlst.ProcessListingService;
+import zos.shell.service.job.processlst.ProcessLstService;
 import zos.shell.service.job.purge.PurgeService;
 import zos.shell.service.job.submit.SubmitService;
 import zos.shell.service.job.tail.TailService;
@@ -390,7 +390,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 var dsnList = new DsnList(currConnection);
-                var changeDirService = new ChangeDirectoryService(dsnList);
+                var changeDirService = new ChangeDirService(dsnList);
                 var changeDirController = new ChangeDirController(changeDirService);
                 ResponseStatus responseStatus = changeDirController.cd(currDataSet, params[1].toUpperCase());
                 if (responseStatus.isStatus()) {
@@ -681,14 +681,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                var processListingService = new ProcessListingService(new JobGet(currConnection), timeout);
-                var processListingController = new ProcessListingController(processListingService);
+                var processLstService = new ProcessLstService(new JobGet(currConnection), timeout);
+                var processLstController = new ProcessLstController(processLstService);
                 String result = "";
                 if (params.length > 1) {
-                    result = processListingController.processList(params[1]);
+                    result = processLstController.processList(params[1]);
                     terminal.println(result);
                 } else {
-                    result = processListingController.processList();
+                    result = processLstController.processList();
                 }
                 commandOutput = new SearchCache("ps", new StringBuilder(result));
                 break;

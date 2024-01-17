@@ -7,7 +7,7 @@ import org.beryx.textio.TextTerminal;
 import zos.shell.configuration.model.Profile;
 import zos.shell.configuration.record.ConfigSettings;
 import zos.shell.constants.Constants;
-import zos.shell.service.change.ChangeWindowService;
+import zos.shell.service.change.ChangeWinService;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 
@@ -26,7 +26,7 @@ public class ConfigSingleton {
     private final List<ZosConnection> zosConnections = new ArrayList<>();
     private final List<SshConnection> shhConnections = new ArrayList<>();
     private ConfigSettings configSettings;
-    private ChangeWindowService windowCmd;
+    private ChangeWinService windowCmd;
 
     private static class Holder {
         private static final ConfigSingleton instance = new ConfigSingleton();
@@ -89,7 +89,7 @@ public class ConfigSingleton {
     public void updateWindowSittings(final TextTerminal<?> terminal) {
         final var str = new StringBuilder();
         if (windowCmd == null) {
-            windowCmd = new ChangeWindowService(terminal);
+            windowCmd = new ChangeWinService(terminal);
         }
         final var configSettings = ConfigSingleton.getInstance().getConfigSettings();
         final var window = configSettings.getWindow();

@@ -5,8 +5,8 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.service.change.ChangeConnectionService;
-import zos.shell.service.change.ChangeWindowService;
+import zos.shell.service.change.ChangeConnService;
+import zos.shell.service.change.ChangeWinService;
 import zos.shell.service.dsn.delete.DeleteService;
 import zos.shell.service.dsn.download.DownloadDsnService;
 import zos.shell.service.dsn.list.ListingService;
@@ -41,19 +41,19 @@ public class Commands {
 
     public ZosConnection changeZosConnection(final ZosConnection connection, final String[] commands) {
         LOG.debug("*** changeZosConnection ***");
-        final var changeConn = new ChangeConnectionService(terminal);
+        final var changeConn = new ChangeConnService(terminal);
         return changeConn.changeZosConnection(connection, commands);
     }
 
     public SshConnection changeSshConnection(final SshConnection connection, final String[] commands) {
         LOG.debug("*** changeSshConnection ***");
-        final var changeConn = new ChangeConnectionService(terminal);
+        final var changeConn = new ChangeConnService(terminal);
         return changeConn.changeSshConnection(connection, commands);
     }
 
     public void color(final String arg, final String agr2) {
         LOG.debug("*** color ***");
-        final var color = new ChangeWindowService(terminal);
+        final var color = new ChangeWinService(terminal);
         final var str = new StringBuilder();
         String result;
         result = color.setTextColor(arg);
@@ -65,7 +65,7 @@ public class Commands {
 
     public void displayConnections() {
         LOG.debug("*** displayConnections ***");
-        new ChangeConnectionService(terminal).displayConnections();
+        new ChangeConnService(terminal).displayConnections();
     }
 
     public void downloadDsn(final ZosConnection connection, final String dataset,

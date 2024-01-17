@@ -3,15 +3,15 @@ package zos.shell.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.response.ResponseStatus;
-import zos.shell.service.job.processlst.ProcessListingService;
+import zos.shell.service.job.processlst.ProcessLstService;
 
-public class ProcessListingController {
+public class ProcessLstController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ProcessListingController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProcessLstController.class);
 
-    private final ProcessListingService processListingService;
+    private final ProcessLstService processListingService;
 
-    public ProcessListingController(final ProcessListingService processListingService) {
+    public ProcessLstController(final ProcessLstService processListingService) {
         this.processListingService = processListingService;
     }
 

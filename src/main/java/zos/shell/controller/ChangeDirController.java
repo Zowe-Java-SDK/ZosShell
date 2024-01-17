@@ -3,15 +3,15 @@ package zos.shell.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.response.ResponseStatus;
-import zos.shell.service.change.ChangeDirectoryService;
+import zos.shell.service.change.ChangeDirService;
 
 public class ChangeDirController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChangeDirController.class);
 
-    private final ChangeDirectoryService changeDirService;
+    private final ChangeDirService changeDirService;
 
-    public ChangeDirController(final ChangeDirectoryService changeDirService) {
+    public ChangeDirController(final ChangeDirService changeDirService) {
         LOG.debug("*** ChangeDirController ***");
         this.changeDirService = changeDirService;
     }

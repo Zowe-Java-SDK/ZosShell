@@ -11,14 +11,14 @@ import zowe.client.sdk.core.ZosConnection;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ChangeConnectionService {
+public class ChangeConnService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChangeConnectionService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChangeConnService.class);
 
     private final TextTerminal<?> terminal;
     private final ConfigSingleton configSingleton = ConfigSingleton.getInstance();
 
-    public ChangeConnectionService(final TextTerminal<?> terminal) {
+    public ChangeConnService(final TextTerminal<?> terminal) {
         LOG.debug("*** ChangeConnectionService ***");
         this.terminal = terminal;
     }
