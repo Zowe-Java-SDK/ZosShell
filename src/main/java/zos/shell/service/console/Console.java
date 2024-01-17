@@ -37,8 +37,8 @@ public class Console {
         ConsoleResponse consoleResponse;
         final var params = new IssueConsoleParams(command);
         final var configSettings = ConfigSingleton.getInstance().getConfigSettings();
-        final var consoleName = Optional.ofNullable(configSettings != null && configSettings.getConsoleName() != null ?
-                configSettings.getConsoleName() : null);
+        final var consoleName = Optional.ofNullable(configSettings != null && configSettings.getConsoleName() != null
+                && !configSettings.getConsoleName().isBlank() ? configSettings.getConsoleName() : null);
         try {
             consoleResponse = consoleName.isPresent() ? execute(consoleName.get(), params) : execute(params);
         } catch (ZosmfRequestException e) {
