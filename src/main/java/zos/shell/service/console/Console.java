@@ -36,6 +36,7 @@ public class Console {
 
         ConsoleResponse consoleResponse;
         final var params = new IssueConsoleParams(command);
+        params.setProcessResponse(true);
         final var configSettings = ConfigSingleton.getInstance().getConfigSettings();
         final var consoleName = Optional.ofNullable(configSettings != null && configSettings.getConsoleName() != null
                 && !configSettings.getConsoleName().isBlank() ? configSettings.getConsoleName() : null);
