@@ -548,7 +548,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(1, params)) {
                     return;
                 }
-                commandOutput = commands.env();
+                var envVariableService = new EnvVariableService();
+                var envVariableController = new EnvVariableController(envVariableService);
+                String envResult = envVariableController.env();
+                terminal.println(envResult);
+                commandOutput = new SearchCache("env", new StringBuilder(envResult));
                 break;
             case "files":
                 if (isParamsExceeded(1, params)) {
@@ -793,8 +797,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                param = params[1];
-                commands.set(param);
+                envVariableService = new EnvVariableService();
+                envVariableController = new EnvVariableController(envVariableService);
+                String setResult = envVariableController.set(params[1]);
+                terminal.println(setResult);
                 break;
             case "stop":
                 if (isParamsMissing(1, params)) {
@@ -874,7 +880,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                String acctNum = EnvVariableService.getInstance().getValueByKeyName("ACCTNUM");
+                envVariableService = new EnvVariableService();
+                envVariableController = new EnvVariableController(envVariableService);
+                String acctNum = envVariableController.getValueByEnv("ACCTNUM");
                 StringBuilder tsoCommandCandidate = getCommandFromParams(params);
                 long tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {

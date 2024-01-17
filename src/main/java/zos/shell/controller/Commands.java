@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.dsn.makedir.MakeDirectoryService;
-import zos.shell.service.env.EnvVariableService;
 import zos.shell.service.localfile.LocalFileService;
 import zos.shell.service.search.SearchCache;
 import zos.shell.service.search.SearchCacheService;
@@ -15,8 +14,6 @@ import zos.shell.utility.StrUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosfiles.dsn.input.CreateParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
-
-import java.util.TreeMap;
 
 public class Commands {
 
@@ -28,21 +25,6 @@ public class Commands {
     public Commands(final TextTerminal<?> terminal) {
         LOG.debug("*** Commands ***");
         this.terminal = terminal;
-    }
-
-    public SearchCache env() {
-        LOG.debug("*** env ***");
-        final var env = EnvVariableService.getInstance();
-        if (env.getVariables().isEmpty()) {
-            terminal.println("no environment variables set, try again...");
-        }
-        final var str = new StringBuilder();
-        new TreeMap<>(env.getVariables()).forEach((k, v) -> {
-            final var value = k + "=" + v;
-            str.append(value).append("\n");
-            terminal.println(value);
-        });
-        return new SearchCache("env", str);
     }
 
     public SearchCache files(String dataset) {
@@ -189,17 +171,6 @@ public class Commands {
         LOG.debug("*** search ***");
         final var search = new SearchCacheService(terminal);
         search.search(output, text);
-    }
-
-    public void set(final String param) {
-        LOG.debug("*** set ***");
-        final var values = param.split("=");
-        if (values.length != 2) {
-            terminal.println(Constants.INVALID_COMMAND);
-            return;
-        }
-        EnvVariableService.getInstance().setVariable(values[0], values[1]);
-        terminal.println(values[0] + "=" + values[1]);
     }
 
 }
