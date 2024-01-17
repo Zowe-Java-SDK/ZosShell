@@ -415,7 +415,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 currConnection = commands.changeZosConnection(currConnection, params);
                 currSshConnection = commands.changeSshConnection(currSshConnection, params);
-                terminal.println("Connected to " + currConnection.getHost() + " with user " + currConnection.getUser() + ".");
+                var msg = "Connected to " + currConnection.getHost() + " with user " + currConnection.getUser() + ".";
+                terminal.println(msg);
                 mainTerminal.setPaneTitle(Constants.APP_TITLE + " - " + currConnection.getHost().toUpperCase());
                 break;
             case "clear":
