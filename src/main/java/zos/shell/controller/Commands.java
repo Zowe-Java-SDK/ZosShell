@@ -17,7 +17,6 @@ import zos.shell.service.dsn.list.ListingService;
 import zos.shell.service.dsn.makedir.MakeDirectoryService;
 import zos.shell.service.env.EnvVariableService;
 import zos.shell.service.job.browse.BrowseLogService;
-import zos.shell.service.job.download.DownloadJobService;
 import zos.shell.service.job.tail.TailService;
 import zos.shell.service.localfile.LocalFileService;
 import zos.shell.service.search.SearchCache;
@@ -119,13 +118,6 @@ public class Commands {
         if (results.size() == 1 && !results.get(0).isStatus()) {
             terminal.println("cannot download " + target + ", try again...");
         }
-    }
-
-    public void downloadJob(final ZosConnection connection, final String target, boolean isAll) {
-        LOG.debug("*** downloadJob ***");
-        final var downloadJobCmd = new DownloadJobService(new JobGet(connection), isAll, timeout);
-        final var responseStatus = downloadJobCmd.download(target);
-        terminal.println(responseStatus.getMessage());
     }
 
     public SearchCache env() {

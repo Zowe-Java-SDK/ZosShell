@@ -26,6 +26,7 @@ import zos.shell.service.env.EnvVariableService;
 import zos.shell.service.grep.GrepService;
 import zos.shell.service.help.HelpService;
 import zos.shell.service.history.HistoryService;
+import zos.shell.service.job.download.DownloadJobService;
 import zos.shell.service.job.processlst.ProcessListingService;
 import zos.shell.service.job.purge.PurgeService;
 import zos.shell.service.job.submit.SubmitService;
@@ -488,7 +489,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     }
                     isAll = true;
                 }
-                commands.downloadJob(currConnection, param, isAll);
+                var jobGet = new JobGet(currConnection);
+                var downloadJobService = new DownloadJobService(jobGet, isAll, timeout);
+                var downloadJobController = new DownloadJobController(downloadJobService);
+                String downloadJobResult = downloadJobController.downloadJob(param);
+                terminal.println(downloadJobResult);
                 break;
             case "end":
                 if (isParamsExceeded(1, params)) {
@@ -669,7 +674,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 var jobDelete = new JobDelete(currConnection);
-                var jobGet = new JobGet(currConnection);
+                jobGet = new JobGet(currConnection);
                 var purgeService = new PurgeService(jobDelete, jobGet, timeout);
                 var purgeController = new PurgeController(purgeService);
                 String purgeResult = purgeController.purge(params[1].toUpperCase());
