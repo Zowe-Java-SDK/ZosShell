@@ -11,7 +11,7 @@ public class ChangeWinService {
     private final TextTerminal<?> terminal;
 
     public ChangeWinService(final TextTerminal<?> terminal) {
-        LOG.debug("*** ChangeWindowService ***");
+        LOG.debug("*** ChangeWinService ***");
         this.terminal = terminal;
     }
 

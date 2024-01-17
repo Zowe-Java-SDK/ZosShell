@@ -19,7 +19,7 @@ public class ChangeConnService {
     private final ConfigSingleton configSingleton = ConfigSingleton.getInstance();
 
     public ChangeConnService(final TextTerminal<?> terminal) {
-        LOG.debug("*** ChangeConnectionService ***");
+        LOG.debug("*** ChangeConnService ***");
         this.terminal = terminal;
     }
 

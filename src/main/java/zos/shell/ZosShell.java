@@ -17,6 +17,7 @@ import zos.shell.controller.*;
 import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.autocomplete.SearchCommandService;
+import zos.shell.service.change.ChangeConnService;
 import zos.shell.service.change.ChangeDirService;
 import zos.shell.service.console.ConsoleService;
 import zos.shell.service.dsn.concat.ConcatService;
@@ -414,8 +415,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                currConnection = commands.changeZosConnection(currConnection, params);
-                currSshConnection = commands.changeSshConnection(currSshConnection, params);
+                var changeConnService = new ChangeConnService(terminal);
+                var changeConnController = new ChangeConnController(changeConnService);
+                currConnection = changeConnController.changeZosConnection(currConnection, params);
+                currSshConnection = changeConnController.changeSshConnection(currSshConnection, params);
                 var msg = "Connected to " + currConnection.getHost() + " with user " + currConnection.getUser() + ".";
                 terminal.println(msg);
                 mainTerminal.setPaneTitle(Constants.APP_TITLE + " - " + currConnection.getHost().toUpperCase());
@@ -447,7 +450,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(1, params)) {
                     return;
                 }
-                commands.displayConnections();
+                changeConnService = new ChangeConnService(terminal);
+                changeConnController = new ChangeConnController(changeConnService);
+                changeConnController.displayConnections();
                 break;
             case "cp":
             case "copy":

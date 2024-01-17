@@ -5,7 +5,6 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.service.change.ChangeConnService;
 import zos.shell.service.change.ChangeWinService;
 import zos.shell.service.dsn.list.ListingService;
 import zos.shell.service.dsn.makedir.MakeDirectoryService;
@@ -16,7 +15,6 @@ import zos.shell.service.search.SearchCacheService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
 import zos.shell.utility.StrUtil;
-import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.input.CreateParams;
@@ -37,18 +35,6 @@ public class Commands {
         this.terminal = terminal;
     }
 
-    public ZosConnection changeZosConnection(final ZosConnection connection, final String[] commands) {
-        LOG.debug("*** changeZosConnection ***");
-        final var changeConn = new ChangeConnService(terminal);
-        return changeConn.changeZosConnection(connection, commands);
-    }
-
-    public SshConnection changeSshConnection(final SshConnection connection, final String[] commands) {
-        LOG.debug("*** changeSshConnection ***");
-        final var changeConn = new ChangeConnService(terminal);
-        return changeConn.changeSshConnection(connection, commands);
-    }
-
     public void color(final String arg, final String agr2) {
         LOG.debug("*** color ***");
         final var color = new ChangeWinService(terminal);
@@ -59,11 +45,6 @@ public class Commands {
         result = color.setBackGroundColor(agr2);
         str.append(result != null ? result : "");
         terminal.println(str.toString());
-    }
-
-    public void displayConnections() {
-        LOG.debug("*** displayConnections ***");
-        new ChangeConnService(terminal).displayConnections();
     }
 
     public SearchCache env() {

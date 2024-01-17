@@ -21,7 +21,7 @@ public class ChangeDirService {
     private final ListParams params = new ListParams.Builder().build();
 
     public ChangeDirService(final DsnList dsnList) {
-        LOG.debug("*** ChangeDirectoryService ***");
+        LOG.debug("*** ChangeDirService ***");
         this.dsnList = dsnList;
     }
 
