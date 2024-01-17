@@ -54,8 +54,10 @@ import zowe.client.sdk.zostso.method.IssueTso;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
@@ -86,7 +88,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         setTerminalProperties();
         mainTextIO = new TextIO(mainTerminal);
         try {
-            ConfigSingleton configSingleton = ConfigSingleton.getInstance();
+            var configSingleton = ConfigSingleton.getInstance();
             configSingleton.readConfig();
             currConnection = configSingleton.getZosConnectionByIndex(0);
             currSshConnection = configSingleton.getSshConnectionByIndex(0);
@@ -112,9 +114,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         }
         mainTerminal.setPaneTitle(Constants.APP_TITLE + title);
 
-        final var iconURL = ZosShell.class.getResource("/image/zowe-icon.png");
+        URL iconURL = ZosShell.class.getResource("/image/zowe-icon.png");
         if (iconURL != null) {
-            final var icon = new ImageIcon(iconURL);
+            var icon = new ImageIcon(iconURL);
             mainTerminal.getFrame().setIconImage(icon.getImage());
         }
 
@@ -166,13 +168,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             if (disableKeys) {
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
-            final var items = mainTerminal.getTextPane().getText().split(PromptUtil.getPrompt());
+            String[] items = mainTerminal.getTextPane().getText().split(PromptUtil.getPrompt());
             var candidateStr = items[items.length - 1].trim();
             candidateStr = candidateStr.replaceAll("[\\p{Cf}]", "");
             if (candidateStr.contains(" ")) {  // invalid look up
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
-            final var candidateLst = searchCommandService.search(candidateStr);
+            List<String> candidateLst = searchCommandService.search(candidateStr);
             if (!candidateLst.isEmpty()) {
                 mainTerminal.moveToLineStart();
                 if (candidateLst.size() == 1) {
@@ -275,9 +277,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static String[] removePrompt(String[] command) {
         LOG.debug("*** removePrompt ***");
         if (Constants.DEFAULT_PROMPT.equals(command[0])) {
-            final var size = command.length;
-            final var newCmdArr = new String[size - 1];
-            final var newCmdLst = new ArrayList<>(Arrays.asList(command).subList(1, size));
+            int size = command.length;
+            String[] newCmdArr = new String[size - 1];
+            List<String> newCmdLst = new ArrayList<>(Arrays.asList(command).subList(1, size));
             for (var i = 0; i < newCmdLst.size(); i++) {
                 newCmdArr[i] = newCmdLst.get(i);
             }
@@ -289,7 +291,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private String[] exclamationMark(String[] command) {
         LOG.debug("*** exclamationMark ***");
         if (command[0].startsWith("!")) {
-            final var str = new StringBuilder();
+            var str = new StringBuilder();
             for (var i = 0; i < command.length; i++) {
                 str.append(command[i]);
                 if (i + 1 != command.length) {
@@ -297,14 +299,14 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
             }
 
-            final var cmd = str.toString();
+            var cmd = str.toString();
             if (cmd.length() == 1) {
                 terminal.println(Constants.MISSING_PARAMETERS);
                 return null;
             }
 
-            final var subStr = cmd.substring(1);
-            final var isStrNum = StrUtil.isStrNum(subStr);
+            var subStr = cmd.substring(1);
+            boolean isStrNum = StrUtil.isStrNum(subStr);
 
             String newCmd;
             if ("!".equals(subStr)) {
@@ -326,7 +328,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         if (params.length == 0) {
             return;
         }
-        final var command = params[0];
+        var command = params[0];
         String param;
         history.addHistory(params);
 
@@ -575,15 +577,15 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 3 && ("-l".equals(params[1]) || "--l".equals(params[1]))) {
-                    final var isAttributes = !"--l".equals(params[1]);
-                    final var value = params[2];
-                    final var size = params[2].length();
+                    boolean isAttributes = !"--l".equals(params[1]);
+                    var value = params[2];
+                    int size = params[2].length();
                     if (size <= 9 && value.charAt(size - 1) == '*') {  // is member with wild card specified...
                         if (isCurrDataSetNotSpecified()) {
                             return;
                         }
-                        final var index = value.indexOf("*");
-                        final var member = value.substring(0, index);
+                        int index = value.indexOf("*");
+                        var member = value.substring(0, index);
                         if (DsnUtil.isMember(member)) {  // validate member value without wild card char...
                             commands.lsl(currConnection, value, currDataSet, isAttributes);
                         } else {
@@ -608,7 +610,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     if (isCurrDataSetNotSpecified()) {
                         return;
                     }
-                    final var isAttributes = !"--l".equals(params[1]);
+                    boolean isAttributes = !"--l".equals(params[1]);
                     commands.lsl(currConnection, currDataSet, isAttributes);
                     addVisited();
                     return;
@@ -621,9 +623,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 2 && (params[1].length() <= 9 && params[1].charAt(params[1].length() - 1) == '*')) {
-                    final var value = params[1];
-                    final var index = value.indexOf("*");
-                    final var member = value.substring(0, index);
+                    var value = params[1];
+                    int index = value.indexOf("*");
+                    var member = value.substring(0, index);
                     if (DsnUtil.isMember(member)) {
                         commands.ls(currConnection, value, currDataSet);
                         return;
@@ -656,8 +658,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                final var mvsCommandCandidate = getCommandFromParams(params);
-                final var mvsCommandCount = mvsCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
+                StringBuilder mvsCommandCandidate = getCommandFromParams(params);
+                long mvsCommandCount = mvsCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(mvsCommandCount, mvsCommandCandidate)) {
                     var consoleService = new ConsoleService(currConnection, timeout);
                     var consoleController = new ConsoleController(consoleService);
@@ -819,9 +821,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                final var acctNum = EnvVariableService.getInstance().getValueByKeyName("ACCTNUM");
-                final var tsoCommandCandidate = getCommandFromParams(params);
-                final var tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
+                String acctNum = EnvVariableService.getInstance().getValueByKeyName("ACCTNUM");
+                StringBuilder tsoCommandCandidate = getCommandFromParams(params);
+                long tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {
                     var issueTso = new IssueTso(currConnection);
                     var tsoService = new TsoService(issueTso, acctNum, timeout);
@@ -843,8 +845,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                final var ussCommandCandidate = getCommandFromParams(params);
-                final var ussCommandCount = ussCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
+                StringBuilder ussCommandCandidate = getCommandFromParams(params);
+                long ussCommandCount = ussCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(ussCommandCount, ussCommandCandidate)) {
                     var sshService = new SshService(currSshConnection);
                     var ussController = new UssController(sshService);
@@ -861,7 +863,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 for (final String key : dataSets.keySet()) {
-                    final var lst = dataSets.get(key);
+                    List<String> lst = dataSets.get(key);
                     lst.forEach(l -> terminal.println(
                             Strings.padStart(l.toUpperCase(), currDataSetMax, ' ') + Constants.ARROW + key));
                 }
@@ -904,7 +906,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private static StringBuilder getCommandFromParams(String[] params) {
         LOG.debug("*** getCommandFromParams ***");
-        final var command = new StringBuilder();
+        var command = new StringBuilder();
         for (var i = 1; i < params.length; i++) {
             command.append(params[i]);
             if (i != params.length - 1) {
