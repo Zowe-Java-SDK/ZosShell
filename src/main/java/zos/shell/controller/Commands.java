@@ -8,7 +8,6 @@ import zos.shell.constants.Constants;
 import zos.shell.service.change.ChangeConnectionService;
 import zos.shell.service.change.ChangeDirectoryService;
 import zos.shell.service.change.ChangeWindowService;
-import zos.shell.service.dsn.copy.CopyService;
 import zos.shell.service.dsn.delete.DeleteService;
 import zos.shell.service.dsn.download.DownloadDsnService;
 import zos.shell.service.dsn.list.ListingService;
@@ -68,12 +67,6 @@ public class Commands {
         result = color.setBackGroundColor(agr2);
         str.append(result != null ? result : "");
         terminal.println(str.toString());
-    }
-
-    public void copy(final ZosConnection connection, final String dataset, final String[] params) {
-        LOG.debug("*** copy ***");
-        final var copy = new CopyService(connection, timeout);
-        terminal.println(copy.copy(dataset, params).getMessage());
     }
 
     public void displayConnections() {

@@ -18,6 +18,7 @@ import zos.shell.record.DataSetMember;
 import zos.shell.service.autocomplete.SearchCommandService;
 import zos.shell.service.console.ConsoleService;
 import zos.shell.service.dsn.concat.ConcatService;
+import zos.shell.service.dsn.copy.CopyService;
 import zos.shell.service.dsn.count.CountService;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.service.dsn.edit.EditService;
@@ -445,7 +446,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
-                commands.copy(currConnection, currDataSet, params);
+                var copyService = new CopyService(currConnection, timeout);
+                var copyController = new CopyController(copyService);
+                String copyResult = copyController.copy(currDataSet, params);
+                terminal.println(copyResult);
                 break;
             case "count":
                 if (params.length == 1) {
