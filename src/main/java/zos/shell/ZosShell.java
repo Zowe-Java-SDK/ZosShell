@@ -22,6 +22,7 @@ import zos.shell.service.console.ConsoleService;
 import zos.shell.service.dsn.concat.ConcatService;
 import zos.shell.service.dsn.copy.CopyService;
 import zos.shell.service.dsn.count.CountService;
+import zos.shell.service.dsn.delete.DeleteService;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.service.dsn.edit.EditService;
 import zos.shell.service.dsn.save.SaveService;
@@ -717,9 +718,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 terminal.println(currDataSet);
                 break;
             case "rm":
-                // command parameter check is done before this call
-                param = params[1];
-                commands.rm(currConnection, currDataSet, param);
+                var deleteService = new DeleteService(currConnection, timeout);
+                var deleteController = new DeleteController(deleteService);
+                String deleteResult = deleteController.rm(currDataSet, params[1]);
+                terminal.println(deleteResult);
                 break;
             case "save":
                 if (isParamsMissing(1, params)) {

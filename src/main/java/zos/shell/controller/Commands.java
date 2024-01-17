@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.change.ChangeConnService;
 import zos.shell.service.change.ChangeWinService;
-import zos.shell.service.dsn.delete.DeleteService;
 import zos.shell.service.dsn.download.DownloadDsnService;
 import zos.shell.service.dsn.list.ListingService;
 import zos.shell.service.dsn.makedir.MakeDirectoryService;
@@ -274,13 +273,6 @@ public class Commands {
             }
         } while (StrUtil.isStrNum(input));
         return input;
-    }
-
-    public void rm(final ZosConnection connection, final String dataset, final String param) {
-        LOG.debug("*** rm ***");
-        final var delete = new DeleteService(connection, timeout);
-        final var responseStatus = delete.delete(dataset, param);
-        terminal.println(responseStatus.getMessage());
     }
 
     public void search(final SearchCache output, final String text) {
