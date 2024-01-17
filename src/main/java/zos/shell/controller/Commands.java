@@ -160,11 +160,6 @@ public class Commands {
         return new SearchCache("files", result);
     }
 
-    public SearchCache help() {
-        LOG.debug("*** help ***");
-        return HelpService.display(terminal);
-    }
-
     public void ls(final ZosConnection connection, final String member, final String dataset) {
         LOG.debug("*** ls 1 ***");
         final var listing = new ListingService(terminal, new DsnList(connection), timeout);

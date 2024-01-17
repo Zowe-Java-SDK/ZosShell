@@ -23,6 +23,7 @@ import zos.shell.service.dsn.save.SaveService;
 import zos.shell.service.dsn.touch.TouchService;
 import zos.shell.service.env.EnvVariableService;
 import zos.shell.service.grep.GrepService;
+import zos.shell.service.help.HelpService;
 import zos.shell.service.history.HistoryService;
 import zos.shell.service.job.processlst.ProcessListingService;
 import zos.shell.service.job.purge.PurgeService;
@@ -524,7 +525,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 1) {
-                    commandOutput = commands.help();
+                    commandOutput = HelpService.display(terminal);;
                 }
                 break;
             case "history":
