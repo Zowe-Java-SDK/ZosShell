@@ -5,7 +5,6 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.service.change.ChangeWinService;
 import zos.shell.service.dsn.makedir.MakeDirectoryService;
 import zos.shell.service.env.EnvVariableService;
 import zos.shell.service.localfile.LocalFileService;
@@ -29,18 +28,6 @@ public class Commands {
     public Commands(final TextTerminal<?> terminal) {
         LOG.debug("*** Commands ***");
         this.terminal = terminal;
-    }
-
-    public void color(final String arg, final String agr2) {
-        LOG.debug("*** color ***");
-        final var color = new ChangeWinService(terminal);
-        final var str = new StringBuilder();
-        String result;
-        result = color.setTextColor(arg);
-        str.append(result != null ? result + "\n" : "");
-        result = color.setBackGroundColor(agr2);
-        str.append(result != null ? result : "");
-        terminal.println(str.toString());
     }
 
     public SearchCache env() {

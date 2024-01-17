@@ -19,6 +19,7 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.service.autocomplete.SearchCommandService;
 import zos.shell.service.change.ChangeConnService;
 import zos.shell.service.change.ChangeDirService;
+import zos.shell.service.change.ChangeWinService;
 import zos.shell.service.console.ConsoleService;
 import zos.shell.service.dsn.concat.ConcatService;
 import zos.shell.service.dsn.copy.CopyService;
@@ -441,11 +442,15 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
+                var changeWinService = new ChangeWinService(terminal);
+                var changeWinController = new ChangeWinController(changeWinService);
+                String colorResult;
                 if (params.length == 3) {
-                    commands.color(params[1], params[2]);
+                    colorResult = changeWinController.changeColorSettings(params[1], params[2]);
                 } else {
-                    commands.color(params[1], null);
+                    colorResult = changeWinController.changeColorSettings(params[1], null);
                 }
+                terminal.println(colorResult);
                 break;
             case "connections":
                 if (isParamsExceeded(1, params)) {
