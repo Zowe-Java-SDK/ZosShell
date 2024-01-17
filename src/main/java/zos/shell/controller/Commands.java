@@ -41,14 +41,6 @@ public class Commands {
         this.terminal = terminal;
     }
 
-//    public SearchCache cat(final ZosConnection connection, final String dataset, final String target) {
-//        LOG.debug("*** cat ***");
-//        final var concatCmd = new ConcatService(new Download(new DsnGet(connection), false), timeout);
-//        final var data = concatCmd.cat(dataset, target).getMessage();
-//        terminal.println(data);
-//        return new SearchCache("cat", new StringBuilder(data));
-//    }
-
     public String cd(final ZosConnection connection, final String dataset, final String param) {
         LOG.debug("*** cd ***");
         return new ChangeDirectoryService(terminal, new DsnList(connection)).cd(dataset, param);
