@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.change.ChangeConnectionService;
-import zos.shell.service.change.ChangeDirectoryService;
 import zos.shell.service.change.ChangeWindowService;
 import zos.shell.service.dsn.delete.DeleteService;
 import zos.shell.service.dsn.download.DownloadDsnService;
@@ -38,11 +37,6 @@ public class Commands {
     public Commands(final TextTerminal<?> terminal) {
         LOG.debug("*** Commands ***");
         this.terminal = terminal;
-    }
-
-    public String cd(final ZosConnection connection, final String dataset, final String param) {
-        LOG.debug("*** cd ***");
-        return new ChangeDirectoryService(terminal, new DsnList(connection)).cd(dataset, param);
     }
 
     public ZosConnection changeZosConnection(final ZosConnection connection, final String[] commands) {

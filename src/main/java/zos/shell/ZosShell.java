@@ -15,7 +15,9 @@ import zos.shell.configuration.ConfigSingleton;
 import zos.shell.constants.Constants;
 import zos.shell.controller.*;
 import zos.shell.record.DataSetMember;
+import zos.shell.response.ResponseStatus;
 import zos.shell.service.autocomplete.SearchCommandService;
+import zos.shell.service.change.ChangeDirectoryService;
 import zos.shell.service.console.ConsoleService;
 import zos.shell.service.dsn.concat.ConcatService;
 import zos.shell.service.dsn.copy.CopyService;
@@ -387,14 +389,21 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                currDataSet = commands.cd(currConnection, currDataSet, params[1].toUpperCase());
+                var dsnList = new DsnList(currConnection);
+                var changeDirService = new ChangeDirectoryService(dsnList);
+                var changeDirController = new ChangeDirController(changeDirService);
+                ResponseStatus responseStatus = changeDirController.cd(currDataSet, params[1].toUpperCase());
+                if (responseStatus.isStatus()) {
+                    currDataSet = responseStatus.getOptionalData();
+                    terminal.println("set to " + currDataSet);
+                } else {
+                    terminal.println(responseStatus.getMessage());
+                    terminal.println("set to " + currDataSet);
+                }
                 if (currDataSet.length() > currDataSetMax) {
                     currDataSetMax = currDataSet.length();
                 }
                 addVisited();
-                if (!currDataSet.isBlank()) {
-                    terminal.println("set to " + currDataSet);
-                }
                 break;
             case "change":
                 if (isParamsMissing(1, params)) {
@@ -465,7 +474,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                var dsnList = new DsnList(currConnection);
+                dsnList = new DsnList(currConnection);
                 var countService = new CountService(dsnList, timeout);
                 var countController = new CountController(countService);
                 String countResult = countController.count(currDataSet, params[1]);

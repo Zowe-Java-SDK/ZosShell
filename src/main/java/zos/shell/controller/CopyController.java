@@ -18,10 +18,8 @@ public class CopyController {
 
     public String copy(final String dataset, final String[] params) {
         LOG.debug("*** copy ***");
-//        final var copy = new CopyService(connection, timeout);
         ResponseStatus responseStatus = copyService.copy(dataset, params);
         return responseStatus.getMessage();
-//        terminal.println(copy.copy(dataset, params).getMessage());
     }
 
 }
