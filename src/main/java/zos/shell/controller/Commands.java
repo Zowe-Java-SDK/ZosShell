@@ -10,14 +10,12 @@ import zos.shell.service.change.ChangeDirectoryService;
 import zos.shell.service.change.ChangeWindowService;
 import zos.shell.service.dsn.concat.ConcatService;
 import zos.shell.service.dsn.copy.CopyService;
-import zos.shell.service.dsn.count.CountService;
 import zos.shell.service.dsn.delete.DeleteService;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.service.dsn.download.DownloadDsnService;
 import zos.shell.service.dsn.list.ListingService;
 import zos.shell.service.dsn.makedir.MakeDirectoryService;
 import zos.shell.service.env.EnvVariableService;
-import zos.shell.service.help.HelpService;
 import zos.shell.service.job.browse.BrowseLogService;
 import zos.shell.service.job.download.DownloadJobService;
 import zos.shell.service.job.tail.TailService;
@@ -101,13 +99,6 @@ public class Commands {
         LOG.debug("*** copy ***");
         final var copy = new CopyService(connection, timeout);
         terminal.println(copy.copy(dataset, params).getMessage());
-    }
-
-    public void count(final ZosConnection connection, final String dataset, final String filter) {
-        LOG.debug("*** count ***");
-        final var countcmd = new CountService(new DsnList(connection), timeout);
-        final var responseStatus = countcmd.count(dataset, filter);
-        terminal.println(responseStatus.getMessage());
     }
 
     public void displayConnections() {

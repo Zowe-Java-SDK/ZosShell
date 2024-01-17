@@ -17,6 +17,7 @@ import zos.shell.controller.*;
 import zos.shell.record.DataSetMember;
 import zos.shell.service.autocomplete.SearchCommandService;
 import zos.shell.service.console.ConsoleService;
+import zos.shell.service.dsn.count.CountService;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.service.dsn.edit.EditService;
 import zos.shell.service.dsn.save.SaveService;
@@ -444,8 +445,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                param = params[1];
-                commands.count(currConnection, currDataSet, param);
+                var dsnList = new DsnList(currConnection);
+                var countService = new CountService(dsnList, timeout);
+                var countController = new CountController(countService);
+                String countResult = countController.count(currDataSet, params[1]);
+                terminal.println(countResult);
                 break;
             case "d":
             case "download":
@@ -525,7 +529,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 1) {
-                    commandOutput = HelpService.display(terminal);;
+                    commandOutput = HelpService.display(terminal);
+                    ;
                 }
                 break;
             case "history":
@@ -777,7 +782,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 var dsnWrite = new DsnWrite(currConnection);
-                var dsnList = new DsnList(currConnection);
+                dsnList = new DsnList(currConnection);
                 var touchService = new TouchService(dsnWrite, dsnList, timeout);
                 var touchController = new TouchController(touchService);
                 String touchResult = touchController.touch(currDataSet, params[1]);
