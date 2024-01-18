@@ -81,7 +81,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static SshConnection currSshConnection;
     private static ZosConnection currConnection;
     private static TextTerminal<?> terminal;
-    private static Commands commands;
     private static HistoryService history;
     private static SearchCache commandOutput;
     private static final SwingTextTerminal mainTerminal = new SwingTextTerminal();
@@ -205,7 +204,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         terminal = textIO.getTextTerminal();
         terminal.setBookmark("top");
         ConfigSingleton.getInstance().updateWindowSittings(terminal);
-        commands = new Commands(terminal);
         history = new HistoryService(terminal);
         if (currConnection == null) {
             terminal.println(Constants.NO_CONNECTIONS);
