@@ -46,6 +46,7 @@ import zos.shell.service.job.terminate.TerminateService;
 import zos.shell.service.localfile.LocalFileService;
 import zos.shell.service.omvs.SshService;
 import zos.shell.service.search.SearchCache;
+import zos.shell.service.search.SearchCacheService;
 import zos.shell.service.tso.TsoService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.PromptUtil;
@@ -797,7 +798,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                commands.search(commandOutput, params[1]);
+                var searchCacheService = new SearchCacheService();
+                var searchCacheController = new SearchCacheController(searchCacheService);
+                searchCacheController.search(commandOutput, params[1]).forEach(terminal::println);
                 break;
             case "set":
                 if (isParamsMissing(1, params)) {
