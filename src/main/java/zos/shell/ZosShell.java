@@ -337,8 +337,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         if (params.length == 0) {
             return;
         }
+        ResponseStatus responseStatus;
         String command = params[0];
-//        String param;
         history.addHistory(params);
 
         switch (command.toLowerCase()) {
@@ -399,7 +399,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 var dsnList = new DsnList(currConnection);
                 var changeDirService = new ChangeDirService(dsnList);
                 var changeDirController = new ChangeDirController(changeDirService);
-                ResponseStatus responseStatus = changeDirController.cd(currDataSet, params[1].toUpperCase());
+                responseStatus = changeDirController.cd(currDataSet, params[1].toUpperCase());
                 if (responseStatus.isStatus()) {
                     currDataSet = responseStatus.getOptionalData();
                     terminal.println("set to " + currDataSet);
