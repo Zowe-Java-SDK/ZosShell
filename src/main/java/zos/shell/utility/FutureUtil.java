@@ -21,8 +21,8 @@ public final class FutureUtil {
         } catch (InterruptedException | ExecutionException e) {
             LOG.debug("error: " + e);
             future.cancel(true);
-            final var isErrMsg = e.getMessage() != null && !e.getMessage().isBlank();
-            final var errMsg = isErrMsg ? e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG;
+            boolean isErrMsg = e.getMessage() != null && !e.getMessage().isBlank();
+            var errMsg = isErrMsg ? e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG;
             return new ResponseStatus(errMsg, false);
         } catch (TimeoutException e) {
             future.cancel(true);
@@ -36,19 +36,19 @@ public final class FutureUtil {
                                                     final ExecutorService pool, final long timeout,
                                                     final int padLength) {
         LOG.debug("*** getFutureResponses ***");
-        final var results = new StringBuilder();
+        var results = new StringBuilder();
         futures.forEach(future -> {
             ResponseStatus responseStatus;
             try {
                 responseStatus = future.get(timeout, TimeUnit.SECONDS);
-                final var arrowMsg = Strings.padStart(responseStatus.getOptionalData(),
-                        padLength, ' ') + Constants.ARROW;
+                var arrowMsg = Strings.padStart(responseStatus.getOptionalData(), padLength, ' ');
+                arrowMsg += Constants.ARROW;
                 results.append(arrowMsg).append(responseStatus.getMessage()).append("\n");
             } catch (InterruptedException | ExecutionException e) {
                 LOG.debug("error: " + e);
                 future.cancel(true);
-                final var isErrMsg = e.getMessage() != null && !e.getMessage().isBlank();
-                final var errMsg = isErrMsg ? e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG;
+                var isErrMsg = e.getMessage() != null && !e.getMessage().isBlank();
+                var errMsg = isErrMsg ? e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG;
                 results.append(errMsg).append("\n");
             } catch (TimeoutException e) {
                 future.cancel(true);

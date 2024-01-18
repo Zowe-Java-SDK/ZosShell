@@ -36,7 +36,7 @@ public class ChangeWinService {
 
     public String setBold(boolean value) {
         LOG.debug("*** setBold ***");
-        final var tp = terminal.getProperties();
+        var tp = terminal.getProperties();
         tp.put("prompt.bold", value);
         tp.put("input.bold", value);
         if (value) {
@@ -48,7 +48,7 @@ public class ChangeWinService {
     public String setFontSize(final String size) {
         LOG.debug("*** setFontSize ***");
         if (size != null) {
-            final var tp = terminal.getProperties();
+            var tp = terminal.getProperties();
             tp.put("prompt.font.size", Integer.valueOf(size));
             tp.put("input.font.size", Integer.valueOf(size));
             return "increased font size to " + size;

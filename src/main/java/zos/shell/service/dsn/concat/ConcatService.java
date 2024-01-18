@@ -8,7 +8,9 @@ import zos.shell.service.dsn.download.Download;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.FutureUtil;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ConcatService {
 
@@ -28,8 +30,8 @@ public class ConcatService {
         if (DsnUtil.isMember(target) && !DsnUtil.isDataSet(dataset)) {
             return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
         }
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureConcat(download, dataset, target));
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        Future<ResponseStatus> submit = pool.submit(new FutureConcat(download, dataset, target));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

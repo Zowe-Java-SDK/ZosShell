@@ -23,9 +23,9 @@ public class EnvVariableController {
         if (envVariableService.getEnvVariables().isEmpty()) {
             return "no environment variables set, try again...";
         }
-        final var str = new StringBuilder();
+        var str = new StringBuilder();
         new TreeMap<>(envVariableService.getEnvVariables()).forEach((k, v) -> {
-            final var value = k + "=" + v;
+            var value = k + "=" + v;
             str.append(value).append("\n");
         });
         return str.toString();
@@ -33,7 +33,7 @@ public class EnvVariableController {
 
     public String set(final String key_value) {
         LOG.debug("*** set ***");
-        final var values = key_value.split("=");
+        var values = key_value.split("=");
         if (values.length != 2) {
             return Constants.INVALID_COMMAND;
         }

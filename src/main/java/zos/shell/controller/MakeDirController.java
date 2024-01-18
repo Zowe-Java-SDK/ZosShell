@@ -108,7 +108,7 @@ public class MakeDirController {
             createParamsBuilder.volser(input);
         }
         createParamsBuilder.alcunit("CYL");
-        final var createParams = createParamsBuilder.build();
+        var createParams = createParamsBuilder.build();
         target = target.toUpperCase();
         while (true) {
             input = getMakeDirStr(mainTextIO, "Create " + target + " (y/n)?:");

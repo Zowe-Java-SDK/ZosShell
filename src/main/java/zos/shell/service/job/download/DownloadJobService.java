@@ -7,7 +7,9 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class DownloadJobService {
 
@@ -26,8 +28,8 @@ public class DownloadJobService {
 
     public ResponseStatus download(final String target) {
         LOG.debug("*** download ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureDownloadJob(retrieve, target, this.isAll, this.timeout));
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        Future<ResponseStatus> submit = pool.submit(new FutureDownloadJob(retrieve, target, this.isAll, this.timeout));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

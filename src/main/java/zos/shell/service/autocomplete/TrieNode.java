@@ -28,7 +28,7 @@ public class TrieNode {
     }
 
     public void addCommand(String command) {
-        final var limit = command.length();
+        int limit = command.length();
         var node = this;
         int letter, index;
 
@@ -57,8 +57,8 @@ public class TrieNode {
     }
 
     public List<String> FindAndRetrieveCommands() {
-        final var cmds = new ArrayList<String>();
-        final var node = this;
+        List<String> cmds = new ArrayList<>();
+        var node = this;
 
         if (node.isCmd()) {
             cmds.add(node.getCommand());
@@ -77,8 +77,8 @@ public class TrieNode {
 
     private String getCommand() {
         var node = this;
-        final var buffer = new char[BUFFER_SIZE];
-        final var result = new StringBuilder();
+        var buffer = new char[BUFFER_SIZE];
+        var result = new StringBuilder();
         String value;
 
         var i = 0;
@@ -95,7 +95,7 @@ public class TrieNode {
     }
 
     public TrieNode getNode(int index) {
-        final var node = this;
+        var node = this;
 
         if (node.children[index] != null) {
             return node.children[index];
@@ -111,8 +111,8 @@ public class TrieNode {
      * return a list of those commands.
      */
     public List<String> getCommands() {
-        final var node = this;
-        final var cmds = new ArrayList<String>();
+        var node = this;
+        List<String> cmds = new ArrayList<>();
 
         for (var i = 0; i < ALPHABET_SIZE; i++) {
             if (node.children[i] != null) {

@@ -74,7 +74,7 @@ public class HelpService {
 
     public static SearchCache display(TextTerminal<?> terminal) {
         LOG.debug("*** display ***");
-        final var str = new StringBuilder();
+        var str = new StringBuilder();
         HELP.forEach(item -> {
             str.append(item).append("\n");
             terminal.println(item);

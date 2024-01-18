@@ -30,7 +30,7 @@ public class ChangeConnService {
             terminal.println(Constants.NO_CONNECTION);
             return zosConnection;
         }
-        final var profile = configSingleton.getProfileByIndex(index);
+        var profile = configSingleton.getProfileByIndex(index);
         ConfigSingleton.getInstance().setConfigSettings(new ConfigSettings(profile.getDownloadpath(),
                 profile.getConsolename(), profile.getWindow()));
         ConfigSingleton.getInstance().updateWindowSittings(terminal);
@@ -48,7 +48,7 @@ public class ChangeConnService {
 
     public void displayConnections() {
         LOG.debug("*** displayConnections ***");
-        final var i = new AtomicInteger(1);
+        var i = new AtomicInteger(1);
         configSingleton.getZosConnections().forEach(c -> terminal.println(i.getAndIncrement() + " " + "hostname: " +
                 c.getHost() + ", port: " + c.getZosmfPort() + ", user: " + c.getUser()));
         if (configSingleton.getZosConnections().isEmpty()) {

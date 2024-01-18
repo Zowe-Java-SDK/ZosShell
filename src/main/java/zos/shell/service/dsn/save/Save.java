@@ -32,7 +32,7 @@ public class Save {
             return new ResponseStatus(Constants.OS_ERROR, false);
         }
 
-        final var isSequentialDataset = DsnUtil.isDataSet(target);
+        boolean isSequentialDataset = DsnUtil.isDataSet(target);
         PathService pathService;
         if (isSequentialDataset) {
             pathService = new PathService(target);
@@ -40,8 +40,8 @@ public class Save {
             pathService = new PathService(dataset, target);
         }
 
-        try (final var br = new BufferedReader(new FileReader(pathService.getPathWithFile()))) {
-            final var sb = new StringBuilder();
+        try (var br = new BufferedReader(new FileReader(pathService.getPathWithFile()))) {
+            var sb = new StringBuilder();
             var line = br.readLine();
 
             while (line != null) {
@@ -49,7 +49,7 @@ public class Save {
                 sb.append(System.lineSeparator());
                 line = br.readLine();
             }
-            final var content = sb.toString().replaceAll("(\\r)", "");
+            var content = sb.toString().replaceAll("(\\r)", "");
 
             if (isSequentialDataset) {
                 dsnWrite.write(target, content);
@@ -57,7 +57,7 @@ public class Save {
                 dsnWrite.write(dataset, target, content);
             }
         } catch (ZosmfRequestException e) {
-            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+            var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         } catch (IOException e) {
             return new ResponseStatus(e.getMessage(), false);

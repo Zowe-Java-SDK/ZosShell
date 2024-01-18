@@ -26,16 +26,16 @@ public class DataSetMember {
 
     public static DataSetMember getDatasetAndMember(final String target) {
         LOG.debug("*** getMemberFromDataSet ***");
-        final var index = target.indexOf("(");
+        int index = target.indexOf("(");
         if (index == -1) {
             return null;
         }
-        final var dataset = target.substring(0, index);
+        var dataset = target.substring(0, index);
         if (!DsnUtil.isDataSet(dataset)) {
             return null;
         }
 
-        final var member = target.substring(index + 1, target.length() - 1);
+        var member = target.substring(index + 1, target.length() - 1);
         if (!DsnUtil.isMember(member)) {
             return null;
         }

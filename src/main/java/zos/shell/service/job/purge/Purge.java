@@ -89,8 +89,7 @@ public class Purge {
         try {
             delete.deleteCommon(new ModifyJobParams.Builder(
                     job.getJobName().get(), job.getJobId().get()).version("1.0").build());
-            final var msg = "Job Name: " + job.getJobName().get() + ", Job Id: " + job.getJobId().get() +
-                    " purged successfully...";
+            var msg = "Job Name: " + job.getJobName().get() + ", Job Id: " + job.getJobId().get() + " purged successfully...";
             return new ResponseStatus(msg, true);
         } catch (ZosmfRequestException e) {
             final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());

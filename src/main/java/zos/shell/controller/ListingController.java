@@ -23,7 +23,7 @@ public class ListingController {
         try {
             listingService.ls(member, dataset, true, false);
         } catch (ZosmfRequestException e) {
-            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+            var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus(errMsg != null ? errMsg : e.getMessage(), false);
         }
         return new ResponseStatus("success", true);
@@ -34,7 +34,7 @@ public class ListingController {
         try {
             listingService.ls(null, dataset, true, false);
         } catch (ZosmfRequestException e) {
-            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+            var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus(errMsg != null ? errMsg : e.getMessage(), false);
         }
         return new ResponseStatus("success", true);
@@ -50,7 +50,7 @@ public class ListingController {
         try {
             listingService.ls(member, dataset, false, isAttributes);
         } catch (ZosmfRequestException e) {
-            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+            var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus(errMsg != null ? errMsg : e.getMessage(), false);
         }
         return new ResponseStatus("success", true);

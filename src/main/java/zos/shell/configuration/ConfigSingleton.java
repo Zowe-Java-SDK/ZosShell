@@ -72,7 +72,7 @@ public class ConfigSingleton {
     }
 
     private void initialConfigSettings() {
-        final var profile = this.getProfileByIndex(0);
+        var profile = this.getProfileByIndex(0);
         configSettings = new ConfigSettings(profile.getDownloadpath(), profile.getConsolename(), profile.getWindow());
     }
 
@@ -87,12 +87,12 @@ public class ConfigSingleton {
     }
 
     public void updateWindowSittings(final TextTerminal<?> terminal) {
-        final var str = new StringBuilder();
+        var str = new StringBuilder();
         if (windowCmd == null) {
             windowCmd = new ChangeWinService(terminal);
         }
-        final var configSettings = ConfigSingleton.getInstance().getConfigSettings();
-        final var window = configSettings.getWindow();
+        var configSettings = ConfigSingleton.getInstance().getConfigSettings();
+        var window = configSettings.getWindow();
         String result;
         result = windowCmd.setTextColor(window != null ? configSettings.getWindow().getTextcolor() : null);
         str.append(result != null ? result + "\n" : "");

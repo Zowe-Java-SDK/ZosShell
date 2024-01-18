@@ -14,7 +14,7 @@ public class TriePreFix {
 
     public List<String> getCommands(String prefix) {
         var lastNode = root;
-        final var limit = prefix.length();
+        int limit = prefix.length();
 
         // retrieve the last Node of the trie for
         // the last character of the prefix

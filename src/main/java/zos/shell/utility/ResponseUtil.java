@@ -16,8 +16,8 @@ public final class ResponseUtil {
 
     public static ResponseStatus getByteResponseStatus(ZosmfRequestException e) {
         LOG.debug("*** getByteResponseStatus ***");
-        final var byteMsg = (byte[]) e.getResponse().getResponsePhrase().get();
-        final var errorStream = new ByteArrayInputStream(byteMsg);
+        var byteMsg = (byte[]) e.getResponse().getResponsePhrase().get();
+        var errorStream = new ByteArrayInputStream(byteMsg);
         String errMsg;
         try {
             errMsg = FileUtil.getTextStreamData(errorStream);
@@ -40,7 +40,7 @@ public final class ResponseUtil {
         if (!msg.contains(Constants.ARROW)) {
             return msg;
         }
-        final var index = msg.indexOf(Constants.ARROW) + Constants.ARROW.length();
+        int index = msg.indexOf(Constants.ARROW) + Constants.ARROW.length();
         return msg.substring(index);
     }
 

@@ -21,15 +21,15 @@ public class SshService {
 
     public String sshCommand(String command) {
         LOG.debug("*** sshCommand ***");
-        final var p = Pattern.compile("\"([^\"]*)\"");
-        final var m = p.matcher(command);
+        var p = Pattern.compile("\"([^\"]*)\"");
+        var m = p.matcher(command);
 
         while (m.find()) {
             command = m.group(1);
         }
 
         try {
-            final var issueUss = new IssueUss(sshConnection);
+            var issueUss = new IssueUss(sshConnection);
             // 10000 is the timeout value in milliseconds
             return issueUss.issueCommand(command, 10000);
         } catch (IssueUssException e) {

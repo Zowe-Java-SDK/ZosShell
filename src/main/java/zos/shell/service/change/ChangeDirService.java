@@ -31,7 +31,7 @@ public class ChangeDirService {
             return new ResponseStatus("success", true, target);
         } else if (target.equals("..") && !currDataSet.isBlank()) {
             var tokens = currDataSet.split("\\.");
-            final var length = tokens.length - 1;
+            int length = tokens.length - 1;
             if (length == 1) {
                 return new ResponseStatus(Constants.HIGH_QUALIFIER_ERROR, false, currDataSet);
             }

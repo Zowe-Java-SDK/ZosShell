@@ -2,6 +2,7 @@ package zos.shell.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.delete.DeleteService;
 
 public class DeleteController {
@@ -17,7 +18,7 @@ public class DeleteController {
 
     public String rm(final String dataset, final String param) {
         LOG.debug("*** rm ***");
-        final var responseStatus = deleteService.delete(dataset, param);
+        ResponseStatus responseStatus = deleteService.delete(dataset, param);
         return responseStatus.getMessage();
     }
 

@@ -25,7 +25,7 @@ public class Touch {
             dsnWrite.write(dataset, member, "");
             return new ResponseStatus(member + SUCCESS_MSG, true);
         } catch (ZosmfRequestException e) {
-            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+            var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
     }

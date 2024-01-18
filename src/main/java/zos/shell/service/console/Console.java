@@ -28,22 +28,22 @@ public class Console {
     public ResponseStatus issueConsole(String command) {
         LOG.debug("*** issueConsoleCmd ***");
 
-        final var p = Pattern.compile("\"([^\"]*)\"");
-        final var m = p.matcher(command);
+        var p = Pattern.compile("\"([^\"]*)\"");
+        var m = p.matcher(command);
         while (m.find()) {
             command = m.group(1);
         }
 
         ConsoleResponse consoleResponse;
-        final var params = new IssueConsoleParams(command);
+        var params = new IssueConsoleParams(command);
         params.setProcessResponse(true);
-        final var configSettings = ConfigSingleton.getInstance().getConfigSettings();
-        final var consoleName = Optional.ofNullable(configSettings != null && configSettings.getConsoleName() != null
+        var configSettings = ConfigSingleton.getInstance().getConfigSettings();
+        var consoleName = Optional.ofNullable(configSettings != null && configSettings.getConsoleName() != null
                 && !configSettings.getConsoleName().isBlank() ? configSettings.getConsoleName() : null);
         try {
             consoleResponse = consoleName.isPresent() ? execute(consoleName.get(), params) : execute(params);
         } catch (ZosmfRequestException e) {
-            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+            var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
 

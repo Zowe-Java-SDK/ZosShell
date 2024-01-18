@@ -18,11 +18,11 @@ public class DownloadJob {
 
     private static final Logger LOG = LoggerFactory.getLogger(DownloadJob.class);
 
-    private final BrowseLogService browseCmd;
+    private final BrowseLogService browseLogService;
 
     public DownloadJob(final JobGet retrieve, boolean isAll, final long timeout) {
         LOG.debug("*** DownloadJob ***");
-        this.browseCmd = new BrowseLogService(retrieve, isAll, timeout);
+        this.browseLogService = new BrowseLogService(retrieve, isAll, timeout);
     }
 
     public ResponseStatus download(final String target) {
@@ -31,25 +31,25 @@ public class DownloadJob {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
 
-        final var responseStatus = browseCmd.browseJob(target);
+        ResponseStatus responseStatus = browseLogService.browseJob(target);
         if (!responseStatus.isStatus() && responseStatus.getMessage().contains("timeout")) {
             return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
         } else if (!responseStatus.isStatus()) {
             return new ResponseStatus(responseStatus.getMessage(), false);
         }
 
-        final var output = responseStatus.getMessage();
-        browseCmd.jobs.sort(Comparator.comparing(job -> job.getJobId().orElse(""), Comparator.reverseOrder()));
-        final var id = browseCmd.jobs.get(0).getJobId().orElse(null);
+        var output = responseStatus.getMessage();
+        browseLogService.jobs.sort(Comparator.comparing(job -> job.getJobId().orElse(""), Comparator.reverseOrder()));
+        String id = browseLogService.jobs.get(0).getJobId().orElse(null);
 
-        final var pathService = new PathService(target, id);
+        var pathService = new PathService(target, id);
         try {
             FileUtil.writeTextFile(output, pathService.getPath(), pathService.getPathWithFile());
         } catch (IOException e) {
             return new ResponseStatus(e.getMessage(), false);
         }
 
-        final var message = Strings.padStart(target, 8, ' ') + Constants.ARROW +
+        var message = Strings.padStart(target, 8, ' ') + Constants.ARROW +
                 "downloaded to " + pathService.getPath();
         return new ResponseStatus(message, true, pathService.getPathWithFile());
     }

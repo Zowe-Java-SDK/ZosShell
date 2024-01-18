@@ -28,8 +28,8 @@ public final class FileUtil {
             if (SystemUtils.IS_OS_WINDOWS) {
                 Runtime.getRuntime().exec("explorer.exe /select, " + filePath);
             } else if (SystemUtils.IS_OS_MAC_OSX) {
-                final var arr = filePath.split("/");
-                final var str = new StringBuilder();
+                var arr = filePath.split("/");
+                var str = new StringBuilder();
                 for (var i = 0; i < arr.length - 1; i++) {
                     str.append(arr[i]).append("/");
                 }
@@ -56,7 +56,7 @@ public final class FileUtil {
     public static String getTextStreamData(final InputStream inputStream) throws IOException {
         LOG.debug("*** getTextStreamData ***");
         if (inputStream != null) {
-            final var writer = new StringWriter();
+            var writer = new StringWriter();
             IOUtils.copy(inputStream, writer, Constants.UTF8);
             inputStream.close();
             return writer.toString();

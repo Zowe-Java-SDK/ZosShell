@@ -37,7 +37,7 @@ public class GrepService {
         LOG.debug("*** search ***");
         List<String> result = new ArrayList<>();
         ExecutorService pool = null;
-        final var futures = new ArrayList<Future<List<String>>>();
+        var futures = new ArrayList<Future<List<String>>>();
 
         long count = target.chars().filter(ch -> ch == '*').count();
         boolean endsWithWildCard = target.endsWith("*");
@@ -46,12 +46,12 @@ public class GrepService {
 
         List<Member> members = new ArrayList<>();
         if (memberWildCard || wildCardOnly) {
-            final var memberLst = new MemberListingService(new DsnList(connection), timeout);
+            var memberListingService = new MemberListingService(new DsnList(connection), timeout);
 
             try {
-                members = memberLst.memberLst(dataset);
+                members = memberListingService.memberLst(dataset);
             } catch (ZosmfRequestException e) {
-                final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+                var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
                 result.add(errMsg != null ? errMsg : e.getMessage());
                 return result;
             }
@@ -67,7 +67,7 @@ public class GrepService {
         if (wildCardOnly) {
             return futureResults(dataset, result, pool, futures, members);
         } else if (memberWildCard) {
-            final var value = target.substring(0, target.indexOf("*")).toUpperCase();
+            var value = target.substring(0, target.indexOf("*")).toUpperCase();
             members = members.stream()
                     .filter(m -> m.getMember().isPresent() && m.getMember().get().startsWith(value))
                     .collect(Collectors.toList());
@@ -75,8 +75,8 @@ public class GrepService {
             return futureResults(dataset, result, pool, futures, members);
         } else {
             pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-            final var concatCmd = new ConcatService(new Download(new DsnGet(connection), false), timeout);
-            final var submit = pool.submit(new FutureGrep(concatCmd, dataset, target, pattern, false));
+            var concatService = new ConcatService(new Download(new DsnGet(connection), false), timeout);
+            Future<List<String>> submit = pool.submit(new FutureGrep(concatService, dataset, target, pattern, false));
 
             try {
                 result.addAll(submit.get(timeout, TimeUnit.SECONDS));
@@ -98,15 +98,15 @@ public class GrepService {
 
     private List<String> futureResults(final String dataset, final List<String> result, final ExecutorService pool,
                                        final ArrayList<Future<List<String>>> futures, final List<Member> members) {
-        for (final var member : members) {
-            final var concatCmd = new ConcatService(new Download(new DsnGet(connection), false), timeout);
+        for (var member : members) {
+            var concatService = new ConcatService(new Download(new DsnGet(connection), false), timeout);
             if (member.getMember().isPresent()) {
-                final var name = member.getMember().get();
-                futures.add(pool.submit(new FutureGrep(concatCmd, dataset, name, pattern, true)));
+                var name = member.getMember().get();
+                futures.add(pool.submit(new FutureGrep(concatService, dataset, name, pattern, true)));
             }
         }
 
-        for (final var future : futures) {
+        for (var future : futures) {
             try {
                 result.addAll(future.get(timeout, TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException e) {

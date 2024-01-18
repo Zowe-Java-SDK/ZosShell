@@ -8,7 +8,9 @@ import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.zosfiles.dsn.input.CreateParams;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class MakeDirService {
 
@@ -25,8 +27,8 @@ public class MakeDirService {
 
     public ResponseStatus create(final String dataset, final CreateParams params) {
         LOG.debug("*** create ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureMakeDirectory(dsnCreate, dataset, params));
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        Future<ResponseStatus> submit = pool.submit(new FutureMakeDirectory(dsnCreate, dataset, params));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

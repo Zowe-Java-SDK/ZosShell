@@ -8,7 +8,9 @@ import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ConsoleService {
 
@@ -25,8 +27,8 @@ public class ConsoleService {
 
     public ResponseStatus issueConsole(String command) {
         LOG.debug("*** issueConsole ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureConsole(new IssueConsole(connection), command));
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        Future<ResponseStatus> submit = pool.submit(new FutureConsole(new IssueConsole(connection), command));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

@@ -51,12 +51,12 @@ public class HistoryService {
 
     public void addHistory(String[] params) {
         LOG.debug("*** addHistory ***");
-        final var str = new StringBuilder();
+        var str = new StringBuilder();
         Arrays.stream(params).forEach(p -> {
             str.append(p);
             str.append(" ");
         });
-        final var command = str.toString();
+        var command = str.toString();
         if (!command.startsWith("history")) {
             if (commandLst.size() == Constants.HISTORY_SIZE) {
                 commandLst.remove(0);
@@ -89,7 +89,7 @@ public class HistoryService {
             terminal.println(Constants.NO_HISTORY);
             return;
         }
-        final var size = commandLst.size();
+        int size = commandLst.size();
         if (num > size) {
             displayAll();
         } else {
@@ -106,7 +106,7 @@ public class HistoryService {
             return command;
         }
 
-        final var list = new ArrayList<>(Arrays.asList(command));
+        var list = new ArrayList<>(Arrays.asList(command));
         // remove multiple spaces entered by end user and nulls
         list.removeAll(Arrays.asList("", null));
 
@@ -148,7 +148,7 @@ public class HistoryService {
 
     public String getLastHistoryByValue(String str) {
         LOG.debug("*** getLastHistoryByValue ***");
-        final var lst = commandLst.stream().filter(c -> c.startsWith(str.toLowerCase())).collect(Collectors.toList());
+        List<String> lst = commandLst.stream().filter(c -> c.startsWith(str.toLowerCase())).collect(Collectors.toList());
         if (lst.isEmpty()) {
             terminal.println(Constants.NO_HISTORY);
             return null;
@@ -163,8 +163,8 @@ public class HistoryService {
 
     private void display(int i) {
         LOG.debug("*** display ***");
-        final var orderNum = Strings.padStart(String.valueOf(i + 1), 4, ' ');
-        final var historyRow = orderNum + Constants.ARROW + commandLst.get(i);
+        var orderNum = Strings.padStart(String.valueOf(i + 1), 4, ' ');
+        var historyRow = orderNum + Constants.ARROW + commandLst.get(i);
         terminal.println(historyRow);
     }
 

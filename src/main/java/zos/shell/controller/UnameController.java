@@ -25,7 +25,7 @@ public class UnameController {
             return Constants.NO_INFO;
         }
         String output = response.getMessage();
-        final var index = output.indexOf("RELEASE z/OS ");
+        int index = output.indexOf("RELEASE z/OS ");
         String zosVersion = null;
         if (index >= 0) {
             zosVersion = output.substring(index, index + 22);

@@ -2,6 +2,7 @@ package zos.shell.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.response.ResponseStatus;
 import zos.shell.service.console.ConsoleService;
 
 public class ConsoleController {
@@ -17,7 +18,7 @@ public class ConsoleController {
 
     public String issueConsole(final String command) {
         LOG.debug("*** issueConsole ***");
-        final var responseStatus = consoleService.issueConsole(command);
+        ResponseStatus responseStatus = consoleService.issueConsole(command);
         return responseStatus.getMessage();
     }
 

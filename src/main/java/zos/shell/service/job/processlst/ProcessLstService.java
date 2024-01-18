@@ -7,7 +7,9 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ProcessLstService {
 
@@ -24,8 +26,8 @@ public class ProcessLstService {
 
     public ResponseStatus processLst(final String jobOrTask) {
         LOG.debug("*** processLst ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureProcessListing(jobGet, jobOrTask));
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        Future<ResponseStatus> submit = pool.submit(new FutureProcessListing(jobGet, jobOrTask));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 
