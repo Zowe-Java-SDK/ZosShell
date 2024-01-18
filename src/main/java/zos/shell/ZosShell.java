@@ -43,6 +43,7 @@ import zos.shell.service.job.purge.PurgeService;
 import zos.shell.service.job.submit.SubmitService;
 import zos.shell.service.job.tail.TailService;
 import zos.shell.service.job.terminate.TerminateService;
+import zos.shell.service.localfile.LocalFileService;
 import zos.shell.service.omvs.SshService;
 import zos.shell.service.search.SearchCache;
 import zos.shell.service.tso.TsoService;
@@ -559,7 +560,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(1, params)) {
                     return;
                 }
-                commandOutput = commands.files(currDataSet);
+                var localFilesService = new LocalFileService();
+                var localFilesController = new LocalFilesController(localFilesService);
+                StringBuilder resultLocalFiles = localFilesController.files(currDataSet);
+                terminal.println(resultLocalFiles.toString());
+                commandOutput = new SearchCache("files", resultLocalFiles);
                 break;
             case "g":
             case "grep":
