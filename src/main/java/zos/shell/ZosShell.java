@@ -738,7 +738,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 var processLstService = new ProcessLstService(new JobGet(currConnection), timeout);
                 var processLstController = new ProcessLstController(processLstService);
-                String result = "";
+                String result;
                 if (params.length > 1) {
                     result = processLstController.processList(params[1]);
                     terminal.println(result);
