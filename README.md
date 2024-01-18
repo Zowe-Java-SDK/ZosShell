@@ -193,7 +193,7 @@ Example of config.json:
         }
     ]
   
-Configuration json formatted file is required for the application to work properly. Any error in finding the file or parsing the JSON string will result in the application starting itself and displaying the error related and won't allow you to continue on.  
+Configuration json formatted file is required for the application to work properly. Any error in finding the file or parsing the JSON string will result in the application starting itself and displaying the error and won't allow you to continue on.    
   
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/colors.gif)    
 
