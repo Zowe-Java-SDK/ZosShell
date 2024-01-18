@@ -157,36 +157,36 @@ Example of config.json:
 
     [
         {
-            "hostname": "usilCA31.lvn.broadcom.net",
-            "zosmfport": "1443",
-            "sshport" : "22",
-            "username": "FG892105",
-            "password": "sbosbo1",
+            "hostname": "xxxxxxxxx",
+            "zosmfport": "xxxx",
+            "sshport" : "xxxx",
+            "username": "xxxxx",
+            "password": "xxxxxx",
             "downloadpath": "/ZosShell",
             "consolename": "",
             "window": {
-                        "fontsize": "21",
-                        "fontbold": "true",
-                        "textcolor": "yellow",
-                        "backgroundcolor": "green"
+                        "fontsize": "xxx",
+                        "fontbold": "xxxxx",
+                        "textcolor": "xxxx",
+                        "backgroundcolor": "xxx"
                       }		
         },
         {
-            "hostname": "usilCA31.lvn.broadcom.net",
-            "zosmfport": "1443",
-            "sshport" : "22",
-            "username": "CCSAUTO",
-            "password": "QA2016",
+            "hostname": "xxxxxxxxx",
+            "zosmfport": "xxxx",
+            "sshport" : "xxxx",
+            "username": "xxxxx",
+            "password": "xxxxxx",
             "downloadpath": "C:\\ZosShell3",
             "consolename": "",
             "window": {}		
         },
         {
-            "hostname": "usilCA32.lvn.broadcom.net",
-            "zosmfport": "1443",
-            "sshport" : "123",
-            "username": "FG892105",
-            "password": "sbosbo1",
+           "hostname": "xxxxxxxxx",
+            "zosmfport": "xxxx",
+            "sshport" : "xxxx",
+            "username": "xxxxx",
+            "password": "xxxxxx",
             "downloadpath": "C:\\ZosShell",
             "consolename": "",
             "window": {}		
