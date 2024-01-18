@@ -2,6 +2,7 @@ package zos.shell.service.grep;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.concat.ConcatService;
 
 import java.util.ArrayList;
@@ -28,15 +29,15 @@ public class Grep {
 
     public List<String> search(final String currDataSet, final String target) {
         LOG.debug("*** search ***");
-        final var lines = new ArrayList<String>();
-        final var responseStatus = concatenate.cat(currDataSet, target);
+        List<String> lines = new ArrayList<>();
+        ResponseStatus responseStatus = concatenate.cat(currDataSet, target);
         var content = new StringBuilder(responseStatus.getMessage());
-        final var title = target + ":";
+        var title = target + ":";
 
         var index = findPosition(content.toString());
         while (index != 0) {
-            final var foundStr = content.substring(index);
-            final var entireLine = new StringBuilder();
+            var foundStr = content.substring(index);
+            var entireLine = new StringBuilder();
 
             for (var i = index - 1; i >= 0; i--) {
                 if (content.charAt(i) == '\n') {
@@ -55,7 +56,7 @@ public class Grep {
             if (entireLine.length() > 0) {
                 lines.add(withMember ? entireLine.insert(0, title).toString() : entireLine.toString());
             }
-            final var newIndex = index + pattern.length();
+            var newIndex = index + pattern.length();
             if (newIndex > content.length()) {
                 break;
             }
@@ -73,8 +74,8 @@ public class Grep {
 
     private int findPosition(final String text) {
         LOG.debug("*** findPosition ***");
-        final var lengthOfPattern = pattern.length();
-        final var lengthOfText = text.length();
+        int lengthOfPattern = pattern.length();
+        int lengthOfText = text.length();
         int numOfSkips;
 
         for (var i = 0; i <= lengthOfText - lengthOfPattern; i += numOfSkips) {
@@ -100,7 +101,7 @@ public class Grep {
 
     private void compileMisMatchShiftsTable() {
         LOG.debug("*** compileMisMatchShiftsTable ***");
-        final var lengthOfPattern = pattern.length();
+        int lengthOfPattern = pattern.length();
         for (var i = 0; i < lengthOfPattern; i++) {
             misMatchShiftsTable.put(pattern.charAt(i), Math.max(1, lengthOfPattern - i - 1));
         }

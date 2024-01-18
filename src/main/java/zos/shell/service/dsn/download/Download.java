@@ -70,7 +70,7 @@ public class Download {
         LOG.debug("*** dataset ***");
         var message = dataset + " " + Constants.ARROW;
 
-        final var pathService = new PathService(dataset);
+        var pathService = new PathService(dataset);
         try {
             dlParams = new DownloadParams.Builder().build();
             String textContent = getTextContent(dataset);
@@ -92,13 +92,13 @@ public class Download {
     private String getTextContent(final String dataset, final String member)
             throws ZosmfRequestException, IOException {
         LOG.debug("*** getTextContent member ***");
-        final var inputStream = getInputStream(String.format("%s(%s)", dataset, member));
+        var inputStream = getInputStream(String.format("%s(%s)", dataset, member));
         return FileUtil.getTextStreamData(inputStream);
     }
 
     private String getTextContent(final String dataset) throws ZosmfRequestException, IOException {
         LOG.debug("*** getTextContent member ***");
-        final var inputStream = getInputStream(dataset);
+        var inputStream = getInputStream(dataset);
         return FileUtil.getTextStreamData(inputStream);
     }
 

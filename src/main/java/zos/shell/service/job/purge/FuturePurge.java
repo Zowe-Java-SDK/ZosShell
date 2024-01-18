@@ -40,7 +40,7 @@ public class FuturePurge extends Purge implements Callable<ResponseStatus> {
                 filter.startsWith(JobIdIdentifier.TSU.getValue()) ||
                 filter.startsWith(JobIdIdentifier.STC.getValue()))) {
 
-            final var id = filter.substring(3);
+            var id = filter.substring(3);
             if (StrUtil.isStrNum(id)) {
                 return this.purgeById(filter);
             }

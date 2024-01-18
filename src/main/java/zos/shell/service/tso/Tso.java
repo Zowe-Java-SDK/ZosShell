@@ -26,8 +26,8 @@ public class Tso {
     public ResponseStatus issueCommand(String command) {
         LOG.debug("*** issueCommand ***");
 
-        final var p = Pattern.compile("\"([^\"]*)\"");
-        final var m = p.matcher(command);
+        var p = Pattern.compile("\"([^\"]*)\"");
+        var m = p.matcher(command);
         while (m.find()) {
             command = m.group(1);
         }

@@ -19,7 +19,7 @@ public class FutureBrowseLog implements Callable<StringBuilder> {
 
     @Override
     public StringBuilder call() {
-        final var str = new StringBuilder();
+        var str = new StringBuilder();
         files.forEach(file -> {
             try {
                 str.append(List.of(retrieve.getSpoolContent(file)

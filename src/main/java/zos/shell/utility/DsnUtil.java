@@ -23,7 +23,7 @@ public class DsnUtil {
 
         // Check that the dataset contains more than one segment
         // This could be valid for additionalTests
-        final var segments = name.split("\\.");
+        var segments = name.split("\\.");
         if (segments.length < 2) {
             return false;
         }
@@ -43,7 +43,7 @@ public class DsnUtil {
             return false;
         }
 
-        for (final var segment : segments) {
+        for (var segment : segments) {
             if (!isSegment(segment)) {
                 return false;
             }
@@ -68,13 +68,13 @@ public class DsnUtil {
         }
 
         if (size == 1) {
-            final var p = Pattern.compile(PATTERN_STRING_FOR_ONE_CHAR);
-            final var m = p.matcher(segment);
+            var p = Pattern.compile(PATTERN_STRING_FOR_ONE_CHAR);
+            var m = p.matcher(segment);
             return m.matches();
         }
 
-        final var p = Pattern.compile(PATTERN_STRING_MORE_THAN_ONE_CHAR);
-        final var m = p.matcher(segment);
+        var p = Pattern.compile(PATTERN_STRING_MORE_THAN_ONE_CHAR);
+        var m = p.matcher(segment);
         return m.matches();
     }
 

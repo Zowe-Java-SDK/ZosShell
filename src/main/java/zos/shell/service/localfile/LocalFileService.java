@@ -33,14 +33,14 @@ public class LocalFileService {
         LOG.debug("*** getFiles ***");
         StringBuilder result = new StringBuilder();
         String path;
-        final var configSettings = ConfigSingleton.getInstance().getConfigSettings();
-        final var configPath = configSettings != null ? configSettings.getDownloadPath() : "";
-        final String targetValue = target != null && !target.isBlank() ? target : "";
+        var configSettings = ConfigSingleton.getInstance().getConfigSettings();
+        var configPath = configSettings != null ? configSettings.getDownloadPath() : "";
+        var targetValue = target != null && !target.isBlank() ? target : "";
         if (SystemUtils.IS_OS_WINDOWS) {
-            final String configPathValue = configPath + (!configPath.endsWith("\\") ? "\\" : "") + targetValue;
+            var configPathValue = configPath + (!configPath.endsWith("\\") ? "\\" : "") + targetValue;
             path = !configPathValue.isBlank() ? configPathValue : DIRECTORY_PATH_WINDOWS + targetValue;
         } else if (SystemUtils.IS_OS_MAC_OSX) {
-            final String configPathValue = configPath + (!configPath.endsWith("/") ? "/" : "") + targetValue;
+            var configPathValue = configPath + (!configPath.endsWith("/") ? "/" : "") + targetValue;
             path = !configPathValue.isBlank() ? configPathValue : DIRECTORY_PATH_MAC + targetValue;
         } else {
             return result.append(Constants.OS_ERROR);
@@ -48,8 +48,8 @@ public class LocalFileService {
         if (path.isBlank()) {
             return result.append(Constants.NO_FILES);
         }
-        final var files = Optional.ofNullable(new File(path).listFiles());
-        final var results = new ArrayList<>(List.of(path + ":"));
+        var files = Optional.ofNullable(new File(path).listFiles());
+        var results = new ArrayList<>(List.of(path + ":"));
         results.addAll(Stream.of(files.orElse(new File[]{})).map(File::getName).sorted().collect(Collectors.toList()));
         results.forEach(i -> result.append(i).append("\n"));
         return result;

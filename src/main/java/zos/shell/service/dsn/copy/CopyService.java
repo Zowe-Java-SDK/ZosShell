@@ -17,6 +17,7 @@ import zowe.client.sdk.zosfiles.dsn.response.Member;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
@@ -38,15 +39,15 @@ public class CopyService {
         var fromDataSetName = "";
         var toDataSetName = "";
 
-        final var firstParam = params[1].toUpperCase();
-        final var secondParam = params[2].toUpperCase();
+        var firstParam = params[1].toUpperCase();
+        var secondParam = params[2].toUpperCase();
 
-        final var datasetMemberFirstParam = DataSetMember.getDatasetAndMember(firstParam);
+        var datasetMemberFirstParam = DataSetMember.getDatasetAndMember(firstParam);
         if (datasetMemberFirstParam != null) {
             fromDataSetName = datasetMemberFirstParam.getDataset() + "(" + datasetMemberFirstParam.getMember() + ")";
         }
 
-        final var datasetMemberSecondParam = DataSetMember.getDatasetAndMember(secondParam);
+        var datasetMemberSecondParam = DataSetMember.getDatasetAndMember(secondParam);
         if (datasetMemberSecondParam != null) {
             toDataSetName = datasetMemberSecondParam.getDataset() + "(" + datasetMemberSecondParam.getMember() + ")";
         }
@@ -132,7 +133,7 @@ public class CopyService {
             try {
                 members = new MemberListingService(new DsnList(connection), timeout).memberLst(currDataSet);
             } catch (ZosmfRequestException e) {
-                final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+                var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
                 return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
             }
 
@@ -142,10 +143,10 @@ public class CopyService {
             }
 
             // target is a member string without * (wild card)
-            final var target = firstParam.substring(0, firstParam.indexOf("*"));
+            var target = firstParam.substring(0, firstParam.indexOf("*"));
             members = DsnUtil.getMembersByStartsWithFilter(target, members);
             if (members.size() == 1) {
-                final var name = members.get(0).getMember().orElse("");
+                var name = members.get(0).getMember().orElse("");
                 fromDataSetName = currDataSet + "(" + name + ")";
                 return processRequest(fromDataSetName, toDataSetName, false);
             }
@@ -154,14 +155,14 @@ public class CopyService {
                 return new ResponseStatus(Constants.COPY_NOTHING_WARNING, false);
             }
 
-            final var futures = new ArrayList<Future<ResponseStatus>>();
-            final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
-            for (final var member : members) {
-                final var name = member.getMember().orElse("");
+            List<Future<ResponseStatus>> futures = new ArrayList<>();
+            ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
+            for (var member : members) {
+                var name = member.getMember().orElse("");
                 fromDataSetName = currDataSet + "(" + name + ")";
-                final var destination = toDataSetName + "(" + name + ")";
-                final var dsnCopy = new DsnCopy(connection);
-                final var future = new FutureCopy(dsnCopy, fromDataSetName, destination, false);
+                var destination = toDataSetName + "(" + name + ")";
+                var dsnCopy = new DsnCopy(connection);
+                var future = new FutureCopy(dsnCopy, fromDataSetName, destination, false);
                 futures.add(pool.submit(future));
             }
             return FutureUtil.getFutureResponses(futures, pool, timeout,
@@ -186,10 +187,10 @@ public class CopyService {
 
     private ResponseStatus processRequest(final String source, final String destination, boolean isCopyAll) {
         LOG.debug("*** processResult ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var dsnCopy = new DsnCopy(connection);
-        final var futureCopy = new FutureCopy(dsnCopy, source, destination, isCopyAll);
-        final var submit = pool.submit(futureCopy);
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        var dsnCopy = new DsnCopy(connection);
+        var futureCopy = new FutureCopy(dsnCopy, source, destination, isCopyAll);
+        Future<ResponseStatus> submit = pool.submit(futureCopy);
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

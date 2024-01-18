@@ -47,15 +47,15 @@ public class ListingService {
         members = getMembers(dataset);
 
         member.ifPresentOrElse((m) -> {
-            final var index = m.indexOf("*");
-            final var searchForMember = index == -1 ? m : m.substring(0, index);
+            int index = m.indexOf("*");
+            String searchForMember = index == -1 ? m : m.substring(0, index);
             if (m.equals(searchForMember)) {
                 members = DsnUtil.getMembersByFilter(searchForMember, members);
             } else {
                 members = DsnUtil.getMembersByStartsWithFilter(searchForMember, members);
             }
         }, () -> displayDataSets(dataset, isColumnView, isAttributes));
-        final var membersSize = members.size();
+        int membersSize = members.size();
         if (member.isPresent() && membersSize == 0) {
             terminal.println(Constants.NO_MEMBERS);
             return;
@@ -72,8 +72,8 @@ public class ListingService {
         }
 
         // ls
-        final var line = new StringBuilder();
-        for (final var item : members) {
+        var line = new StringBuilder();
+        for (var item : members) {
             line.append(String.format("%-8s", item.getMember().orElse("")));
             line.append(" ");
         }
@@ -82,14 +82,14 @@ public class ListingService {
 
     private List<Member> getMembers(final String member) throws ZosmfRequestException {
         LOG.debug("*** getMembers ***");
-        final var memberLst = new MemberListingService(dsnList, timeout);
-        return memberLst.memberLst(member);
+        var memberListingService = new MemberListingService(dsnList, timeout);
+        return memberListingService.memberLst(member);
     }
 
     private List<Dataset> getDataSets(final String dataset) throws ZosmfRequestException {
         LOG.debug("*** getDataSets ***");
-        final var datasetLst = new DatasetListingService(dsnList, timeout);
-        return datasetLst.datasetLst(dataset);
+        var datasetListingService = new DatasetListingService(dsnList, timeout);
+        return datasetListingService.datasetLst(dataset);
     }
 
     private void displayListStatus(final int membersSize, final int dataSetsSize) {
@@ -109,11 +109,11 @@ public class ListingService {
             return;
         }
         if (!isColumnView && isAttributes) { // ls -l
-            final var columnFormat = "%-11s %-11s %-8s %-5s %-5s %-6s %-7s %-5s";
+            var columnFormat = "%-11s %-11s %-8s %-5s %-5s %-6s %-7s %-5s";
             terminal.println(String.format(columnFormat,
                     "cdate", "rdate", "vol", "dsorg", "recfm", "blksz", "dsntp", "dsname"));
             this.datasets.forEach(ds -> {
-                final var dsname = ds.getDsname().orElse("n\\a");
+                var dsname = ds.getDsname().orElse("n\\a");
                 if (!dsname.equalsIgnoreCase(ignoreCurrDataSet)) {
                     terminal.println(String.format(columnFormat, ds.getCdate().orElse("n\\a"),
                             ds.getRdate().orElse("n\\a"), ds.getVol().orElse("n\\a"),
@@ -124,7 +124,7 @@ public class ListingService {
             });
         } else { // ls
             this.datasets.forEach(ds -> {
-                final var dsname = ds.getDsname().orElse("");
+                var dsname = ds.getDsname().orElse("");
                 if (!dsname.equalsIgnoreCase(ignoreCurrDataSet)) {
                     terminal.println(dsname);
                 }
@@ -137,13 +137,13 @@ public class ListingService {
         if (this.members.isEmpty()) {
             return;
         }
-        final var columnFormat = "%-8s %-10s %-10s %-4s %-5s";
+        var columnFormat = "%-8s %-10s %-10s %-4s %-5s";
         if (isDataSets) {
             terminal.println();
         }
         if (isAttributes) {
             terminal.println(String.format(columnFormat, "user", "cdate", "mdate", "mod", "member"));
-            for (final var member : this.members) {
+            for (var member : this.members) {
                 terminal.println(String.format(columnFormat, member.getUser().orElse("n\\a"),
                         member.getC4date().orElse("n\\a"), member.getM4date().orElse("n\\a"),
                         member.getMod().orElse(0), member.getMember().orElse("n\\a")));

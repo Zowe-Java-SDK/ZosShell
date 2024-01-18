@@ -56,7 +56,7 @@ The shell performs the following Linux like commands:
   
 Along with following custom commands:  
 
-    b | browse <arg1> <arg2>            - where arg1 is a job name and arg2 is optional
+    bj | browsejob <arg1> <arg2>        - where arg1 is a job name and arg2 is optional
                                           if arg2 not specified, display job's JESMSGLG spool output
                                           if arg2 is equal to "all", display all job's spool output
     cancel <arg>                        - where arg is a task/job name  
@@ -139,7 +139,7 @@ If you are planning to browse large job output you may want to set the JVM memor
   
     java -jar -Xmx2G zosshell-2.0.jar   
   
-### Terminal configuration properties (optional)
+### Terminal configuration properties
   
 By default, the configuration file name is config.json located within C:\ZosShell directory for Windows or /ZosShell for macOS.  
   
@@ -156,41 +156,41 @@ In addition, each profile contains path variable to control location for downloa
 Example of config.json:  
 
     [
-    {
-    "hostname": "usilCA31.lvn.broadcom.net",
-    "zosmfport": "1443",
-    "sshport" : "22",
-    "username": "FG892105",
-    "password": "sbosbo1",
-    "downloadpath": "/ZosShell",
-    "consolename": "",
-    "window": {
-    "fontsize": "21",
-    "fontbold": "true",
-    "textcolor": "yellow",
-    "backgroundcolor": "green"
-    }		
-    },
-    {
-    "hostname": "usilCA31.lvn.broadcom.net",
-    "zosmfport": "1443",
-    "sshport" : "22",
-    "username": "CCSAUTO",
-    "password": "QA2016",
-    "downloadpath": "C:\\ZosShell3",
-    "consolename": "",
-    "window": {}		
-    },
-    {
-    "hostname": "usilCA32.lvn.broadcom.net",
-    "zosmfport": "1443",
-    "sshport" : "123",
-    "username": "FG892105",
-    "password": "sbosbo1",
-    "downloadpath": "C:\\ZosShell",
-    "consolename": "",
-    "window": {}		
-    }
+        {
+            "hostname": "usilCA31.lvn.broadcom.net",
+            "zosmfport": "1443",
+            "sshport" : "22",
+            "username": "FG892105",
+            "password": "sbosbo1",
+            "downloadpath": "/ZosShell",
+            "consolename": "",
+            "window": {
+                        "fontsize": "21",
+                        "fontbold": "true",
+                        "textcolor": "yellow",
+                        "backgroundcolor": "green"
+                      }		
+        },
+        {
+            "hostname": "usilCA31.lvn.broadcom.net",
+            "zosmfport": "1443",
+            "sshport" : "22",
+            "username": "CCSAUTO",
+            "password": "QA2016",
+            "downloadpath": "C:\\ZosShell3",
+            "consolename": "",
+            "window": {}		
+        },
+        {
+            "hostname": "usilCA32.lvn.broadcom.net",
+            "zosmfport": "1443",
+            "sshport" : "123",
+            "username": "FG892105",
+            "password": "sbosbo1",
+            "downloadpath": "C:\\ZosShell",
+            "consolename": "",
+            "window": {}		
+        }
     ]
   
 Configuration json formatted file is required for the application to work properly. Any error in finding the file or parsing the JSON string will result in the application starting itself and displaying the error related and won't allow you to continue on.  

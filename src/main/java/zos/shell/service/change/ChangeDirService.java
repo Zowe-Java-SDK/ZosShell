@@ -1,9 +1,9 @@
 package zos.shell.service.change;
 
-import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.response.ResponseStatus;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -13,30 +13,27 @@ import zowe.client.sdk.zosfiles.dsn.response.Dataset;
 
 import java.util.List;
 
-public class ChangeDirectoryService {
+public class ChangeDirService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChangeDirectoryService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChangeDirService.class);
 
-    private final TextTerminal<?> terminal;
     private final DsnList dsnList;
     private final ListParams params = new ListParams.Builder().build();
 
-    public ChangeDirectoryService(final TextTerminal<?> terminal, final DsnList dsnList) {
-        LOG.debug("*** ChangeDirectoryService ***");
-        this.terminal = terminal;
+    public ChangeDirService(final DsnList dsnList) {
+        LOG.debug("*** ChangeDirService ***");
         this.dsnList = dsnList;
     }
 
-    public String cd(String currDataSet, final String param) {
+    public ResponseStatus cd(String currDataSet, final String target) {
         LOG.debug("*** cd ***");
-        if (DsnUtil.isDataSet(param)) {
-            return param;
-        } else if (param.equals("..") && !currDataSet.isBlank()) {
+        if (DsnUtil.isDataSet(target)) {
+            return new ResponseStatus("success", true, target);
+        } else if (target.equals("..") && !currDataSet.isBlank()) {
             var tokens = currDataSet.split("\\.");
-            final var length = tokens.length - 1;
+            int length = tokens.length - 1;
             if (length == 1) {
-                terminal.println(Constants.HIGH_QUALIFIER_ERROR);
-                return currDataSet;
+                return new ResponseStatus(Constants.HIGH_QUALIFIER_ERROR, false, currDataSet);
             }
 
             var str = new StringBuilder();
@@ -47,27 +44,25 @@ public class ChangeDirectoryService {
 
             var dataset = str.toString();
             dataset = dataset.substring(0, str.length() - 1);
-            return dataset;
+            return new ResponseStatus("success", true, dataset);
         } else {
             List<Dataset> dsLst;
             try {
                 dsLst = dsnList.getDatasets(currDataSet, params);
             } catch (ZosmfRequestException e) {
                 final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
-                terminal.println((errMsg != null ? errMsg : e.getMessage()));
-                return currDataSet;
+                return new ResponseStatus(errMsg != null ? errMsg : e.getMessage(), false, currDataSet);
             } catch (IllegalArgumentException e) {
-                terminal.println(Constants.DATASET_NOT_SPECIFIED);
-                return currDataSet;
+                return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false, currDataSet);
             }
-            var findDataSet = currDataSet + "." + param;
+            var findDataSet = currDataSet + "." + target;
             var found = dsLst.stream().anyMatch(d -> d.getDsname().orElse("").contains(findDataSet));
             if (found) {
-                currDataSet += "." + param;
+                currDataSet += "." + target;
             } else {
-                terminal.println(Constants.DATASET_OR_HIGH_QUALIFIER_ERROR);
+                return new ResponseStatus(Constants.DATASET_OR_HIGH_QUALIFIER_ERROR, false, currDataSet);
             }
-            return currDataSet;
+            return new ResponseStatus("success", true, currDataSet);
         }
     }
 

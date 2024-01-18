@@ -17,6 +17,7 @@ import zowe.client.sdk.zosfiles.dsn.response.Member;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
@@ -37,7 +38,7 @@ public class DeleteService {
         LOG.debug("*** delete ***");
         List<Member> members;
 
-        final var datasetMemberTarget = DataSetMember.getDatasetAndMember(target);
+        var datasetMemberTarget = DataSetMember.getDatasetAndMember(target);
         // delete dataset(member) not in currDataset
         if (datasetMemberTarget != null) {
             return processRequest(datasetMemberTarget.getDataset(), datasetMemberTarget.getMember());
@@ -52,7 +53,7 @@ public class DeleteService {
             try {
                 members = new MemberListingService(new DsnList(connection), timeout).memberLst(currDataSet);
             } catch (ZosmfRequestException e) {
-                final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+                var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
                 return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
             }
             if (DsnUtil.getMembersByFilter(target, members).isEmpty()) {
@@ -74,7 +75,7 @@ public class DeleteService {
             try {
                 members = new MemberListingService(new DsnList(connection), timeout).memberLst(currDataSet);
             } catch (ZosmfRequestException e) {
-                final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+                var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
                 return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
             }
             if (members.isEmpty()) {
@@ -88,12 +89,12 @@ public class DeleteService {
                 return processRequest(currDataSet, members.get(0).getMember().get());
             }
 
-            final var futures = new ArrayList<Future<ResponseStatus>>();
-            final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
-            for (final var member : members) {
-                final var name = member.getMember().orElse("");
-                final var dsnDelete = new DsnDelete(connection);
-                final var future = new FutureDelete(dsnDelete, currDataSet, name);
+            List<Future<ResponseStatus>> futures = new ArrayList<>();
+            ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
+            for (var member : members) {
+                var name = member.getMember().orElse("");
+                var dsnDelete = new DsnDelete(connection);
+                var future = new FutureDelete(dsnDelete, currDataSet, name);
                 futures.add(pool.submit(future));
             }
             return FutureUtil.getFutureResponses(futures, pool, timeout, Constants.STRING_PAD_LENGTH);
@@ -111,10 +112,10 @@ public class DeleteService {
 
     private ResponseStatus processRequest(final String dataset, final String member) {
         LOG.debug("*** processResult ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var dsnDelete = new DsnDelete(connection);
-        final var futureDelete = new FutureDelete(dsnDelete, dataset, member);
-        final var submit = pool.submit(futureDelete);
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        var dsnDelete = new DsnDelete(connection);
+        var futureDelete = new FutureDelete(dsnDelete, dataset, member);
+        Future<ResponseStatus> submit = pool.submit(futureDelete);
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

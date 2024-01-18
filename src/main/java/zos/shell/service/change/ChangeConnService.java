@@ -11,15 +11,15 @@ import zowe.client.sdk.core.ZosConnection;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ChangeConnectionService {
+public class ChangeConnService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChangeConnectionService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChangeConnService.class);
 
     private final TextTerminal<?> terminal;
     private final ConfigSingleton configSingleton = ConfigSingleton.getInstance();
 
-    public ChangeConnectionService(final TextTerminal<?> terminal) {
-        LOG.debug("*** ChangeConnectionService ***");
+    public ChangeConnService(final TextTerminal<?> terminal) {
+        LOG.debug("*** ChangeConnService ***");
         this.terminal = terminal;
     }
 
@@ -30,7 +30,7 @@ public class ChangeConnectionService {
             terminal.println(Constants.NO_CONNECTION);
             return zosConnection;
         }
-        final var profile = configSingleton.getProfileByIndex(index);
+        var profile = configSingleton.getProfileByIndex(index);
         ConfigSingleton.getInstance().setConfigSettings(new ConfigSettings(profile.getDownloadpath(),
                 profile.getConsolename(), profile.getWindow()));
         ConfigSingleton.getInstance().updateWindowSittings(terminal);
@@ -48,7 +48,7 @@ public class ChangeConnectionService {
 
     public void displayConnections() {
         LOG.debug("*** displayConnections ***");
-        final var i = new AtomicInteger(1);
+        var i = new AtomicInteger(1);
         configSingleton.getZosConnections().forEach(c -> terminal.println(i.getAndIncrement() + " " + "hostname: " +
                 c.getHost() + ", port: " + c.getZosmfPort() + ", user: " + c.getUser()));
         if (configSingleton.getZosConnections().isEmpty()) {

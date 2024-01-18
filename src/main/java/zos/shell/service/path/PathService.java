@@ -39,8 +39,8 @@ public class PathService {
 
     public void initialize() {
         LOG.debug("*** initialize ***");
-        final var configSettings = ConfigSingleton.getInstance().getConfigSettings();
-        final var configPath = configSettings != null ? configSettings.getDownloadPath() : null;
+        var configSettings = ConfigSingleton.getInstance().getConfigSettings();
+        String configPath = configSettings != null ? configSettings.getDownloadPath() : null;
         if (SystemUtils.IS_OS_WINDOWS) {
             path = configPath != null ? configPath + (!configPath.endsWith("\\") ? "\\" : "") + dataset
                     : DIRECTORY_PATH_WINDOWS + dataset;

@@ -27,7 +27,7 @@ public class Edit {
     public ResponseStatus open(String dataset, String target) {
         LOG.debug("*** open ***");
         ResponseStatus result;
-        final var dataSetMember = DataSetMember.getDatasetAndMember(target);
+        var dataSetMember = DataSetMember.getDatasetAndMember(target);
 
         PathService pathService;
         if (DsnUtil.isMember(target)) {

@@ -1,6 +1,5 @@
 package zos.shell.service.omvs;
 
-import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zowe.client.sdk.core.SshConnection;
@@ -13,30 +12,29 @@ public class SshService {
 
     private static final Logger LOG = LoggerFactory.getLogger(SshService.class);
 
-    private final TextTerminal<?> terminal;
     private final SshConnection sshConnection;
 
-    public SshService(final TextTerminal<?> terminal, final SshConnection sshConnection) {
+    public SshService(final SshConnection sshConnection) {
         LOG.debug("*** SshService ***");
-        this.terminal = terminal;
         this.sshConnection = sshConnection;
     }
 
-    public void sshCommand(String command) {
+    public String sshCommand(String command) {
         LOG.debug("*** sshCommand ***");
-        final var p = Pattern.compile("\"([^\"]*)\"");
-        final var m = p.matcher(command);
+        var p = Pattern.compile("\"([^\"]*)\"");
+        var m = p.matcher(command);
 
         while (m.find()) {
             command = m.group(1);
         }
 
         try {
-            final var issueUss = new IssueUss(sshConnection);
+            var issueUss = new IssueUss(sshConnection);
             // 10000 is the timeout value in milliseconds
-            terminal.println(issueUss.issueCommand(command, 10000));
+            return issueUss.issueCommand(command, 10000);
         } catch (IssueUssException e) {
-            terminal.println(e.getMessage());
+            LOG.debug("error: " + e);
+            return e.getMessage();
         }
     }
 

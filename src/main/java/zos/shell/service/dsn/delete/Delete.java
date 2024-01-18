@@ -25,7 +25,7 @@ public class Delete {
             dsnDelete.delete(dataset, member);
             return new ResponseStatus(member + SUCCESS_MSG, true, member);
         } catch (ZosmfRequestException e) {
-            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+            var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             throw new ZosmfRequestException((errMsg != null ? errMsg : e.getMessage()));
         }
     }
@@ -36,7 +36,7 @@ public class Delete {
             dsnDelete.delete(dataset);
             return new ResponseStatus(dataset + SUCCESS_MSG, true, dataset);
         } catch (ZosmfRequestException e) {
-            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+            var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             throw new ZosmfRequestException((errMsg != null ? errMsg : e.getMessage()));
         }
     }

@@ -32,7 +32,7 @@ public class ProcessListing {
             if (jobOrTask != null) {
                 getJobParams.prefix(jobOrTask).build();
             }
-            final var params = getJobParams.build();
+            var params = getJobParams.build();
             jobs = jobGet.getCommon(params);
         } catch (ZosmfRequestException e) {
             final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
@@ -44,11 +44,11 @@ public class ProcessListing {
         if (jobs.isEmpty()) {
             return new ResponseStatus(Constants.NO_PROCESS_FOUND, false);
         }
-        final var str = new StringBuilder();
+        var str = new StringBuilder();
         jobs.forEach(job -> {
-            final var jobName = job.getJobName().orElse("");
-            final var jobId = job.getJobId().orElse("");
-            final var jobStatus = job.getStatus().orElse("");
+            var jobName = job.getJobName().orElse("");
+            var jobId = job.getJobId().orElse("");
+            var jobStatus = job.getStatus().orElse("");
             str.append(String.format("%-8s %-8s %-8s", jobName, jobId, jobStatus));
             str.append("\n");
         });

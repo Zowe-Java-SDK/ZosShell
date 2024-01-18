@@ -7,7 +7,9 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.zosjobs.methods.JobSubmit;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class SubmitService {
 
@@ -24,8 +26,8 @@ public class SubmitService {
 
     public ResponseStatus submit(final String dataset, final String target) {
         LOG.debug("*** submit ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureSubmit(this.submit, dataset, target));
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        Future<ResponseStatus> submit = pool.submit(new FutureSubmit(this.submit, dataset, target));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

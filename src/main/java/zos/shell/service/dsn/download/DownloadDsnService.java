@@ -15,6 +15,7 @@ import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.response.Member;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -47,7 +48,7 @@ public class DownloadDsnService {
             try {
                 members = new MemberListingService(new DsnList(connection), timeout).memberLst(dataset);
             } catch (ZosmfRequestException e) {
-                final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+                var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
                 return List.of(new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false));
             }
             if (members.isEmpty()) {
@@ -62,7 +63,7 @@ public class DownloadDsnService {
             try {
                 members = new MemberListingService(new DsnList(connection), timeout).memberLst(dataset);
             } catch (ZosmfRequestException e) {
-                final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+                var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
                 return List.of(new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false));
             }
             // transform target is a member string without * (wild card)
@@ -75,8 +76,8 @@ public class DownloadDsnService {
             return results;
         }
 
-        final var dataSetMember = DataSetMember.getDatasetAndMember(target);
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        var dataSetMember = DataSetMember.getDatasetAndMember(target);
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         Future<ResponseStatus> submit = null;
         try {
             if (dataSetMember != null) {
@@ -108,7 +109,8 @@ public class DownloadDsnService {
         }
 
         if (results.get(0).isStatus()) {
-            FileUtil.openFileLocation(results.get(0).getOptionalData());
+            var file = new File(results.get(0).getOptionalData());
+            FileUtil.openFileLocation(file.getAbsolutePath());
             return results;
         }
 
@@ -117,18 +119,18 @@ public class DownloadDsnService {
 
     private List<ResponseStatus> downloadMembers(final String dataset, final List<Member> members) {
         LOG.debug("*** downloadMembers ***");
-        final var results = new ArrayList<ResponseStatus>();
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
-        final var futures = new ArrayList<Future<ResponseStatus>>();
+        List<ResponseStatus> results = new ArrayList<>();
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
+        var futures = new ArrayList<Future<ResponseStatus>>();
 
-        for (final var member : members) {
+        for (var member : members) {
             if (member.getMember().isPresent()) {
-                final var name = member.getMember().get();
+                String name = member.getMember().get();
                 futures.add(pool.submit(new FutureMemberDownload(new DsnGet(connection), dataset, name, isBinary)));
             }
         }
 
-        for (final var future : futures) {
+        for (var future : futures) {
             try {
                 results.add(future.get(timeout, TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException e) {
@@ -143,7 +145,8 @@ public class DownloadDsnService {
         }
 
         // results.get(0) not possible if we used FutureUtil.getFutureResponses
-        FileUtil.openFileLocation(results.get(0).getOptionalData());
+        var file = new File(results.get(0).getOptionalData());
+        FileUtil.openFileLocation(file.getAbsolutePath());
         pool.shutdownNow();
         return results;
     }

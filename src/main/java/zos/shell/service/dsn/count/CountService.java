@@ -34,23 +34,23 @@ public class CountService {
         if (!DsnUtil.isDataSet(dataset)) {
             return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
         }
-        final var dataSetCount = new AtomicInteger();
+        var dataSetCount = new AtomicInteger();
         List<Dataset> datasets = new ArrayList<>();
         List<Member> members = new ArrayList<>();
 
         if ("members".equalsIgnoreCase(filter)) {
-            final var memberLst = new MemberListingService(dsnList, timeout);
+            var memberListingService = new MemberListingService(dsnList, timeout);
             try {
-                members = memberLst.memberLst(dataset);
+                members = memberListingService.memberLst(dataset);
             } catch (ZosmfRequestException e) {
                 return new ResponseStatus(e.getMessage(), false);
             }
         }
 
         if ("datasets".equalsIgnoreCase(filter)) {
-            final var datasetLst = new DatasetListingService(dsnList, timeout);
+            var datasetListingService = new DatasetListingService(dsnList, timeout);
             try {
-                datasets = datasetLst.datasetLst(dataset);
+                datasets = datasetListingService.datasetLst(dataset);
             } catch (ZosmfRequestException e) {
                 return new ResponseStatus(e.getMessage(), false);
             }

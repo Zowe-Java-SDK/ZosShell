@@ -12,7 +12,7 @@ public class CircularLinkedList<T> {
     // this function will add the new node at the end of the list.
     public void add(T data) {
         // create new node
-        final var newNode = new Node<>(data);
+        var newNode = new Node<>(data);
 
         if (size == Constants.HISTORY_SIZE) {
             // set the new head pointer
@@ -60,7 +60,7 @@ public class CircularLinkedList<T> {
         // tail will point to new node.
         tail.next = newNode;
         // hold a temp reference to current tail node
-        final var temp = tail;
+        var temp = tail;
         // new node will become new tail.
         tail = newNode;
         // circular tail will point to new head.

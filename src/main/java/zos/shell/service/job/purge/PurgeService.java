@@ -8,7 +8,9 @@ import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.zosjobs.methods.JobDelete;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class PurgeService {
 
@@ -27,8 +29,8 @@ public class PurgeService {
 
     public ResponseStatus purge(String filter) {
         LOG.debug("*** purge ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FuturePurge(delete, retrieve, filter));
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        Future<ResponseStatus> submit = pool.submit(new FuturePurge(delete, retrieve, filter));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

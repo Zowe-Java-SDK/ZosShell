@@ -12,7 +12,9 @@ import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class TouchService {
 
@@ -41,11 +43,11 @@ public class TouchService {
         }
 
         boolean foundMember;
-        MemberListingService memberLst = new MemberListingService(dsnList, timeout);
+        var memberListingService = new MemberListingService(dsnList, timeout);
         try {
-            foundMember = memberLst.memberExist(dataset, target);
+            foundMember = memberListingService.memberExist(dataset, target);
         } catch (ZosmfRequestException e) {
-            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+            var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus(errMsg != null ? errMsg : e.getMessage(), false);
         }
 
@@ -53,8 +55,8 @@ public class TouchService {
             return new ResponseStatus(target + " already exists", false);
         }
 
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureTouch(dsnWrite, dataset, target));
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        Future<ResponseStatus> submit = pool.submit(new FutureTouch(dsnWrite, dataset, target));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

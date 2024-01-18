@@ -8,7 +8,9 @@ import zos.shell.service.console.FutureConsole;
 import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class TerminateService {
 
@@ -42,8 +44,8 @@ public class TerminateService {
                 return new ResponseStatus("invalid termination type, try again...", false);
         }
 
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureConsole(issueConsole, command));
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        Future<ResponseStatus> submit = pool.submit(new FutureConsole(issueConsole, command));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

@@ -28,10 +28,10 @@ public class Tail extends BrowseLog {
         if (!result.isStatus()) {
             return result;
         }
-        final var output = Arrays.asList(result.getMessage().split("\n"));
+        var output = Arrays.asList(result.getMessage().split("\n"));
 
-        final var size = output.size();
-        var lines = 0;
+        int size = output.size();
+        int lines = 0;
         if (params.length == 3) {
             if (!"all".equalsIgnoreCase(params[2])) {
                 lines = Integer.parseInt(params[2]);
@@ -49,7 +49,7 @@ public class Tail extends BrowseLog {
                 return result;
             }
         } else {
-            final var LINE_LIMIT = 25;
+            int LINE_LIMIT = 25;
             if (size > LINE_LIMIT) {
                 return display(LINE_LIMIT, size, output);
             } else {
@@ -66,7 +66,7 @@ public class Tail extends BrowseLog {
 
     private ResponseStatus display(final int lines, final int size, final List<String> output) {
         LOG.debug("*** display ***");
-        final var str = new StringBuilder();
+        var str = new StringBuilder();
         for (var i = size - lines; i < size; i++) {
             terminal.println(output.get(i));
             str.append(output.get(i)).append("\n");

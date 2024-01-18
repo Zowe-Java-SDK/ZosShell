@@ -7,7 +7,9 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.zostso.method.IssueTso;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class TsoService {
 
@@ -26,8 +28,11 @@ public class TsoService {
 
     public ResponseStatus issueCommand(final String command) {
         LOG.debug("*** issueCommand ***");
-        final var pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        final var submit = pool.submit(new FutureTso(issueTso, accountNumber, command));
+        if (accountNumber == null || accountNumber.isBlank()) {
+            return new ResponseStatus("ACCTNUM is not set, try again...", false);
+        }
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        Future<ResponseStatus> submit = pool.submit(new FutureTso(issueTso, accountNumber, command));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 
