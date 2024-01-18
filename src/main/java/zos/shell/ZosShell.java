@@ -29,6 +29,7 @@ import zos.shell.service.dsn.download.Download;
 import zos.shell.service.dsn.download.DownloadDsnService;
 import zos.shell.service.dsn.edit.EditService;
 import zos.shell.service.dsn.list.ListingService;
+import zos.shell.service.dsn.makedir.MakeDirService;
 import zos.shell.service.dsn.save.SaveService;
 import zos.shell.service.dsn.touch.TouchService;
 import zos.shell.service.env.EnvVariableService;
@@ -51,6 +52,7 @@ import zos.shell.utility.StrUtil;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
+import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
@@ -335,8 +337,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         if (params.length == 0) {
             return;
         }
-        var command = params[0];
-        String param;
+        String command = params[0];
+//        String param;
         history.addHistory(params);
 
         switch (command.toLowerCase()) {
@@ -524,7 +526,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
-                param = params[1];
                 boolean isAll = false;
                 if (params.length == 3) {
                     if (!"all".equalsIgnoreCase(params[2])) {
@@ -536,7 +537,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 jobGet = new JobGet(currConnection);
                 var downloadJobService = new DownloadJobService(jobGet, isAll, timeout);
                 var downloadJobController = new DownloadJobController(downloadJobService);
-                String downloadJobResult = downloadJobController.downloadJob(param);
+                String downloadJobResult = downloadJobController.downloadJob(params[1]);
                 terminal.println(downloadJobResult);
                 break;
             case "end":
@@ -707,7 +708,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 disableKeys = true;
-                commands.mkdir(currConnection, mainTextIO, currDataSet, params[1]);
+                var dsnCreate = new DsnCreate(currConnection);
+                var makeDirService = new MakeDirService(dsnCreate, timeout);
+                var makeDirController = new MakeDirController(terminal, makeDirService);
+                makeDirController.mkdir(mainTextIO, currDataSet, params[1]);
                 disableKeys = false;
                 break;
             case "mvs":
@@ -825,11 +829,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isCurrDataSetNotSpecified()) {
                     return;
                 }
-                param = params[1];
                 var jobSubmit = new JobSubmit(currConnection);
                 var submitService = new SubmitService(jobSubmit, timeout);
                 var submitController = new SubmitController(submitService);
-                String submitResult = submitController.submit(currDataSet, param);
+                String submitResult = submitController.submit(currDataSet, params[1]);
                 terminal.println(submitResult);
                 break;
             case "tail":

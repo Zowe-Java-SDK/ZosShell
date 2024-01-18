@@ -10,14 +10,14 @@ import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
 
 import java.util.concurrent.Executors;
 
-public class MakeDirectoryService {
+public class MakeDirService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MakeDirectoryService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MakeDirService.class);
 
     private final DsnCreate dsnCreate;
     private final long timeout;
 
-    public MakeDirectoryService(final DsnCreate dsnCreate, long timeout) {
+    public MakeDirService(final DsnCreate dsnCreate, long timeout) {
         LOG.debug("*** MakeDirectoryService ***");
         this.dsnCreate = dsnCreate;
         this.timeout = timeout;
