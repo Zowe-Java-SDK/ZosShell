@@ -13,54 +13,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.configuration.ConfigSingleton;
 import zos.shell.constants.Constants;
-import zos.shell.controller.*;
+import zos.shell.controller.ControllerContainer;
+import zos.shell.controller.TsoController;
 import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.autocomplete.SearchCommandService;
-import zos.shell.service.change.ChangeConnService;
-import zos.shell.service.change.ChangeDirService;
-import zos.shell.service.change.ChangeWinService;
-import zos.shell.service.console.ConsoleService;
-import zos.shell.service.dsn.concat.ConcatService;
-import zos.shell.service.dsn.copy.CopyService;
-import zos.shell.service.dsn.count.CountService;
-import zos.shell.service.dsn.delete.DeleteService;
-import zos.shell.service.dsn.download.Download;
-import zos.shell.service.dsn.download.DownloadDsnService;
-import zos.shell.service.dsn.edit.EditService;
-import zos.shell.service.dsn.list.ListingService;
-import zos.shell.service.dsn.makedir.MakeDirService;
-import zos.shell.service.dsn.save.SaveService;
-import zos.shell.service.dsn.touch.TouchService;
-import zos.shell.service.env.EnvVariableService;
-import zos.shell.service.grep.GrepService;
 import zos.shell.service.help.HelpService;
 import zos.shell.service.history.HistoryService;
-import zos.shell.service.job.browse.BrowseLogService;
-import zos.shell.service.job.download.DownloadJobService;
-import zos.shell.service.job.processlst.ProcessLstService;
-import zos.shell.service.job.purge.PurgeService;
-import zos.shell.service.job.submit.SubmitService;
-import zos.shell.service.job.tail.TailService;
-import zos.shell.service.job.terminate.TerminateService;
-import zos.shell.service.localfile.LocalFileService;
-import zos.shell.service.omvs.SshService;
 import zos.shell.service.search.SearchCache;
-import zos.shell.service.search.SearchCacheService;
 import zos.shell.service.tso.TsoService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.PromptUtil;
 import zos.shell.utility.StrUtil;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
-import zowe.client.sdk.zosconsole.method.IssueConsole;
-import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
-import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
-import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
-import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
-import zowe.client.sdk.zosjobs.methods.JobDelete;
-import zowe.client.sdk.zosjobs.methods.JobGet;
-import zowe.client.sdk.zosjobs.methods.JobSubmit;
 import zowe.client.sdk.zostso.method.IssueTso;
 
 import javax.swing.*;
@@ -337,6 +303,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         if (params.length == 0) {
             return;
         }
+        var controllerContainer = new ControllerContainer();
         ResponseStatus responseStatus;
         String command = params[0];
         history.addHistory(params);
@@ -354,9 +321,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     terminal.println(Constants.INVALID_PARAMETER);
                     return;
                 }
-                var jobGet = new JobGet(currConnection);
-                var browseJobService = new BrowseLogService(jobGet, params.length == 3, timeout);
-                var browseJobController = new BrowseJobController(browseJobService);
+                var browseJobController = controllerContainer.getBrowseJobController(currConnection,
+                        params.length == 3, timeout);
                 String browseJobResult = browseJobController.browseJob(params[1]);
                 terminal.println(browseJobResult);
                 commandOutput = new SearchCache("browsejob", new StringBuilder(browseJobResult));
@@ -368,9 +334,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                var issueConsole = new IssueConsole(currConnection);
-                var cancelService = new TerminateService(issueConsole, timeout);
-                var cancelController = new CancelController(cancelService);
+                var cancelController = controllerContainer.getCancelController(currConnection, timeout);
                 String cancelResult = cancelController.cancel(params[1]);
                 terminal.println(cancelResult);
                 break;
@@ -381,10 +345,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                var dsnGet = new DsnGet(currConnection);
-                var download = new Download(dsnGet, false);
-                var concatService = new ConcatService(download, timeout);
-                var concatController = new ConcatController(concatService);
+                var concatController = controllerContainer.getConcatController(currConnection, timeout);
                 String concatResult = concatController.cat(currDataSet, params[1]);
                 terminal.println(concatResult);
                 commandOutput = new SearchCache("cat", new StringBuilder(concatResult));
@@ -396,9 +357,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                var dsnList = new DsnList(currConnection);
-                var changeDirService = new ChangeDirService(dsnList);
-                var changeDirController = new ChangeDirController(changeDirService);
+                var changeDirController = controllerContainer.getChangeDirController(currConnection);
                 responseStatus = changeDirController.cd(currDataSet, params[1].toUpperCase());
                 if (responseStatus.isStatus()) {
                     currDataSet = responseStatus.getOptionalData();
@@ -419,8 +378,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                var changeConnService = new ChangeConnService(terminal);
-                var changeConnController = new ChangeConnController(changeConnService);
+                var changeConnController = controllerContainer.getChangeConnController(terminal);
                 currConnection = changeConnController.changeZosConnection(currConnection, params);
                 currSshConnection = changeConnController.changeSshConnection(currSshConnection, params);
                 var msg = "Connected to " + currConnection.getHost() + " with user " + currConnection.getUser() + ".";
@@ -444,8 +402,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
-                var changeWinService = new ChangeWinService(terminal);
-                var changeWinController = new ChangeWinController(changeWinService);
+                var changeWinController = controllerContainer.getChangeWinController(terminal);
                 String colorResult;
                 if (params.length == 3) {
                     colorResult = changeWinController.changeColorSettings(params[1], params[2]);
@@ -458,9 +415,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(1, params)) {
                     return;
                 }
-                changeConnService = new ChangeConnService(terminal);
-                changeConnController = new ChangeConnController(changeConnService);
-                changeConnController.displayConnections();
+                controllerContainer.getChangeConnController(terminal).displayConnections();
                 break;
             case "cp":
             case "copy":
@@ -473,8 +428,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
-                var copyService = new CopyService(currConnection, timeout);
-                var copyController = new CopyController(copyService);
+                var copyController = controllerContainer.getCopyController(currConnection, timeout);
                 String copyResult = copyController.copy(currDataSet, params);
                 terminal.println(copyResult);
                 break;
@@ -490,9 +444,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                dsnList = new DsnList(currConnection);
-                var countService = new CountService(dsnList, timeout);
-                var countController = new CountController(countService);
+                var countController = controllerContainer.getCountController(currConnection, timeout);
                 String countResult = countController.count(currDataSet, params[1]);
                 terminal.println(countResult);
                 break;
@@ -513,8 +465,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         return;
                     }
                 }
-                var downloadDsnService = new DownloadDsnService(currConnection, isBinary, timeout);
-                var downloadDsnController = new DownloadDsnController(downloadDsnService);
+                var downloadDsnController = controllerContainer.getDownloadDsnController(currConnection, isBinary, timeout);
                 List<String> downloadResults = downloadDsnController.download(currDataSet, params[1]);
                 downloadResults.forEach(terminal::println);
                 break;
@@ -534,9 +485,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     }
                     isAll = true;
                 }
-                jobGet = new JobGet(currConnection);
-                var downloadJobService = new DownloadJobService(jobGet, isAll, timeout);
-                var downloadJobController = new DownloadJobController(downloadJobService);
+                var downloadJobController = controllerContainer.getDownloadJobController(currConnection, isAll, timeout);
                 String downloadJobResult = downloadJobController.downloadJob(params[1]);
                 terminal.println(downloadJobResult);
                 break;
@@ -549,9 +498,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(1, params)) {
                     return;
                 }
-                var envVariableService = new EnvVariableService();
-                var envVariableController = new EnvVariableController(envVariableService);
-                String envResult = envVariableController.env();
+                String envResult = controllerContainer.getEnvVariableController().env();
                 terminal.println(envResult);
                 commandOutput = new SearchCache("env", new StringBuilder(envResult));
                 break;
@@ -559,9 +506,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(1, params)) {
                     return;
                 }
-                var localFilesService = new LocalFileService();
-                var localFilesController = new LocalFilesController(localFilesService);
-                StringBuilder resultLocalFiles = localFilesController.files(currDataSet);
+                StringBuilder resultLocalFiles = controllerContainer.getLocalFilesController().files(currDataSet);
                 terminal.println(resultLocalFiles.toString());
                 commandOutput = new SearchCache("files", resultLocalFiles);
                 break;
@@ -576,8 +521,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
-                var grepService = new GrepService(currConnection, params[1], timeout);
-                var grepController = new GrepController(grepService);
+                var grepController = controllerContainer.getGrepController(currConnection, params[1], timeout);
                 String grepResult = grepController.grep(params[2], currDataSet);
                 terminal.println(grepResult);
                 break;
@@ -610,9 +554,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(3, params)) {
                     return;
                 }
-                dsnList = new DsnList(currConnection);
-                var listingService = new ListingService(terminal, dsnList, timeout);
-                var listingController = new ListingController(listingService);
+                var listingController = controllerContainer.getListingController(currConnection, terminal, timeout);
                 if (params.length == 3 && ("-l".equals(params[1]) || "--l".equals(params[1]))) {
                     boolean isAttributes = !"--l".equals(params[1]);
                     var value = params[2];
@@ -712,9 +654,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 disableKeys = true;
-                var dsnCreate = new DsnCreate(currConnection);
-                var makeDirService = new MakeDirService(dsnCreate, timeout);
-                var makeDirController = new MakeDirController(terminal, makeDirService);
+                var makeDirController = controllerContainer.getMakeDirController(currConnection, terminal, timeout);
                 makeDirController.mkdir(mainTextIO, currDataSet, params[1]);
                 disableKeys = false;
                 break;
@@ -725,8 +665,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 StringBuilder mvsCommandCandidate = getCommandFromParams(params);
                 long mvsCommandCount = mvsCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(mvsCommandCount, mvsCommandCandidate)) {
-                    var consoleService = new ConsoleService(currConnection, timeout);
-                    var consoleController = new ConsoleController(consoleService);
+                    var consoleController = controllerContainer.getConsoleController(currConnection, timeout);
                     String result = consoleController.issueConsole(mvsCommandCandidate.toString());
                     terminal.println(result);
                     commandOutput = new SearchCache("mvs", new StringBuilder(result));
@@ -736,8 +675,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                var processLstService = new ProcessLstService(new JobGet(currConnection), timeout);
-                var processLstController = new ProcessLstController(processLstService);
+                var processLstController = controllerContainer.getProcessLstController(currConnection, timeout);
                 String result;
                 if (params.length > 1) {
                     result = processLstController.processList(params[1]);
@@ -755,10 +693,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                var jobDelete = new JobDelete(currConnection);
-                jobGet = new JobGet(currConnection);
-                var purgeService = new PurgeService(jobDelete, jobGet, timeout);
-                var purgeController = new PurgeController(purgeService);
+                var purgeController = controllerContainer.getPurgeController(currConnection, timeout);
                 String purgeResult = purgeController.purge(params[1].toUpperCase());
                 terminal.println(purgeResult);
                 break;
@@ -772,8 +707,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 terminal.println(currDataSet);
                 break;
             case "rm":
-                var deleteService = new DeleteService(currConnection, timeout);
-                var deleteController = new DeleteController(deleteService);
+                var deleteController = controllerContainer.getDeleteController(currConnection, timeout);
                 String deleteResult = deleteController.rm(currDataSet, params[1]);
                 terminal.println(deleteResult);
                 break;
@@ -784,8 +718,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                var saveService = new SaveService(new DsnWrite(currConnection), timeout);
-                var saveController = new SaveController(saveService);
+                var saveController = controllerContainer.getSaveController(currConnection, timeout);
                 String saveResult = saveController.save(currDataSet, params[1]);
                 terminal.println(saveResult);
                 break;
@@ -796,8 +729,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                var searchCacheService = new SearchCacheService();
-                var searchCacheController = new SearchCacheController(searchCacheService);
+                var searchCacheController = controllerContainer.getSearchCacheController();
                 searchCacheController.search(commandOutput, params[1]).forEach(terminal::println);
                 break;
             case "set":
@@ -807,9 +739,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                envVariableService = new EnvVariableService();
-                envVariableController = new EnvVariableController(envVariableService);
-                String setResult = envVariableController.set(params[1]);
+                String setResult = controllerContainer.getEnvVariableController().set(params[1]);
                 terminal.println(setResult);
                 break;
             case "stop":
@@ -819,9 +749,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                issueConsole = new IssueConsole(currConnection);
-                var stopService = new TerminateService(issueConsole, timeout);
-                var stopController = new StopController(stopService);
+                var stopController = controllerContainer.getStopController(currConnection, timeout);
                 String terminateResult = stopController.stop(params[1]);
                 terminal.println(terminateResult);
                 break;
@@ -835,9 +763,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isCurrDataSetNotSpecified()) {
                     return;
                 }
-                var jobSubmit = new JobSubmit(currConnection);
-                var submitService = new SubmitService(jobSubmit, timeout);
-                var submitController = new SubmitController(submitService);
+                var submitController = controllerContainer.getSubmitController(currConnection, timeout);
                 String submitResult = submitController.submit(currDataSet, params[1]);
                 terminal.println(submitResult);
                 break;
@@ -848,9 +774,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(4, params)) {
                     return;
                 }
-                jobGet = new JobGet(currConnection);
-                var tailService = new TailService(terminal, jobGet, timeout);
-                var tailController = new TailController(tailService);
+                var tailController = controllerContainer.getTailController(currConnection, terminal, timeout);
                 commandOutput = tailController.tail(params);
                 break;
             case "t":
@@ -878,10 +802,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                var dsnWrite = new DsnWrite(currConnection);
-                dsnList = new DsnList(currConnection);
-                var touchService = new TouchService(dsnWrite, dsnList, timeout);
-                var touchController = new TouchController(touchService);
+                var touchController = controllerContainer.getTouchController(currConnection, timeout);
                 String touchResult = touchController.touch(currDataSet, params[1]);
                 terminal.println(touchResult);
                 break;
@@ -889,9 +810,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                envVariableService = new EnvVariableService();
-                envVariableController = new EnvVariableController(envVariableService);
-                String acctNum = envVariableController.getValueByEnv("ACCTNUM");
+                String acctNum = controllerContainer.getEnvVariableController().getValueByEnv("ACCTNUM");
                 StringBuilder tsoCommandCandidate = getCommandFromParams(params);
                 long tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {
@@ -906,8 +825,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(1, params)) {
                     return;
                 }
-                var consoleService = new ConsoleService(currConnection, timeout);
-                var unameController = new UnameController(consoleService);
+                var unameController = controllerContainer.getUnameController(currConnection, timeout);
                 String unameResult = unameController.uname(currConnection);
                 terminal.println(unameResult);
                 break;
@@ -918,8 +836,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 StringBuilder ussCommandCandidate = getCommandFromParams(params);
                 long ussCommandCount = ussCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(ussCommandCount, ussCommandCandidate)) {
-                    var sshService = new SshService(currSshConnection);
-                    var ussController = new UssController(sshService);
+                    var ussController = controllerContainer.getUssController(currSshConnection);
                     String ussResult = ussController.issueUnixCommand(ussCommandCandidate.toString());
                     terminal.println(ussResult);
                 }
@@ -945,10 +862,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                dsnGet = new DsnGet(currConnection);
-                download = new Download(dsnGet, false);
-                var editService = new EditService(download, timeout);
-                var editController = new EditController(editService);
+                var editController = controllerContainer.getEditController(currConnection, timeout);
                 String editResult = editController.edit(currDataSet, params[1]);
                 terminal.println(editResult);
                 break;
