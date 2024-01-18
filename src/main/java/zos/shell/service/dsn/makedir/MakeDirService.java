@@ -18,7 +18,7 @@ public class MakeDirService {
     private final long timeout;
 
     public MakeDirService(final DsnCreate dsnCreate, long timeout) {
-        LOG.debug("*** MakeDirectoryService ***");
+        LOG.debug("*** MakeDirService ***");
         this.dsnCreate = dsnCreate;
         this.timeout = timeout;
     }
