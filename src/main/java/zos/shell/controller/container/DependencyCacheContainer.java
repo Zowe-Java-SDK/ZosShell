@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 
+import java.util.Optional;
+
 public class DependencyCacheContainer {
 
     private static final Logger LOG = LoggerFactory.getLogger(DependencyCacheContainer.class);
@@ -41,7 +43,11 @@ public class DependencyCacheContainer {
     public DependencyCacheContainer(final ZosConnection zosConnection, final String data, final long timeout) {
         LOG.debug("*** DependencyContainer zosConnection data timeout ***");
         this.zosConnection = zosConnection;
-        this.data = data;
+        if (data == null) {
+            this.data = "";
+        } else {
+            this.data = data.trim();
+        }
         this.timeout = timeout;
     }
 
