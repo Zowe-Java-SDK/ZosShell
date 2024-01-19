@@ -11,6 +11,7 @@ public class DependencyCacheContainer {
 
     private ZosConnection zosConnection;
     private SshConnection sshConnection;
+    private String data;
     private boolean toggle;
     private long timeout;
 
@@ -37,6 +38,13 @@ public class DependencyCacheContainer {
         this.sshConnection = sshConnection;
     }
 
+    public DependencyCacheContainer(final ZosConnection connection, final String data, final long timeout) {
+        LOG.debug("*** DependencyContainer zosConnection toggle timeout ***");
+        this.zosConnection = zosConnection;
+        this.data = data;
+        this.timeout = timeout;
+    }
+
     public boolean isZosConnectionSame(final ZosConnection zosConnection) {
         LOG.debug("*** isZosConnectionSame ***");
         return this.zosConnection.getHost().equalsIgnoreCase(zosConnection.getHost()) &&
@@ -51,6 +59,10 @@ public class DependencyCacheContainer {
                 this.sshConnection.getPassword().equalsIgnoreCase(sshConnection.getPassword()) &&
                 this.sshConnection.getUser().equalsIgnoreCase(sshConnection.getUser()) &&
                 this.sshConnection.getPort() == sshConnection.getPort();
+    }
+
+    public boolean isData(String data) {
+        return this.data.equalsIgnoreCase(data);
     }
 
     public boolean isToggleSame(boolean toggle) {

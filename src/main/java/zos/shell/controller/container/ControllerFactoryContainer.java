@@ -294,8 +294,15 @@ public class ControllerFactoryContainer {
 
     public GrepController getGrepController(final ZosConnection connection, final String target, final long timeout) {
         LOG.debug("*** getGrepController ***");
-        var grepService = new GrepService(connection, target, timeout);
-        this.grepController = new GrepController(grepService);
+        if (this.grepController == null ||
+                (this.grepDependencyContainer != null && (
+                        !(this.grepDependencyContainer.isZosConnectionSame(connection) &&
+                                this.grepDependencyContainer.isTimeoutSame(timeout) &&
+                                this.grepDependencyContainer.isData(target))))) {
+            var grepService = new GrepService(connection, target, timeout);
+            this.grepController = new GrepController(grepService);
+            this.grepDependencyContainer = new DependencyCacheContainer(connection, target, timeout);
+        }
         return this.grepController;
     }
 
