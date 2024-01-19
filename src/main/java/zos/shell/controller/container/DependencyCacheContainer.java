@@ -38,8 +38,8 @@ public class DependencyCacheContainer {
         this.sshConnection = sshConnection;
     }
 
-    public DependencyCacheContainer(final ZosConnection connection, final String data, final long timeout) {
-        LOG.debug("*** DependencyContainer zosConnection toggle timeout ***");
+    public DependencyCacheContainer(final ZosConnection zosConnection, final String data, final long timeout) {
+        LOG.debug("*** DependencyContainer zosConnection data timeout ***");
         this.zosConnection = zosConnection;
         this.data = data;
         this.timeout = timeout;
