@@ -13,21 +13,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.configuration.ConfigSingleton;
 import zos.shell.constants.Constants;
-import zos.shell.controller.ControllerContainer;
-import zos.shell.controller.TsoController;
+import zos.shell.controller.container.ControllerFactoryContainer;
 import zos.shell.record.DataSetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.autocomplete.SearchCommandService;
 import zos.shell.service.help.HelpService;
 import zos.shell.service.history.HistoryService;
 import zos.shell.service.search.SearchCache;
-import zos.shell.service.tso.TsoService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.PromptUtil;
 import zos.shell.utility.StrUtil;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
-import zowe.client.sdk.zostso.method.IssueTso;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -57,6 +54,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static boolean disableKeys = false;
     private static TextIO mainTextIO;
     private static long timeout = Constants.FUTURE_TIMEOUT_VALUE;
+    private static final ControllerFactoryContainer controllerContainer = new ControllerFactoryContainer();
 
     public static void main(String[] args) {
         LOG.debug("*** main ***");
@@ -303,7 +301,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         if (params.length == 0) {
             return;
         }
-        var controllerContainer = new ControllerContainer();
         ResponseStatus responseStatus;
         String command = params[0];
         history.addHistory(params);
@@ -464,6 +461,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         terminal.println(Constants.INVALID_PARAMETER);
                         return;
                     }
+                }
+                if (currDataSet.isBlank()) {
+                    terminal.println(Constants.DATASET_NOT_SPECIFIED);
+                    break;
                 }
                 var downloadDsnController = controllerContainer.getDownloadDsnController(currConnection, isBinary, timeout);
                 List<String> downloadResults = downloadDsnController.download(currDataSet, params[1]);
@@ -814,9 +815,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 StringBuilder tsoCommandCandidate = getCommandFromParams(params);
                 long tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {
-                    var issueTso = new IssueTso(currConnection);
-                    var tsoService = new TsoService(issueTso, acctNum, timeout);
-                    var tsoController = new TsoController(tsoService);
+                    var tsoController = controllerContainer.getTsoController(currConnection, acctNum, timeout);
                     String tsoResult = tsoController.issueCommand(acctNum, tsoCommandCandidate.toString());
                     terminal.println(tsoResult);
                 }
