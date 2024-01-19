@@ -298,7 +298,7 @@ public class ControllerFactoryContainer {
                 (this.grepDependencyContainer != null && (
                         !(this.grepDependencyContainer.isZosConnectionSame(connection) &&
                                 this.grepDependencyContainer.isTimeoutSame(timeout) &&
-                                this.grepDependencyContainer.isData(target))))) {
+                                this.grepDependencyContainer.isDataSame(target))))) {
             var grepService = new GrepService(connection, target, timeout);
             this.grepController = new GrepController(grepService);
             this.grepDependencyContainer = new DependencyCacheContainer(connection, target, timeout);
