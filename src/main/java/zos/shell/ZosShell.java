@@ -306,8 +306,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         history.addHistory(params);
 
         switch (command.toLowerCase()) {
-            case "b":
-            case "browse":
+            case "bj":
+            case "browsejob":
                 if (isParamsMissing(1, params)) {
                     return;
                 }
