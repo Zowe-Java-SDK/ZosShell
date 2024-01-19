@@ -457,9 +457,16 @@ public class ControllerFactoryContainer {
 
     public TsoController getTsoController(final ZosConnection connection, final String acctNum, final long timeout) {
         LOG.debug("*** getTsoController ***");
-        var issueTso = new IssueTso(connection);
-        var tsoService = new TsoService(issueTso, acctNum, timeout);
-        this.tsoController = new TsoController(tsoService);
+        if (this.tsoController == null ||
+                (this.tsoDependencyContainer != null && (
+                        !(this.tsoDependencyContainer.isZosConnectionSame(connection) &&
+                                this.tsoDependencyContainer.isTimeoutSame(timeout) &&
+                                this.tsoDependencyContainer.isDataSame(acctNum))))) {
+            var issueTso = new IssueTso(connection);
+            var tsoService = new TsoService(issueTso, acctNum, timeout);
+            this.tsoController = new TsoController(tsoService);
+            this.tsoDependencyContainer = new DependencyCacheContainer(connection, acctNum, timeout);
+        }
         return this.tsoController;
     }
 
