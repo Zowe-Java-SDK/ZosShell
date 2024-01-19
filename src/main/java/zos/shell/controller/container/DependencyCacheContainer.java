@@ -61,7 +61,7 @@ public class DependencyCacheContainer {
                 this.sshConnection.getPort() == sshConnection.getPort();
     }
 
-    public boolean isDataSame(String data) {
+    public boolean isDataSame(final String data) {
         LOG.debug("*** isDataSame ***");
         return this.data.equalsIgnoreCase(data);
     }
