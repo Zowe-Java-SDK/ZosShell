@@ -817,6 +817,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {
                     var tsoController = controllerContainer.getTsoController(currConnection, acctNum, timeout);
                     String tsoResult = tsoController.issueCommand(acctNum, tsoCommandCandidate.toString());
+                    commandOutput = new SearchCache("tso", new StringBuilder(tsoResult));
                     terminal.println(tsoResult);
                 }
                 break;
