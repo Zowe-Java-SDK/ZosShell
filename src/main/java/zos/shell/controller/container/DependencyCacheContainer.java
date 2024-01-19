@@ -54,6 +54,7 @@ public class DependencyCacheContainer {
     }
 
     public boolean isToggleSame(boolean toggle) {
+        LOG.debug("*** isToggleSame ***");
         return this.toggle == toggle;
     }
 
