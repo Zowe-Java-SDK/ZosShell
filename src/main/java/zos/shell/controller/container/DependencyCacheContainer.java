@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 
-import java.util.Optional;
-
 public class DependencyCacheContainer {
 
     private static final Logger LOG = LoggerFactory.getLogger(DependencyCacheContainer.class);
