@@ -35,6 +35,7 @@ public class PathService {
             throw new IllegalArgumentException("Expected sequential dataset");
         }
         this.target = target;
+        this.initialize();
     }
 
     public void initialize() {
