@@ -680,10 +680,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 String result;
                 if (params.length > 1) {
                     result = processLstController.processList(params[1]);
-                    terminal.println(result);
                 } else {
                     result = processLstController.processList();
                 }
+                terminal.println(result);
                 commandOutput = new SearchCache("ps", new StringBuilder(result));
                 break;
             case "p":
