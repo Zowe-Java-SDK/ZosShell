@@ -112,11 +112,12 @@ public class ControllerFactoryContainer {
         if (this.browseJobController == null ||
                 (this.browseJobDependencyContainer != null && (
                         !(this.browseJobDependencyContainer.isZosConnectionSame(connection) &&
-                                this.browseJobDependencyContainer.isTimeoutSame(timeout))))) {
+                                this.browseJobDependencyContainer.isTimeoutSame(timeout) &&
+                                this.browseJobDependencyContainer.isToggleSame(isAll))))) {
             var jobGet = new JobGet(connection);
             var browseJobService = new BrowseLogService(jobGet, isAll, timeout);
             this.browseJobController = new BrowseJobController(browseJobService);
-            this.browseJobDependencyContainer = new DependencyCacheContainer(connection, timeout);
+            this.browseJobDependencyContainer = new DependencyCacheContainer(connection, isAll, timeout);
         }
         return this.browseJobController;
     }
