@@ -45,7 +45,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static ZosConnection currConnection;
     private static TextTerminal<?> terminal;
     private static HistoryService history;
-    private static SearchCache commandOutput;
+    private static SearchCache searchCache;
     private static final SwingTextTerminal mainTerminal = new SwingTextTerminal();
     private static final SearchCommandService searchCommandService = new SearchCommandService();
     private static final int defaultFontSize = 10;
@@ -322,7 +322,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         params.length == 3, timeout);
                 String browseJobResult = browseJobController.browseJob(params[1]);
                 terminal.println(browseJobResult);
-                commandOutput = new SearchCache("browsejob", new StringBuilder(browseJobResult));
+                searchCache = new SearchCache("browsejob", new StringBuilder(browseJobResult));
                 break;
             case "cancel":
                 if (isParamsMissing(1, params)) {
@@ -345,7 +345,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 var concatController = controllerContainer.getConcatController(currConnection, timeout);
                 String concatResult = concatController.cat(currDataSet, params[1]);
                 terminal.println(concatResult);
-                commandOutput = new SearchCache("cat", new StringBuilder(concatResult));
+                searchCache = new SearchCache("cat", new StringBuilder(concatResult));
                 break;
             case "cd":
                 if (isParamsMissing(1, params)) {
@@ -385,9 +385,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             case "clear":
                 terminal.println();
                 terminal.resetToBookmark("top");
-                if (commandOutput != null) {
-                    commandOutput.getOutput().setLength(0);
-                    commandOutput = null;
+                if (searchCache != null) {
+                    searchCache.getOutput().setLength(0);
+                    searchCache = null;
                     System.gc();
                 }
                 terminal.println();
@@ -501,7 +501,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 String envResult = controllerContainer.getEnvVariableController().env();
                 terminal.println(envResult);
-                commandOutput = new SearchCache("env", new StringBuilder(envResult));
+                searchCache = new SearchCache("env", new StringBuilder(envResult));
                 break;
             case "files":
                 if (isParamsExceeded(1, params)) {
@@ -509,7 +509,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 }
                 StringBuilder resultLocalFiles = controllerContainer.getLocalFilesController().files(currDataSet);
                 terminal.println(resultLocalFiles.toString());
-                commandOutput = new SearchCache("files", resultLocalFiles);
+                searchCache = new SearchCache("files", resultLocalFiles);
                 break;
             case "g":
             case "grep":
@@ -532,7 +532,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 if (params.length == 1) {
-                    commandOutput = HelpService.display(terminal);
+                    searchCache = HelpService.display(terminal);
                 }
                 break;
             case "history":
@@ -669,7 +669,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     var consoleController = controllerContainer.getConsoleController(currConnection, timeout);
                     String result = consoleController.issueConsole(mvsCommandCandidate.toString());
                     terminal.println(result);
-                    commandOutput = new SearchCache("mvs", new StringBuilder(result));
+                    searchCache = new SearchCache("mvs", new StringBuilder(result));
                 }
                 break;
             case "ps":
@@ -684,7 +684,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     result = processLstController.processList();
                 }
                 terminal.println(result);
-                commandOutput = new SearchCache("ps", new StringBuilder(result));
+                searchCache = new SearchCache("ps", new StringBuilder(result));
                 break;
             case "p":
             case "purge":
@@ -731,7 +731,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 var searchCacheController = controllerContainer.getSearchCacheController();
-                searchCacheController.search(commandOutput, params[1]).forEach(terminal::println);
+                searchCacheController.search(searchCache, params[1]).forEach(terminal::println);
                 break;
             case "set":
                 if (isParamsMissing(1, params)) {
@@ -776,7 +776,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     return;
                 }
                 var tailController = controllerContainer.getTailController(currConnection, terminal, timeout);
-                commandOutput = tailController.tail(params);
+                searchCache = tailController.tail(params);
                 break;
             case "t":
             case "timeout":
@@ -817,7 +817,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {
                     var tsoController = controllerContainer.getTsoController(currConnection, acctNum, timeout);
                     String tsoResult = tsoController.issueCommand(acctNum, tsoCommandCandidate.toString());
-                    commandOutput = new SearchCache("tso", new StringBuilder(tsoResult));
+                    searchCache = new SearchCache("tso", new StringBuilder(tsoResult));
                     terminal.println(tsoResult);
                 }
                 break;
