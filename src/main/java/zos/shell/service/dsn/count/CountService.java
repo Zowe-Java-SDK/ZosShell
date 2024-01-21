@@ -31,7 +31,7 @@ public class CountService {
 
     public ResponseStatus count(final String dataset, final String filter) {
         LOG.debug("*** count ***");
-        if (!DsnUtil.isDataSet(dataset)) {
+        if (!DsnUtil.isDataset(dataset)) {
             return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
         }
         var dataSetCount = new AtomicInteger();

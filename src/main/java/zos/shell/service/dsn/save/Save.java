@@ -32,7 +32,7 @@ public class Save {
             return new ResponseStatus(Constants.OS_ERROR, false);
         }
 
-        boolean isSequentialDataset = DsnUtil.isDataSet(target);
+        boolean isSequentialDataset = DsnUtil.isDataset(target);
         PathService pathService;
         if (isSequentialDataset) {
             pathService = new PathService(target);

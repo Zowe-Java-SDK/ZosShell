@@ -25,7 +25,7 @@ public class ListingService {
     private List<Member> members = new ArrayList<>();
     private List<Dataset> datasets = new ArrayList<>();
     private final DsnList dsnList;
-    private boolean isDataSets = false;
+    private boolean isDatasets = false;
 
     public ListingService(final TextTerminal<?> terminal, final DsnList dsnList, final long timeout) {
         LOG.debug("*** ListingService ***");
@@ -43,7 +43,7 @@ public class ListingService {
         }
 
         datasets = getDataSets(dataset);
-        isDataSets = datasets.size() > 1;
+        isDatasets = datasets.size() > 1;
         members = getMembers(dataset);
 
         member.ifPresentOrElse((m) -> {
@@ -138,7 +138,7 @@ public class ListingService {
             return;
         }
         var columnFormat = "%-8s %-10s %-10s %-4s %-5s";
-        if (isDataSets) {
+        if (isDatasets) {
             terminal.println();
         }
         if (isAttributes) {

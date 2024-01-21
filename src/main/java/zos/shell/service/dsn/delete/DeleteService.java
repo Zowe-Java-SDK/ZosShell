@@ -63,7 +63,7 @@ public class DeleteService {
         }
 
         // handle sequential dataset
-        if (DsnUtil.isDataSet(target)) {
+        if (DsnUtil.isDataset(target)) {
             return processRequest(target, null);
         }
 

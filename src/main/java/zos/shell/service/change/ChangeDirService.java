@@ -27,7 +27,7 @@ public class ChangeDirService {
 
     public ResponseStatus cd(String currDataSet, final String target) {
         LOG.debug("*** cd ***");
-        if (DsnUtil.isDataSet(target)) {
+        if (DsnUtil.isDataset(target)) {
             return new ResponseStatus("success", true, target);
         } else if (target.equals("..") && !currDataSet.isBlank()) {
             var tokens = currDataSet.split("\\.");

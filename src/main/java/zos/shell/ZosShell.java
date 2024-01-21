@@ -217,7 +217,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         terminal.printf("Are you sure you want to delete " + candidate + " y/n");
                     } else if (currDataSet.isBlank() && dataSetMember != null) {
                         terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
-                    } else if (currDataSet.isBlank() && DsnUtil.isDataSet(command[1])) {
+                    } else if (currDataSet.isBlank() && DsnUtil.isDataset(command[1])) {
                         terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
                     } else if (!currDataSet.isBlank() && ("*".equals(command[1]) || ".".equals(command[1]))) {
                         terminal.printf("Are you sure you want to delete all from " + currDataSet + " y/n");
@@ -584,7 +584,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                             terminal.println(responseStatus.getMessage());
                         }
                         return;
-                    } else if (DsnUtil.isDataSet(value)) {  // is dataset specified at this point...
+                    } else if (DsnUtil.isDataset(value)) {  // is dataset specified at this point...
                         responseStatus = listingController.lsl(null, value, isAttributes);
                         if (!responseStatus.isStatus()) {
                             terminal.println(responseStatus.getMessage());
@@ -607,7 +607,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     addVisited();
                     return;
                 }
-                if (params.length == 2 && DsnUtil.isDataSet(params[1])) {
+                if (params.length == 2 && DsnUtil.isDataset(params[1])) {
                     responseStatus = listingController.ls(params[1]);
                     if (!responseStatus.isStatus()) {
                         terminal.println(responseStatus.getMessage());

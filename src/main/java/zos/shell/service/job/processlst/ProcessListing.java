@@ -25,12 +25,12 @@ public class ProcessListing {
         this.jobGet = jobGet;
     }
 
-    public ResponseStatus processLst(final String jobOrTask) {
+    public ResponseStatus processLst(final String target) {
         LOG.debug("*** processLst ***");
         List<Job> jobs;
         try {
-            if (jobOrTask != null) {
-                getJobParams.prefix(jobOrTask).build();
+            if (target != null) {
+                getJobParams.prefix(target).build();
             }
             var params = getJobParams.build();
             jobs = jobGet.getCommon(params);

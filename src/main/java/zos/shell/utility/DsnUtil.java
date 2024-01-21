@@ -17,8 +17,8 @@ public class DsnUtil {
     private static final String PATTERN_STRING_MORE_THAN_ONE_CHAR = "[A-Z#@\\$][A-Z\\d#@\\$\\-]{1,7}";
     private static final String PATTERN_STRING_FOR_ONE_CHAR = "[A-Z#@\\$]{1}";
 
-    public static boolean isDataSet(String name) {
-        LOG.debug("*** isDataSet ***");
+    public static boolean isDataset(String name) {
+        LOG.debug("*** isDataset ***");
         name = name.toUpperCase(Locale.ROOT);
 
         // Check that the dataset contains more than one segment

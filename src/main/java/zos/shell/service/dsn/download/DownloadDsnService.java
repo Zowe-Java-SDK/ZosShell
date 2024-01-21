@@ -89,7 +89,7 @@ public class DownloadDsnService {
                 // member in current dataset
                 submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), dataset, target, isBinary));
                 results.add(submit.get(timeout, TimeUnit.SECONDS));
-            } else if (DsnUtil.isDataSet(target)) {
+            } else if (DsnUtil.isDataset(target)) {
                 // sequential dataset
                 submit = pool.submit(new FutureDatasetDownload(new DsnGet(connection), target, isBinary));
                 results.add(submit.get(timeout, TimeUnit.SECONDS));

@@ -29,7 +29,7 @@ public class PathService {
 
     public PathService(final String target) {
         LOG.debug("*** PathService target ***");
-        if (DsnUtil.isDataSet(target)) {
+        if (DsnUtil.isDataset(target)) {
             this.dataset = Constants.SEQUENTIAL_DIRECTORY_LOCATION;
         } else {
             throw new IllegalArgumentException("Expected sequential dataset");

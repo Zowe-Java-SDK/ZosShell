@@ -31,7 +31,7 @@ public class DataSetMember {
             return null;
         }
         var dataset = target.substring(0, index);
-        if (!DsnUtil.isDataSet(dataset)) {
+        if (!DsnUtil.isDataset(dataset)) {
             return null;
         }
 

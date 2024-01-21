@@ -24,10 +24,10 @@ public class ProcessLstService {
         this.timeout = timeout;
     }
 
-    public ResponseStatus processLst(final String jobOrTask) {
+    public ResponseStatus processLst(final String target) {
         LOG.debug("*** processLst ***");
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureProcessListing(jobGet, jobOrTask));
+        Future<ResponseStatus> submit = pool.submit(new FutureProcessListing(jobGet, target));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

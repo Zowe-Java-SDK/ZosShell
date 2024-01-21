@@ -7,16 +7,16 @@ import java.util.concurrent.Callable;
 
 public class FutureProcessListing extends ProcessListing implements Callable<ResponseStatus> {
 
-    private final String jobOrTask;
+    private final String target;
 
-    public FutureProcessListing(final JobGet JobGet, final String jobOrTask) {
+    public FutureProcessListing(final JobGet JobGet, final String target) {
         super(JobGet);
-        this.jobOrTask = jobOrTask;
+        this.target = target;
     }
 
     @Override
     public ResponseStatus call() {
-        return this.processLst(jobOrTask);
+        return this.processLst(target);
     }
 
 }

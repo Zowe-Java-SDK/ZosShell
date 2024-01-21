@@ -34,7 +34,7 @@ public class TouchService {
     public ResponseStatus touch(final String dataset, final String target) {
         LOG.debug("*** touch ***");
 
-        if (!DsnUtil.isDataSet(dataset)) {
+        if (!DsnUtil.isDataset(dataset)) {
             return new ResponseStatus(Constants.INVALID_DATASET, true);
         }
 

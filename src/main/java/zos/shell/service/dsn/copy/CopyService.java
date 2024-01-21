@@ -58,7 +58,7 @@ public class CopyService {
         }
 
         // copy dataset to dataset
-        if (DsnUtil.isDataSet(firstParam) && DsnUtil.isDataSet(secondParam)) {
+        if (DsnUtil.isDataset(firstParam) && DsnUtil.isDataset(secondParam)) {
             return processRequest(firstParam, secondParam, false);
         }
 
@@ -87,7 +87,7 @@ public class CopyService {
                 return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
             }
             fromDataSetName = currDataSet;
-            if (DsnUtil.isDataSet(secondParam)) {
+            if (DsnUtil.isDataset(secondParam)) {
                 toDataSetName = secondParam;
             } else {
                 return new ResponseStatus("specify valid dataset destination, try again...", false);
@@ -109,7 +109,7 @@ public class CopyService {
                 return processRequest(currDataSet + "(" + firstParam + ")",
                         currDataSet + "(" + firstParam + ")", false);
             }
-            if (DsnUtil.isDataSet(firstParam)) {
+            if (DsnUtil.isDataset(firstParam)) {
                 return new ResponseStatus(Constants.COPY_NO_MEMBER_ERROR, false);
             }
         }
@@ -120,7 +120,7 @@ public class CopyService {
         }
 
         // copy member to dataset
-        if (!fromDataSetName.isBlank() && DsnUtil.isDataSet(secondParam)) {
+        if (!fromDataSetName.isBlank() && DsnUtil.isDataset(secondParam)) {
             return processRequest(fromDataSetName, secondParam + "(" + firstParam + ")", false);
         }
 
@@ -138,7 +138,7 @@ public class CopyService {
             }
 
             toDataSetName = secondParam;
-            if (!DsnUtil.isDataSet(toDataSetName)) {
+            if (!DsnUtil.isDataset(toDataSetName)) {
                 return new ResponseStatus("specify valid dataset destination, try again...", false);
             }
 
@@ -170,11 +170,11 @@ public class CopyService {
         }
 
         String errMsg;
-        if (DsnUtil.isDataSet(firstParam)) {
+        if (DsnUtil.isDataset(firstParam)) {
             errMsg = "invalid second argument, enter valid sequential dataset and try again...";
         } else if (DsnUtil.isMember(firstParam)) {
             errMsg = "invalid second argument, enter valid dataset or dataset(member) and try again...";
-        } else if (DsnUtil.isDataSet(secondParam)) {
+        } else if (DsnUtil.isDataset(secondParam)) {
             errMsg = "invalid first argument, enter valid member or sequential dataset and try again...";
         } else if (DsnUtil.isMember(secondParam)) {
             errMsg = "invalid first argument, enter valid member or dataset(member) and try again...";

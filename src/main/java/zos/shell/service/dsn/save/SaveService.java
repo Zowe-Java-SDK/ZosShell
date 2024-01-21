@@ -27,7 +27,7 @@ public class SaveService {
 
     public ResponseStatus save(final String dataset, final String target) {
         LOG.debug("*** save ***");
-        if (DsnUtil.isMember(target) && !DsnUtil.isDataSet(dataset)) {
+        if (DsnUtil.isMember(target) && !DsnUtil.isDataset(dataset)) {
             return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
         }
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);

@@ -26,7 +26,7 @@ public class MakeDirController {
 
     public void mkdir(final TextIO mainTextIO, final String dataset, String target) {
         LOG.debug("*** mkdir ***");
-        if (target.contains(".") && !DsnUtil.isDataSet(target)) {
+        if (target.contains(".") && !DsnUtil.isDataset(target)) {
             terminal.println("invalid data set character sequence, try again...");
             return;
         }
@@ -34,7 +34,7 @@ public class MakeDirController {
             terminal.println("invalid 8 character sequence, try again...");
             return;
         }
-        if (!DsnUtil.isDataSet(target) && DsnUtil.isMember(target) && !dataset.isBlank()) {
+        if (!DsnUtil.isDataset(target) && DsnUtil.isMember(target) && !dataset.isBlank()) {
             target = dataset + "." + target;
         } else if (DsnUtil.isMember(target) && dataset.isBlank()) {
             terminal.println(Constants.DATASET_NOT_SPECIFIED);
