@@ -192,7 +192,11 @@ Example of config.json:
         }
     ]
   
-Configuration json formatted file is required for the application to work properly. Any error in finding the file or parsing the JSON string will result in the application being unusable; it will display an error and any input will close the app.    
+JSON configuration file is required for the application to work properly. Any error in finding the file or parsing the JSON string will result in the application being unusable; it will display an error and any input will close the app.    
+    
+The following screenshot displays ZosShell shell window with custom windows properties defined within the "window" JSON section.  
+  
+Here the window is set to display its background in green and font as yellow/bold.   
   
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/colors.gif)    
 
