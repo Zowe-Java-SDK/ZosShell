@@ -24,10 +24,8 @@ public class EnvVariableController {
             return "no environment variables set, try again...";
         }
         var str = new StringBuilder();
-        new TreeMap<>(envVariableService.getEnvVariables()).forEach((k, v) -> {
-            var value = k + "=" + v;
-            str.append(value).append("\n");
-        });
+        new TreeMap<>(envVariableService.getEnvVariables())
+                .forEach((k, v) -> str.append(k).append("=").append(v).append("\n"));
         return str.toString();
     }
 
