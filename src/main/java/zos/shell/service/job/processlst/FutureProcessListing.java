@@ -9,8 +9,8 @@ public class FutureProcessListing extends ProcessListing implements Callable<Res
 
     private final String target;
 
-    public FutureProcessListing(final JobGet JobGet, final String target) {
-        super(JobGet);
+    public FutureProcessListing(final JobGet jobGet, final String target) {
+        super(jobGet);
         this.target = target;
     }
 
