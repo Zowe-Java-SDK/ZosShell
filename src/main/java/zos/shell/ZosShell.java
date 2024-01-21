@@ -39,22 +39,22 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static final Logger LOG = LoggerFactory.getLogger(ZosShell.class);
 
     private static final ListMultimap<String, String> dataSets = ArrayListMultimap.create();
-    private static String currDataSet = "";
-    private static int currDataSetMax = 0;
+    private static final SwingTextTerminal mainTerminal = new SwingTextTerminal();
+    private static final SearchCommandService searchCommandService = new SearchCommandService();
+    private static final ControllerFactoryContainer controllerContainer = new ControllerFactoryContainer();
     private static SshConnection currSshConnection;
     private static ZosConnection currConnection;
     private static TextTerminal<?> terminal;
-    private static HistoryService history;
-    private static SearchCache searchCache;
-    private static final SwingTextTerminal mainTerminal = new SwingTextTerminal();
-    private static final SearchCommandService searchCommandService = new SearchCommandService();
+    private static TextIO mainTextIO;
     private static final int defaultFontSize = 10;
     private static int fontSize = defaultFontSize;
     private static boolean fontSizeChanged = false;
     private static boolean disableKeys = false;
-    private static TextIO mainTextIO;
+    private static String currDataSet = "";
+    private static int currDataSetMax = 0;
+    private static HistoryService history;
+    private static SearchCache searchCache;
     private static long timeout = Constants.FUTURE_TIMEOUT_VALUE;
-    private static final ControllerFactoryContainer controllerContainer = new ControllerFactoryContainer();
 
     public static void main(String[] args) {
         LOG.debug("*** main ***");
