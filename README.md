@@ -1,16 +1,20 @@
 # ZosShell  
   
-ZosShell provides a client like Linux shell to perform and manipulate commands via z/OSMF Rest API calls. 
-
-Functionally provides the ability to do the following:  
+ZosShell provides a client like Linux shell to perform commands against a z/OS instance.  
   
+The commands are exploiting z/OSMF Rest API layer installed on a z/OS instance. 
+  
+The ZosShell application utilizes the [Zowe Client Java SDK](https://github.com/zowe/zowe-client-java-sdk) library to help provide all the boilerplate code to call those Rest APIs. 
+  
+With ZosShell and the functionality it provides with the dependencies noted you can perform the following:  
+
     MVS console command  
-    TSO command  
-    List, view, create, delete, and edit members.  
-    List, create, view and edit (sequential) datasets.  
-    List, submit, start, stop, cancel, purge, monitor and browse log output for jobs and started tasks.  
-      
-The project arise for a need for something more simple, direct and less verbosity than Zowe CLI.     
+    TSO console command
+    Dataset/Member: list, view, create, delete, and edit
+    Job/StartedTask: list, submit, start, stop, cancel, purge, monitor and browse 
+    Download: sequential dataset, member, and job/started task log. 
+        
+The project arise for a need for something more simple, direct and less verbosity than Zowe CLI for the most common commands.       
   
 The app works well on Windows and macOS.   
   
@@ -143,6 +147,10 @@ The configuration file consists of JSON data. The configuration JSON string is d
 A profile is a one-to-one relationship of Profile.java file within the project. It contains variables as a placeholder for configuration information, such as z/OSMF and ssh connection information and properties to control the Window environment.  
     
 In addition, each profile contains path variable to control location for download directory.  
+
+The first JSON array entry in the example below shows all the attributes defined to be read by the application.  
+  
+The other JSON array entries shows that you don't need to specify all attributes and its values. The attributes most critical are those that specify a z/OSMF connection: hostname, zosmfport, username, and password.  
   
 Example of config.json:  
 
@@ -173,7 +181,7 @@ Example of config.json:
             "window": {}		
         },
         {
-           "hostname": "xxxxxxxxx",
+            "hostname": "xxxxxxxxx",
             "zosmfport": "xxxx",
             "sshport" : "xxxx",
             "username": "xxxxx",
