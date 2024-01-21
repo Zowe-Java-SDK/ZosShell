@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.configuration.ConfigSingleton;
 import zos.shell.constants.Constants;
 import zos.shell.controller.container.ControllerFactoryContainer;
-import zos.shell.record.DataSetMember;
+import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.autocomplete.SearchCommandService;
 import zos.shell.service.help.HelpService;
@@ -209,7 +209,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
                 boolean doIt = false;
                 do {
-                    var dataSetMember = DataSetMember.getDatasetAndMember(command[1]);
+                    var dataSetMember = DatasetMember.getDatasetAndMember(command[1]);
                     if (!currDataset.isBlank() && dataSetMember != null) {
                         terminal.printf("Are you sure you want to delete " + command[1] + " y/n");
                     } else if (!currDataset.isBlank() && DsnUtil.isMember(command[1])) {

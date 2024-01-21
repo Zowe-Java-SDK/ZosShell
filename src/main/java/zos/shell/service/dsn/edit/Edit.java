@@ -4,7 +4,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.record.DataSetMember;
+import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.service.path.PathService;
@@ -27,7 +27,7 @@ public class Edit {
     public ResponseStatus open(String dataset, String target) {
         LOG.debug("*** open ***");
         ResponseStatus result;
-        var dataSetMember = DataSetMember.getDatasetAndMember(target);
+        var dataSetMember = DatasetMember.getDatasetAndMember(target);
 
         PathService pathService;
         if (DsnUtil.isMember(target)) {

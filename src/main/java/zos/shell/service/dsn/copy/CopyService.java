@@ -3,7 +3,7 @@ package zos.shell.service.dsn.copy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.record.DataSetMember;
+import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.memberlst.MemberListingService;
 import zos.shell.utility.DsnUtil;
@@ -42,12 +42,12 @@ public class CopyService {
         var firstParam = params[1].toUpperCase();
         var secondParam = params[2].toUpperCase();
 
-        var datasetMemberFirstParam = DataSetMember.getDatasetAndMember(firstParam);
+        var datasetMemberFirstParam = DatasetMember.getDatasetAndMember(firstParam);
         if (datasetMemberFirstParam != null) {
             fromDataSetName = datasetMemberFirstParam.getDataset() + "(" + datasetMemberFirstParam.getMember() + ")";
         }
 
-        var datasetMemberSecondParam = DataSetMember.getDatasetAndMember(secondParam);
+        var datasetMemberSecondParam = DatasetMember.getDatasetAndMember(secondParam);
         if (datasetMemberSecondParam != null) {
             toDataSetName = datasetMemberSecondParam.getDataset() + "(" + datasetMemberSecondParam.getMember() + ")";
         }

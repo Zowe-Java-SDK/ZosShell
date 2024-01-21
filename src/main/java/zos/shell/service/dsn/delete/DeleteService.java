@@ -3,7 +3,7 @@ package zos.shell.service.dsn.delete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.record.DataSetMember;
+import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.memberlst.MemberListingService;
 import zos.shell.utility.DsnUtil;
@@ -38,7 +38,7 @@ public class DeleteService {
         LOG.debug("*** delete ***");
         List<Member> members;
 
-        var datasetMemberTarget = DataSetMember.getDatasetAndMember(target);
+        var datasetMemberTarget = DatasetMember.getDatasetAndMember(target);
         // delete dataset(member) not in currDataset
         if (datasetMemberTarget != null) {
             return processRequest(datasetMemberTarget.getDataset(), datasetMemberTarget.getMember());

@@ -4,14 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.utility.DsnUtil;
 
-public class DataSetMember {
+public class DatasetMember {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DataSetMember.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DatasetMember.class);
 
     private final String dataset;
     private final String member;
 
-    public DataSetMember(final String dataset, final String member) {
+    public DatasetMember(final String dataset, final String member) {
         this.dataset = dataset;
         this.member = member;
     }
@@ -24,7 +24,7 @@ public class DataSetMember {
         return member;
     }
 
-    public static DataSetMember getDatasetAndMember(final String target) {
+    public static DatasetMember getDatasetAndMember(final String target) {
         LOG.debug("*** getMemberFromDataSet ***");
         int index = target.indexOf("(");
         if (index == -1) {
@@ -39,7 +39,7 @@ public class DataSetMember {
         if (!DsnUtil.isMember(member)) {
             return null;
         }
-        return new DataSetMember(dataset, member);
+        return new DatasetMember(dataset, member);
     }
 
     @Override

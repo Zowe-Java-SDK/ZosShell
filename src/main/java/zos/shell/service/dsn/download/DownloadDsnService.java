@@ -3,7 +3,7 @@ package zos.shell.service.dsn.download;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.record.DataSetMember;
+import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.memberlst.MemberListingService;
 import zos.shell.utility.DsnUtil;
@@ -76,7 +76,7 @@ public class DownloadDsnService {
             return results;
         }
 
-        var dataSetMember = DataSetMember.getDatasetAndMember(target);
+        var dataSetMember = DatasetMember.getDatasetAndMember(target);
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         Future<ResponseStatus> submit = null;
         try {
