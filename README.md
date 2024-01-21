@@ -1,11 +1,19 @@
 # ZosShell  
   
-ZosShell provides a client like Linux shell to manipulate members and datasets on your z/OS backend.  
+ZosShell provides a client like Linux shell to perform and manipulate commands via z/OSMF Rest API calls. 
+
+Functionally provides the ability to do the following:  
   
+    MVS console command  
+    TSO command  
+    List, view, create, delete, and edit members.  
+    List, create, view and edit (sequential) datasets.  
+    List, submit, start, stop, cancel, purge, monitor and browse log output for jobs and started tasks.  
+      
 The project arise for a need for something more simple, direct and less verbosity than Zowe CLI.     
   
-The app works well on Windows and macOS. It has not been tested on a Linux environment and some features may be limited.         
-    
+The app works well on Windows and macOS.   
+  
 Project demonstrates the usage of [Zowe Client Java SDK](https://github.com/zowe/zowe-client-java-sdk).  
         
 ## Main Demo  
@@ -109,23 +117,6 @@ To quit from the command shell UI, you can either press 'X' windows close icon o
     z/OSMF installed on your backend z/OS instance.
               
 ## Build And Execute  
-
-Create a credentials.txt file under "C:\ZosShell" for Windows or "/ZosShell" on Max OSX directory that contains a list of z/OSMF connections per line with a comma delimiter for
-connection values. You can change the drive\directory location by changing the hard coded value in the code.    
-  
-Format:  
-    
-    hostname,zomsfportnumber,username,password,mvsconsolename,sshport  
-  
-or
-  
-    hostname,zomsfportnumber,username,password,sshport  
-  
-NOTES:  
-  
-"mvsconsolename" is optional. If executing a mvs command fails, then your zosmf instance may be using a console name other than the default. If so, you can specify the different mvsconsolename.      
-    
-"sshport" is optional. If not specified, "ussh" command will fail.    
           
 At the root directory prompt, execute the following maven command:  
   
@@ -193,7 +184,7 @@ Example of config.json:
         }
     ]
   
-Configuration json formatted file is required for the application to work properly. Any error in finding the file or parsing the JSON string will result in the application starting itself and displaying the error and won't allow you to continue on.    
+Configuration json formatted file is required for the application to work properly. Any error in finding the file or parsing the JSON string will result in the application being unusable; it will display an error and any input will close the app.    
   
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/colors.gif)    
 
