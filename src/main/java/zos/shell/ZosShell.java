@@ -561,7 +561,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     var value = params[2];
                     int size = params[2].length();
                     if (size <= 9 && value.charAt(size - 1) == '*') {  // is member with wild card specified...
-                        if (iscurrDatasetNotSpecified()) {
+                        if (isCurrDatasetNotSpecified()) {
                             return;
                         }
                         int index = value.indexOf("*");
@@ -576,7 +576,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         }
                         return;
                     } else if (DsnUtil.isMember(value)) {  // is member without wild card specified...
-                        if (iscurrDatasetNotSpecified()) {
+                        if (isCurrDatasetNotSpecified()) {
                             return;
                         }
                         responseStatus = listingController.lsl(value, currDataset, isAttributes);
@@ -596,7 +596,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     }
                 }
                 if (params.length == 2 && ("-l".equals(params[1]) || "--l".equals(params[1]))) {
-                    if (iscurrDatasetNotSpecified()) {
+                    if (isCurrDatasetNotSpecified()) {
                         return;
                     }
                     boolean isAttributes = !"--l".equals(params[1]);
@@ -614,7 +614,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     }
                     return;
                 }
-                if (iscurrDatasetNotSpecified()) {
+                if (isCurrDatasetNotSpecified()) {
                     return;
                 }
                 if (params.length == 2 && (params[1].length() <= 9 && params[1].charAt(params[1].length() - 1) == '*')) {
@@ -702,7 +702,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(1, params)) {
                     return;
                 }
-                if (iscurrDatasetNotSpecified()) {
+                if (isCurrDatasetNotSpecified()) {
                     return;
                 }
                 terminal.println(currDataset);
@@ -761,7 +761,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                if (iscurrDatasetNotSpecified()) {
+                if (isCurrDatasetNotSpecified()) {
                     return;
                 }
                 var submitController = controllerContainer.getSubmitController(currConnection, timeout);
@@ -846,7 +846,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(1, params)) {
                     return;
                 }
-                if (iscurrDatasetNotSpecified()) {
+                if (isCurrDatasetNotSpecified()) {
                     return;
                 }
                 for (final String key : dataSets.keySet()) {
@@ -876,9 +876,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         }
     }
 
-    private static boolean isCommandValid(long count, StringBuilder commandCandidate) {
+    private static boolean isCommandValid(long count, StringBuilder cmd) {
         LOG.debug("*** isCommandValid ***");
-        if (count == 2 && commandCandidate.charAt(commandCandidate.length() - 1) == '\"') {
+        if (count == 2 && cmd.charAt(cmd.length() - 1) == '\"') {
             return true;
         } else if (count == 2) {
             terminal.println(Constants.COMMAND_EXTRA_TEXT_INVALID_COMMAND);
@@ -929,8 +929,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         return false;
     }
 
-    private static boolean iscurrDatasetNotSpecified() {
-        LOG.debug("*** iscurrDatasetNotSpecified ***");
+    private static boolean isCurrDatasetNotSpecified() {
+        LOG.debug("*** isCurrDatasetNotSpecified ***");
         if (currDataset.isBlank()) {
             terminal.println(Constants.DATASET_NOT_SPECIFIED);
             return true;
