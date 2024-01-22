@@ -816,7 +816,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 long tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {
                     var tsoController = controllerContainer.getTsoController(currConnection, acctNum, timeout);
-                    String tsoResult = tsoController.issueCommand(acctNum, tsoCommandCandidate.toString());
+                    String tsoResult = tsoController.issueCommand(tsoCommandCandidate.toString());
                     searchCache = new SearchCache("tso", new StringBuilder(tsoResult));
                     terminal.println(tsoResult);
                 }

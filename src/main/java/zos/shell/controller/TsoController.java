@@ -16,7 +16,7 @@ public class TsoController {
         this.tsoService = tsoService;
     }
 
-    public String issueCommand(final String accountNum, final String command) {
+    public String issueCommand(final String command) {
         LOG.debug("*** issueCommand ***");
         ResponseStatus responseStatus = tsoService.issueCommand(command);
         return responseStatus.getMessage();
