@@ -12,15 +12,18 @@ public class DatasetMember {
     private final String member;
 
     public DatasetMember(final String dataset, final String member) {
+        LOG.debug("*** DatasetMember ***");
         this.dataset = dataset;
         this.member = member;
     }
 
     public String getDataset() {
+        LOG.debug("*** getDataset ***");
         return dataset;
     }
 
     public String getMember() {
+        LOG.debug("*** getMember ***");
         return member;
     }
 
