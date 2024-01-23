@@ -2,16 +2,21 @@
   
 ZosShell provides a client like Linux shell to perform commands against a z/OS instance.  
   
-The commands are exploiting z/OSMF Rest API layer installed on a z/OS instance. 
+The commands exploit the z/OSMF Rest API layer installed on a z/OS instance. 
   
-The ZosShell application utilizes the [Zowe Client Java SDK](https://github.com/zowe/zowe-client-java-sdk) library to help provide all the boilerplate code to call those Rest APIs. 
+The ZosShell application utilizes the [Zowe Client Java SDK](https://github.com/zowe/zowe-client-java-sdk) library to call the Rest APIs.  
   
-With ZosShell and the functionality it provides with the dependencies noted you can perform the following:  
+With ZosShell and the functionality it provides with the dependencies noted you can perform the following commands:
 
-    MVS console command  
-    TSO console command
-    Dataset/Member: list, view, create, delete, and edit
-    Job/StartedTask: list, submit, start, stop, cancel, purge, monitor and browse 
+    MVS console  
+    TSO console  
+      
+    Dataset/Member:  
+    list, view, create, delete, and edit. 
+    
+    Job/StartedTask:   
+    list, submit, start, stop, cancel, purge, monitor and browse   
+      
     Download: sequential dataset, member, and job/started task log. 
         
 The project arise for a need for something more simple, direct and less verbosity than Zowe CLI for the most common commands.       
