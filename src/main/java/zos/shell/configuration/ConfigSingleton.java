@@ -94,13 +94,16 @@ public class ConfigSingleton {
         var configSettings = ConfigSingleton.getInstance().getConfigSettings();
         var window = configSettings.getWindow();
         String result;
-        result = windowCmd.setTextColor(window != null ? configSettings.getWindow().getTextcolor() : null);
+        result = windowCmd.setTextColor(window != null && window.getTextcolor() != null ?
+                configSettings.getWindow().getTextcolor() : Constants.DEFAULT_TEXT_COLOR);
         str.append(result != null ? result + "\n" : "");
-        result = windowCmd.setBackGroundColor(window != null ? configSettings.getWindow().getBackgroundcolor() : null);
+        result = windowCmd.setBackGroundColor(window != null && window.getBackgroundcolor() != null ?
+                configSettings.getWindow().getBackgroundcolor() : Constants.DEFAULT_BACKGROUND_COLOR);
         str.append(result != null ? result + "\n" : "");
         result = windowCmd.setBold(window != null && "true".equalsIgnoreCase(configSettings.getWindow().getFontbold()));
         str.append(result != null ? result + "\n" : "");
-        result = windowCmd.setFontSize(window != null ? configSettings.getWindow().getFontsize() : null);
+        result = windowCmd.setFontSize(window != null && window.getFontsize() != null ?
+                configSettings.getWindow().getFontsize() : String.valueOf(Constants.DEFAULT_FONT_SIZE));
         str.append(result != null ? result : "");
         terminal.println(str.toString());
     }
