@@ -59,7 +59,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     public static void main(String[] args) {
         LOG.debug("*** main ***");
         mainTerminal.init();
-        setTerminalProperties();
         mainTextIO = new TextIO(mainTerminal);
         try {
             var configSingleton = ConfigSingleton.getInstance();
@@ -77,6 +76,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             mainTerminal.dispose();
             throw new RuntimeException(e);
         }
+        setTerminalProperties();
         new ZosShell().accept(mainTextIO, null);
     }
 
