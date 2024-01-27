@@ -44,7 +44,7 @@ public class Save {
             // dataset(member) input specified
             pathService = new PathService(datasetMember.getDataset(), datasetMember.getMember());
         } else if (DsnUtil.isDataset(target)) {
-            // target input specified must be sequential dataset
+            //  sequential dataset input specified
             pathService = new PathService(dataset, target);
             isSequentialDataset = true;
         } else {
