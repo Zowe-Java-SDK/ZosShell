@@ -24,7 +24,7 @@ public class Edit {
         this.download = download;
     }
 
-    public ResponseStatus open(String dataset, String target) {
+    public ResponseStatus open(final String dataset, final String target) {
         LOG.debug("*** open ***");
         ResponseStatus result;
         var datasetMember = DatasetMember.getDatasetAndMember(target);
@@ -36,9 +36,7 @@ public class Edit {
             pathService = new PathService(dataset, target);
         } else if (datasetMember != null) {
             // dataset(member) input specified
-            dataset = datasetMember.getDataset();
-            target = datasetMember.getMember();
-            result = download.member(dataset, target);
+            result = download.member(datasetMember.getDataset(), datasetMember.getMember());
             pathService = new PathService(dataset, target);
         } else {
             // target input specified must be sequential dataset
