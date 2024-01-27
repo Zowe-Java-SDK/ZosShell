@@ -42,10 +42,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static final SwingTextTerminal mainTerminal = new SwingTextTerminal();
     private static final SearchCommandService searchCommandService = new SearchCommandService();
     private static final ControllerFactoryContainer controllerContainer = new ControllerFactoryContainer();
-    private static long timeout = Constants.FUTURE_TIMEOUT_VALUE;
     private static final int defaultFontSize = Constants.DEFAULT_FONT_SIZE;
     private static int fontSize = defaultFontSize;
     private static boolean fontSizeChanged = false;
+    private static long timeout = Constants.FUTURE_TIMEOUT_VALUE;
     private static boolean disableKeys = false;
     private static String currDataset = "";
     private static int currDatasetMax = 0;
