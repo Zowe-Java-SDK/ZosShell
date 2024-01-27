@@ -375,6 +375,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
+                terminal.resetToBookmark("top");
                 var changeConnController = controllerContainer.getChangeConnController(terminal);
                 currConnection = changeConnController.changeZosConnection(currConnection, params);
                 currSshConnection = changeConnController.changeSshConnection(currSshConnection, params);
