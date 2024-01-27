@@ -27,17 +27,17 @@ public class Edit {
     public ResponseStatus open(String dataset, String target) {
         LOG.debug("*** open ***");
         ResponseStatus result;
-        var dataSetMember = DatasetMember.getDatasetAndMember(target);
+        var datasetMember = DatasetMember.getDatasetAndMember(target);
 
         PathService pathService;
         if (DsnUtil.isMember(target)) {
             // member input specified from current dataset
             result = download.member(dataset, target);
             pathService = new PathService(dataset, target);
-        } else if (dataSetMember != null) {
+        } else if (datasetMember != null) {
             // dataset(member) input specified
-            dataset = dataSetMember.getDataset();
-            target = dataSetMember.getMember();
+            dataset = datasetMember.getDataset();
+            target = datasetMember.getMember();
             result = download.member(dataset, target);
             pathService = new PathService(dataset, target);
         } else {
