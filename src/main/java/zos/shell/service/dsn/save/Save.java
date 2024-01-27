@@ -4,6 +4,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.path.PathService;
 import zos.shell.utility.DsnUtil;
@@ -32,12 +33,22 @@ public class Save {
             return new ResponseStatus(Constants.OS_ERROR, false);
         }
 
-        boolean isSequentialDataset = DsnUtil.isDataset(target);
+        var datasetMember = DatasetMember.getDatasetAndMember(target);
+        boolean isSequentialDataset = false;
         PathService pathService;
-        if (isSequentialDataset) {
-            pathService = new PathService(target);
-        } else {
+
+        if (DsnUtil.isMember(target)) {
+            // member input specified from current dataset
             pathService = new PathService(dataset, target);
+        } else if (datasetMember != null) {
+            // dataset(member) input specified
+            pathService = new PathService(datasetMember.getDataset(), datasetMember.getMember());
+        } else if (DsnUtil.isDataset(target)) {
+            // target input specified must be sequential dataset
+            pathService = new PathService(dataset, target);
+            isSequentialDataset = true;
+        } else {
+            return new ResponseStatus(Constants.INVALID_PARAMETER, false);
         }
 
         try (var br = new BufferedReader(new FileReader(pathService.getPathWithFile()))) {
@@ -53,6 +64,8 @@ public class Save {
 
             if (isSequentialDataset) {
                 dsnWrite.write(target, content);
+            } else if (datasetMember != null) {
+                dsnWrite.write(datasetMember.getDataset(), datasetMember.getMember(), content);
             } else {
                 dsnWrite.write(dataset, target, content);
             }
