@@ -1,6 +1,6 @@
-package zos.shell.configuration.record;
+package zos.shell.singleton.configuration.record;
 
-import zos.shell.configuration.model.Window;
+import zos.shell.singleton.configuration.model.Window;
 
 public class ConfigSettings {
 

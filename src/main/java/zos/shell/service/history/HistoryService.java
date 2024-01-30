@@ -5,9 +5,7 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.utility.PromptUtil;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,12 +20,12 @@ public class HistoryService {
     private final List<String> commandLst = new LinkedList<>();
     private final CircularLinkedList<String> circularLinkedList = new CircularLinkedList<>();
 
-    public HistoryService(TextTerminal<?> terminal) {
+    public HistoryService(final TextTerminal<?> terminal) {
         LOG.debug("*** HistoryService ***");
         this.terminal = terminal;
     }
 
-    public void listUpCommands(String prompt) {
+    public void listUpCommands(final String prompt) {
         LOG.debug("*** listUpCommands ***");
         if (circularLinkedList.getSize() > 1) {
             terminal.resetLine();
@@ -38,7 +36,7 @@ public class HistoryService {
         }
     }
 
-    public void listDownCommands(String prompt) {
+    public void listDownCommands(final String prompt) {
         LOG.debug("*** listDownCommands ***");
         if (circularLinkedList.getSize() > 1) {
             terminal.resetLine();
@@ -49,7 +47,7 @@ public class HistoryService {
         }
     }
 
-    public void addHistory(String[] params) {
+    public void addHistory(final String[] params) {
         LOG.debug("*** addHistory ***");
         var str = new StringBuilder();
         Arrays.stream(params).forEach(p -> {
@@ -75,7 +73,7 @@ public class HistoryService {
         displayAll();
     }
 
-    public void displayHistory(String param) {
+    public void displayHistory(final String param) {
         LOG.debug("*** displayHistory 2 ***");
         int num;
         try {
@@ -100,35 +98,7 @@ public class HistoryService {
         }
     }
 
-    public String[] filterCommand(String prompt, String[] command) {
-        LOG.debug("*** filterCommand ***");
-        if (!prompt.equals(command[0])) {
-            return command;
-        }
-
-        var list = new ArrayList<>(Arrays.asList(command));
-        // remove multiple spaces entered by end user and nulls
-        list.removeAll(Arrays.asList("", null));
-
-        String[] newCommand;
-        if (list.get(0).equals(PromptUtil.getPrompt())) {
-            newCommand = new String[list.size() - 1];
-            // remove prompt before sending new command
-            for (int i = 1, j = 0; i < list.size(); i++, j++) {
-                newCommand[j] = list.get(i);
-            }
-        } else {
-            // prompt not seen maybe removed by end user when scrolling through history
-            newCommand = new String[list.size()];
-            for (var i = 0; i < list.size(); i++) {
-                newCommand[i] = list.get(i);
-            }
-        }
-
-        return newCommand;
-    }
-
-    public String getHistoryByIndex(int index) {
+    public String getHistoryByIndex(final int index) {
         LOG.debug("*** getHistoryByIndex ***");
         if (index > commandLst.size() - 1 || commandLst.isEmpty()) {
             terminal.println(Constants.NO_HISTORY);
@@ -146,7 +116,7 @@ public class HistoryService {
         return commandLst.get(commandLst.size() - 1);
     }
 
-    public String getLastHistoryByValue(String str) {
+    public String getLastHistoryByValue(final String str) {
         LOG.debug("*** getLastHistoryByValue ***");
         List<String> lst = commandLst.stream().filter(c -> c.startsWith(str.toLowerCase())).collect(Collectors.toList());
         if (lst.isEmpty()) {
@@ -161,10 +131,10 @@ public class HistoryService {
         IntStream.range(0, commandLst.size()).forEach(this::display);
     }
 
-    private void display(int i) {
+    private void display(final int index) {
         LOG.debug("*** display ***");
-        var orderNum = Strings.padStart(String.valueOf(i + 1), 4, ' ');
-        var historyRow = orderNum + Constants.ARROW + commandLst.get(i);
+        var orderNum = Strings.padStart(String.valueOf(index + 1), 4, ' ');
+        var historyRow = orderNum + Constants.ARROW + commandLst.get(index);
         terminal.println(historyRow);
     }
 

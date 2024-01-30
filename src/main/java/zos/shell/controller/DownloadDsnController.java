@@ -2,9 +2,9 @@ package zos.shell.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.configuration.ConfigSingleton;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.DownloadDsnService;
+import zos.shell.singleton.configuration.ConfigSingleton;
 import zos.shell.utility.ResponseUtil;
 
 import java.io.File;

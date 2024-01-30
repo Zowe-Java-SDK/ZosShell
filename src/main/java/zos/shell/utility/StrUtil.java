@@ -23,9 +23,13 @@ public final class StrUtil {
 
     public static String[] stripEmptyStrings(String[] command) {
         LOG.debug("*** stripEmptyStrings ***");
-        var list = new ArrayList<>(Arrays.asList(command));
-        list.removeAll(Collections.singleton(""));
-        command = list.toArray(new String[0]);
+        // handle multiple empty spaces specified
+        if (Arrays.stream(command).anyMatch(String::isEmpty)) {
+            var list = new ArrayList<>(Arrays.asList(command));
+            list.removeAll(Collections.singleton(""));
+            command = list.toArray(new String[0]);
+            return command;
+        }
         return command;
     }
 

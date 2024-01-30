@@ -1,13 +1,14 @@
-package zos.shell.configuration;
+package zos.shell.singleton.configuration;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;
-import zos.shell.configuration.model.Profile;
-import zos.shell.configuration.record.ConfigSettings;
 import zos.shell.constants.Constants;
 import zos.shell.service.change.ChangeWinService;
+import zos.shell.singleton.TerminalSingleton;
+import zos.shell.singleton.configuration.model.Profile;
+import zos.shell.singleton.configuration.record.ConfigSettings;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 
@@ -72,6 +73,10 @@ public class ConfigSingleton {
     }
 
     private void initialConfigSettings() {
+        if (profiles.isEmpty()) {
+            configSettings = null;
+            return;
+        }
         var profile = this.getProfileByIndex(0);
         configSettings = new ConfigSettings(profile.getDownloadpath(), profile.getConsolename(), profile.getWindow());
     }
@@ -89,9 +94,12 @@ public class ConfigSingleton {
     public void updateWindowSittings(final TextTerminal<?> terminal) {
         var str = new StringBuilder();
         if (windowCmd == null) {
-            windowCmd = new ChangeWinService(terminal);
+            windowCmd = new ChangeWinService(TerminalSingleton.getInstance().getTerminal());
         }
         var configSettings = ConfigSingleton.getInstance().getConfigSettings();
+        if (configSettings == null) {
+            return;
+        }
         var window = configSettings.getWindow();
         String result;
         result = windowCmd.setTextColor(window != null && window.getTextcolor() != null ?
@@ -112,15 +120,21 @@ public class ConfigSingleton {
         return zosConnections;
     }
 
-    public Profile getProfileByIndex(final int index) {
+    public Profile getProfileByIndex(int index) {
         return this.profiles.get(index);
     }
 
-    public SshConnection getSshConnectionByIndex(final int index) {
+    public SshConnection getSshConnectionByIndex(int index) {
+        if (shhConnections.isEmpty()) {
+            return null;
+        }
         return shhConnections.get(index);
     }
 
-    public ZosConnection getZosConnectionByIndex(final int index) {
+    public ZosConnection getZosConnectionByIndex(int index) {
+        if (zosConnections.isEmpty()) {
+            return null;
+        }
         return zosConnections.get(index);
     }
 
@@ -133,6 +147,3 @@ public class ConfigSingleton {
     }
 
 }
-
-
-
