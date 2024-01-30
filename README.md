@@ -19,7 +19,7 @@ With ZosShell and the functionality it provides with the dependencies noted you 
       
     Download: sequential dataset, member, and job/started task log. 
         
-The project arise for a need for something more simple, direct and less verbosity than Zowe CLI for the most common commands.       
+The project arise for a need for something more simple, direct and less verbosity than [Zowe CLI](https://github.com/zowe/zowe-cli) for the most common commands.       
   
 The app works well on Windows and macOS.   
   
