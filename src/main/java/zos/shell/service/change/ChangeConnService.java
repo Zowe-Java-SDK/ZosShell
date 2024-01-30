@@ -3,9 +3,9 @@ package zos.shell.service.change;
 import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.configuration.ConfigSingleton;
-import zos.shell.configuration.record.ConfigSettings;
 import zos.shell.constants.Constants;
+import zos.shell.singleton.configuration.ConfigSingleton;
+import zos.shell.singleton.configuration.record.ConfigSettings;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 

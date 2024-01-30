@@ -1,4 +1,4 @@
-package zos.shell.configuration.model;
+package zos.shell.singleton.configuration.model;
 
 public class Profile {
 
