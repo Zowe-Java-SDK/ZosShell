@@ -1,6 +1,6 @@
 # ZosShell  
   
-ZosShell provides a client like Linux shell to perform commands against a z/OS instance.  
+ZosShell provides a client like Linux shell to perform z?OS system services commands against a z/OS instance.  
   
 The commands exploit the z/OSMF Rest API layer installed on a z/OS instance. 
   
