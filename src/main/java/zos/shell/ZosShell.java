@@ -29,9 +29,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     public static void main(String[] args) {
         LOG.debug("*** main ***");
-
         // initialize all Singleton objects needed for Shell processing and tracking
-
         // initialize TerminalSingleton object
         var terminalSingleton = TerminalSingleton.getInstance();
         terminalSingleton.setMainTerminal(new SwingTextTerminal());
@@ -57,6 +55,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         var connSingleton = ConnSingleton.getInstance();
         connSingleton.setCurrZosConnection(ConfigSingleton.getInstance().getZosConnectionByIndex(0));
         connSingleton.setCurrSshConnection(ConfigSingleton.getInstance().getSshConnectionByIndex(0));
+        var title = Constants.APP_TITLE + " - " + connSingleton.getCurrSshConnection().getHost().toUpperCase();
+        TerminalSingleton.getInstance().getMainTerminal().setPaneTitle(title);
 
         // set TerminalSingleton terminal window font size
         if (ConfigSingleton.getInstance().getConfigSettings() != null &&
