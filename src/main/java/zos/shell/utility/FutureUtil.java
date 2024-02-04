@@ -13,6 +13,10 @@ public final class FutureUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(FutureUtil.class);
 
+    private FutureUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static ResponseStatus getFutureResponse(final Future<ResponseStatus> future, final ExecutorService pool,
                                                    final long timeout) {
         LOG.debug("*** getFutureResponse ***");

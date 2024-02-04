@@ -12,6 +12,10 @@ import java.util.stream.Collectors;
 
 public class DsnUtil {
 
+    private DsnUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(DsnUtil.class);
 
     private static final String PATTERN_STRING_MORE_THAN_ONE_CHAR = "[A-Z#@\\$][A-Z\\d#@\\$\\-]{1,7}";

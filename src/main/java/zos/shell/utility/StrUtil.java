@@ -11,6 +11,10 @@ public final class StrUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(StrUtil.class);
 
+    private StrUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static boolean isStrNum(final String str) {
         LOG.debug("*** isStrNum ***");
         try {

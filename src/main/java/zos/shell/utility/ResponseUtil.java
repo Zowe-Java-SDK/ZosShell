@@ -14,6 +14,10 @@ public final class ResponseUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResponseUtil.class);
 
+    private ResponseUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static ResponseStatus getByteResponseStatus(ZosmfRequestException e) {
         LOG.debug("*** getByteResponseStatus ***");
         var byteMsg = (byte[]) e.getResponse().getResponsePhrase().get();

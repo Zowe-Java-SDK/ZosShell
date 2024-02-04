@@ -18,6 +18,10 @@ public final class FileUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(FileUtil.class);
 
+    private FileUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static void openFileLocation(final String filePath) {
         LOG.debug("*** openFileLocation ***");
         if (filePath == null) {
