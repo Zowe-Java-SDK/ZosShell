@@ -19,7 +19,7 @@ public class HelpService {
             "cat                     - display contents",
             "cd <arg>                - where arg is a dataset value or empty",
             "change <arg>            - where arg is a number representing a connection",
-            "clear                   - clear the shell of all history and cached output for search command",
+            "clear                   - clear the shell screen and start at top and empty out cached output for search command",
             "color <arg> <arg2>      - change color arg is prompt and text ",
             "                          and arg2 is background color, i.e. blue, yellow, cyan etc..",
             "connections             - a list of connection(s)",

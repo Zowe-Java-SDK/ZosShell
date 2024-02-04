@@ -45,7 +45,7 @@ The shell performs the following Linux like commands:
     
     cat                     - display contents
     cd <arg>                - where arg is a dataset value or empty
-    clear                   - clear the shell of all history and cached output for search command
+    clear                   - clear the shell screen and start at top and empty out cached output for search command
     cp | copy <arg> <arg>   - where arg can be ".", "*", member, sequential dataset or dataset(member)
     env                     - display environment variables
     g | grep <arg> <arg2>   - where arg is search string and arg2 is member value
