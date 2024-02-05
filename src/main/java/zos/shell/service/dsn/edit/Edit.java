@@ -38,10 +38,12 @@ public class Edit {
             // dataset(member) input specified
             result = download.member(datasetMember.getDataset(), datasetMember.getMember());
             pathService = new PathService(datasetMember.getDataset(), datasetMember.getMember());
-        } else {
-            // target input specified must be sequential dataset
+        } else if (DsnUtil.isDataset(target)) {
+            // sequential dataset input specified
             result = download.dataset(target);
             pathService = new PathService(target);
+        } else {
+            return new ResponseStatus(Constants.INVALID_PARAMETER, false);
         }
 
         try {
