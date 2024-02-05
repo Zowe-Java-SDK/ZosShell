@@ -122,7 +122,6 @@ public class CommandRouter {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                terminal.resetToBookmark("top");
                 var changeConnController = controllerContainer.getChangeConnController(terminal);
                 currConnection = changeConnController.changeZosConnection(currConnection, params);
                 ConnSingleton.getInstance().setCurrZosConnection(currConnection);
