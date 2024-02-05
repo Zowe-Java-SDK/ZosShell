@@ -27,23 +27,35 @@ public class HistoryService {
 
     public void listUpCommands(final String prompt) {
         LOG.debug("*** listUpCommands ***");
-        if (circularLinkedList.getSize() > 1) {
-            terminal.resetLine();
-            terminal.printf(prompt + " " + circularLinkedList.back().trim());
-        } else if (circularLinkedList.getSize() == 1) {
-            terminal.resetLine();
-            terminal.printf(prompt + " " + circularLinkedList.head.getData().trim());
+        try {
+            if (circularLinkedList.getSize() > 1) {
+                terminal.resetLine();
+                terminal.printf(prompt + " " + circularLinkedList.back().trim());
+            } else if (circularLinkedList.getSize() == 1) {
+                terminal.resetLine();
+                terminal.printf(prompt + " " + circularLinkedList.head.getData().trim());
+            }
+        } catch (MissingFormatArgumentException e) {
+            // when %s in string terminal.printf expects string replacement value
+            // skip it and don't hang the terminal
+            terminal.printf(prompt + " ");
         }
     }
 
     public void listDownCommands(final String prompt) {
         LOG.debug("*** listDownCommands ***");
-        if (circularLinkedList.getSize() > 1) {
-            terminal.resetLine();
-            terminal.printf(prompt + " " + circularLinkedList.forward().trim());
-        } else if (circularLinkedList.getSize() == 1) {
-            terminal.resetLine();
-            terminal.printf(prompt + " " + circularLinkedList.head.getData().trim());
+        try {
+            if (circularLinkedList.getSize() > 1) {
+                terminal.resetLine();
+                terminal.printf(prompt + " " + circularLinkedList.forward().trim());
+            } else if (circularLinkedList.getSize() == 1) {
+                terminal.resetLine();
+                terminal.printf(prompt + " " + circularLinkedList.head.getData().trim());
+            }
+        } catch (MissingFormatArgumentException e) {
+            // when %s in string terminal.printf expects string replacement value
+            // skip it and don't hang the terminal
+            terminal.printf(prompt + " ");
         }
     }
 
