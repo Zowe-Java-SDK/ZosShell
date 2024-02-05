@@ -37,7 +37,7 @@ public class Edit {
         } else if (datasetMember != null) {
             // dataset(member) input specified
             result = download.member(datasetMember.getDataset(), datasetMember.getMember());
-            pathService = new PathService(dataset, target);
+            pathService = new PathService(datasetMember.getDataset(), datasetMember.getMember());
         } else {
             // target input specified must be sequential dataset
             result = download.dataset(target);
