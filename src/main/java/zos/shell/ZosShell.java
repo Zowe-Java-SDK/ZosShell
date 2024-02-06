@@ -48,7 +48,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             throw new RuntimeException(e);
         }
 
-        // Initialize TerminalSingleton terminal properties
+        // initialize TerminalSingleton terminal properties
         terminalSingleton.setTerminalProperties();
 
         // initialize ConnSingleton object
