@@ -12,16 +12,16 @@
         <developer>
             <name>Frank Giordano</name>
             <email>giofr01@yahoo.com</email>
-            <organization>org.zowe</organization>
-            <organizationUrl>https://www.zowe.org/</organizationUrl>
+            <organization>Zowe-Java-SDK</organization>
+            <organizationUrl>https://github.com/Zowe-Java-SDK</organizationUrl>
         </developer>
     </developers>
 
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>z/OS shell command prompt that allows you to manipulate datasets and its members.
+    <description>ZosShell provides a client like Linux shell to perform z/OS system services commands.
     </description>
-    <url>https://github.com/frankgiordano/zosshell</url>
+    <url>https://github.com/Zowe-Java-SDK/ZosShell</url>
 
     <build>
         <plugins>
