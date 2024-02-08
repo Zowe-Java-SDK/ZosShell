@@ -63,7 +63,7 @@ public class HelpService {
             "                          if \"all\" is specified, display output from all of job's spool content",
             "                          line limit is 25 by default if not specified in arg2",
             "t | timeout <arg>       - where arg is optional, with arg value you set new timeout, without shows current value",
-            "touch <arg>             - create member arg if it does not already exist",
+            "touch <arg>             - create empty member if does not exist, arg represents a member or dataset(member)",
             "tso <arg>               - execute a tso command where arg is a command string within double quotes",
             "uname                   - show current connected host name",
             "ussh <arg>              - execute USS/UNIX command via SSH connection where arg is a command string within double quotes",
