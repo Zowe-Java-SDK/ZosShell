@@ -3,6 +3,7 @@ package zos.shell.service.dsn.touch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.memberlst.MemberListingService;
 import zos.shell.utility.DsnUtil;
@@ -31,32 +32,33 @@ public class TouchService {
         this.timeout = timeout;
     }
 
-    public ResponseStatus touch(final String dataset, final String target) {
+    public ResponseStatus touch(String dataset, String target) {
         LOG.debug("*** touch ***");
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        Future<ResponseStatus> submit;
 
-        if (!DsnUtil.isDataset(dataset)) {
-            return new ResponseStatus(Constants.INVALID_DATASET, true);
+        var datasetMember = DatasetMember.getDatasetAndMember(target);
+
+        if (DsnUtil.isMember(target)) {
+            submit = pool.submit(new FutureTouch(dsnWrite, dataset, target));
+        } else if (datasetMember != null) {
+            dataset = datasetMember.getDataset();
+            target = datasetMember.getMember();
+            submit = pool.submit(new FutureTouch(dsnWrite, dataset, target));
+        } else {
+            return new ResponseStatus(Constants.INVALID_PARAMETER, false);
         }
 
-        if (!DsnUtil.isMember(target)) {
-            return new ResponseStatus(Constants.INVALID_MEMBER, true);
-        }
-
-        boolean foundMember;
         var memberListingService = new MemberListingService(dsnList, timeout);
         try {
-            foundMember = memberListingService.memberExist(dataset, target);
+            if (memberListingService.memberExist(dataset, target)) {
+                return new ResponseStatus(target + " already exists", false);
+            }
         } catch (ZosmfRequestException e) {
             var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus(errMsg != null ? errMsg : e.getMessage(), false);
         }
 
-        if (foundMember) {
-            return new ResponseStatus(target + " already exists", false);
-        }
-
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureTouch(dsnWrite, dataset, target));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 
