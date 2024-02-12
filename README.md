@@ -6,7 +6,7 @@ The commands exploit the z/OSMF Rest API layer installed on a z/OS instance.
   
 The ZosShell application utilizes the [Zowe Client Java SDK](https://github.com/zowe/zowe-client-java-sdk) library to call the Rest APIs.  
   
-With ZosShell and the functionality it provides with the dependencies noted you can perform the following commands:
+With ZosShell the following z/OS service commands can be performed:  
 
     MVS console  
     TSO console  
