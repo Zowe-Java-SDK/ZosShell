@@ -127,7 +127,7 @@ public class CommandRouter {
                 ConnSingleton.getInstance().setCurrZosConnection(currConnection);
                 currSshConnection = changeConnController.changeSshConnection(currSshConnection, params);
                 ConnSingleton.getInstance().setCurrSshConnection(currSshConnection);
-                var msg = "Connected to " + currConnection.getHost() + " with user " + currConnection.getUser() + ".";
+                var msg = "Connected to " + currConnection.getHost() + " as user " + currConnection.getUser() + ".";
                 terminal.println(msg);
                 TerminalSingleton.getInstance().getMainTerminal()
                         .setPaneTitle(Constants.APP_TITLE + " - " + currConnection.getHost().toUpperCase());

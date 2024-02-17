@@ -92,7 +92,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             ValidateUtils.checkConnection(currConnection);
             var host = currConnection.getHost();
             var user = currConnection.getUser();
-            terminal.println("Connected to " + host + " with user " + user + ".");
+            terminal.println("Connected to " + host + " as user " + user + ".");
         } catch (Exception e) {
             var mainTerminal = TerminalSingleton.getInstance().getMainTerminal();
             mainTerminal.println("ERROR: Default connection invalid, try again...");
