@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.checksum.CheckSumService;
 import zos.shell.service.path.PathService;
-import zos.shell.singleton.FileCheckSumSingleton;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -16,17 +16,18 @@ import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Objects;
 
 public class Save {
 
     private static final Logger LOG = LoggerFactory.getLogger(Save.class);
 
     private final DsnWrite dsnWrite;
+    private final CheckSumService checkSumService;
 
-    public Save(final DsnWrite dsnWrite) {
+    public Save(final DsnWrite dsnWrite, final CheckSumService checkSumService) {
         LOG.debug("*** Save ***");
         this.dsnWrite = dsnWrite;
+        this.checkSumService = checkSumService;
     }
 
     public ResponseStatus save(final String dataset, final String target) {
@@ -64,11 +65,11 @@ public class Save {
             }
             var content = sb.toString().replaceAll("(\\r)", "");
 
-            String checksum = FileCheckSumSingleton.getInstance().calculateCheckSum(pathService.getPathWithFile());
-            if (checksum.equals(FileCheckSumSingleton.getInstance().getCacheCheckSum(pathService.getPathWithFile()))) {
-                return new ResponseStatus("nothing to save, perform editor save and try again...", true);
+            String checksum = checkSumService.calculateCheckSum(pathService.getPathWithFile());
+            if (checksum.equals(checkSumService.getCheckSum(pathService.getPathWithFile()))) {
+                return new ResponseStatus("nothing to save, perform editor save and try again...", false);
             }
-            FileCheckSumSingleton.getInstance().addCheckSum(pathService.getPathWithFile());
+            checkSumService.addCheckSum(pathService.getPathWithFile());
 
             if (isSequentialDataset) {
                 dsnWrite.write(target, content);

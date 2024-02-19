@@ -1,4 +1,8 @@
-package zos.shell.singleton;
+package zos.shell.service.checksum;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import zos.shell.singleton.CheckSumSingleton;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -6,34 +10,23 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
 
-public class FileCheckSumSingleton {
+public class CheckSumService {
 
-    public static Map<String, String> checksums = new HashMap<>();
+    private static final Logger LOG = LoggerFactory.getLogger(CheckSumService.class);
 
-    private static class Holder {
-        private static final FileCheckSumSingleton instance = new FileCheckSumSingleton();
-    }
+    private static final CheckSumSingleton INSTANCE = CheckSumSingleton.getInstance();
 
-    private FileCheckSumSingleton() {
-    }
-
-    public static FileCheckSumSingleton getInstance() {
-        return FileCheckSumSingleton.Holder.instance;
+    public CheckSumService() {
+        LOG.debug("*** CheckSumService ***");
     }
 
     public void addCheckSum(final String target) {
-        checksums.put(target, calculateCheckSum(target));
-    }
-
-    public String getCacheCheckSum(final String target) {
-        return checksums.get(target);
+        INSTANCE.put(target, calculateCheckSum(target));
     }
 
     public String getCheckSum(final String target) {
-        return calculateCheckSum(target);
+        return INSTANCE.get(target);
     }
 
     public String calculateCheckSum(final String target) {

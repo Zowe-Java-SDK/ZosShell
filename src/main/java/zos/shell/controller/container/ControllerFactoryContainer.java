@@ -7,6 +7,7 @@ import zos.shell.controller.*;
 import zos.shell.service.change.ChangeConnService;
 import zos.shell.service.change.ChangeDirService;
 import zos.shell.service.change.ChangeWinService;
+import zos.shell.service.checksum.CheckSumService;
 import zos.shell.service.console.ConsoleService;
 import zos.shell.service.dsn.concat.ConcatService;
 import zos.shell.service.dsn.copy.CopyService;
@@ -276,7 +277,8 @@ public class ControllerFactoryContainer {
                                 this.editDependencyContainer.isTimeoutSame(timeout))))) {
             var dsnGet = new DsnGet(connection);
             var download = new Download(dsnGet, false);
-            var editService = new EditService(download, timeout);
+            var checkSumService = new CheckSumService();
+            var editService = new EditService(download, checkSumService, timeout);
             this.editController = new EditController(editService);
             this.editDependencyContainer = new DependencyCacheContainer(connection, timeout);
         }
@@ -381,7 +383,8 @@ public class ControllerFactoryContainer {
                 (this.saveDependencyContainer != null && (
                         !(this.saveDependencyContainer.isZosConnectionSame(connection) &&
                                 this.saveDependencyContainer.isTimeoutSame(timeout))))) {
-            var saveService = new SaveService(new DsnWrite(connection), timeout);
+            var checkSumService = new CheckSumService();
+            var saveService = new SaveService(new DsnWrite(connection), checkSumService, timeout);
             this.saveController = new SaveController(saveService);
             this.saveDependencyContainer = new DependencyCacheContainer(connection, timeout);
         }
