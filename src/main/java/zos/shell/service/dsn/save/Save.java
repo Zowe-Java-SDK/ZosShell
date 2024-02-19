@@ -7,6 +7,7 @@ import zos.shell.constants.Constants;
 import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.path.PathService;
+import zos.shell.singleton.FileCheckSumSingleton;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -15,6 +16,7 @@ import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Objects;
 
 public class Save {
 
@@ -61,6 +63,11 @@ public class Save {
                 line = br.readLine();
             }
             var content = sb.toString().replaceAll("(\\r)", "");
+
+            String checksum = FileCheckSumSingleton.getInstance().calculateCheckSum(content);
+            if (checksum.equals(FileCheckSumSingleton.getInstance().getCacheCheckSum(pathService.getPathWithFile()))) {
+                return new ResponseStatus(target + " nothing to saved", true);
+            }
 
             if (isSequentialDataset) {
                 dsnWrite.write(target, content);

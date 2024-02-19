@@ -8,6 +8,7 @@ import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.service.path.PathService;
+import zos.shell.singleton.FileCheckSumSingleton;
 import zos.shell.utility.DsnUtil;
 
 import java.io.IOException;
@@ -51,6 +52,7 @@ public class Edit {
                 String pathFile;
                 String editorName;
                 pathFile = pathService.getPathWithFile();
+                FileCheckSumSingleton.getInstance().addCheckSum(pathFile);
                 if (SystemUtils.IS_OS_WINDOWS) {
                     editorName = Constants.WINDOWS_EDITOR_NAME;
                 } else if (SystemUtils.IS_OS_MAC_OSX) {
