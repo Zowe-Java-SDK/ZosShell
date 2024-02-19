@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.checksum.CheckSumService;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.service.path.PathService;
 import zos.shell.utility.DsnUtil;
@@ -17,11 +18,13 @@ public class Edit {
     private static final Logger LOG = LoggerFactory.getLogger(Edit.class);
 
     private final Download download;
+    private final CheckSumService checkSumService;
     private final Runtime rs = Runtime.getRuntime();
 
-    public Edit(final Download download) {
+    public Edit(final Download download, final CheckSumService checkSumService) {
         LOG.debug("*** Edit ***");
         this.download = download;
+        this.checkSumService = checkSumService;
     }
 
     public ResponseStatus open(final String dataset, final String target) {
@@ -51,6 +54,7 @@ public class Edit {
                 String pathFile;
                 String editorName;
                 pathFile = pathService.getPathWithFile();
+                checkSumService.addCheckSum(pathFile);
                 if (SystemUtils.IS_OS_WINDOWS) {
                     editorName = Constants.WINDOWS_EDITOR_NAME;
                 } else if (SystemUtils.IS_OS_MAC_OSX) {

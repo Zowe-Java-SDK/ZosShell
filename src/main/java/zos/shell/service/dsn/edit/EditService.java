@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.checksum.CheckSumService;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.FutureUtil;
@@ -17,11 +18,13 @@ public class EditService {
     private static final Logger LOG = LoggerFactory.getLogger(EditService.class);
 
     private final Download download;
+    private final CheckSumService checkSumService;
     private final long timeout;
 
-    public EditService(final Download download, long timeout) {
+    public EditService(final Download download, final CheckSumService checkSumService, long timeout) {
         LOG.debug("*** EditService ***");
         this.download = download;
+        this.checkSumService = checkSumService;
         this.timeout = timeout;
     }
 
@@ -31,7 +34,7 @@ public class EditService {
             return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
         }
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureEdit(download, dataset, target));
+        Future<ResponseStatus> submit = pool.submit(new FutureEdit(download, checkSumService, dataset, target));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

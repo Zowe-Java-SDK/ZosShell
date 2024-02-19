@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.checksum.CheckSumService;
 import zos.shell.service.path.PathService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
@@ -21,10 +22,12 @@ public class Save {
     private static final Logger LOG = LoggerFactory.getLogger(Save.class);
 
     private final DsnWrite dsnWrite;
+    private final CheckSumService checkSumService;
 
-    public Save(final DsnWrite dsnWrite) {
+    public Save(final DsnWrite dsnWrite, final CheckSumService checkSumService) {
         LOG.debug("*** Save ***");
         this.dsnWrite = dsnWrite;
+        this.checkSumService = checkSumService;
     }
 
     public ResponseStatus save(final String dataset, final String target) {
@@ -61,6 +64,12 @@ public class Save {
                 line = br.readLine();
             }
             var content = sb.toString().replaceAll("(\\r)", "");
+
+            String checksum = checkSumService.calculateCheckSum(pathService.getPathWithFile());
+            if (checksum.equals(checkSumService.getCheckSum(pathService.getPathWithFile()))) {
+                return new ResponseStatus("nothing to save, perform editor save and try again...", false);
+            }
+            checkSumService.addCheckSum(pathService.getPathWithFile());
 
             if (isSequentialDataset) {
                 dsnWrite.write(target, content);
