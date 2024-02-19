@@ -64,10 +64,11 @@ public class Save {
             }
             var content = sb.toString().replaceAll("(\\r)", "");
 
-            String checksum = FileCheckSumSingleton.getInstance().calculateCheckSum(content);
+            String checksum = FileCheckSumSingleton.getInstance().calculateCheckSum(pathService.getPathWithFile());
             if (checksum.equals(FileCheckSumSingleton.getInstance().getCacheCheckSum(pathService.getPathWithFile()))) {
-                return new ResponseStatus(target + " nothing to saved", true);
+                return new ResponseStatus("nothing to save, perform editor save and try again...", true);
             }
+            FileCheckSumSingleton.getInstance().addCheckSum(pathService.getPathWithFile());
 
             if (isSequentialDataset) {
                 dsnWrite.write(target, content);
