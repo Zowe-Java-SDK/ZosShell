@@ -70,7 +70,7 @@ public class DependencyCacheContainer {
         return this.data.equalsIgnoreCase(data);
     }
 
-    public boolean isToggleSame(boolean toggle) {
+    public boolean isToggleSame(final boolean toggle) {
         LOG.debug("*** isToggleSame ***");
         return this.toggle == toggle;
     }
