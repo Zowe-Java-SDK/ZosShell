@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.TextTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.change.ChangeWinService;
 import zos.shell.singleton.TerminalSingleton;
@@ -22,6 +24,8 @@ import java.util.Map;
 
 public class ConfigSingleton {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigSingleton.class);
+
     private List<Profile> profiles;
     private final ObjectMapper mapper = new ObjectMapper();
     private final List<ZosConnection> zosConnections = new ArrayList<>();
@@ -34,13 +38,16 @@ public class ConfigSingleton {
     }
 
     private ConfigSingleton() {
+        LOG.debug("*** ConfigSingleton ***");
     }
 
     public static ConfigSingleton getInstance() {
+        LOG.debug("*** getInstance ***");
         return ConfigSingleton.Holder.instance;
     }
 
     public void readConfig() throws IOException {
+        LOG.debug("*** readConfig ***");
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         Map<String, String> env = System.getenv();
         String path = "";
@@ -73,6 +80,7 @@ public class ConfigSingleton {
     }
 
     private void initialConfigSettings() {
+        LOG.debug("*** initialConfigSettings ***");
         if (profiles.isEmpty()) {
             configSettings = null;
             return;
@@ -82,16 +90,19 @@ public class ConfigSingleton {
     }
 
     private void createZosConnections() {
+        LOG.debug("*** createZosConnections ***");
         profiles.forEach(profile -> zosConnections.add(new ZosConnection(profile.getHostname(),
                 profile.getZosmfport(), profile.getUsername(), profile.getPassword())));
     }
 
     private void createSshConnections() {
+        LOG.debug("*** createSshConnections ***");
         profiles.forEach(profile -> shhConnections.add(new SshConnection(profile.getHostname(),
                 Integer.parseInt(profile.getSshport()), profile.getUsername(), profile.getPassword())));
     }
 
     public void updateWindowSittings(final TextTerminal<?> terminal) {
+        LOG.debug("*** updateWindowSittings ***");
         var str = new StringBuilder();
         if (windowCmd == null) {
             windowCmd = new ChangeWinService(TerminalSingleton.getInstance().getTerminal());
@@ -117,14 +128,17 @@ public class ConfigSingleton {
     }
 
     public List<ZosConnection> getZosConnections() {
+        LOG.debug("*** getZosConnections ***");
         return zosConnections;
     }
 
     public Profile getProfileByIndex(int index) {
+        LOG.debug("*** getProfileByIndex ***");
         return this.profiles.get(index);
     }
 
     public SshConnection getSshConnectionByIndex(int index) {
+        LOG.debug("*** getSshConnectionByIndex ***");
         if (shhConnections.isEmpty()) {
             return null;
         }
@@ -132,6 +146,7 @@ public class ConfigSingleton {
     }
 
     public ZosConnection getZosConnectionByIndex(int index) {
+        LOG.debug("*** getZosConnectionByIndex ***");
         if (zosConnections.isEmpty()) {
             return null;
         }
@@ -139,10 +154,12 @@ public class ConfigSingleton {
     }
 
     public ConfigSettings getConfigSettings() {
+        LOG.debug("*** getConfigSettings ***");
         return configSettings;
     }
 
     public void setConfigSettings(final ConfigSettings configSettings) {
+        LOG.debug("*** setConfigSettings ***");
         this.configSettings = configSettings;
     }
 

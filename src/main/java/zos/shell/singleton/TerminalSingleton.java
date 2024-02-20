@@ -5,6 +5,8 @@ import org.beryx.textio.ReadInterruptionStrategy;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.beryx.textio.swing.SwingTextTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.ZosShell;
 import zos.shell.constants.Constants;
 import zos.shell.service.autocomplete.SearchCommandService;
@@ -15,6 +17,8 @@ import java.net.URL;
 import java.util.List;
 
 public class TerminalSingleton {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TerminalSingleton.class);
 
     private static final SearchCommandService searchCommandService = new SearchCommandService();
     private static SwingTextTerminal mainTerminal;
@@ -30,53 +34,66 @@ public class TerminalSingleton {
     }
 
     private TerminalSingleton() {
+        LOG.debug("*** TerminalSingleton ***");
     }
 
     public static TerminalSingleton getInstance() {
+        LOG.debug("*** getInstance ***");
         return TerminalSingleton.Holder.instance;
     }
 
     public SwingTextTerminal getMainTerminal() {
+        LOG.debug("*** getMainTerminal ***");
         return mainTerminal;
     }
 
     public void setMainTerminal(final SwingTextTerminal mainTerminal) {
+        LOG.debug("*** setMainTerminal ***");
         TerminalSingleton.mainTerminal = mainTerminal;
     }
 
     public TextTerminal<?> getTerminal() {
+        LOG.debug("*** getTerminal ***");
         return terminal;
     }
 
     public void setTerminal(final TextTerminal<?> terminal) {
+        LOG.debug("*** setTerminal ***");
         TerminalSingleton.terminal = terminal;
     }
 
     public TextIO getMainTextIO() {
+        LOG.debug("*** getMainTextIO ***");
         return mainTextIO;
     }
 
     public void setMainTextIO(final TextIO mainTextIO) {
+        LOG.debug("*** setMainTextIO ***");
         TerminalSingleton.mainTextIO = mainTextIO;
     }
 
     public void setFontSize(final int fontSize) {
+        LOG.debug("*** setFontSize ***");
         TerminalSingleton.fontSize = fontSize;
     }
 
     public boolean isFontSizeChanged() {
+        LOG.debug("*** isFontSizeChanged ***");
         return fontSizeChanged;
     }
 
     public void setFontSizeChanged(final boolean fontSizeChanged) {
+        LOG.debug("*** setFontSizeChanged ***");
         TerminalSingleton.fontSizeChanged = fontSizeChanged;
     }
 
     public void setDisableKeys(final boolean disableKeys) {
+        LOG.debug("*** setDisableKeys ***");
         TerminalSingleton.disableKeys = disableKeys;
     }
 
     public void setTerminalProperties() {
+        LOG.debug("*** setTerminalProperties ***");
         var title = "";
         var zosConnection = ConnSingleton.getInstance().getCurrZosConnection();
         if (zosConnection != null) {
