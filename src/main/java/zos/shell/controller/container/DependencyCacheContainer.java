@@ -34,7 +34,7 @@ public class DependencyCacheContainer {
     }
 
     public DependencyCacheContainer(final SshConnection sshConnection) {
-        LOG.debug("*** DependencyContainer  sshConnection ***");
+        LOG.debug("*** DependencyContainer sshConnection ***");
         this.sshConnection = sshConnection;
     }
 
