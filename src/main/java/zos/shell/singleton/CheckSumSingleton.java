@@ -10,7 +10,7 @@ public class CheckSumSingleton {
 
     private static final Logger LOG = LoggerFactory.getLogger(CheckSumSingleton.class);
 
-    public static Map<String, String> checksums = new HashMap<>();
+    public static final Map<String, String> checksums = new HashMap<>();
 
     private static class Holder {
         private static final CheckSumSingleton instance = new CheckSumSingleton();
