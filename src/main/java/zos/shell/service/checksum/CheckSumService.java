@@ -15,18 +15,18 @@ public class CheckSumService {
 
     private static final Logger LOG = LoggerFactory.getLogger(CheckSumService.class);
 
-    private static final CheckSumSingleton INSTANCE = CheckSumSingleton.getInstance();
+    private static final CheckSumSingleton checkSumSingleton = CheckSumSingleton.getInstance();
 
     public CheckSumService() {
         LOG.debug("*** CheckSumService ***");
     }
 
     public void addCheckSum(final String target) {
-        INSTANCE.put(target, calculateCheckSum(target));
+        checkSumSingleton.put(target, calculateCheckSum(target));
     }
 
     public String getCheckSum(final String target) {
-        return INSTANCE.get(target);
+        return checkSumSingleton.get(target);
     }
 
     public String calculateCheckSum(final String target) {

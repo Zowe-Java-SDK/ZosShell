@@ -10,7 +10,7 @@ public class EnvVariableService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EnvVariableService.class);
 
-    private static final EnvVariableSingleton INSTANCE = EnvVariableSingleton.getInstance();
+    private static final EnvVariableSingleton envVariableSingleton = EnvVariableSingleton.getInstance();
 
     public EnvVariableService() {
         LOG.debug("*** EnvVariableService ***");
@@ -18,17 +18,17 @@ public class EnvVariableService {
 
     public String getValueByEnvName(final String key) {
         LOG.debug("*** getValueByEnvName ***");
-        return INSTANCE.getVariables().get(key.toUpperCase());
+        return envVariableSingleton.getVariables().get(key.toUpperCase());
     }
 
     public Map<String, String> getEnvVariables() {
         LOG.debug("*** getEnvVariables ***");
-        return INSTANCE.getVariables();
+        return envVariableSingleton.getVariables();
     }
 
     public void setEnvVariable(final String key, final String value) {
         LOG.debug("*** setEnvVariable ***");
-        INSTANCE.getVariables().put(key.toUpperCase(), value.toUpperCase());
+        envVariableSingleton.getVariables().put(key.toUpperCase(), value.toUpperCase());
     }
 
 }
