@@ -29,7 +29,7 @@ public class TsoService {
     public ResponseStatus issueCommand(final String command) {
         LOG.debug("*** issueCommand ***");
         if (accountNumber == null || accountNumber.isBlank()) {
-            return new ResponseStatus("ACCTNUM is not set, try again...", false);
+            return new ResponseStatus("ACCTNUM is not set, use SET command and try again...", false);
         }
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         Future<ResponseStatus> submit = pool.submit(new FutureTso(issueTso, accountNumber, command));
