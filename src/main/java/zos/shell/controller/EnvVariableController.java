@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.env.EnvVariableService;
+import zos.shell.utility.StrUtil;
 
 import java.util.TreeMap;
 
@@ -36,6 +37,11 @@ public class EnvVariableController {
             return Constants.INVALID_COMMAND;
         }
         envVariableService.setEnvVariable(values[0], values[1]);
+        if (values[0].equalsIgnoreCase("acctnum")) {
+            if (!StrUtil.isStrNum(values[1])) {
+                return "ACCTNUM value not a number, try again...";
+            }
+        }
         return values[0] + "=" + values[1];
     }
 
