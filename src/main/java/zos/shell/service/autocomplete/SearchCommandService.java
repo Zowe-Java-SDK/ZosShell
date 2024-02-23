@@ -16,11 +16,11 @@ public final class SearchCommandService {
             "search", "set", "stop", "submit", "tail", "timeout", "touch", "tso", "uname", "ussh", "vi", "visited",
             "whoami"};
 
+    private final TriePreFix dictionary = new TriePreFix(commands);
+
     public SearchCommandService() {
         LOG.debug("*** SearchCommandService ***");
     }
-
-    private final TriePreFix dictionary = new TriePreFix(commands);
 
     public List<String> search(String prefix) {
         LOG.debug("*** search command for autofill ***");
