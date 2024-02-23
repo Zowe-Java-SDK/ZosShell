@@ -52,6 +52,7 @@ public class HelpService {
             "ps <arg>                - where arg is a task/job name",
             "p | purge <arg>         - purge a job name or job is arg can represent either",
             "pwd                     - show current working dataset",
+            "rn | rename <arg> <arg> - rename sequential dataset or member, both arg values either member or dataset type",
             "rm <arg>                - where arg is member with wildcard \"*\", member, dataset, or dataset with member value",
             "save <arg>              - save arg where arg is a file name from files command to the current pwd",
             "search <arg>            - search for arg within last job browse, tailjob or member cat command",
