@@ -31,7 +31,7 @@ public class RenameService {
 
         boolean isMember = DsnUtil.isMember(source);
         boolean isDataSet = DsnUtil.isDataset(source);
-        
+
         if (isMember && !DsnUtil.isMember(destination)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
