@@ -31,7 +31,7 @@ public class RenameService {
 
         boolean isMember = DsnUtil.isMember(source);
         boolean isDataSet = DsnUtil.isDataset(source);
-
+        
         if (isMember && !DsnUtil.isMember(destination)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
@@ -42,15 +42,16 @@ public class RenameService {
 
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         Future<ResponseStatus> submit;
-        
+
         if (isMember) {
             submit = pool.submit(new FutureRenameMember(new DsnRename(connection), dataset, source, destination));
             return FutureUtil.getFutureResponse(submit, pool, timeout);
+        } else if (isDataSet) {
+            submit = pool.submit(new FutureRenameDataset(new DsnRename(connection), source, destination));
+            return FutureUtil.getFutureResponse(submit, pool, timeout);
+        } else {
+            return new ResponseStatus(Constants.INVALID_COMMAND, false);
         }
-
-        // it is dataset
-        submit = pool.submit(new FutureRenameDataset(new DsnRename(connection), source, destination));
-        return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 
 }
