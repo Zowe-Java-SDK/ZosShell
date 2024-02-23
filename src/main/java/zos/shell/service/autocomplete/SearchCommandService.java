@@ -8,7 +8,7 @@ import java.util.List;
 
 public final class SearchCommandService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChangeConnService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SearchCommandService.class);
 
     private static final String[] commands = new String[]{"browsejob", "cancel", "cat", "cd", "change", "clear",
             "color", "connections", "count", "copy", "download", "downloadjob", "end", "env", "files", "grep",
