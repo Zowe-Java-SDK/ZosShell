@@ -470,6 +470,7 @@ public class CommandRouter {
                 var renameController = controllerContainer.getRenameController(currConnection, timeout);
                 String renameResult = renameController.rename(currDataset, params[0], params[1]);
                 terminal.println(renameResult);
+                break;
             case "rm":
                 if (isParamsMissing(1, params)) {
                     return;

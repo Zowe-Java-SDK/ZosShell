@@ -44,6 +44,9 @@ public class RenameService {
         Future<ResponseStatus> submit;
 
         if (isMember) {
+            if (dataset.isBlank()) {
+                return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
+            }
             submit = pool.submit(new FutureRenameMember(new DsnRename(connection), dataset, source, destination));
             return FutureUtil.getFutureResponse(submit, pool, timeout);
         } else if (isDataSet) {
