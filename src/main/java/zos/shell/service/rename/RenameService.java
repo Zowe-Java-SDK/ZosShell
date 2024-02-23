@@ -49,12 +49,10 @@ public class RenameService {
             }
             submit = pool.submit(new FutureRenameMember(new DsnRename(connection), dataset, source, destination));
             return FutureUtil.getFutureResponse(submit, pool, timeout);
-        } else if (isDataSet) {
-            submit = pool.submit(new FutureRenameDataset(new DsnRename(connection), source, destination));
-            return FutureUtil.getFutureResponse(submit, pool, timeout);
-        } else {
-            return new ResponseStatus(Constants.INVALID_COMMAND, false);
         }
+
+        submit = pool.submit(new FutureRenameDataset(new DsnRename(connection), source, destination));
+        return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 
 }
