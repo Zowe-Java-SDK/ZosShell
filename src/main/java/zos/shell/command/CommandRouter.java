@@ -456,6 +456,21 @@ public class CommandRouter {
                 }
                 terminal.println(currDataset);
                 break;
+            case "rn":
+            case "rename":
+                if (isParamsMissing(1, params)) {
+                    return;
+                }
+                if (isParamsMissing(2, params)) {
+                    return;
+                }
+                if (isParamsExceeded(3, params)) {
+                    return;
+                }
+                var renameController = controllerContainer.getRenameController(currConnection, timeout);
+                String renameResult = renameController.rename(currDataset, params[1], params[2]);
+                terminal.println(renameResult);
+                break;
             case "rm":
                 if (isParamsMissing(1, params)) {
                     return;

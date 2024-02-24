@@ -94,6 +94,7 @@ Along with following custom commands:
                                         - -- option means same view as ls -l but without attribute info
     mvs <arg>                           - execute a mvs command where arg is a command string within double quotes
     p | purge <arg>                     - purge a job name or job is arg can represent either  
+    rn | rename <arg> <arg>             - rename sequential dataset or member, both arg values either member or dataset type
     save <arg>                          - save arg where arg is a file name from files command to the current pwd
     search <arg>                        - search for arg within last job browse, tailjob or member cat command  
     stop <arg>                          - where arg is a task/job name  

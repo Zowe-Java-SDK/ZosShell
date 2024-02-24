@@ -31,6 +31,7 @@ import zos.shell.service.job.tail.TailService;
 import zos.shell.service.job.terminate.TerminateService;
 import zos.shell.service.localfile.LocalFileService;
 import zos.shell.service.omvs.SshService;
+import zos.shell.service.rename.RenameService;
 import zos.shell.service.search.SearchCacheService;
 import zos.shell.service.tso.TsoService;
 import zowe.client.sdk.core.SshConnection;
@@ -85,6 +86,8 @@ public class ControllerFactoryContainer {
     private DependencyCacheContainer processLstDependencyContainer;
     private PurgeController purgeController;
     private DependencyCacheContainer purgeDependencyContainer;
+    private RenameController renameController;
+    private DependencyCacheContainer renameDependencyContainer;
     private SaveController saveController;
     private DependencyCacheContainer saveDependencyContainer;
     private SearchCacheController searchCacheController;
@@ -375,6 +378,19 @@ public class ControllerFactoryContainer {
             this.purgeDependencyContainer = new DependencyCacheContainer(connection, timeout);
         }
         return this.purgeController;
+    }
+
+    public RenameController getRenameController(final ZosConnection connection, final long timeout) {
+        LOG.debug("*** getRenameController ***");
+        if (this.renameController == null ||
+                (this.renameDependencyContainer != null && (
+                        !(this.renameDependencyContainer.isZosConnectionSame(connection) &&
+                                this.renameDependencyContainer.isTimeoutSame(timeout))))) {
+            var renameService = new RenameService(connection, timeout);
+            this.renameController = new RenameController(renameService);
+            this.renameDependencyContainer = new DependencyCacheContainer(connection, timeout);
+        }
+        return this.renameController;
     }
 
     public SaveController getSaveController(final ZosConnection connection, final long timeout) {
