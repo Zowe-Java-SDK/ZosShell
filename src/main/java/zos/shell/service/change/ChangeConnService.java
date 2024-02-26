@@ -52,6 +52,7 @@ public class ChangeConnService {
             return zosConnectionByIndex;
         }
 
+        TerminalSingleton.getInstance().setDisableKeys(true);
         terminal.println("Enter username and password for host " + host);
         username = TerminalSingleton.getInstance()
                 .getMainTextIO()
@@ -64,6 +65,7 @@ public class ChangeConnService {
                 .withMaxLength(80)
                 .withInputMasking(true).
                 read("password:");
+        TerminalSingleton.getInstance().setDisableKeys(false);
         ConfigSingleton.getInstance().updateWindowSittings(terminal);
         configSingleton.setZosConnectionByIndex(new ZosConnection(host, zosmfport, username, password), index);
         return configSingleton.getZosConnectionByIndex(index);

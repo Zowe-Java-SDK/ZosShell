@@ -102,6 +102,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             }
 
             if (username.isBlank() || password.isBlank()) {
+                TerminalSingleton.getInstance().setDisableKeys(true);
                 terminal.println("Enter username and password for host " + host);
                 username = TerminalSingleton.getInstance()
                         .getMainTextIO()
@@ -114,6 +115,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         .withMaxLength(80)
                         .withInputMasking(true).
                         read("password:");
+                TerminalSingleton.getInstance().setDisableKeys(false);
 
                 currConnection = new ZosConnection(host, zosmfport, username, password);
 
