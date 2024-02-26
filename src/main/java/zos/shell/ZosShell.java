@@ -113,8 +113,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         .getMainTextIO()
                         .newStringInputReader()
                         .withMaxLength(80)
-                        .withInputMasking(true).
-                        read("password:");
+                        .withInputMasking(true)
+                        .read("password:");
                 TerminalSingleton.getInstance().setDisableKeys(false);
 
                 currConnection = new ZosConnection(host, zosmfport, username, password);

@@ -63,8 +63,8 @@ public class ChangeConnService {
                 .getMainTextIO()
                 .newStringInputReader()
                 .withMaxLength(80)
-                .withInputMasking(true).
-                read("password:");
+                .withInputMasking(true)
+                .read("password:");
         TerminalSingleton.getInstance().setDisableKeys(false);
         ConfigSingleton.getInstance().updateWindowSittings(terminal);
         configSingleton.setZosConnectionByIndex(new ZosConnection(host, zosmfport, username, password), index);
