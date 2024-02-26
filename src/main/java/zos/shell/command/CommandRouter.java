@@ -122,13 +122,18 @@ public class CommandRouter {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
+                var previousCurrConnection = currConnection;
                 var changeConnController = controllerContainer.getChangeConnController(terminal);
                 currConnection = changeConnController.changeZosConnection(currConnection, params);
                 ConnSingleton.getInstance().setCurrZosConnection(currConnection);
                 currSshConnection = changeConnController.changeSshConnection(currSshConnection, params);
                 ConnSingleton.getInstance().setCurrSshConnection(currSshConnection);
-                var msg = "Connected to " + currConnection.getHost() + " as user " + currConnection.getUser() + ".";
-                terminal.println(msg);
+                if (previousCurrConnection != currConnection) {
+                    var msg = String.format("Connection changed:\nhost:%s\nuser:%s\nzosmfport:%s\nsshport:%s",
+                            currConnection.getHost(), currConnection.getUser(), currConnection.getZosmfPort(),
+                            currSshConnection.getPort());
+                    terminal.println(msg);
+                }
                 TerminalSingleton.getInstance().getMainTerminal()
                         .setPaneTitle(Constants.APP_TITLE + " - " + currConnection.getHost().toUpperCase());
                 break;

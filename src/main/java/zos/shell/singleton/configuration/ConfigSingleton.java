@@ -92,13 +92,23 @@ public class ConfigSingleton {
     private void createZosConnections() {
         LOG.debug("*** createZosConnections ***");
         profiles.forEach(profile -> zosConnections.add(new ZosConnection(profile.getHostname(),
-                profile.getZosmfport(), profile.getUsername(), profile.getPassword())));
+                profile.getZosmfport() != null ? profile.getZosmfport() : "0",
+                profile.getUsername() != null ? profile.getUsername() : "",
+                profile.getPassword() != null ? profile.getPassword() : "")));
     }
 
     private void createSshConnections() {
         LOG.debug("*** createSshConnections ***");
-        profiles.forEach(profile -> shhConnections.add(new SshConnection(profile.getHostname(),
-                Integer.parseInt(profile.getSshport()), profile.getUsername(), profile.getPassword())));
+        profiles.forEach(profile -> {
+            int sshport = 0;
+            try {
+                sshport = Integer.parseInt(profile.getSshport());
+            } catch (NumberFormatException ignored) {
+            }
+            shhConnections.add(new SshConnection(profile.getHostname(),
+                    sshport, profile.getUsername() != null ? profile.getUsername() : "",
+                    profile.getPassword() != null ? profile.getPassword() : ""));
+        });
     }
 
     public void updateWindowSittings(final TextTerminal<?> terminal) {
@@ -145,12 +155,20 @@ public class ConfigSingleton {
         return shhConnections.get(index);
     }
 
+    public void setSshConnectionByIndex(final SshConnection sshConnection, final int index) {
+        this.shhConnections.set(index, sshConnection);
+    }
+
     public ZosConnection getZosConnectionByIndex(int index) {
         LOG.debug("*** getZosConnectionByIndex ***");
         if (zosConnections.isEmpty()) {
             return null;
         }
         return zosConnections.get(index);
+    }
+
+    public void setZosConnectionByIndex(final ZosConnection zosConnection, final int index) {
+        this.zosConnections.set(index, zosConnection);
     }
 
     public ConfigSettings getConfigSettings() {
