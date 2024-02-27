@@ -161,6 +161,10 @@ public class TerminalSingleton {
             if (candidateStr.contains(" ")) {  // invalid look up
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
+            boolean isAlphabetOnly = candidateStr.matches("[a-zA-Z]*");
+            if (!isAlphabetOnly) {
+                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+            }
             List<String> candidateLst = searchCommandService.search(candidateStr);
             if (!candidateLst.isEmpty()) {
                 mainTerminal.moveToLineStart();
