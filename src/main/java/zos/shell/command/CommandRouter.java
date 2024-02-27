@@ -122,10 +122,17 @@ public class CommandRouter {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
+                int changeIndex;
+                try {
+                    changeIndex = Integer.parseInt(params[1]);
+                } catch (NumberFormatException e) {
+                    terminal.println(Constants.INVALID_COMMAND);
+                    return;
+                }
                 var previousCurrConnection = currConnection;
                 var changeConnController = controllerContainer.getChangeConnController(terminal);
                 currConnection = changeConnController.changeZosConnection(currConnection, params);
-                ConnSingleton.getInstance().setCurrZosConnection(currConnection);
+                ConnSingleton.getInstance().setCurrZosConnection(currConnection, changeIndex);
                 currSshConnection = changeConnController.changeSshConnection(currSshConnection, params);
                 ConnSingleton.getInstance().setCurrSshConnection(currSshConnection);
                 if (previousCurrConnection != currConnection) {
@@ -620,6 +627,9 @@ public class CommandRouter {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
+                if (isParamsExceeded(2, params)) {
+                    return;
+                }
                 String acctNum = controllerContainer.getEnvVariableController().getValueByEnv("ACCTNUM");
                 StringBuilder tsoCommandCandidate = getCommandFromParams(params);
                 long tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
@@ -637,6 +647,19 @@ public class CommandRouter {
                 var unameController = controllerContainer.getUnameController(currConnection, timeout);
                 String unameResult = unameController.uname(currConnection);
                 terminal.println(unameResult);
+                break;
+            case "usermod":
+                if (isParamsMissing(1, params)) {
+                    return;
+                }
+                if (isParamsExceeded(2, params)) {
+                    return;
+                }
+                var usermodController = controllerContainer.getUsermodController(currConnection,
+                        ConnSingleton.getInstance().getCurrZosConnectionIndex());
+                var flag = params[1];
+                String usermodResult = usermodController.change(flag);
+                terminal.println(usermodResult);
                 break;
             case "ussh":
                 if (isParamsMissing(1, params)) {

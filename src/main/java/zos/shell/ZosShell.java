@@ -55,7 +55,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
         // initialize ConnSingleton object
         var connSingleton = ConnSingleton.getInstance();
-        connSingleton.setCurrZosConnection(ConfigSingleton.getInstance().getZosConnectionByIndex(0));
+        connSingleton.setCurrZosConnection(ConfigSingleton.getInstance().getZosConnectionByIndex(0), 0);
         connSingleton.setCurrSshConnection(ConfigSingleton.getInstance().getSshConnectionByIndex(0));
         var title = Constants.APP_TITLE + " - " + connSingleton.getCurrSshConnection().getHost().toUpperCase();
         TerminalSingleton.getInstance().getMainTerminal().setPaneTitle(title);
@@ -110,7 +110,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
                 ValidateUtils.checkConnection(currConnection);
                 ConfigSingleton.getInstance().setZosConnectionByIndex(currConnection, 0);
-                ConnSingleton.getInstance().setCurrZosConnection(currConnection);
+                ConnSingleton.getInstance().setCurrZosConnection(currConnection, 0);
                 currSshConnection = new SshConnection(host, currSshConnection.getPort(), username, password);
                 ConfigSingleton.getInstance().setSshConnectionByIndex(currSshConnection, 0);
                 ConnSingleton.getInstance().setCurrSshConnection(currSshConnection);

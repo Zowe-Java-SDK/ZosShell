@@ -11,6 +11,7 @@ public class ConnSingleton {
 
     private ZosConnection currZosConnection;
     private SshConnection currSshConnection;
+    private int connectionIndex;
 
     private static class Holder {
         private static final ConnSingleton instance = new ConnSingleton();
@@ -30,9 +31,10 @@ public class ConnSingleton {
         return currZosConnection;
     }
 
-    public void setCurrZosConnection(final ZosConnection currZosConnection) {
+    public void setCurrZosConnection(final ZosConnection currZosConnection, int index) {
         LOG.debug("*** setCurrZosConnection ***");
         this.currZosConnection = currZosConnection;
+        this.connectionIndex = index;
     }
 
     public SshConnection getCurrSshConnection() {
@@ -43,6 +45,11 @@ public class ConnSingleton {
     public void setCurrSshConnection(final SshConnection currSshConnection) {
         LOG.debug("*** setCurrSshConnection ***");
         this.currSshConnection = currSshConnection;
+    }
+
+    public int getCurrZosConnectionIndex() {
+        LOG.debug("*** getCurrZosConnectionIndex ***");
+        return connectionIndex;
     }
 
 }

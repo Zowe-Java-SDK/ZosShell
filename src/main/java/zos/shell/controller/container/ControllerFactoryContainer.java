@@ -34,6 +34,7 @@ import zos.shell.service.omvs.SshService;
 import zos.shell.service.rename.RenameService;
 import zos.shell.service.search.SearchCacheService;
 import zos.shell.service.tso.TsoService;
+import zos.shell.service.usermod.UsermodService;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
@@ -501,6 +502,12 @@ public class ControllerFactoryContainer {
             this.unameDependencyContainer = new DependencyCacheContainer(connection, timeout);
         }
         return this.unameController;
+    }
+
+    public UsermodController getUsermodController(final ZosConnection connection, final int index) {
+        LOG.debug("*** getUsermodController ***");
+        var usermodService = new UsermodService(connection, index);
+        return new UsermodController(usermodService);
     }
 
     public UssController getUssController(final SshConnection connection) {
