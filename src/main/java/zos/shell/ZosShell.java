@@ -90,7 +90,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         var currConnection = ConnSingleton.getInstance().getCurrZosConnection();
         var currSshConnection = ConnSingleton.getInstance().getCurrSshConnection();
 
-        // display information on initial first connection defined and set for usage
+        // setup initial first connection definition and prompt for username and password if applicable.
         try {
             var host = currConnection.getHost();
             var zosmfport = currConnection.getZosmfPort();
@@ -102,20 +102,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             }
 
             if (username.isBlank() || password.isBlank()) {
-                TerminalSingleton.getInstance().setDisableKeys(true);
                 terminal.println("Enter username and password for host " + host);
-                username = TerminalSingleton.getInstance()
-                        .getMainTextIO()
-                        .newStringInputReader()
-                        .withMaxLength(80)
-                        .read("username:");
-                password = TerminalSingleton.getInstance()
-                        .getMainTextIO()
-                        .newStringInputReader()
-                        .withMaxLength(80)
-                        .withInputMasking(true)
-                        .read("password:");
-                TerminalSingleton.getInstance().setDisableKeys(false);
+                username = PromptUtil.getPromptInfo("username:", false);
+                password = PromptUtil.getPromptInfo("password:", true);
 
                 currConnection = new ZosConnection(host, zosmfport, username, password);
 

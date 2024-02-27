@@ -4,9 +4,9 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.singleton.TerminalSingleton;
 import zos.shell.singleton.configuration.ConfigSingleton;
 import zos.shell.singleton.configuration.record.ConfigSettings;
+import zos.shell.utility.PromptUtil;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 
@@ -52,20 +52,9 @@ public class ChangeConnService {
             return zosConnectionByIndex;
         }
 
-        TerminalSingleton.getInstance().setDisableKeys(true);
         terminal.println("Enter username and password for host " + host);
-        username = TerminalSingleton.getInstance()
-                .getMainTextIO()
-                .newStringInputReader()
-                .withMaxLength(80)
-                .read("username:");
-        password = TerminalSingleton.getInstance()
-                .getMainTextIO()
-                .newStringInputReader()
-                .withMaxLength(80)
-                .withInputMasking(true)
-                .read("password:");
-        TerminalSingleton.getInstance().setDisableKeys(false);
+        username = PromptUtil.getPromptInfo("username:", false);
+        password = PromptUtil.getPromptInfo("password:", true);
         ConfigSingleton.getInstance().updateWindowSittings(terminal);
         configSingleton.setZosConnectionByIndex(new ZosConnection(host, zosmfport, username, password), index);
         return configSingleton.getZosConnectionByIndex(index);
