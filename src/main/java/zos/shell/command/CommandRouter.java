@@ -627,9 +627,6 @@ public class CommandRouter {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                if (isParamsExceeded(2, params)) {
-                    return;
-                }
                 String acctNum = controllerContainer.getEnvVariableController().getValueByEnv("ACCTNUM");
                 StringBuilder tsoCommandCandidate = getCommandFromParams(params);
                 long tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
