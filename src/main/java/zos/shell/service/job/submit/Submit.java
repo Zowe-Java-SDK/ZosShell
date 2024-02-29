@@ -2,6 +2,7 @@ package zos.shell.service.job.submit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -19,8 +20,15 @@ public class Submit {
         this.submit = submit;
     }
 
-    public ResponseStatus submit(final String dataset, final String target) {
+    public ResponseStatus submit(String dataset, String target) {
         LOG.debug("*** submit ***");
+        var datasetMember = DatasetMember.getDatasetAndMember(target);
+        if (datasetMember != null) {
+            // dataset(member) input specified
+            dataset = datasetMember.getDataset();
+            target = datasetMember.getMember();
+        }
+
         Job job;
         try {
             job = submit.submit(String.format("%s(%s)", dataset, target));
