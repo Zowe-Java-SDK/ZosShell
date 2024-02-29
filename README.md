@@ -135,11 +135,11 @@ At the root directory prompt, execute the following maven command:
   
 Change directory to the target directory and execute the following command:  
   
-    java -jar zosshell-2.0.jar   
+    java -jar zosshell-2.1.0.jar   
   
 If you are planning to browse large job output you may want to set the JVM memory usage higher than the default, i.e.  
   
-    java -jar -Xmx2G zosshell-2.0.jar   
+    java -jar -Xmx2G zosshell-2.1.0.jar   
   
 ### Terminal configuration properties
   
@@ -161,7 +161,7 @@ The other JSON array entries shows that you don't need to specify all attributes
    
 The username and password entries are optional. It is recommended to not specify those settings. When not specified, the application will prompt end user for username and password for the current connection.   
     
-For further details on username and password usage see [here](https://github.com/Zowe-Java-SDK/ZosShell/issues/178)  
+For further details on username and password usage see [here](https://github.com/Zowe-Java-SDK/ZosShell/issues/182)  
     
 Example of config.json:  
 
@@ -214,7 +214,4 @@ Logging framework log4j2 is configured for the project. log4j2 configuration is 
 It is configured to produce output logging while application is running under the running directory where the application was kicked off.
       
 You are free to change configuration accordingly for your needs. 
-  
-    
-  
   
