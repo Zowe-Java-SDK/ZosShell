@@ -67,6 +67,7 @@ The shell performs the following Linux like commands:
     set <arg>               - set environment variable with arg value in the following format: key=value
     touch <arg>             - create empty member if does not exist, arg represents a member or dataset(member)
     uname                   - show current connected host name
+    usermod <arg>           - modify username or password of current connection, arg can be -u or -p"
     vi <arg>                - where arg is a sequential dataset or member name, arg will be downloaded 
                               and displayed for editing, use save command to save changes  
     whoami                  - show current connected user name
@@ -150,14 +151,18 @@ You can override the default file name and its location by setting the following
   
 The configuration file consists of JSON data. The configuration JSON string is defined as a JSON array structure. The array will consist of one or more profile(s).
   
-A profile is a one-to-one relationship of Profile.java file within the project. It contains variables as a placeholder for configuration information, such as z/OSMF and ssh connection information and properties to control the Window environment.  
+A profile is a one-to-one relationship of Profile.java file within the project. It contains variables as a placeholder for configuration information, such as z/OSMF and SSH connection information and properties to control the Window environment.  
     
-In addition, each profile contains path variable to control location for download directory.  
-
+In addition, each profile contains path variable to control location for the download directory.  
+  
 The first JSON array entry in the example below shows all the attributes defined to be read by the application.  
   
-The other JSON array entries shows that you don't need to specify all attributes and its values. The attributes most critical are those that specify a z/OSMF connection: hostname, zosmfport, username, and password.  
-  
+The other JSON array entries shows that you don't need to specify all attributes and its values. The attributes most critical are those that specify a z/OSMF connection: hostname and zosmfport.    
+   
+The username and password entries are optional. It is recommended to not specify those settings. When not specified, the application will prompt end user for username and password for the current connection.   
+    
+For further details on username and password usage see [here](https://github.com/Zowe-Java-SDK/ZosShell/issues/178)  
+    
 Example of config.json:  
 
     [
@@ -165,8 +170,8 @@ Example of config.json:
             "hostname": "xxxxxxxxx",
             "zosmfport": "xxxx",
             "sshport" : "xxxx",
-            "username": "xxxxx",
-            "password": "xxxxxx",
+            "username": "",
+            "password": "",
             "downloadpath": "/ZosShell",
             "consolename": "",
             "window": {
@@ -180,8 +185,6 @@ Example of config.json:
             "hostname": "xxxxxxxxx",
             "zosmfport": "xxxx",
             "sshport" : "xxxx",
-            "username": "xxxxx",
-            "password": "xxxxxx",
             "downloadpath": "C:\\ZosShell3",
             "consolename": "",
             "window": {}		
@@ -190,8 +193,6 @@ Example of config.json:
             "hostname": "xxxxxxxxx",
             "zosmfport": "xxxx",
             "sshport" : "xxxx",
-            "username": "xxxxx",
-            "password": "xxxxxx",
             "downloadpath": "C:\\ZosShell",
             "consolename": "",
             "window": {}		

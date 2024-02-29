@@ -15,6 +15,8 @@ import zos.shell.singleton.TerminalSingleton;
 import zos.shell.singleton.configuration.ConfigSingleton;
 import zos.shell.utility.PromptUtil;
 import zos.shell.utility.StrUtil;
+import zowe.client.sdk.core.SshConnection;
+import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.utility.ValidateUtils;
 
 import java.io.IOException;
@@ -53,7 +55,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
         // initialize ConnSingleton object
         var connSingleton = ConnSingleton.getInstance();
-        connSingleton.setCurrZosConnection(ConfigSingleton.getInstance().getZosConnectionByIndex(0));
+        connSingleton.setCurrZosConnection(ConfigSingleton.getInstance().getZosConnectionByIndex(0), 0);
         connSingleton.setCurrSshConnection(ConfigSingleton.getInstance().getSshConnectionByIndex(0));
         var title = Constants.APP_TITLE + " - " + connSingleton.getCurrSshConnection().getHost().toUpperCase();
         TerminalSingleton.getInstance().getMainTerminal().setPaneTitle(title);
@@ -86,13 +88,37 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         // local variables copies from singletons
         TextTerminal<?> terminal = TerminalSingleton.getInstance().getTerminal();
         var currConnection = ConnSingleton.getInstance().getCurrZosConnection();
+        var currSshConnection = ConnSingleton.getInstance().getCurrSshConnection();
 
-        // display information on initial first connection defined and set for usage
+        // setup initial first connection definition and prompt for username and password if applicable.
         try {
-            ValidateUtils.checkConnection(currConnection);
             var host = currConnection.getHost();
-            var user = currConnection.getUser();
-            terminal.println("Connected to " + host + " as user " + user + ".");
+            var zosmfport = currConnection.getZosmfPort();
+            var username = currConnection.getUser();
+            var password = currConnection.getPassword();
+            if (host.isBlank() || zosmfport.isBlank() || "0".equals(zosmfport)) {
+                throw new IllegalStateException("Error: Hostname or z/OSMF port value(s) missing\n" +
+                        "Check configuration file and try again...");
+            }
+
+            if (username.isBlank() || password.isBlank()) {
+                terminal.println("Enter username and password for host " + host);
+                username = PromptUtil.getPromptInfo("username:", false);
+                password = PromptUtil.getPromptInfo("password:", true);
+
+                currConnection = new ZosConnection(host, zosmfport, username, password);
+
+                ValidateUtils.checkConnection(currConnection);
+                ConfigSingleton.getInstance().setZosConnectionByIndex(currConnection, 0);
+                ConnSingleton.getInstance().setCurrZosConnection(currConnection, 0);
+                currSshConnection = new SshConnection(host, currSshConnection.getPort(), username, password);
+                ConfigSingleton.getInstance().setSshConnectionByIndex(currSshConnection, 0);
+                ConnSingleton.getInstance().setCurrSshConnection(currSshConnection);
+            }
+            var msg = String.format("Connection defined:\nhost:%s\nuser:%s\nzosmfport:%s\nsshport:%s",
+                    currConnection.getHost(), currConnection.getUser(), currConnection.getZosmfPort(),
+                    currSshConnection.getPort());
+            terminal.println(msg);
         } catch (Exception e) {
             var mainTerminal = TerminalSingleton.getInstance().getMainTerminal();
             mainTerminal.println("ERROR: Default connection invalid, try again...");

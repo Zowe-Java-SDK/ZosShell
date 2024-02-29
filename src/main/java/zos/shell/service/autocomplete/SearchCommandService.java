@@ -12,8 +12,8 @@ public final class SearchCommandService {
     private static final String[] commands = new String[]{"browsejob", "cancel", "cat", "cd", "change", "clear",
             "color", "connections", "count", "copy", "download", "downloadjob", "end", "env", "files", "grep",
             "help", "history", "hostname", "ls", "mkdir", "mvs", "purge", "ps", "pwd", "rename", "rm", "rn", "save",
-            "search", "set", "stop", "submit", "tail", "timeout", "touch", "tso", "uname", "ussh", "vi", "visited",
-            "whoami"};
+            "search", "set", "stop", "submit", "tail", "timeout", "touch", "tso", "uname", "usermod", "ussh", "vi",
+            "visited", "whoami"};
 
     private final TriePreFix dictionary = new TriePreFix(commands);
 
