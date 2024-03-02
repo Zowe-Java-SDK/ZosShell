@@ -1,6 +1,6 @@
 # ZosShell  
   
-ZosShell provides a client like Linux shell to perform z/OS system services commands.  
+ZosShell provides a client like Linux shell to perform z/OS system service commands.  
   
 The commands exploit the z/OSMF Rest API layer installed on z/OS. 
 
@@ -10,7 +10,7 @@ Zowe Client Java SDK provides the plumbing to perform z/OSMF Rest API calls.
 
 The project arise for a need for something more simple, direct and less verbosity than [Zowe CLI](https://github.com/zowe/zowe-cli) for the most common commands.   
 
-ZosShell acts like a Bash shell and keeps track of command history and current PDS. It provides history short cuts, caches command output for search, and type heading command processing.  
+ZosShell acts like a Bash shell. It provides similar bash concepts and processing. Examples of shell functionality are: keeping track of command history, changing directories represented as a partition dataset, history shortcuts with exclamation mark, auto command type ahead with TAB key and much more. It also caches each command output that can be searched by the search command.  
   
 With ZosShell the following z/OS service commands can be performed:  
 
