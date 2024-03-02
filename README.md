@@ -2,29 +2,73 @@
   
 ZosShell provides a client like Linux shell to perform z/OS system services commands.  
   
-The commands exploit the z/OSMF Rest API layer installed on a z/OS instance. 
-  
-The ZosShell application utilizes the [Zowe Client Java SDK](https://github.com/zowe/zowe-client-java-sdk) library to call the Rest APIs.  
+The commands exploit the z/OSMF Rest API layer installed on z/OS. 
+
+Project demonstrates the usage of [Zowe Client Java SDK](https://github.com/zowe/zowe-client-java-sdk).    
+    
+Zowe Client Java SDK provides the plumbing to perform z/OSMF Rest API calls.   
+
+The project arise for a need for something more simple, direct and less verbosity than [Zowe CLI](https://github.com/zowe/zowe-cli) for the most common commands.   
+
+ZosShell acts like a Bash shell and keeps track of command history and current PDS. It provides history short cuts, caches command output for search, and type heading command processing.  
   
 With ZosShell the following z/OS service commands can be performed:  
 
-    MVS console  
-    TSO console  
-      
-    Dataset/Member:  
-    list, view, create, delete, and edit. 
-    
-    Job/StartedTask:   
-    list, submit, start, stop, cancel, purge, monitor and browse   
-      
-    Download: sequential dataset, member, and job/started task log. 
-        
-The project arise for a need for something more simple, direct and less verbosity than [Zowe CLI](https://github.com/zowe/zowe-cli) for the most common commands.       
+MVS
+  
+    MVS console command
+
+TSO  
+
+    TSO console command
+
+Member  
+
+    copy
+    create
+    delete
+    download
+    edit
+    list
+    rename
+    save
+    view
+
+Partition Dataset (PDS)
+
+    copy
+    create
+    delete
+    list
+    rename
+    view
+
+Sequential Dataset  
+
+    copy
+    create
+    delete
+    download
+    edit
+    list
+    rename
+    save
+    view
+
+Job and StartedTask      
+
+    cancel
+    browse log
+    download log
+    list
+    monitor
+    purge
+    start
+    stop
+    submit  
   
 The app works well on Windows and macOS.   
-  
-Project demonstrates the usage of [Zowe Client Java SDK](https://github.com/zowe/zowe-client-java-sdk).  
-        
+          
 ## Main Demo  
   
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/main-demo.gif)
