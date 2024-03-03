@@ -5,11 +5,11 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.singleton.TerminalSingleton;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.MissingFormatArgumentException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -26,37 +26,25 @@ public class HistoryService {
         this.terminal = terminal;
     }
 
-    public void listUpCommands(final String prompt) {
+    public void listUpCommands() {
         LOG.debug("*** listUpCommands ***");
-        try {
-            if (circularLinkedList.getSize() > 1) {
-                terminal.resetLine();
-                terminal.printf(prompt + " " + circularLinkedList.back().trim());
-            } else if (circularLinkedList.getSize() == 1) {
-                terminal.resetLine();
-                terminal.printf(prompt + " " + circularLinkedList.head.getData().trim());
-            }
-        } catch (MissingFormatArgumentException e) {
-            // when %s in string terminal.printf expects string replacement value
-            // skip it and don't hang the terminal
-            terminal.printf(prompt + " ");
+        if (circularLinkedList.getSize() > 1) {
+            TerminalSingleton.getInstance().getMainTerminal()
+                    .replaceInput(circularLinkedList.back().trim(), false);
+        } else if (circularLinkedList.getSize() == 1) {
+            TerminalSingleton.getInstance().getMainTerminal()
+                    .replaceInput(circularLinkedList.head.getData().trim(), false);
         }
     }
 
-    public void listDownCommands(final String prompt) {
+    public void listDownCommands() {
         LOG.debug("*** listDownCommands ***");
-        try {
-            if (circularLinkedList.getSize() > 1) {
-                terminal.resetLine();
-                terminal.printf(prompt + " " + circularLinkedList.forward().trim());
-            } else if (circularLinkedList.getSize() == 1) {
-                terminal.resetLine();
-                terminal.printf(prompt + " " + circularLinkedList.head.getData().trim());
-            }
-        } catch (MissingFormatArgumentException e) {
-            // when %s in string terminal.printf expects string replacement value
-            // skip it and don't hang the terminal
-            terminal.printf(prompt + " ");
+        if (circularLinkedList.getSize() > 1) {
+            TerminalSingleton.getInstance().getMainTerminal()
+                    .replaceInput(circularLinkedList.forward().trim(), false);
+        } else if (circularLinkedList.getSize() == 1) {
+            TerminalSingleton.getInstance().getMainTerminal()
+                    .replaceInput(circularLinkedList.head.getData().trim(), false);
         }
     }
 

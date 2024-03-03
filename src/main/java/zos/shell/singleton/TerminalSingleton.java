@@ -115,14 +115,14 @@ public class TerminalSingleton {
             if (disableKeys) {
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
-            HistorySingleton.getInstance().getHistory().listUpCommands(PromptUtil.getPrompt());
+            HistorySingleton.getInstance().getHistory().listUpCommands();
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerminal.registerHandler("DOWN", t -> {
             if (disableKeys) {
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
-            HistorySingleton.getInstance().getHistory().listDownCommands(PromptUtil.getPrompt());
+            HistorySingleton.getInstance().getHistory().listDownCommands();
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerminal.registerHandler("shift UP", t -> {
