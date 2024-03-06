@@ -20,9 +20,6 @@ import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.utility.ValidateUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.BiConsumer;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
@@ -140,14 +137,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             }
             String[] command = input.split(" ");
             command = StrUtil.stripEmptyStrings(command);
-            if (isPromptInput(command)) {
-                continue;
-            }
-            command = removePrompt(command);
             if (isExclamationMark(command)) {
                 command = retrieveFromHistory(command);
             }
-            commandRouter.routeCommand(command);
+            commandRouter.routeCommand(command, input);
         } while (true);
 
         textIO.dispose();
@@ -158,12 +151,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         return command[0].startsWith("!");
     }
 
-    private boolean isPromptInput(final String[] command) {
-        LOG.debug("*** isPromptInput ***");
-        // handle edge case where end user enters prompt as the only input, skip it and continue
-        return command.length == 1 && Constants.DEFAULT_PROMPT.equals(command[0]);
-    }
-
     private boolean isFontSizeChanged() {
         LOG.debug("*** isFontSizeChanged ***");
         if (TerminalSingleton.getInstance().isFontSizeChanged()) {
@@ -171,20 +158,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             return true;
         }
         return false;
-    }
-
-    private static String[] removePrompt(String[] command) {
-        LOG.debug("*** removePrompt ***");
-        if (Constants.DEFAULT_PROMPT.equals(command[0])) {
-            int size = command.length;
-            String[] newCmdArr = new String[size - 1];
-            List<String> newCmdLst = new ArrayList<>(Arrays.asList(command).subList(1, size));
-            for (var i = 0; i < newCmdLst.size(); i++) {
-                newCmdArr[i] = newCmdLst.get(i);
-            }
-            command = newCmdArr;
-        }
-        return command;
     }
 
     private String[] retrieveFromHistory(String[] command) {

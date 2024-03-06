@@ -32,8 +32,14 @@ public class ChangeConnService {
             return zosConnection;
         }
         var profile = configSingleton.getProfileByIndex(index);
-        ConfigSingleton.getInstance().setConfigSettings(new ConfigSettings(profile.getDownloadpath(),
-                profile.getConsolename(), profile.getWindow()));
+        ConfigSingleton.getInstance().setConfigSettings(
+                new ConfigSettings(
+                        profile.getHostname(),
+                        profile.getDownloadpath(),
+                        profile.getConsolename(),
+                        profile.getPrompt(),
+                        profile.getWindow()
+                ));
 
         var zosConnectionByIndex = configSingleton.getZosConnectionByIndex(index);
         var host = zosConnectionByIndex.getHost();
