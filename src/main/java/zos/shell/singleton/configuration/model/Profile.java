@@ -9,6 +9,7 @@ public class Profile {
     private String password;
     private String downloadPath;
     private String consoleName;
+    private String prompt;
     private Window window;
 
     //TODO add account num
@@ -72,6 +73,14 @@ public class Profile {
         this.consoleName = consolename;
     }
 
+    public String getPrompt() {
+        return prompt;
+    }
+
+    public void setPrompt(String prompt) {
+        this.prompt = prompt;
+    }
+
     public Window getWindow() {
         return window;
     }
@@ -90,6 +99,7 @@ public class Profile {
                 ", password='" + password + '\'' +
                 ", downloadPath='" + downloadPath + '\'' +
                 ", consoleName='" + consoleName + '\'' +
+                ", prompt='" + prompt + '\'' +
                 ", window=" + window +
                 '}';
     }

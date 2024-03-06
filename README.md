@@ -111,7 +111,7 @@ The shell performs the following Linux like commands:
     set <arg>               - set environment variable with arg value in the following format: key=value
     touch <arg>             - create empty member if does not exist, arg represents a member or dataset(member)
     uname                   - show current connected host name
-    usermod <arg>           - modify username or password of current connection, arg can be -u or -p"
+    usermod <arg>           - modify username or password of current connection, arg can be -u or -p
     vi <arg>                - where arg is a sequential dataset or member name, arg will be downloaded 
                               and displayed for editing, use save command to save changes  
     whoami                  - show current connected user name
@@ -218,6 +218,7 @@ Example of config.json:
             "password": "",
             "downloadpath": "/ZosShell",
             "consolename": "",
+            "prompt": "$",
             "window": {
                         "fontsize": "xxx",
                         "fontbold": "xxxxx",
@@ -231,6 +232,7 @@ Example of config.json:
             "sshport" : "xxxx",
             "downloadpath": "C:\\ZosShell3",
             "consolename": "",
+            "prompt": "",
             "window": {}		
         },
         {
@@ -239,9 +241,36 @@ Example of config.json:
             "sshport" : "xxxx",
             "downloadpath": "C:\\ZosShell",
             "consolename": "",
+            "prompt": "$(hostname)",
             "window": {}		
         }
     ]
+  
+The following JSON variable settings are converted into environmental variables within the shell:
+  
+    hostname as HOSTNAME
+    downloadpath as DOWNLOAD_PATH
+    consolename as CONSOLE_NAME
+    prompt as PROMPT
+  
+ENV command will display the variables if they were set with a value in the configuration JSON file.    
+  
+<b>PROMPT</b> is a special setting that controls what the shell prompt value it should represent. By default, the prompt value is ">".  
+  
+Prompt can be set and changed directly with the SET command. It can parse other ENV variables' value to use within its prompt value.  
+  
+For example:  
+
+    > env
+    DOWNLOAD_PATH=/ZosShell
+    HOSTNAME=hostname1
+    > set prompt=$(hostname)
+    prompt=$(hostname)
+    hostname1> set prompt=start$(info)
+    prompt=start$(info)
+    START$(INFO)> set info=with
+    info=with
+    STARTWITH> 
   
 JSON configuration file is required for the application to work properly. Any error in finding the file or parsing the JSON string will result in the application being unusable; it will display an error and any input will close the app.    
     

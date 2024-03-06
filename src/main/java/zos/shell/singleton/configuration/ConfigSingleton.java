@@ -86,7 +86,12 @@ public class ConfigSingleton {
             return;
         }
         var profile = this.getProfileByIndex(0);
-        configSettings = new ConfigSettings(profile.getDownloadpath(), profile.getConsolename(), profile.getWindow());
+        configSettings = new ConfigSettings(
+                profile.getHostname(),
+                profile.getDownloadpath(),
+                profile.getConsolename(),
+                profile.getPrompt(),
+                profile.getWindow());
     }
 
     private void createZosConnections() {
@@ -117,8 +122,7 @@ public class ConfigSingleton {
         if (windowCmd == null) {
             windowCmd = new ChangeWinService(TerminalSingleton.getInstance().getTerminal());
         }
-        var configSettings = ConfigSingleton.getInstance().getConfigSettings();
-        if (configSettings == null) {
+        if (this.configSettings == null) {
             return;
         }
         var window = configSettings.getWindow();

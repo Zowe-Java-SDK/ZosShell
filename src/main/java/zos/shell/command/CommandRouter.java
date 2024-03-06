@@ -16,11 +16,8 @@ import zos.shell.singleton.ConnSingleton;
 import zos.shell.singleton.HistorySingleton;
 import zos.shell.singleton.TerminalSingleton;
 import zos.shell.utility.DsnUtil;
-import zos.shell.utility.PromptUtil;
 import zowe.client.sdk.core.ZosConnection;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CommandRouter {
@@ -38,7 +35,7 @@ public class CommandRouter {
         this.terminal = terminal;
     }
 
-    public void routeCommand(String[] params) {
+    public void routeCommand(String[] params, String input) {
         LOG.debug("*** routeCommand ***");
         if (params == null || params.length == 0) {
             return;
@@ -48,8 +45,6 @@ public class CommandRouter {
         var currSshConnection = ConnSingleton.getInstance().getCurrSshConnection();
         ResponseStatus responseStatus;
 
-        // handle incoming command
-        params = filterCommand(PromptUtil.getPrompt(), params);
         var command = params[0];
         HistorySingleton.getInstance().getHistory().addHistory(params);
         switch (command.toLowerCase()) {
@@ -550,13 +545,31 @@ public class CommandRouter {
                 searchCacheController.search(searchCache, params[1]).forEach(terminal::println);
                 break;
             case "set":
-                if (isParamsMissing(1, params)) {
+                if (!input.contains("=")) {
+                    terminal.println(Constants.INVALID_COMMAND);
                     return;
                 }
-                if (isParamsExceeded(2, params)) {
+                if (new StringBuilder(input).codePoints().filter(ch -> ch == '=').count() > 2) {
+                    terminal.println(Constants.INVALID_COMMAND);
                     return;
                 }
-                String setResult = controllerContainer.getEnvVariableController().set(params[1]);
+                int index = input.indexOf("=");
+                var setFirstHalfStr = input.substring(0, index + 1);
+                if (!setFirstHalfStr.toUpperCase().startsWith("SET ")) {
+                    terminal.println(Constants.INVALID_COMMAND);
+                    return;
+                }
+                var setValuesLst = input.split(" ");
+                var setKeyValueStr = new StringBuilder();
+                for (int i = 1; i < setValuesLst.length; i++) {
+                    if (i == setValuesLst.length - 1) {
+                        setKeyValueStr.append(setValuesLst[i]);
+                    } else {
+                        setKeyValueStr.append(setValuesLst[i]).append(" ");
+                    }
+                }
+                var envVariableController = controllerContainer.getEnvVariableController();
+                String setResult = envVariableController.set(setKeyValueStr.toString());
                 terminal.println(setResult);
                 break;
             case "stop":
@@ -707,41 +720,13 @@ public class CommandRouter {
 
     private void addVisited(final ZosConnection connection, final String dataset) {
         LOG.debug("*** addVisited ***");
-        // if valid hostname and dataset not in datasets multimap add it
+        // if valid hostname and dataset not in datasets multi-map add it
         if (connection == null || connection.getHost() == null && dataset.isBlank()) {
             return;
         }
         if (!dataSets.containsEntry(connection.getHost(), dataset)) {
             dataSets.put(connection.getHost(), dataset);
         }
-    }
-
-    public String[] filterCommand(final String prompt, final String[] command) {
-        LOG.debug("*** filterCommand ***");
-        if (!prompt.equals(command[0])) {
-            return command;
-        }
-
-        var list = new ArrayList<>(Arrays.asList(command));
-        // remove multiple spaces entered by end user and nulls
-        list.removeAll(Arrays.asList("", null));
-
-        String[] newCommand;
-        if (list.get(0).equals(PromptUtil.getPrompt())) {
-            newCommand = new String[list.size() - 1];
-            // remove prompt before sending new command
-            for (int i = 1, j = 0; i < list.size(); i++, j++) {
-                newCommand[j] = list.get(i);
-            }
-        } else {
-            // prompt not seen maybe removed by end user when scrolling through history
-            newCommand = new String[list.size()];
-            for (var i = 0; i < list.size(); i++) {
-                newCommand[i] = list.get(i);
-            }
-        }
-
-        return newCommand;
     }
 
     private StringBuilder getCommandFromParams(final String[] params) {

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.singleton.EnvVariableSingleton;
 
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class EnvVariableService {
 
@@ -26,8 +27,13 @@ public class EnvVariableService {
         return envVariableSingleton.getVariables();
     }
 
-    public void setEnvVariable(final String key, final String value) {
+    public void setEnvVariable(final String key, String value) {
         LOG.debug("*** setEnvVariable ***");
+        var p = Pattern.compile("\"([^\"]*)\"");
+        var m = p.matcher(value);
+        while (m.find()) {
+            value = m.group(1);
+        }
         envVariableSingleton.getVariables().put(key.toUpperCase(), value.toUpperCase());
     }
 

@@ -36,7 +36,7 @@ public class EnvVariableController {
         if (values.length != 2) {
             return Constants.INVALID_COMMAND;
         }
-        envVariableService.setEnvVariable(values[0], values[1]);
+        envVariableService.setEnvVariable(values[0].trim(), values[1].trim());
         if (values[0].equalsIgnoreCase("acctnum")) {
             if (!StrUtil.isStrNum(values[1])) {
                 return "ACCTNUM value not a number, try again...";
