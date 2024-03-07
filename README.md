@@ -218,6 +218,7 @@ Example of config.json:
             "password": "",
             "downloadpath": "/ZosShell",
             "consolename": "",
+            "accountname": "12345",
             "prompt": "$",
             "window": {
                         "fontsize": "xxx",
@@ -232,6 +233,7 @@ Example of config.json:
             "sshport" : "xxxx",
             "downloadpath": "C:\\ZosShell3",
             "consolename": "",
+            "accountname": "",
             "prompt": "",
             "window": {}		
         },
@@ -241,6 +243,7 @@ Example of config.json:
             "sshport" : "xxxx",
             "downloadpath": "C:\\ZosShell",
             "consolename": "",
+            "accountname": "",
             "prompt": "$(hostname)",
             "window": {}		
         }
@@ -255,6 +258,12 @@ The following JSON variable settings are converted into environmental variables 
   
 ENV command will display the variables if they were set with a value in the configuration JSON file.    
   
+<b>ACCOUNT_NUMBER</b> is environment variable will be initially defined on app startup from accountnumber setting if a value exist.  
+  
+ACCOUNT_NUMBER variable is used for TSO console command and needs to be defined for the TSO command to execute properly.  
+  
+Use SET command to define or change ACCOUNT_NUMBER and use accountnumber optionally to define a value at startup for a profile.      
+
 <b>PROMPT</b> is a special setting that controls what the shell prompt value it should represent. By default, the prompt value is ">".  
   
 Prompt can be set and changed directly with the SET command. It can parse other ENV variables' value to use within its prompt value.  
