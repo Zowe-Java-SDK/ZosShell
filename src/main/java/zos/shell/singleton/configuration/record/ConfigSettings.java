@@ -8,11 +8,12 @@ public class ConfigSettings {
     private final String hostName;
     private final String downloadPath;
     private final String consoleName;
+    private final String accountNumber;
     private final String prompt;
     private final Window window;
 
     public ConfigSettings(final String hostName, final String downloadPath, final String consoleName,
-                          final String prompt, final Window window) {
+                          final String accountNumber, final String prompt, final Window window) {
         this.hostName = hostName;
         if (hostName != null && !hostName.isBlank()) {
             EnvVariableSingleton.getInstance().getVariables().put("HOSTNAME", hostName);
@@ -24,6 +25,10 @@ public class ConfigSettings {
         this.consoleName = consoleName;
         if (consoleName != null && !consoleName.isBlank()) {
             EnvVariableSingleton.getInstance().getVariables().put("CONSOLE_NAME", consoleName);
+        }
+        this.accountNumber = accountNumber;
+        if (accountNumber != null && !accountNumber.isBlank()) {
+            EnvVariableSingleton.getInstance().getVariables().put("ACCOUNT_NUMBER", accountNumber);
         }
         this.prompt = prompt;
         if (prompt != null && !prompt.isBlank()) {
@@ -44,6 +49,10 @@ public class ConfigSettings {
         return consoleName;
     }
 
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
     public String getPrompt() {
         return prompt;
     }
@@ -58,6 +67,7 @@ public class ConfigSettings {
                 "hostName='" + hostName + '\'' +
                 ", downloadPath='" + downloadPath + '\'' +
                 ", consoleName='" + consoleName + '\'' +
+                ", accountNumber='" + accountNumber + '\'' +
                 ", prompt='" + prompt + '\'' +
                 ", window=" + window +
                 '}';

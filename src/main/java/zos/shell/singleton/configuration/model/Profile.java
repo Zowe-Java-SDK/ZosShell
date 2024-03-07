@@ -9,6 +9,7 @@ public class Profile {
     private String password;
     private String downloadPath;
     private String consoleName;
+    private String accountNumber;
     private String prompt;
     private Window window;
 
@@ -73,6 +74,14 @@ public class Profile {
         this.consoleName = consolename;
     }
 
+    public String getAccountnumber() {
+        return accountNumber;
+    }
+
+    public void setAccountnumber(final String accountnumber) {
+        this.accountNumber = accountnumber;
+    }
+
     public String getPrompt() {
         return prompt;
     }
@@ -99,6 +108,7 @@ public class Profile {
                 ", password='" + password + '\'' +
                 ", downloadPath='" + downloadPath + '\'' +
                 ", consoleName='" + consoleName + '\'' +
+                ", accountNumber='" + accountNumber + '\'' +
                 ", prompt='" + prompt + '\'' +
                 ", window=" + window +
                 '}';

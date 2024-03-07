@@ -640,11 +640,10 @@ public class CommandRouter {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                String acctNum = controllerContainer.getEnvVariableController().getValueByEnv("ACCTNUM");
                 StringBuilder tsoCommandCandidate = getCommandFromParams(params);
                 long tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {
-                    var tsoController = controllerContainer.getTsoController(currConnection, acctNum, timeout);
+                    var tsoController = controllerContainer.getTsoController(currConnection, timeout);
                     String tsoResult = tsoController.issueCommand(tsoCommandCandidate.toString());
                     searchCache = new SearchCache("tso", new StringBuilder(tsoResult));
                     terminal.println(tsoResult);

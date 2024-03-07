@@ -476,17 +476,16 @@ public class ControllerFactoryContainer {
         return this.touchController;
     }
 
-    public TsoController getTsoController(final ZosConnection connection, final String acctNum, final long timeout) {
+    public TsoController getTsoController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getTsoController ***");
         if (this.tsoController == null ||
                 (this.tsoDependencyContainer != null && (
                         !(this.tsoDependencyContainer.isZosConnectionSame(connection) &&
-                                this.tsoDependencyContainer.isTimeoutSame(timeout) &&
-                                this.tsoDependencyContainer.isDataSame(acctNum))))) {
+                                this.tsoDependencyContainer.isTimeoutSame(timeout))))) {
             var issueTso = new IssueTso(connection);
-            var tsoService = new TsoService(issueTso, acctNum, timeout);
-            this.tsoController = new TsoController(tsoService);
-            this.tsoDependencyContainer = new DependencyCacheContainer(connection, acctNum, timeout);
+            var tsoService = new TsoService(issueTso, timeout);
+            this.tsoController = new TsoController(tsoService, this.getEnvVariableController());
+            this.tsoDependencyContainer = new DependencyCacheContainer(connection, timeout);
         }
         return this.tsoController;
     }

@@ -90,6 +90,7 @@ public class ConfigSingleton {
                 profile.getHostname(),
                 profile.getDownloadpath(),
                 profile.getConsolename(),
+                profile.getAccountnumber(),
                 profile.getPrompt(),
                 profile.getWindow());
     }

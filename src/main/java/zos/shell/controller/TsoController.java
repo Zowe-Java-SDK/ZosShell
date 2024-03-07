@@ -10,15 +10,18 @@ public class TsoController {
     private static final Logger LOG = LoggerFactory.getLogger(TsoController.class);
 
     private final TsoService tsoService;
+    private final EnvVariableController envVariableController;
 
-    public TsoController(final TsoService tsoService) {
+    public TsoController(final TsoService tsoService, final EnvVariableController envVariableController) {
         LOG.debug("*** TsoController ***");
         this.tsoService = tsoService;
+        this.envVariableController = envVariableController;
     }
 
     public String issueCommand(final String command) {
         LOG.debug("*** issueCommand ***");
-        ResponseStatus responseStatus = tsoService.issueCommand(command);
+        ResponseStatus responseStatus = tsoService.issueCommand(
+                envVariableController.getValueByEnv("ACCOUNT_NUMBER"), command);
         return responseStatus.getMessage();
     }
 
