@@ -179,11 +179,11 @@ At the root directory prompt, execute the following maven command:
   
 Change directory to the target directory and execute the following command:  
   
-    java -jar zosshell-2.1.0.jar   
+    java -jar zosshell-2.1.1.jar   
   
 If you are planning to browse large job output you may want to set the JVM memory usage higher than the default, i.e.  
   
-    java -jar -Xmx2G zosshell-2.1.0.jar   
+    java -jar -Xmx2G zosshell-2.1.1.jar   
   
 ### Terminal configuration properties
   
