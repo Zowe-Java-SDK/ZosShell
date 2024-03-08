@@ -195,15 +195,13 @@ You can override the default file name and its location by setting the following
   
 The configuration file consists of JSON data. The configuration JSON string is defined as a JSON array structure. The array will consist of one or more profile(s).
   
-A profile is a one-to-one relationship of Profile.java file within the project. It contains variables as a placeholder for configuration information, such as z/OSMF and SSH connection information and properties to control the Window environment.  
-    
-In addition, each profile contains path variable to control location for the download directory.  
-  
+A profile is a one-to-one relationship of Profile.java file within the project. It contains variables as a placeholder for configuration information, such as z/OSMF and SSH connection information, properties to control the Window environment and much more.  
+   
 The first JSON array entry in the example below shows all the attributes defined to be read by the application.  
   
-The other JSON array entries shows that you don't need to specify all attributes and its values. The attributes most critical are those that specify a z/OSMF connection: hostname and zosmfport.    
+The other JSON array entries shows that you don't need to specify all attributes and its values. The attributes required are those that specify a z/OSMF connection: hostname and zosmfport.    
    
-The username and password entries are optional. It is recommended to not specify those settings. When not specified, the application will prompt end user for username and password for the current connection.   
+The username and password entries are optional. It is recommended to not specify those settings. When not specified, the application will prompt the end user for username and password for the current connection.   
     
 For further details on username and password usage see [here](https://github.com/Zowe-Java-SDK/ZosShell/issues/182)  
     
@@ -218,7 +216,7 @@ Example of config.json:
             "password": "",
             "downloadpath": "/ZosShell",
             "consolename": "",
-            "accountname": "12345",
+            "accountnumber": "12345",
             "prompt": "$",
             "window": {
                         "fontsize": "xxx",
@@ -233,7 +231,7 @@ Example of config.json:
             "sshport" : "xxxx",
             "downloadpath": "C:\\ZosShell3",
             "consolename": "",
-            "accountname": "",
+            "accountnumber": "",
             "prompt": "",
             "window": {}		
         },
@@ -243,33 +241,37 @@ Example of config.json:
             "sshport" : "xxxx",
             "downloadpath": "C:\\ZosShell",
             "consolename": "",
-            "accountname": "",
+            "accountnumber": "",
             "prompt": "$(hostname)",
             "window": {}		
         }
     ]
   
+Explanation of some of the variable settings:
+  
+    downloadpath specifies the location on your disk drive to store downloaded data
+    consolename specifies the console name to use to perform MVS console command
+    accountnumber specifies the account number needed to perform TSO command
+    prompt specifies value to display for the application prompt
+   
 The following JSON variable settings are converted into environmental variables within the shell:
   
     hostname as HOSTNAME
     downloadpath as DOWNLOAD_PATH
     consolename as CONSOLE_NAME
+    accountnumber as ACCOUNT_NUMBER
     prompt as PROMPT
   
-ENV command will display the variables if they were set with a value in the configuration JSON file.    
-  
-<b>ACCOUNT_NUMBER</b> is environment variable will be initially defined on app startup from accountnumber setting if a value exist.  
-  
-ACCOUNT_NUMBER variable is used for TSO console command and needs to be defined for the TSO command to execute properly.  
-  
-Use SET command to define or change ACCOUNT_NUMBER and use accountnumber optionally to define a value at startup for a profile.      
+Each of these environmental variables will appear at app startup via ENV command if any have a value specified within the configuration JSON file.
 
-<b>PROMPT</b> is a special setting that controls what the shell prompt value it should represent. By default, the prompt value is ">".  
+Use SET command to define or change each environmental variable noted above as needed and the new settings will be used by the application accordingly.
   
-Prompt can be set and changed directly with the SET command. It can parse other ENV variables' value to use within its prompt value.  
+<b>PROMPT</b> setting controls what the shell prompt value should represent. By default, the prompt value is ">".  
+  
+A prompt can be set and changed directly with the SET command. It can parse other ENV variables' value to use within its prompt value.  
   
 For example:  
-
+  
     > env
     DOWNLOAD_PATH=/ZosShell
     HOSTNAME=hostname1
