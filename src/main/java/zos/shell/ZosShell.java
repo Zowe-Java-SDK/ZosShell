@@ -20,7 +20,10 @@ import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.utility.ValidateUtils;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
@@ -135,7 +138,19 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 terminal.println("Front size set.");
                 continue;
             }
-            String[] command = input.split(" ");
+            var inputs = Arrays.stream(input.split(" ")).collect(Collectors.toList());
+            String[] command;
+            if (inputs.get(0).equalsIgnoreCase(PromptUtil.getPrompt())) {
+                command = new String[inputs.size() - 1];
+                for (int i = 1; i < inputs.size(); i++) {
+                    command[i - 1] = inputs.get(i);
+                }
+            } else {
+                command = new String[inputs.size()];
+                for (int i = 0; i < inputs.size(); i++) {
+                    command[i] = inputs.get(i);
+                }
+            }
             command = StrUtil.stripEmptyStrings(command);
             if (isExclamationMark(command)) {
                 command = retrieveFromHistory(command);
