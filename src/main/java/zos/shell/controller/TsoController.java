@@ -28,8 +28,7 @@ public class TsoController {
         if (accountNumber.isBlank()) {
             accountNumber = configSingleton.getConfigSettings().getConsoleName();
         }
-        ResponseStatus responseStatus = tsoService.issueCommand(
-                envVariableController.getValueByEnv(accountNumber), command);
+        ResponseStatus responseStatus = tsoService.issueCommand(accountNumber, command);
         return responseStatus.getMessage();
     }
 
