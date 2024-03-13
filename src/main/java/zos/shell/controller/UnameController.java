@@ -2,38 +2,33 @@ package zos.shell.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.constants.Constants;
-import zos.shell.response.ResponseStatus;
-import zos.shell.service.console.ConsoleService;
+import zos.shell.service.uname.UnameService;
+import zos.shell.singleton.configuration.ConfigSingleton;
 import zowe.client.sdk.core.ZosConnection;
 
 public class UnameController {
 
     private static final Logger LOG = LoggerFactory.getLogger(UnameController.class);
 
-    private final ConsoleService consoleService;
+    private final UnameService unameService;
+    private final ConfigSingleton configSingleton;
+    private final EnvVariableController envVariableController;
 
-    public UnameController(final ConsoleService consoleService) {
+    public UnameController(final UnameService unameService, final ConfigSingleton configSingleton,
+                           final EnvVariableController envVariableController) {
         LOG.debug("*** UnameController ***");
-        this.consoleService = consoleService;
+        this.unameService = unameService;
+        this.configSingleton = configSingleton;
+        this.envVariableController = envVariableController;
     }
 
     public String uname(final ZosConnection connection) {
         LOG.debug("*** uname ***");
-        ResponseStatus response = consoleService.issueConsole("D IPLINFO");
-        if (!response.isStatus()) {
-            return Constants.NO_INFO;
+        String consoleName = envVariableController.getValueByEnv("CONSOLE_NAME").trim();
+        if (consoleName.isBlank()) {
+            consoleName = configSingleton.getConfigSettings().getConsoleName();
         }
-        String output = response.getMessage();
-        int index = output.indexOf("RELEASE z/OS ");
-        String zosVersion = null;
-        if (index >= 0) {
-            zosVersion = output.substring(index, index + 22);
-        }
-        if (zosVersion == null) {
-            return Constants.NO_INFO;
-        }
-        return "hostname: " + connection.getHost() + ", " + zosVersion;
+        return unameService.getUname(connection.getHost(), consoleName);
     }
 
 }

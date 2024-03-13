@@ -30,7 +30,7 @@ public class TerminateService {
         this.timeout = timeout;
     }
 
-    public ResponseStatus terminate(final TerminateService.Type type, final String target) {
+    public ResponseStatus terminate(final TerminateService.Type type, final String consoleName, final String target) {
         LOG.debug("*** terminate ***");
         String command;
         switch (type) {
@@ -45,7 +45,7 @@ public class TerminateService {
         }
 
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureConsole(issueConsole, command));
+        Future<ResponseStatus> submit = pool.submit(new FutureConsole(issueConsole, consoleName, command));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

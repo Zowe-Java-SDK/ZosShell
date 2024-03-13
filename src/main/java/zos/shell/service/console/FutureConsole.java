@@ -9,8 +9,8 @@ public class FutureConsole extends Console implements Callable<ResponseStatus> {
 
     private final String command;
 
-    public FutureConsole(final IssueConsole issueConsole, final String command) {
-        super(issueConsole);
+    public FutureConsole(final IssueConsole issueConsole, final String consoleName, final String command) {
+        super(issueConsole, consoleName);
         this.command = command;
     }
 
