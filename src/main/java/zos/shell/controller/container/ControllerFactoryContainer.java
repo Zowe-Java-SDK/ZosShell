@@ -502,7 +502,12 @@ public class ControllerFactoryContainer {
                                 this.tsoDependencyContainer.isTimeoutSame(timeout))))) {
             var issueTso = new IssueTso(connection);
             var tsoService = new TsoService(issueTso, timeout);
-            this.tsoController = new TsoController(tsoService, this.getEnvVariableController());
+            if (this.envVariableController == null) {
+                var envVariableService = new EnvVariableService();
+                this.envVariableController = new EnvVariableController(envVariableService);
+            }
+            this.tsoController = new TsoController(tsoService,
+                    ConfigSingleton.getInstance(), this.getEnvVariableController());
             this.tsoDependencyContainer = new DependencyCacheContainer(connection, timeout);
         }
         return this.tsoController;
