@@ -4,24 +4,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.tso.TsoService;
+import zos.shell.singleton.configuration.ConfigSingleton;
 
 public class TsoController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TsoController.class);
 
     private final TsoService tsoService;
+    private final ConfigSingleton configSingleton;
     private final EnvVariableController envVariableController;
 
-    public TsoController(final TsoService tsoService, final EnvVariableController envVariableController) {
+    public TsoController(final TsoService tsoService, final ConfigSingleton configSingleton,
+                         final EnvVariableController envVariableController) {
         LOG.debug("*** TsoController ***");
         this.tsoService = tsoService;
+        this.configSingleton = configSingleton;
         this.envVariableController = envVariableController;
     }
 
     public String issueCommand(final String command) {
         LOG.debug("*** issueCommand ***");
-        ResponseStatus responseStatus = tsoService.issueCommand(
-                envVariableController.getValueByEnv("ACCOUNT_NUMBER"), command);
+        String accountNumber = envVariableController.getValueByEnv("ACCOUNT_NUMBER").trim();
+        if (accountNumber.isBlank()) {
+            accountNumber = configSingleton.getConfigSettings().getConsoleName();
+        }
+        ResponseStatus responseStatus = tsoService.issueCommand(accountNumber, command);
         return responseStatus.getMessage();
     }
 

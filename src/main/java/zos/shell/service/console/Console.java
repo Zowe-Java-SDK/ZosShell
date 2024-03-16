@@ -4,14 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.singleton.configuration.ConfigSingleton;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosconsole.input.IssueConsoleParams;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
 import zowe.client.sdk.zosconsole.response.ConsoleResponse;
 
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class Console {
@@ -19,10 +17,12 @@ public class Console {
     private static final Logger LOG = LoggerFactory.getLogger(Console.class);
 
     private final IssueConsole issueConsole;
+    private final String consoleName;
 
-    public Console(final IssueConsole issueConsole) {
+    public Console(final IssueConsole issueConsole, final String consoleName) {
         LOG.debug("*** Console ***");
         this.issueConsole = issueConsole;
+        this.consoleName = consoleName;
     }
 
     public ResponseStatus issueConsole(String command) {
@@ -37,11 +37,8 @@ public class Console {
         ConsoleResponse consoleResponse;
         var params = new IssueConsoleParams(command);
         params.setProcessResponse(true);
-        var configSettings = ConfigSingleton.getInstance().getConfigSettings();
-        var consoleName = Optional.ofNullable(configSettings != null && configSettings.getConsoleName() != null
-                && !configSettings.getConsoleName().isBlank() ? configSettings.getConsoleName() : null);
         try {
-            consoleResponse = consoleName.isPresent() ? execute(consoleName.get(), params) : execute(params);
+            consoleResponse = !consoleName.isBlank() ? execute(consoleName, params) : execute(params);
         } catch (ZosmfRequestException e) {
             var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);

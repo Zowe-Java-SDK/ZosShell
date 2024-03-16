@@ -34,7 +34,9 @@ import zos.shell.service.omvs.SshService;
 import zos.shell.service.rename.RenameService;
 import zos.shell.service.search.SearchCacheService;
 import zos.shell.service.tso.TsoService;
+import zos.shell.service.uname.UnameService;
 import zos.shell.service.usermod.UsermodService;
+import zos.shell.singleton.configuration.ConfigSingleton;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
@@ -133,9 +135,15 @@ public class ControllerFactoryContainer {
                 (this.cancelDependencyContainer != null && (
                         !(this.cancelDependencyContainer.isZosConnectionSame(connection) &&
                                 this.cancelDependencyContainer.isTimeoutSame(timeout))))) {
+
             var issueConsole = new IssueConsole(connection);
+            if (this.envVariableController == null) {
+                var envVariableService = new EnvVariableService();
+                this.envVariableController = new EnvVariableController(envVariableService);
+            }
             var cancelService = new TerminateService(issueConsole, timeout);
-            this.cancelController = new CancelController(cancelService);
+            this.cancelController = new CancelController(cancelService,
+                    ConfigSingleton.getInstance(), this.envVariableController);
             this.cancelDependencyContainer = new DependencyCacheContainer(connection, timeout);
         }
         return this.cancelController;
@@ -196,7 +204,12 @@ public class ControllerFactoryContainer {
                         !(this.consoleDependencyContainer.isZosConnectionSame(connection) &&
                                 this.consoleDependencyContainer.isTimeoutSame(timeout))))) {
             var consoleService = new ConsoleService(connection, timeout);
-            this.consoleController = new ConsoleController(consoleService);
+            if (this.envVariableController == null) {
+                var envVariableService = new EnvVariableService();
+                this.envVariableController = new EnvVariableController(envVariableService);
+            }
+            this.consoleController = new ConsoleController(consoleService,
+                    ConfigSingleton.getInstance(), this.envVariableController);
             this.consoleDependencyContainer = new DependencyCacheContainer(connection, timeout);
         }
         return this.consoleController;
@@ -425,8 +438,13 @@ public class ControllerFactoryContainer {
                         !(this.stopDependencyContainer.isZosConnectionSame(connection) &&
                                 this.stopDependencyContainer.isTimeoutSame(timeout))))) {
             var issueConsole = new IssueConsole(connection);
+            if (this.envVariableController == null) {
+                var envVariableService = new EnvVariableService();
+                this.envVariableController = new EnvVariableController(envVariableService);
+            }
             var stopService = new TerminateService(issueConsole, timeout);
-            this.stopController = new StopController(stopService);
+            this.stopController = new StopController(stopService,
+                    ConfigSingleton.getInstance(), this.envVariableController);
             this.stopDependencyContainer = new DependencyCacheContainer(connection, timeout);
         }
         return this.stopController;
@@ -484,7 +502,12 @@ public class ControllerFactoryContainer {
                                 this.tsoDependencyContainer.isTimeoutSame(timeout))))) {
             var issueTso = new IssueTso(connection);
             var tsoService = new TsoService(issueTso, timeout);
-            this.tsoController = new TsoController(tsoService, this.getEnvVariableController());
+            if (this.envVariableController == null) {
+                var envVariableService = new EnvVariableService();
+                this.envVariableController = new EnvVariableController(envVariableService);
+            }
+            this.tsoController = new TsoController(tsoService,
+                    ConfigSingleton.getInstance(), this.getEnvVariableController());
             this.tsoDependencyContainer = new DependencyCacheContainer(connection, timeout);
         }
         return this.tsoController;
@@ -496,8 +519,14 @@ public class ControllerFactoryContainer {
                 (this.unameDependencyContainer != null && (
                         !(this.unameDependencyContainer.isZosConnectionSame(connection) &&
                                 this.unameDependencyContainer.isTimeoutSame(timeout))))) {
-            var consoleService = new ConsoleService(connection, timeout);
-            this.unameController = new UnameController(consoleService);
+            var issueConsole = new IssueConsole(connection);
+            var unameService = new UnameService(issueConsole, timeout);
+            if (this.envVariableController == null) {
+                var envVariableService = new EnvVariableService();
+                this.envVariableController = new EnvVariableController(envVariableService);
+            }
+            this.unameController = new UnameController(unameService,
+                    ConfigSingleton.getInstance(), this.envVariableController);
             this.unameDependencyContainer = new DependencyCacheContainer(connection, timeout);
         }
         return this.unameController;

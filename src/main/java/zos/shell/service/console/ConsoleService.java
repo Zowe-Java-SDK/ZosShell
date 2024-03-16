@@ -25,10 +25,10 @@ public class ConsoleService {
         this.timeout = timeout;
     }
 
-    public ResponseStatus issueConsole(String command) {
+    public ResponseStatus issueConsole(final String consoleName, final String command) {
         LOG.debug("*** issueConsole ***");
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureConsole(new IssueConsole(connection), command));
+        Future<ResponseStatus> submit = pool.submit(new FutureConsole(new IssueConsole(connection), consoleName, command));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 
