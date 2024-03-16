@@ -19,7 +19,8 @@ public class EnvVariableService {
 
     public String getValueByEnvName(final String key) {
         LOG.debug("*** getValueByEnvName ***");
-        return envVariableSingleton.getVariables().get(key.toUpperCase());
+        return envVariableSingleton.getVariables().get(key.toUpperCase()) != null ?
+                envVariableSingleton.getVariables().get(key.toUpperCase()) : "";
     }
 
     public Map<String, String> getEnvVariables() {
