@@ -1,6 +1,7 @@
 package zos.shell.service.job.download;
 
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.path.PathService;
 import zos.shell.utility.FileUtil;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
@@ -10,8 +11,9 @@ public class FutureDownloadJob extends DownloadJob implements Callable<ResponseS
 
     private final String target;
 
-    public FutureDownloadJob(final JobGet retrieve, final String target, boolean isAll, final long timeout) {
-        super(retrieve, isAll, timeout);
+    public FutureDownloadJob(final JobGet retrieve, final PathService pathService, final String target, boolean isAll,
+                             final long timeout) {
+        super(retrieve, pathService, isAll, timeout);
         this.target = target;
     }
 

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.controller.EnvVariableController;
 import zos.shell.singleton.configuration.ConfigSingleton;
 import zos.shell.utility.DsnUtil;
 
@@ -15,41 +16,46 @@ public class PathService {
 
     private static final String DIRECTORY_PATH_MAC = Constants.DEFAULT_DOWNLOAD_PATH_MAC + "/";
 
-    private String path;
-    private String pathWithFile;
-    private final String dataset;
-    private final String target;
+    private final ConfigSingleton configSingleton;
+    private final EnvVariableController envVariableController;
+    private String pathToDirectory;
+    private String pathToDirectoryWithFileName;
 
-    public PathService(final String dataset, final String target) {
-        LOG.debug("*** PathService dataset target ***");
-        this.dataset = dataset;
-        this.target = target;
-        this.initialize();
+    public PathService(final ConfigSingleton configSingleton,
+                       final EnvVariableController envVariableController) {
+        LOG.debug("*** PathService ***");
+        this.configSingleton = configSingleton;
+        this.envVariableController = envVariableController;
     }
 
-    public PathService(final String target) {
-        LOG.debug("*** PathService target ***");
+    public void createPathsForMember(final String dataset, final String target) {
+        this.initialize(dataset, target);
+    }
+
+    public void createPathsForSequentialDataset(final String target) {
+        LOG.debug("*** createPathsForSequentialDataset ***");
         if (DsnUtil.isDataset(target)) {
-            this.dataset = Constants.SEQUENTIAL_DIRECTORY_LOCATION;
+            this.initialize(Constants.SEQUENTIAL_DIRECTORY_LOCATION, target);
         } else {
             throw new IllegalArgumentException("Expected sequential dataset");
         }
-        this.target = target;
-        this.initialize();
     }
 
-    public void initialize() {
+    private void initialize(final String dataset, final String target) {
         LOG.debug("*** initialize ***");
-        var configSettings = ConfigSingleton.getInstance().getConfigSettings();
-        String configPath = configSettings != null ? configSettings.getDownloadPath() : null;
+        String configPath = envVariableController.getValueByEnv("DOWNLOAD_PATH").trim();
+        if (configPath.isBlank()) {
+            configPath = configSingleton.getConfigSettings().getDownloadPath();
+        }
+
         if (SystemUtils.IS_OS_WINDOWS) {
-            path = configPath != null ? configPath + (!configPath.endsWith("\\") ? "\\" : "") + dataset
-                    : DIRECTORY_PATH_WINDOWS + dataset;
-            pathWithFile = path + "\\" + target;
+            pathToDirectory = !configPath.isBlank() ? configPath +
+                    (!configPath.endsWith("\\") ? "\\" : "") + dataset : DIRECTORY_PATH_WINDOWS + dataset;
+            pathToDirectoryWithFileName = pathToDirectory + "\\" + target;
         } else if (SystemUtils.IS_OS_MAC_OSX) {
-            path = configPath != null ? configPath + (!configPath.endsWith("/") ? "/" : "") + dataset
-                    : DIRECTORY_PATH_MAC + dataset;
-            pathWithFile = path + "/" + target;
+            pathToDirectory = configPath.isBlank() ? configPath +
+                    (!configPath.endsWith("/") ? "/" : "") + dataset : DIRECTORY_PATH_MAC + dataset;
+            pathToDirectoryWithFileName = pathToDirectory + "/" + target;
         } else {
             throw new IllegalStateException(Constants.OS_ERROR);
         }
@@ -57,21 +63,19 @@ public class PathService {
 
     public String getPath() {
         LOG.debug("*** getPath ***");
-        return path;
+        return pathToDirectory;
     }
 
     public String getPathWithFile() {
         LOG.debug("*** getPathWithFile ***");
-        return pathWithFile;
+        return pathToDirectoryWithFileName;
     }
 
     @Override
     public String toString() {
-        return "DirectorySetup{" +
-                "path='" + path + '\'' +
-                ", pathWithFile='" + pathWithFile + '\'' +
-                ", dataset='" + dataset + '\'' +
-                ", target='" + target + '\'' +
+        return "PathService{" +
+                "pathToDirectory='" + pathToDirectory + '\'' +
+                ", pathToDirectoryWithFileName='" + pathToDirectoryWithFileName + '\'' +
                 '}';
     }
 

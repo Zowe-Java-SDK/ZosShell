@@ -31,6 +31,7 @@ import zos.shell.service.job.tail.TailService;
 import zos.shell.service.job.terminate.TerminateService;
 import zos.shell.service.localfile.LocalFileService;
 import zos.shell.service.omvs.SshService;
+import zos.shell.service.path.PathService;
 import zos.shell.service.rename.RenameService;
 import zos.shell.service.search.SearchCacheService;
 import zos.shell.service.tso.TsoService;
@@ -108,6 +109,7 @@ public class ControllerFactoryContainer {
     private DependencyCacheContainer unameDependencyContainer;
     private UssController ussController;
     private DependencyCacheContainer ussDependencyContainer;
+    private PathService pathService;
 
     public ControllerFactoryContainer() {
         LOG.debug("*** ControllerFactoryContainer ***");
@@ -189,7 +191,14 @@ public class ControllerFactoryContainer {
                         !(this.concatDependencyContainer.isZosConnectionSame(connection) &&
                                 this.concatDependencyContainer.isTimeoutSame(timeout))))) {
             var dsnGet = new DsnGet(connection);
-            var download = new Download(dsnGet, false);
+            if (this.envVariableController == null) {
+                var envVariableService = new EnvVariableService();
+                this.envVariableController = new EnvVariableController(envVariableService);
+            }
+            if (this.pathService == null) {
+                this.pathService = new PathService(ConfigSingleton.getInstance(), this.envVariableController);
+            }
+            var download = new Download(dsnGet, this.pathService, false);
             var concatService = new ConcatService(download, timeout);
             this.concatController = new ConcatController(concatService);
             this.concatDependencyContainer = new DependencyCacheContainer(connection, timeout);
@@ -263,7 +272,14 @@ public class ControllerFactoryContainer {
                         !(this.downloadDsnDependencyContainer.isZosConnectionSame(connection) &&
                                 this.downloadDsnDependencyContainer.isTimeoutSame(timeout) &&
                                 this.downloadDsnDependencyContainer.isToggleSame(isBinary))))) {
-            var downloadDsnService = new DownloadDsnService(connection, isBinary, timeout);
+            if (this.envVariableController == null) {
+                var envVariableService = new EnvVariableService();
+                this.envVariableController = new EnvVariableController(envVariableService);
+            }
+            if (this.pathService == null) {
+                this.pathService = new PathService(ConfigSingleton.getInstance(), this.envVariableController);
+            }
+            var downloadDsnService = new DownloadDsnService(connection, this.pathService, isBinary, timeout);
             this.downloadDsnController = new DownloadDsnController(downloadDsnService);
             this.downloadDsnDependencyContainer = new DependencyCacheContainer(connection, isBinary, timeout);
         }
@@ -279,7 +295,14 @@ public class ControllerFactoryContainer {
                                 this.downloadJobDependencyContainer.isTimeoutSame(timeout) &&
                                 this.browseJobDependencyContainer.isToggleSame(isAll))))) {
             var jobGet = new JobGet(connection);
-            var downloadJobService = new DownloadJobService(jobGet, isAll, timeout);
+            if (this.envVariableController == null) {
+                var envVariableService = new EnvVariableService();
+                this.envVariableController = new EnvVariableController(envVariableService);
+            }
+            if (this.pathService == null) {
+                this.pathService = new PathService(ConfigSingleton.getInstance(), this.envVariableController);
+            }
+            var downloadJobService = new DownloadJobService(jobGet, this.pathService, isAll, timeout);
             this.downloadJobController = new DownloadJobController(downloadJobService);
             this.downloadJobDependencyContainer = new DependencyCacheContainer(connection, isAll, timeout);
         }
@@ -293,9 +316,16 @@ public class ControllerFactoryContainer {
                         !(this.editDependencyContainer.isZosConnectionSame(connection) &&
                                 this.editDependencyContainer.isTimeoutSame(timeout))))) {
             var dsnGet = new DsnGet(connection);
-            var download = new Download(dsnGet, false);
+            if (this.envVariableController == null) {
+                var envVariableService = new EnvVariableService();
+                this.envVariableController = new EnvVariableController(envVariableService);
+            }
+            if (this.pathService == null) {
+                this.pathService = new PathService(ConfigSingleton.getInstance(), this.envVariableController);
+            }
+            var download = new Download(dsnGet, this.pathService, false);
             var checkSumService = new CheckSumService();
-            var editService = new EditService(download, checkSumService, timeout);
+            var editService = new EditService(download, this.pathService, checkSumService, timeout);
             this.editController = new EditController(editService);
             this.editDependencyContainer = new DependencyCacheContainer(connection, timeout);
         }
@@ -319,7 +349,14 @@ public class ControllerFactoryContainer {
                         !(this.grepDependencyContainer.isZosConnectionSame(connection) &&
                                 this.grepDependencyContainer.isTimeoutSame(timeout) &&
                                 this.grepDependencyContainer.isDataSame(target))))) {
-            var grepService = new GrepService(connection, target, timeout);
+            if (this.envVariableController == null) {
+                var envVariableService = new EnvVariableService();
+                this.envVariableController = new EnvVariableController(envVariableService);
+            }
+            if (this.pathService == null) {
+                this.pathService = new PathService(ConfigSingleton.getInstance(), this.envVariableController);
+            }
+            var grepService = new GrepService(connection, this.pathService, target, timeout);
             this.grepController = new GrepController(grepService);
             this.grepDependencyContainer = new DependencyCacheContainer(connection, target, timeout);
         }
@@ -414,7 +451,14 @@ public class ControllerFactoryContainer {
                         !(this.saveDependencyContainer.isZosConnectionSame(connection) &&
                                 this.saveDependencyContainer.isTimeoutSame(timeout))))) {
             var checkSumService = new CheckSumService();
-            var saveService = new SaveService(new DsnWrite(connection), checkSumService, timeout);
+            if (this.envVariableController == null) {
+                var envVariableService = new EnvVariableService();
+                this.envVariableController = new EnvVariableController(envVariableService);
+            }
+            if (this.pathService == null) {
+                this.pathService = new PathService(ConfigSingleton.getInstance(), this.envVariableController);
+            }
+            var saveService = new SaveService(new DsnWrite(connection), this.pathService, checkSumService, timeout);
             this.saveController = new SaveController(saveService);
             this.saveDependencyContainer = new DependencyCacheContainer(connection, timeout);
         }

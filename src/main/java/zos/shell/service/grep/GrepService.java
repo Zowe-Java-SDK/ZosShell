@@ -6,6 +6,7 @@ import zos.shell.constants.Constants;
 import zos.shell.service.dsn.concat.ConcatService;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.service.memberlst.MemberListingService;
+import zos.shell.service.path.PathService;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -23,12 +24,14 @@ public class GrepService {
     private static final Logger LOG = LoggerFactory.getLogger(GrepService.class);
 
     private final ZosConnection connection;
+    private final PathService pathService;
     private final String pattern;
     private final long timeout;
 
-    public GrepService(final ZosConnection connection, String pattern, long timeout) {
+    public GrepService(final ZosConnection connection, final PathService pathService, String pattern, long timeout) {
         LOG.debug("*** GrepService ***");
         this.connection = connection;
+        this.pathService = pathService;
         this.pattern = pattern;
         this.timeout = timeout;
     }
@@ -75,7 +78,7 @@ public class GrepService {
             return futureResults(dataset, result, pool, futures, members);
         } else {
             pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-            var concatService = new ConcatService(new Download(new DsnGet(connection), false), timeout);
+            var concatService = new ConcatService(new Download(new DsnGet(connection), pathService, false), timeout);
             Future<List<String>> submit = pool.submit(new FutureGrep(concatService, dataset, target, pattern, false));
 
             try {
@@ -99,7 +102,7 @@ public class GrepService {
     private List<String> futureResults(final String dataset, final List<String> result, final ExecutorService pool,
                                        final ArrayList<Future<List<String>>> futures, final List<Member> members) {
         for (var member : members) {
-            var concatService = new ConcatService(new Download(new DsnGet(connection), false), timeout);
+            var concatService = new ConcatService(new Download(new DsnGet(connection), pathService, false), timeout);
             if (member.getMember().isPresent()) {
                 var name = member.getMember().get();
                 futures.add(pool.submit(new FutureGrep(concatService, dataset, name, pattern, true)));

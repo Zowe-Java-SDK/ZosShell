@@ -22,11 +22,13 @@ public class Save {
     private static final Logger LOG = LoggerFactory.getLogger(Save.class);
 
     private final DsnWrite dsnWrite;
+    private final PathService pathService;
     private final CheckSumService checkSumService;
 
-    public Save(final DsnWrite dsnWrite, final CheckSumService checkSumService) {
+    public Save(final DsnWrite dsnWrite, final PathService pathService, final CheckSumService checkSumService) {
         LOG.debug("*** Save ***");
         this.dsnWrite = dsnWrite;
+        this.pathService = pathService;
         this.checkSumService = checkSumService;
     }
 
@@ -42,19 +44,19 @@ public class Save {
 
         if (DsnUtil.isMember(target)) {
             // member input specified from current dataset
-            pathService = new PathService(dataset, target);
+            this.pathService.createPathsForMember(dataset, target);
         } else if (datasetMember != null) {
             // dataset(member) input specified
-            pathService = new PathService(datasetMember.getDataset(), datasetMember.getMember());
+            this.pathService.createPathsForMember(datasetMember.getDataset(), datasetMember.getMember());
         } else if (DsnUtil.isDataset(target)) {
             //  sequential dataset input specified
-            pathService = new PathService(dataset, target);
+            this.pathService.createPathsForSequentialDataset(target);
             isSequentialDataset = true;
         } else {
             return new ResponseStatus(Constants.INVALID_PARAMETER, false);
         }
 
-        try (var br = new BufferedReader(new FileReader(pathService.getPathWithFile()))) {
+        try (var br = new BufferedReader(new FileReader(this.pathService.getPathWithFile()))) {
             var sb = new StringBuilder();
             var line = br.readLine();
 
@@ -65,11 +67,11 @@ public class Save {
             }
             var content = sb.toString().replaceAll("(\\r)", "");
 
-            String checksum = checkSumService.calculateCheckSum(pathService.getPathWithFile());
-            if (checksum.equals(checkSumService.getCheckSum(pathService.getPathWithFile()))) {
+            String checksum = checkSumService.calculateCheckSum(this.pathService.getPathWithFile());
+            if (checksum.equals(checkSumService.getCheckSum(this.pathService.getPathWithFile()))) {
                 return new ResponseStatus("nothing to save, perform editor save and try again...", false);
             }
-            checkSumService.addCheckSum(pathService.getPathWithFile());
+            checkSumService.addCheckSum(this.pathService.getPathWithFile());
 
             if (isSequentialDataset) {
                 dsnWrite.write(target, content);
