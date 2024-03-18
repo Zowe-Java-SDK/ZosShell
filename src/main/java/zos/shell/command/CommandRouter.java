@@ -246,6 +246,15 @@ public class CommandRouter {
                 String downloadJobResult = downloadJobController.downloadJob(params[1]);
                 terminal.println(downloadJobResult);
                 break;
+            case "echo":
+                if (isParamsMissing(1, params)) {
+                    return;
+                }
+                String echoArg = input.substring(5);
+                var echoController = controllerContainer.getEchoController();
+                String echoResult = echoController.getEcho(echoArg);
+                terminal.println(echoResult);
+                break;
             case "end":
                 if (isParamsExceeded(1, params)) {
                     return;
