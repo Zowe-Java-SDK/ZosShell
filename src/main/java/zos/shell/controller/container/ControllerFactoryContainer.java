@@ -20,6 +20,7 @@ import zos.shell.service.dsn.list.ListingService;
 import zos.shell.service.dsn.makedir.MakeDirService;
 import zos.shell.service.dsn.save.SaveService;
 import zos.shell.service.dsn.touch.TouchService;
+import zos.shell.service.echo.EchoService;
 import zos.shell.service.env.EnvVariableService;
 import zos.shell.service.grep.GrepService;
 import zos.shell.service.job.browse.BrowseLogService;
@@ -75,6 +76,7 @@ public class ControllerFactoryContainer {
     private DependencyCacheContainer downloadDsnDependencyContainer;
     private DownloadJobController downloadJobController;
     private DependencyCacheContainer downloadJobDependencyContainer;
+    private EchoController echoController;
     private EditController editController;
     private DependencyCacheContainer editDependencyContainer;
     private EnvVariableController envVariableController;
@@ -284,6 +286,19 @@ public class ControllerFactoryContainer {
             this.downloadJobDependencyContainer = new DependencyCacheContainer(connection, isAll, timeout);
         }
         return this.downloadJobController;
+    }
+
+    public EchoController getEchoController() {
+        LOG.debug("*** getEchoController ***");
+        if (this.echoController == null) {
+            if (this.envVariableController == null) {
+                var envVariableService = new EnvVariableService();
+                this.envVariableController = new EnvVariableController(envVariableService);
+            }
+            var echoService = new EchoService(this.envVariableController);
+            this.echoController = new EchoController(echoService);
+        }
+        return this.echoController;
     }
 
     public EditController getEditController(final ZosConnection connection, final long timeout) {
