@@ -18,10 +18,12 @@ public class DownloadJob {
 
     private static final Logger LOG = LoggerFactory.getLogger(DownloadJob.class);
 
+    private final PathService pathService;
     private final BrowseLogService browseLogService;
 
-    public DownloadJob(final JobGet retrieve, boolean isAll, final long timeout) {
+    public DownloadJob(final JobGet retrieve, final PathService pathService, boolean isAll, final long timeout) {
         LOG.debug("*** DownloadJob ***");
+        this.pathService = pathService;
         this.browseLogService = new BrowseLogService(retrieve, isAll, timeout);
     }
 
@@ -42,16 +44,16 @@ public class DownloadJob {
         browseLogService.jobs.sort(Comparator.comparing(job -> job.getJobId().orElse(""), Comparator.reverseOrder()));
         String id = browseLogService.jobs.get(0).getJobId().orElse(null);
 
-        var pathService = new PathService(target, id);
+        this.pathService.createPathsForMember(target, id);
         try {
-            FileUtil.writeTextFile(output, pathService.getPath(), pathService.getPathWithFile());
+            FileUtil.writeTextFile(output, this.pathService.getPath(), this.pathService.getPathWithFile());
         } catch (IOException e) {
             return new ResponseStatus(e.getMessage(), false);
         }
 
         var message = Strings.padStart(target, 8, ' ') + Constants.ARROW +
-                "downloaded to " + pathService.getPath();
-        return new ResponseStatus(message, true, pathService.getPathWithFile());
+                "downloaded to " + this.pathService.getPath();
+        return new ResponseStatus(message, true, this.pathService.getPathWithFile());
     }
 
 }

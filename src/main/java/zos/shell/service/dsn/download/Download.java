@@ -21,12 +21,14 @@ public class Download {
     private static final Logger LOG = LoggerFactory.getLogger(Download.class);
 
     private final DsnGet dsnGet;
+    private final PathService pathService;
     private DownloadParams dlParams;
     private final boolean isBinary;
 
-    public Download(final DsnGet dsnGet, boolean isBinary) {
+    public Download(final DsnGet dsnGet, PathService pathService, boolean isBinary) {
         LOG.debug("*** Download ***");
         this.dsnGet = dsnGet;
+        this.pathService = pathService;
         this.isBinary = isBinary;
     }
 
@@ -37,7 +39,7 @@ public class Download {
         }
         var message = Strings.padStart(member, Constants.STRING_PAD_LENGTH, ' ') + Constants.ARROW;
 
-        PathService pathService = new PathService(dataset, member);
+        pathService.createPathsForMember(dataset, member);
         try {
             String textContent;
             InputStream binaryContent;
@@ -70,7 +72,7 @@ public class Download {
         LOG.debug("*** dataset ***");
         var message = dataset + " " + Constants.ARROW;
 
-        var pathService = new PathService(dataset);
+        pathService.createPathsForSequentialDataset(dataset);
         try {
             dlParams = new DownloadParams.Builder().build();
             String textContent = getTextContent(dataset);

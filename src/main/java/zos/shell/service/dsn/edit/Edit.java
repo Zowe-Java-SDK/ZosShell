@@ -18,12 +18,14 @@ public class Edit {
     private static final Logger LOG = LoggerFactory.getLogger(Edit.class);
 
     private final Download download;
+    private final PathService pathService;
     private final CheckSumService checkSumService;
     private final Runtime rs = Runtime.getRuntime();
 
-    public Edit(final Download download, final CheckSumService checkSumService) {
+    public Edit(final Download download, final PathService pathService, final CheckSumService checkSumService) {
         LOG.debug("*** Edit ***");
         this.download = download;
+        this.pathService = pathService;
         this.checkSumService = checkSumService;
     }
 
@@ -36,15 +38,15 @@ public class Edit {
         if (DsnUtil.isMember(target)) {
             // member input specified from current dataset
             result = download.member(dataset, target);
-            pathService = new PathService(dataset, target);
+            this.pathService.createPathsForMember(dataset, target);
         } else if (datasetMember != null) {
             // dataset(member) input specified
             result = download.member(datasetMember.getDataset(), datasetMember.getMember());
-            pathService = new PathService(datasetMember.getDataset(), datasetMember.getMember());
+            this.pathService.createPathsForMember(datasetMember.getDataset(), datasetMember.getMember());
         } else if (DsnUtil.isDataset(target)) {
             // sequential dataset input specified
             result = download.dataset(target);
-            pathService = new PathService(target);
+            this.pathService.createPathsForSequentialDataset(target);
         } else {
             return new ResponseStatus(Constants.INVALID_PARAMETER, false);
         }
@@ -53,7 +55,7 @@ public class Edit {
             if (result.isStatus()) {
                 String pathFile;
                 String editorName;
-                pathFile = pathService.getPathWithFile();
+                pathFile = this.pathService.getPathWithFile();
                 checkSumService.addCheckSum(pathFile);
                 if (SystemUtils.IS_OS_WINDOWS) {
                     editorName = Constants.WINDOWS_EDITOR_NAME;

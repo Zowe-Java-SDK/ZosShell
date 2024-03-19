@@ -6,6 +6,7 @@ import zos.shell.constants.Constants;
 import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.memberlst.MemberListingService;
+import zos.shell.service.path.PathService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.FileUtil;
 import zos.shell.utility.ResponseUtil;
@@ -25,12 +26,15 @@ public class DownloadDsnService {
     private static final Logger LOG = LoggerFactory.getLogger(DownloadDsnService.class);
 
     private final ZosConnection connection;
+    private final PathService pathService;
     private final boolean isBinary;
     private final long timeout;
 
-    public DownloadDsnService(final ZosConnection connection, boolean isBinary, final long timeout) {
+    public DownloadDsnService(final ZosConnection connection, final PathService pathService, boolean isBinary,
+                              final long timeout) {
         LOG.debug("*** DownloadDsnService ***");
         this.connection = connection;
+        this.pathService = pathService;
         this.isBinary = isBinary;
         this.timeout = timeout;
     }
@@ -82,16 +86,17 @@ public class DownloadDsnService {
         try {
             if (dataSetMember != null) {
                 // dataset(member) notation
-                submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), dataSetMember.getDataset(),
-                        dataSetMember.getMember(), isBinary));
+                submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), pathService,
+                        dataSetMember.getDataset(), dataSetMember.getMember(), isBinary));
                 results.add(submit.get(timeout, TimeUnit.SECONDS));
             } else if (DsnUtil.isMember(target)) {
                 // member in current dataset
-                submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), dataset, target, isBinary));
+                submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), pathService, dataset,
+                        target, isBinary));
                 results.add(submit.get(timeout, TimeUnit.SECONDS));
             } else if (DsnUtil.isDataset(target)) {
                 // sequential dataset
-                submit = pool.submit(new FutureDatasetDownload(new DsnGet(connection), target, isBinary));
+                submit = pool.submit(new FutureDatasetDownload(new DsnGet(connection), pathService, target, isBinary));
                 results.add(submit.get(timeout, TimeUnit.SECONDS));
             } else {
                 results.add(new ResponseStatus(Constants.INVALID_DATASET_AND_MEMBER, false));
@@ -126,7 +131,7 @@ public class DownloadDsnService {
         for (var member : members) {
             if (member.getMember().isPresent()) {
                 String name = member.getMember().get();
-                futures.add(pool.submit(new FutureMemberDownload(new DsnGet(connection), dataset, name, isBinary)));
+                futures.add(pool.submit(new FutureMemberDownload(new DsnGet(connection), pathService, dataset, name, isBinary)));
             }
         }
 

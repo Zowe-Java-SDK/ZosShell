@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.path.PathService;
 import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
@@ -16,12 +17,14 @@ public class DownloadJobService {
     private static final Logger LOG = LoggerFactory.getLogger(DownloadJobService.class);
 
     private final JobGet retrieve;
+    private final PathService pathService;
     private final boolean isAll;
     private final long timeout;
 
-    public DownloadJobService(final JobGet retrieve, boolean isAll, final long timeout) {
+    public DownloadJobService(final JobGet retrieve, final PathService pathService, boolean isAll, final long timeout) {
         LOG.debug("*** DownloadJobService ***");
         this.retrieve = retrieve;
+        this.pathService = pathService;
         this.isAll = isAll;
         this.timeout = timeout;
     }
@@ -29,7 +32,7 @@ public class DownloadJobService {
     public ResponseStatus download(final String target) {
         LOG.debug("*** download ***");
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureDownloadJob(retrieve, target, this.isAll, this.timeout));
+        Future<ResponseStatus> submit = pool.submit(new FutureDownloadJob(retrieve, pathService, target, this.isAll, this.timeout));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 
