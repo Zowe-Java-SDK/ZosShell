@@ -31,6 +31,7 @@ public class HelpService {
             "dj | downloadjob <arg1> <arg2> - download the latest job log where <arg1> is job name",
             "                          if arg2 not specified, download job's JESMSGLG spool output",
             "                          if arg2 is equal to \"all\", download all job's spool output",
+            "echo <arg>              - display given input and translate any env value delimited with $",
             "end                     - end session closes shell UI window",
             "env                     - display environment variables",
             "files                   - list all files under local pwd drive value",

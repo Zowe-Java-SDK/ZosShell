@@ -91,6 +91,7 @@ The shell performs the following Linux like commands:
     cd <arg>                - where arg is a dataset value or empty
     clear                   - clear the shell screen and start at top and empty out cached output for search command
     cp | copy <arg> <arg>   - where arg can be ".", "*", member, sequential dataset or dataset(member)
+    echo <arg>              - display given input and translate any env value delimited with $
     env                     - display environment variables
     g | grep <arg> <arg2>   - where arg is search string and arg2 is member value
     h | help                - list commands
