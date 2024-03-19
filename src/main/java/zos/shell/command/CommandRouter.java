@@ -250,7 +250,7 @@ public class CommandRouter {
                 if (isParamsMissing(1, params)) {
                     return;
                 }
-                String echoArg = input.substring(5);
+                var echoArg = input.substring(5);
                 var echoController = controllerContainer.getEchoController();
                 String echoResult = echoController.getEcho(echoArg);
                 terminal.println(echoResult);
