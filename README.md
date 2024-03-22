@@ -12,7 +12,7 @@ ZosShell demonstrates the usage of [Zowe Client Java SDK](https://github.com/zow
     
 Zowe Client Java SDK provides the plumbing to perform z/OSMF Rest API calls.     
   
-With ZosShell the following z/OS service commands can be performed:  
+With ZosShell, the following z/OS service commands can be performed:  
   
 MVS
   
