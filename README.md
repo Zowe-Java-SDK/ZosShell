@@ -112,10 +112,10 @@ The shell performs the following Linux like commands:
     set <arg>               - set environment variable with arg value in the following format: key=value
     touch <arg>             - create empty member if does not exist, arg represents a member or dataset(member)
     uname                   - show current connected host name
-    usermod <arg>           - modify username or password of current connection, arg can be -u or -p
+    usermod <arg>           - modify username or password of current connection, arg can be either -u or -p
     vi <arg>                - where arg is a sequential dataset or member name, arg will be downloaded 
                               and displayed for editing, use save command to save changes  
-    whoami                  - show current connected user name
+    whoami                  - show current set connection's username  
   
 Along with following custom commands:  
 
