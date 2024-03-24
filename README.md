@@ -196,7 +196,7 @@ You can override the default file name and its location by setting the following
   
 The configuration file consists of JSON data. The configuration JSON string is defined as a JSON array structure. The array will consist of one or more profile(s).
   
-A profile is a one-to-one relationship of Profile.java file within the project. It contains variables as a placeholder for configuration information, such as z/OSMF and SSH connection information, properties to control the Window environment and much more.  
+A profile is a one-to-one relationship of [Profile.java](https://github.com/Zowe-Java-SDK/ZosShell/blob/master/src/main/java/zos/shell/singleton/configuration/model/Profile.java) file within the project. It contains variables as a placeholder for configuration information, such as z/OSMF and SSH connection information, properties to control the Window environment and much more.  
    
 The first JSON array entry in the example below shows all the attributes defined to be read by the application.  
   
@@ -204,7 +204,7 @@ The other JSON array entries shows that you don't need to specify all attributes
    
 The username and password entries are optional. It is recommended to not specify those settings. When not specified, the application will prompt the end user for username and password for the current connection.   
     
-For further details on username and password usage see [here](https://github.com/Zowe-Java-SDK/ZosShell/issues/182)  
+For further details on username and password usage see [here](https://github.com/Zowe-Java-SDK/ZosShell/issues/182).    
     
 Example of config.json:  
 
