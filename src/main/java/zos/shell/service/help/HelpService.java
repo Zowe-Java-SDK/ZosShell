@@ -68,12 +68,12 @@ public class HelpService {
             "touch <arg>             - create empty member if does not exist, arg represents a member or dataset(member)",
             "tso <arg>               - execute a tso command where arg is a command string within double quotes",
             "uname                   - show current connected host name",
-            "usermod <arg>           - modify username or password of current connection, arg can be -u or -p",
+            "usermod <arg>           - modify username or password of current connection, arg can be either -u or -p",
             "ussh <arg>              - execute USS/UNIX command via SSH connection where arg is a command string within double quotes",
             "vi <arg>                - where arg is a sequential dataset or member name, arg will be downloaded",
             "                          and displayed for editing, use save command to save changes",
             "v | visited             - a list of visited datasets",
-            "whoami                  - show current connected user name");
+            "whoami                  - show current set connection's username");
 
     public static SearchCache display(TextTerminal<?> terminal) {
         LOG.debug("*** display ***");
