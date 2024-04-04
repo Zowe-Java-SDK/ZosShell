@@ -103,7 +103,11 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             if (username.isBlank() || password.isBlank()) {
                 terminal.println("Enter username and password for host " + host);
                 username = PromptUtil.getPromptInfo("username:", false);
-                password = PromptUtil.getPromptInfo("password:", true);
+                String confirmPassword = null;
+                while (confirmPassword == null || !confirmPassword.equals(password)) {
+                    password = PromptUtil.getPromptInfo("password:", true);
+                    confirmPassword = PromptUtil.getPromptInfo("confirm password:", true);
+                }
 
                 currConnection = new ZosConnection(host, zosmfport, username, password);
 

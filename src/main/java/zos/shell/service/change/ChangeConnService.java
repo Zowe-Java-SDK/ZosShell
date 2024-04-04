@@ -61,7 +61,11 @@ public class ChangeConnService {
 
         terminal.println("Enter username and password for host " + host);
         username = PromptUtil.getPromptInfo("username:", false);
-        password = PromptUtil.getPromptInfo("password:", true);
+        String confirmPassword = null;
+        while (confirmPassword == null || !confirmPassword.equals(password)) {
+            password = PromptUtil.getPromptInfo("password:", true);
+            confirmPassword = PromptUtil.getPromptInfo("confirm password:", true);
+        }
         ConfigSingleton.getInstance().updateWindowSittings(terminal);
         configSingleton.setZosConnectionByIndex(new ZosConnection(host, zosmfport, username, password), index);
         return configSingleton.getZosConnectionByIndex(index);

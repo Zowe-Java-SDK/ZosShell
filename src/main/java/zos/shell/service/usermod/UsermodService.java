@@ -32,7 +32,12 @@ public class UsermodService {
 
     public String changePassword() {
         LOG.debug("*** changePassword ***");
-        var password = PromptUtil.getPromptInfo("password:", true);
+        String confirmPassword = null;
+        var password = "";
+        while (confirmPassword == null || !confirmPassword.equals(password)) {
+            password = PromptUtil.getPromptInfo("password:", true);
+            confirmPassword = PromptUtil.getPromptInfo("confirm password:", true);
+        }
         var zosConnection = new ZosConnection(this.host, this.zosmfPort, this.username, password);
         var sshConnection = new SshConnection(this.host, this.sshPort, this.username, password);
         ConfigSingleton.getInstance().setZosConnectionByIndex(zosConnection, index);
