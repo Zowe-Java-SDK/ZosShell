@@ -27,7 +27,7 @@ public class ChangeConnService {
     public ZosConnection changeZosConnection(final ZosConnection zosConnection, final String[] commands) {
         LOG.debug("*** changeZosConnection ***");
         var index = Integer.parseInt(commands[1]);
-        if (index-- > configSingleton.getZosConnections().size()) {
+        if (index > configSingleton.getZosConnections().size()) {
             terminal.println(Constants.NO_CONNECTION);
             return zosConnection;
         }
@@ -92,7 +92,7 @@ public class ChangeConnService {
 
     public void displayConnections() {
         LOG.debug("*** displayConnections ***");
-        var i = new AtomicInteger(1);
+        var i = new AtomicInteger(0);
         configSingleton.getZosConnections().forEach(
                 c -> terminal.println(i.getAndIncrement() + " " + "hostname: " +
                         (c.getHost().isBlank() ? "n\\a" : c.getHost()) + ", zosmfport: " +

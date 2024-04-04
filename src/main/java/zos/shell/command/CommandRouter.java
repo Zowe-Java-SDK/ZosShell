@@ -674,7 +674,7 @@ public class CommandRouter {
                     return;
                 }
                 var usermodController = controllerContainer.getUsermodController(currConnection,
-                        ConnSingleton.getInstance().getCurrZosConnectionIndex() - 1);
+                        ConnSingleton.getInstance().getCurrZosConnectionIndex());
                 var flag = params[1];
                 String usermodResult = usermodController.change(flag);
                 terminal.println(usermodResult);
