@@ -39,14 +39,13 @@ public class TouchService {
 
         var datasetMember = DatasetMember.getDatasetAndMember(target);
 
-        if (DsnUtil.isMember(target)) {
-            submit = pool.submit(new FutureTouch(dsnWrite, dataset, target));
-        } else if (datasetMember != null) {
+        if (!DsnUtil.isMember(target) && datasetMember == null) {
+            return new ResponseStatus(Constants.INVALID_PARAMETER, false);
+        }
+
+        if (datasetMember != null) {
             dataset = datasetMember.getDataset();
             target = datasetMember.getMember();
-            submit = pool.submit(new FutureTouch(dsnWrite, dataset, target));
-        } else {
-            return new ResponseStatus(Constants.INVALID_PARAMETER, false);
         }
 
         var memberListingService = new MemberListingService(dsnList, timeout);
@@ -58,6 +57,7 @@ public class TouchService {
             var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus(errMsg != null ? errMsg : e.getMessage(), false);
         }
+        submit = pool.submit(new FutureTouch(dsnWrite, dataset, target));
 
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
