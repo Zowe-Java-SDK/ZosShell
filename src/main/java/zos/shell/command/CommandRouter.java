@@ -599,9 +599,6 @@ public class CommandRouter {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                if (isDatasetNotSpecified(currDataset)) {
-                    return;
-                }
                 var submitController = controllerContainer.getSubmitController(currConnection, timeout);
                 String submitResult = submitController.submit(currDataset, params[1]);
                 terminal.println(submitResult);
