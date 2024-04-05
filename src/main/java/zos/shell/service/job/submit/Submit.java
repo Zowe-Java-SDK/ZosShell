@@ -29,6 +29,10 @@ public class Submit {
             target = datasetMember.getMember();
         }
 
+        if (dataset.isBlank()) {
+            return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
+        }
+
         Job job;
         try {
             job = submit.submit(String.format("%s(%s)", dataset, target));
