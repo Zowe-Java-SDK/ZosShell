@@ -59,7 +59,9 @@ public class PathService {
             pathToDirectoryWithFileName = pathToDirectory + "\\" + target;
         } else if (SystemUtils.IS_OS_MAC_OSX) {
             pathToDirectory = configPath.isBlank() ? configPath +
-                    (!configPath.endsWith("/") ? "/" : "") + dataset : DIRECTORY_PATH_MAC + dataset;
+                    (!configPath.endsWith("/") ? "/" : "") +
+                    connSingleton.getCurrZosConnection().getHost() + "/" + dataset :
+                    DIRECTORY_PATH_MAC + connSingleton.getCurrZosConnection().getHost() + "/" + dataset;
             pathToDirectoryWithFileName = pathToDirectory + "/" + target;
         } else {
             throw new IllegalStateException(Constants.OS_ERROR);
