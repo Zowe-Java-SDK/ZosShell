@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.controller.EnvVariableController;
+import zos.shell.singleton.ConnSingleton;
 import zos.shell.singleton.configuration.ConfigSingleton;
 import zos.shell.utility.DsnUtil;
 
@@ -17,14 +18,16 @@ public class PathService {
     private static final String DIRECTORY_PATH_MAC = Constants.DEFAULT_DOWNLOAD_PATH_MAC + "/";
 
     private final ConfigSingleton configSingleton;
+    private final ConnSingleton connSingleton;
     private final EnvVariableController envVariableController;
     private String pathToDirectory;
     private String pathToDirectoryWithFileName;
 
-    public PathService(final ConfigSingleton configSingleton,
+    public PathService(final ConfigSingleton configSingleton, final ConnSingleton connSingleton,
                        final EnvVariableController envVariableController) {
         LOG.debug("*** PathService ***");
         this.configSingleton = configSingleton;
+        this.connSingleton = connSingleton;
         this.envVariableController = envVariableController;
     }
 
@@ -50,7 +53,9 @@ public class PathService {
 
         if (SystemUtils.IS_OS_WINDOWS) {
             pathToDirectory = !configPath.isBlank() ? configPath +
-                    (!configPath.endsWith("\\") ? "\\" : "") + dataset : DIRECTORY_PATH_WINDOWS + dataset;
+                    (!configPath.endsWith("\\") ? "\\" : "") +
+                    connSingleton.getCurrZosConnection().getHost() + "\\" + dataset :
+                    DIRECTORY_PATH_WINDOWS + connSingleton.getCurrZosConnection().getHost() + "\\" + dataset;
             pathToDirectoryWithFileName = pathToDirectory + "\\" + target;
         } else if (SystemUtils.IS_OS_MAC_OSX) {
             pathToDirectory = configPath.isBlank() ? configPath +

@@ -38,6 +38,7 @@ import zos.shell.service.search.SearchCacheService;
 import zos.shell.service.tso.TsoService;
 import zos.shell.service.uname.UnameService;
 import zos.shell.service.usermod.UsermodService;
+import zos.shell.singleton.ConnSingleton;
 import zos.shell.singleton.configuration.ConfigSingleton;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
@@ -198,7 +199,8 @@ public class ControllerFactoryContainer {
                 this.envVariableController = new EnvVariableController(envVariableService);
             }
             if (this.pathService == null) {
-                this.pathService = new PathService(ConfigSingleton.getInstance(), this.envVariableController);
+                this.pathService = new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
+                        this.envVariableController);
             }
             var download = new Download(dsnGet, this.pathService, false);
             var concatService = new ConcatService(download, timeout);
@@ -279,7 +281,8 @@ public class ControllerFactoryContainer {
                 this.envVariableController = new EnvVariableController(envVariableService);
             }
             if (this.pathService == null) {
-                this.pathService = new PathService(ConfigSingleton.getInstance(), this.envVariableController);
+                this.pathService = new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
+                        this.envVariableController);
             }
             var downloadDsnService = new DownloadDsnService(connection, this.pathService, isBinary, timeout);
             this.downloadDsnController = new DownloadDsnController(downloadDsnService);
@@ -302,7 +305,8 @@ public class ControllerFactoryContainer {
                 this.envVariableController = new EnvVariableController(envVariableService);
             }
             if (this.pathService == null) {
-                this.pathService = new PathService(ConfigSingleton.getInstance(), this.envVariableController);
+                this.pathService = new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
+                        this.envVariableController);
             }
             var downloadJobService = new DownloadJobService(jobGet, this.pathService, isAll, timeout);
             this.downloadJobController = new DownloadJobController(downloadJobService);
@@ -336,7 +340,8 @@ public class ControllerFactoryContainer {
                 this.envVariableController = new EnvVariableController(envVariableService);
             }
             if (this.pathService == null) {
-                this.pathService = new PathService(ConfigSingleton.getInstance(), this.envVariableController);
+                this.pathService = new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
+                        this.envVariableController);
             }
             var download = new Download(dsnGet, this.pathService, false);
             var checkSumService = new CheckSumService();
@@ -369,7 +374,8 @@ public class ControllerFactoryContainer {
                 this.envVariableController = new EnvVariableController(envVariableService);
             }
             if (this.pathService == null) {
-                this.pathService = new PathService(ConfigSingleton.getInstance(), this.envVariableController);
+                this.pathService = new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
+                        this.envVariableController);
             }
             var grepService = new GrepService(connection, this.pathService, target, timeout);
             this.grepController = new GrepController(grepService);
@@ -471,7 +477,8 @@ public class ControllerFactoryContainer {
                 this.envVariableController = new EnvVariableController(envVariableService);
             }
             if (this.pathService == null) {
-                this.pathService = new PathService(ConfigSingleton.getInstance(), this.envVariableController);
+                this.pathService = new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
+                        this.envVariableController);
             }
             var saveService = new SaveService(new DsnWrite(connection), this.pathService, checkSumService, timeout);
             this.saveController = new SaveController(saveService);
