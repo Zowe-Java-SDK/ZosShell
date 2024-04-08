@@ -40,7 +40,6 @@ public class Save {
 
         var datasetMember = DatasetMember.getDatasetAndMember(target);
         boolean isSequentialDataset = false;
-        PathService pathService;
 
         if (DsnUtil.isMember(target)) {
             // member input specified from current dataset

@@ -34,7 +34,6 @@ public class Edit {
         ResponseStatus result;
         var datasetMember = DatasetMember.getDatasetAndMember(target);
 
-        PathService pathService;
         if (DsnUtil.isMember(target)) {
             // member input specified from current dataset
             result = download.member(dataset, target);
