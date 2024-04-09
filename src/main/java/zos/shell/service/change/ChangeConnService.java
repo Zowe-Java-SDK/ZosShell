@@ -74,7 +74,7 @@ public class ChangeConnService {
     public SshConnection changeSshConnection(final SshConnection sshConnection, final String[] commands) {
         LOG.debug("*** changeSshConnection ***");
         var index = Integer.parseInt(commands[1]);
-        if (index-- > configSingleton.getZosConnections().size()) {
+        if (index > configSingleton.getZosConnections().size()) {
             return sshConnection;
         }
 
