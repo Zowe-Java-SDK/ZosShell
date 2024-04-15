@@ -315,7 +315,7 @@ public class CommandRouter {
                     return;
                 }
                 terminal.println(currConnection.getHost());
-                return;
+                break;
             case "ls":
                 if (isParamsExceeded(3, params)) {
                     return;
