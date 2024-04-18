@@ -37,7 +37,17 @@ public class TsoService {
         }
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         Future<ResponseStatus> submit = pool.submit(new FutureTso(issueTso, accountNumber, command));
-        return FutureUtil.getFutureResponse(submit, pool, timeout);
+        if (!responseStatus.isStatus()) {
+            var consoleMsg = " or try default or different console name value..";
+            var errMsg = responseStatus.getMessage();
+            if (errMsg.contains("..")) {
+                errMsg = errMsg.replace("..", consoleMsg);
+            } else {
+                errMsg = errMsg + consoleMsg;
+            }
+            return new ResponseStatus(errMsg, false);
+        }
+        return responseStatus;
     }
 
 }
