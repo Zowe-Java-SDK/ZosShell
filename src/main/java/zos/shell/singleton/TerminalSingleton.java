@@ -169,7 +169,7 @@ public class TerminalSingleton {
             if (!candidateLst.isEmpty()) {
                 mainTerminal.moveToLineStart();
                 if (candidateLst.size() == 1) {
-                    mainTerminal.print(PromptUtil.getPrompt() + " " + candidateLst.get(0));
+                    mainTerminal.replaceInput(candidateLst.get(0), false);
                 } else {
                     mainTextIO.newStringInputReader().withDefaultValue("hit enter to skip")
                             .read((PromptUtil.getPrompt() + " " + candidateLst));
