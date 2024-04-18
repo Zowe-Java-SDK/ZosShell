@@ -26,7 +26,7 @@ public class TsoController {
         LOG.debug("*** issueCommand ***");
         String accountNumber = envVariableController.getValueByEnv("ACCOUNT_NUMBER").trim();
         if (accountNumber.isBlank()) {
-            accountNumber = configSingleton.getConfigSettings().getConsoleName();
+            accountNumber = configSingleton.getConfigSettings().getAccountNumber();
         }
         ResponseStatus responseStatus = tsoService.issueCommand(accountNumber, command);
         return responseStatus.getMessage();
