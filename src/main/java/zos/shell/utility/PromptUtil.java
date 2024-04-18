@@ -38,7 +38,7 @@ public final class PromptUtil {
     }
 
     public static String getPromptInfo(final String promptMsg, final boolean isMask) {
-        LOG.debug("*** getPrompt ***");
+        LOG.debug("*** getPromptInfo ***");
         TerminalSingleton.getInstance().setDisableKeys(true);
         var result = TerminalSingleton.getInstance()
                 .getMainTextIO()
