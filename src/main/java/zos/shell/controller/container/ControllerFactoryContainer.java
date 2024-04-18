@@ -298,7 +298,7 @@ public class ControllerFactoryContainer {
                 (this.downloadJobDependencyContainer != null && (
                         !(this.downloadJobDependencyContainer.isZosConnectionSame(connection) &&
                                 this.downloadJobDependencyContainer.isTimeoutSame(timeout) &&
-                                this.browseJobDependencyContainer.isToggleSame(isAll))))) {
+                                this.downloadJobDependencyContainer.isToggleSame(isAll))))) {
             var jobGet = new JobGet(connection);
             if (this.envVariableController == null) {
                 var envVariableService = new EnvVariableService();
