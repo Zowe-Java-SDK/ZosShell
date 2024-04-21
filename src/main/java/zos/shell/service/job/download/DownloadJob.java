@@ -41,7 +41,8 @@ public class DownloadJob {
         }
 
         var output = responseStatus.getMessage();
-        browseLogService.jobs.sort(Comparator.comparing(job -> job.getJobId().orElse(""), Comparator.reverseOrder()));
+        browseLogService.jobs.sort(
+                Comparator.comparing(job -> job.getJobId().orElse(""), Comparator.reverseOrder()));
         String id = browseLogService.jobs.get(0).getJobId().orElse(null);
 
         this.pathService.createPathsForMember(target, id);
