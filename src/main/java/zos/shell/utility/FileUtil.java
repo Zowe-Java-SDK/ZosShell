@@ -28,14 +28,21 @@ public final class FileUtil {
             return;
         }
 
+        var file = new File(filePath);
         try {
+            LOG.info("canonical path {}", file.getCanonicalPath());
             if (SystemUtils.IS_OS_WINDOWS) {
-                Runtime.getRuntime().exec("explorer.exe /select, " + filePath);
+                // open directory in explorer
+                Runtime.getRuntime().exec("explorer.exe /select, " + file.getCanonicalPath());
             } else if (SystemUtils.IS_OS_MAC_OSX) {
-                var arr = filePath.split("/");
+                var arr = file.getCanonicalPath().split("/");
                 var str = new StringBuilder();
-                for (var i = 0; i < arr.length - 1; i++) {
-                    str.append(arr[i]).append("/");
+                if (file.isDirectory()) {
+                    str.append(file.getCanonicalPath());
+                } else { // is file remove file name and open directory only
+                    for (var i = 0; i < arr.length - 1; i++) {
+                        str.append(arr[i]).append("/");
+                    }
                 }
                 Runtime.getRuntime().exec("/usr/bin/open " + str);
             }
