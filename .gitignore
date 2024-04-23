@@ -11,3 +11,4 @@ target/
 .swp
 zosshell-*.*
 zosshell-*.*.*
+.DS_Store
