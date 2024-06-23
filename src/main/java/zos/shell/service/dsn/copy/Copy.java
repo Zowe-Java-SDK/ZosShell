@@ -23,7 +23,7 @@ public class Copy {
         try {
             dsnCopy.copy(source, destination, true, isCopyAll);
         } catch (ZosmfRequestException e) {
-            final var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+            var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false, source);
         }
         var msg = isCopyAll ? source + " copied all members to " + destination : source + " copied to " + destination;
