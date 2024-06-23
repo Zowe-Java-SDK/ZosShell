@@ -47,7 +47,7 @@ public class PathService {
 
     private void initialize(final String dataset, final String target) {
         LOG.debug("*** initialize ***");
-        String configPath = envVariableController.getValueByEnv("DOWNLOAD_PATH").trim();
+        var configPath = envVariableController.getValueByEnv("DOWNLOAD_PATH").trim();
         if (configPath.isBlank()) {
             configPath = configSingleton.getConfigSettings().getDownloadPath();
         }

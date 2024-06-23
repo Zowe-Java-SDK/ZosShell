@@ -62,7 +62,7 @@ public class CommandRouter {
                 }
                 var browseJobController = controllerContainer.getBrowseJobController(currConnection,
                         params.length == 3, timeout);
-                String browseJobResult = browseJobController.browseJob(params[1]);
+                var browseJobResult = browseJobController.browseJob(params[1]);
                 terminal.println(browseJobResult);
                 searchCache = new SearchCache("browsejob", new StringBuilder(browseJobResult));
                 break;

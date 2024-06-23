@@ -66,7 +66,7 @@ public class Save {
             }
             var content = sb.toString().replaceAll("(\\r)", "");
 
-            String checksum = checkSumService.calculateCheckSum(this.pathService.getPathWithFile());
+            var checksum = checkSumService.calculateCheckSum(this.pathService.getPathWithFile());
             if (checksum.equals(checkSumService.getCheckSum(this.pathService.getPathWithFile()))) {
                 return new ResponseStatus("nothing to save, perform editor save and try again...", false);
             }

@@ -155,7 +155,7 @@ public class TerminalSingleton {
             if (disableKeys) {
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
-            String[] items = mainTerminal.getTextPane().getText().split(PromptUtil.getPrompt());
+            var items = mainTerminal.getTextPane().getText().split(PromptUtil.getPrompt());
             var candidateStr = items[items.length - 1].trim();
             candidateStr = candidateStr.replaceAll("[\\p{Cf}]", "");
             if (candidateStr.contains(" ")) {  // invalid look up

@@ -31,7 +31,7 @@ public class LocalFileService {
 
     private StringBuilder getFiles(final String target) {
         LOG.debug("*** getFiles ***");
-        StringBuilder result = new StringBuilder();
+        var result = new StringBuilder();
         String path;
         var configSettings = ConfigSingleton.getInstance().getConfigSettings();
         var configPath = configSettings != null ? configSettings.getDownloadPath() : "";

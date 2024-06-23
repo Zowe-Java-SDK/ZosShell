@@ -36,7 +36,7 @@ public class UnameService {
         if (!responseStatus.isStatus()) {
             return Constants.NO_INFO;
         }
-        String output = responseStatus.getMessage();
+        var output = responseStatus.getMessage();
         int index = output.indexOf("RELEASE z/OS ");
         String zosVersion = null;
         if (index >= 0) {

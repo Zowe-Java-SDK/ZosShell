@@ -75,7 +75,7 @@ public class Download {
         pathService.createPathsForSequentialDataset(dataset);
         try {
             dlParams = new DownloadParams.Builder().build();
-            String textContent = getTextContent(dataset);
+            var textContent = getTextContent(dataset);
             if (textContent == null) {
                 return new ResponseStatus(message + Constants.DOWNLOAD_FAIL, false);
             }
