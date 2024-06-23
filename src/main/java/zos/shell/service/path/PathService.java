@@ -32,6 +32,7 @@ public class PathService {
     }
 
     public void createPathsForMember(final String dataset, final String target) {
+        LOG.debug("*** createPathsForMember ***");
         this.initialize(dataset, target);
     }
 
