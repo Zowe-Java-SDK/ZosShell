@@ -84,6 +84,9 @@ public class ListingService {
             line.append(" ");
         }
         terminal.println(line.toString());
+
+        members.clear();
+        datasets.clear();
     }
 
     private List<Member> getMembers(final String member) throws ZosmfRequestException {
