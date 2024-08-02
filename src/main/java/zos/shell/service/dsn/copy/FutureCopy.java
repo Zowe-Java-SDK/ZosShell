@@ -12,7 +12,7 @@ public class FutureCopy extends Copy implements Callable<ResponseStatus> {
     private final boolean isCopyAll;
 
     public FutureCopy(final DsnCopy DsnCopy, final String fromDataSetName,
-                      final String toDataSetName, boolean isCopyAll) {
+                      final String toDataSetName, final boolean isCopyAll) {
         super(DsnCopy);
         this.fromDataSetName = fromDataSetName;
         this.toDataSetName = toDataSetName;

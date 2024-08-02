@@ -19,7 +19,7 @@ public class Grep {
     private final boolean withMember;
     private final Map<Character, Integer> misMatchShiftsTable = new HashMap<>();
 
-    public Grep(final ConcatService concatenate, final String pattern, boolean withMember) {
+    public Grep(final ConcatService concatenate, final String pattern, final boolean withMember) {
         LOG.debug("*** Grep ***");
         this.concatenate = concatenate;
         this.pattern = pattern;

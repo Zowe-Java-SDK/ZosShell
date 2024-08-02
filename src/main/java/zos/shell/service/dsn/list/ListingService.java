@@ -34,8 +34,8 @@ public class ListingService {
         this.timeout = timeout;
     }
 
-    public void ls(final String memberValue, final String dataset, boolean isColumnView, boolean isAttributes)
-            throws ZosmfRequestException {
+    public void ls(final String memberValue, final String dataset, final boolean isColumnView,
+                   final boolean isAttributes) throws ZosmfRequestException {
         LOG.debug("*** ls ***");
         var member = Optional.ofNullable(memberValue);
         if (member.isPresent()) {
@@ -111,7 +111,7 @@ public class ListingService {
         }
     }
 
-    private void displayDataSets(final String ignoreCurrDataSet, boolean isColumnView, boolean isAttributes) {
+    private void displayDataSets(final String ignoreCurrDataSet, final boolean isColumnView, final boolean isAttributes) {
         LOG.debug("*** displayDataSets ***");
         if (this.datasets.isEmpty() || (this.datasets.size() == 1
                 && ignoreCurrDataSet.equalsIgnoreCase(this.datasets.get(0).getDsname().orElse("")))) {

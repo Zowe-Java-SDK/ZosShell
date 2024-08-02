@@ -118,7 +118,7 @@ public class ControllerFactoryContainer {
         LOG.debug("*** ControllerFactoryContainer ***");
     }
 
-    public BrowseJobController getBrowseJobController(final ZosConnection connection, boolean isAll,
+    public BrowseJobController getBrowseJobController(final ZosConnection connection, final boolean isAll,
                                                       final long timeout) {
         LOG.debug("*** getBrowseJobController ***");
         if (this.browseJobController == null ||
@@ -268,7 +268,7 @@ public class ControllerFactoryContainer {
         return this.deleteController;
     }
 
-    public DownloadDsnController getDownloadDsnController(final ZosConnection connection, boolean isBinary,
+    public DownloadDsnController getDownloadDsnController(final ZosConnection connection, final boolean isBinary,
                                                           final long timeout) {
         LOG.debug("*** getDownloadDsnController ***");
         if (this.downloadDsnController == null ||
@@ -291,7 +291,7 @@ public class ControllerFactoryContainer {
         return this.downloadDsnController;
     }
 
-    public DownloadJobController getDownloadJobController(final ZosConnection connection, boolean isAll,
+    public DownloadJobController getDownloadJobController(final ZosConnection connection, final boolean isAll,
                                                           final long timeout) {
         LOG.debug("*** getDownloadJobController ***");
         if (this.downloadJobController == null ||

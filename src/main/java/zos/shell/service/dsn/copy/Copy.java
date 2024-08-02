@@ -18,7 +18,7 @@ public class Copy {
         this.dsnCopy = dsnCopy;
     }
 
-    public ResponseStatus copy(final String source, final String destination, boolean isCopyAll) {
+    public ResponseStatus copy(final String source, final String destination, final boolean isCopyAll) {
         LOG.debug("*** copy ***");
         try {
             dsnCopy.copy(source, destination, true, isCopyAll);

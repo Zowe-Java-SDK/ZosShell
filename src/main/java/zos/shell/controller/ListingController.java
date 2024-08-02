@@ -40,12 +40,12 @@ public class ListingController {
         return new ResponseStatus("success", true);
     }
 
-    public ResponseStatus lsl(final String dataset, boolean isAttributes) {
+    public ResponseStatus lsl(final String dataset, final boolean isAttributes) {
         LOG.debug("*** lsl 1 ***");
         return this.lsl(null, dataset, isAttributes);
     }
 
-    public ResponseStatus lsl(final String member, final String dataset, boolean isAttributes) {
+    public ResponseStatus lsl(final String member, final String dataset, final boolean isAttributes) {
         LOG.debug("*** lsl 2 ***");
         try {
             listingService.ls(member, dataset, false, isAttributes);

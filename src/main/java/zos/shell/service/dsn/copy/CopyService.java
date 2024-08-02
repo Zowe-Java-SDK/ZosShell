@@ -185,7 +185,7 @@ public class CopyService {
         return new ResponseStatus(errMsg, false);
     }
 
-    private ResponseStatus processRequest(final String source, final String destination, boolean isCopyAll) {
+    private ResponseStatus processRequest(final String source, final String destination, final boolean isCopyAll) {
         LOG.debug("*** processResult ***");
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         var dsnCopy = new DsnCopy(connection);

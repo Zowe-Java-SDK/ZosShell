@@ -21,7 +21,7 @@ public class DependencyCacheContainer {
         this.timeout = timeout;
     }
 
-    public DependencyCacheContainer(final ZosConnection zosConnection, boolean toggle, final long timeout) {
+    public DependencyCacheContainer(final ZosConnection zosConnection, final boolean toggle, final long timeout) {
         LOG.debug("*** DependencyContainer zosConnection toggle timeout ***");
         this.zosConnection = zosConnection;
         this.toggle = toggle;

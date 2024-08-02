@@ -16,7 +16,7 @@ public class Tail extends BrowseLog {
 
     private final TextTerminal<?> terminal;
 
-    public Tail(final TextTerminal<?> terminal, final JobGet retrieve, boolean isAll, final long timeout) {
+    public Tail(final TextTerminal<?> terminal, final JobGet retrieve, final boolean isAll, final long timeout) {
         super(retrieve, isAll, timeout);
         LOG.debug("*** Tail ***");
         this.terminal = terminal;
