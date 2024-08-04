@@ -11,8 +11,8 @@ public class FutureDownloadJob extends DownloadJob implements Callable<ResponseS
 
     private final String target;
 
-    public FutureDownloadJob(final JobGet retrieve, final PathService pathService, final String target, boolean isAll,
-                             final long timeout) {
+    public FutureDownloadJob(final JobGet retrieve, final PathService pathService, final String target,
+                             final boolean isAll, final long timeout) {
         super(retrieve, pathService, isAll, timeout);
         this.target = target;
     }

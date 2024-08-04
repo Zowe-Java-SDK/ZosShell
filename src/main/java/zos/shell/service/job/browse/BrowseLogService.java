@@ -9,7 +9,7 @@ public class BrowseLogService extends BrowseLog {
 
     private static final Logger LOG = LoggerFactory.getLogger(BrowseLogService.class);
 
-    public BrowseLogService(final JobGet retrieve, boolean isAll, final long timeout) {
+    public BrowseLogService(final JobGet retrieve, final boolean isAll, final long timeout) {
         super(retrieve, isAll, timeout);
         LOG.debug("*** BrowseLogService ***");
     }

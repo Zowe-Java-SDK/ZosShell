@@ -26,7 +26,7 @@ public class BrowseLog {
     private final boolean isAll;
     private final long timeout;
 
-    public BrowseLog(final JobGet retrieve, boolean isAll, final long timeout) {
+    public BrowseLog(final JobGet retrieve, final boolean isAll, final long timeout) {
         LOG.debug("*** BrowseLog ***");
         this.retrieve = retrieve;
         this.isAll = isAll;

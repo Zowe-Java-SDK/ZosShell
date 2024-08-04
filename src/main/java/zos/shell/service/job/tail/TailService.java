@@ -27,7 +27,7 @@ public class TailService {
         this.timeout = timeout;
     }
 
-    public ResponseStatus tail(String[] params, boolean isAll) {
+    public ResponseStatus tail(String[] params, final boolean isAll) {
         LOG.debug("*** tail ***");
 
         // example: tail jobOrTaskName 25 all
@@ -56,7 +56,7 @@ public class TailService {
         return doTail(params, isAll);
     }
 
-    private ResponseStatus doTail(String[] params, boolean isAll) {
+    private ResponseStatus doTail(String[] params, final boolean isAll) {
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         Future<ResponseStatus> submit = pool.submit(new FutureTail(terminal, retrieve, isAll, timeout, params));
         return FutureUtil.getFutureResponse(submit, pool, timeout);

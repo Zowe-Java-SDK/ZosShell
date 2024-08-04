@@ -25,7 +25,7 @@ public class Download {
     private DownloadParams dlParams;
     private final boolean isBinary;
 
-    public Download(final DsnGet dsnGet, PathService pathService, boolean isBinary) {
+    public Download(final DsnGet dsnGet, PathService pathService, final boolean isBinary) {
         LOG.debug("*** Download ***");
         this.dsnGet = dsnGet;
         this.pathService = pathService;

@@ -12,7 +12,7 @@ public class FutureMemberDownload extends Download implements Callable<ResponseS
     private final String member;
 
     public FutureMemberDownload(final DsnGet download, final PathService pathService, final String dataset,
-                                final String member, boolean isBinary) {
+                                final String member, final boolean isBinary) {
         super(download, pathService, isBinary);
         this.dataset = dataset;
         this.member = member;

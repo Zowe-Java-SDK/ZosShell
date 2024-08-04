@@ -21,7 +21,8 @@ public class DownloadJobService {
     private final boolean isAll;
     private final long timeout;
 
-    public DownloadJobService(final JobGet retrieve, final PathService pathService, boolean isAll, final long timeout) {
+    public DownloadJobService(final JobGet retrieve, final PathService pathService, final boolean isAll,
+                              final long timeout) {
         LOG.debug("*** DownloadJobService ***");
         this.retrieve = retrieve;
         this.pathService = pathService;
@@ -32,7 +33,8 @@ public class DownloadJobService {
     public ResponseStatus download(final String target) {
         LOG.debug("*** download ***");
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureDownloadJob(retrieve, pathService, target, this.isAll, this.timeout));
+        Future<ResponseStatus> submit = pool.submit(
+                new FutureDownloadJob(retrieve, pathService, target, this.isAll, this.timeout));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

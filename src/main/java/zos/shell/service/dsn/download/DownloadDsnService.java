@@ -30,7 +30,7 @@ public class DownloadDsnService {
     private final boolean isBinary;
     private final long timeout;
 
-    public DownloadDsnService(final ZosConnection connection, final PathService pathService, boolean isBinary,
+    public DownloadDsnService(final ZosConnection connection, final PathService pathService, final boolean isBinary,
                               final long timeout) {
         LOG.debug("*** DownloadDsnService ***");
         this.connection = connection;

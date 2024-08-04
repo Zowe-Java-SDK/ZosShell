@@ -10,8 +10,8 @@ public class FutureTail extends Tail implements Callable<ResponseStatus> {
 
     private final String[] params;
 
-    public FutureTail(final TextTerminal<?> terminal, final JobGet retrieve, boolean isAll,
-                      final long timeout, final String[] params) {
+    public FutureTail(final TextTerminal<?> terminal, final JobGet retrieve, final boolean isAll, final long timeout,
+                      final String[] params) {
         super(terminal, retrieve, isAll, timeout);
         this.params = params;
     }

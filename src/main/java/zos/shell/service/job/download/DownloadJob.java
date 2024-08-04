@@ -21,7 +21,7 @@ public class DownloadJob {
     private final PathService pathService;
     private final BrowseLogService browseLogService;
 
-    public DownloadJob(final JobGet retrieve, final PathService pathService, boolean isAll, final long timeout) {
+    public DownloadJob(final JobGet retrieve, final PathService pathService, final boolean isAll, final long timeout) {
         LOG.debug("*** DownloadJob ***");
         this.pathService = pathService;
         this.browseLogService = new BrowseLogService(retrieve, isAll, timeout);

@@ -11,7 +11,7 @@ public class FutureGrep extends Grep implements Callable<List<String>> {
     private final String target;
 
     public FutureGrep(final ConcatService concatenate, final String dataset, final String target,
-                      final String pattern, boolean withMember) {
+                      final String pattern, final boolean withMember) {
         super(concatenate, pattern, withMember);
         this.dataset = dataset;
         this.target = target;
