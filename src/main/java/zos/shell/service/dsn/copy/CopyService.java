@@ -169,17 +169,23 @@ public class CopyService {
                     toDataSetName.length() + Constants.STRING_PAD_LENGTH);
         }
 
+        var dataSetMemberFirstParam = DatasetMember.getDatasetAndMember(firstParam);
+        var dataSetMemberSecondParam = DatasetMember.getDatasetAndMember(firstParam);
         String errMsg;
         if (DsnUtil.isDataset(firstParam)) {
             errMsg = "invalid second argument, enter valid sequential dataset and try again...";
         } else if (DsnUtil.isMember(firstParam)) {
-            errMsg = "invalid second argument, enter valid dataset or dataset(member) and try again...";
+            errMsg = "invalid second argument, enter valid member or dataset(member) or sequential dataset and try again...";
         } else if (DsnUtil.isDataset(secondParam)) {
-            errMsg = "invalid first argument, enter valid member or sequential dataset and try again...";
+            errMsg = "invalid first argument, enter valid member or dataset(member) or sequential dataset and try again...";
         } else if (DsnUtil.isMember(secondParam)) {
             errMsg = "invalid first argument, enter valid member or dataset(member) and try again...";
+        } else if (dataSetMemberFirstParam != null) {
+            errMsg = "invalid second argument, enter valid member or dataset(member) or sequential dataset and try again...";
+        } else if (dataSetMemberSecondParam != null) {
+            errMsg = "invalid first argument, enter valid member or dataset(member) and try again...";
         } else {
-            errMsg = Constants.INVALID_ARGUMENTS;
+            errMsg = "invalid first and second arguments, enter value member or dataset or dataset(member) or sequential dataset and try again...";
         }
 
         return new ResponseStatus(errMsg, false);
