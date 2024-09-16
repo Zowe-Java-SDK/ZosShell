@@ -170,7 +170,7 @@ public class CopyService {
         }
 
         var dataSetMemberFirstParam = DatasetMember.getDatasetAndMember(firstParam);
-        var dataSetMemberSecondParam = DatasetMember.getDatasetAndMember(firstParam);
+        var dataSetMemberSecondParam = DatasetMember.getDatasetAndMember(secondParam);
         String errMsg;
         if (DsnUtil.isDataset(firstParam)) {
             errMsg = "invalid second argument, enter valid sequential dataset and try again...";
