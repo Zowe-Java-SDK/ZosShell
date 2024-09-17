@@ -99,7 +99,6 @@ public class MakeDirController {
             return;
         }
         createParamsBuilder.lrecl(num);
-
         if (!isSequential) {
             while (true) {
                 input = getMakeDirStr(mainTextIO, "Enter dataset type (LIBRARY or PDS or 's' to skip):");
