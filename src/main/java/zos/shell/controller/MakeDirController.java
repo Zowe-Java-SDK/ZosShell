@@ -46,12 +46,12 @@ public class MakeDirController {
         String input;
         while (true) {
             input = getMakeDirStr(mainTextIO,
-                    "Enter data set organization, PS (sequential), PO (partitioned), DA (direct):");
+                    "Enter data set organization, PS (sequential) or PO (partitioned):");
             if (input == null) {
                 terminal.println(Constants.MAKE_DIR_EXIT_MSG);
                 return;
             }
-            if ("PS".equalsIgnoreCase(input) || "PO".equalsIgnoreCase(input) || "DA".equalsIgnoreCase(input)) {
+            if ("PS".equalsIgnoreCase(input) || "PO".equalsIgnoreCase(input)) {
                 if ("PS".equalsIgnoreCase(input)) {
                     isSequential = true;
                 }
@@ -99,6 +99,23 @@ public class MakeDirController {
             return;
         }
         createParamsBuilder.lrecl(num);
+
+        if (!isSequential) {
+            while (true) {
+                input = getMakeDirStr(mainTextIO, "Enter dataset type (LIBRARY or PDS or 's' to skip):");
+                if (input == null) {
+                    terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+                    return;
+                }
+                if ("LIBRARY".equalsIgnoreCase(input) || "PDS".equalsIgnoreCase(input)) {
+                    createParamsBuilder.dsntype(input);
+                    break;
+                }
+                if ("s".equalsIgnoreCase(input)) {
+                    break;
+                }
+            }
+        }
         input = getMakeDirStr(mainTextIO, "Enter volume name ('s' to skip):");
         if (input == null) {
             terminal.println(Constants.MAKE_DIR_EXIT_MSG);
