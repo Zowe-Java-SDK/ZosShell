@@ -25,10 +25,13 @@ public final class ResponseUtil {
         String errMsg;
         try {
             errMsg = FileUtil.getTextStreamData(errorStream);
+            if (errMsg == null) {
+                errMsg = "";
+            }
         } catch (IOException ex) {
             errMsg = "error processing response";
         }
-        return new ResponseStatus(errMsg, false);
+        return new ResponseStatus(errMsg.isBlank() ? e.getMessage() : errMsg, false);
     }
 
     public static String getResponsePhrase(final Response response) {
