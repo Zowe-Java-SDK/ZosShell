@@ -38,7 +38,8 @@ public class Console {
         var params = new IssueConsoleParams(command);
         params.setProcessResponse(true);
         try {
-            consoleResponse = !consoleName.isBlank() ? execute(consoleName, params) : execute(params);
+            consoleResponse = !(consoleName == null || consoleName.isBlank()) ? 
+                    execute(consoleName, params) : execute(params);
         } catch (ZosmfRequestException e) {
             var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
