@@ -51,18 +51,12 @@ public class DependencyCacheContainer {
 
     public boolean isZosConnectionSame(final ZosConnection zosConnection) {
         LOG.debug("*** isZosConnectionSame ***");
-        return this.zosConnection.getHost().equalsIgnoreCase(zosConnection.getHost()) &&
-                this.zosConnection.getPassword().equalsIgnoreCase(zosConnection.getPassword()) &&
-                this.zosConnection.getUser().equalsIgnoreCase(zosConnection.getUser()) &&
-                this.zosConnection.getZosmfPort().equals(zosConnection.getZosmfPort());
+        return this.zosConnection.equals(zosConnection);
     }
 
     public boolean isSshConnectionSame(final SshConnection sshConnection) {
         LOG.debug("*** isSshConnectionSame ***");
-        return this.sshConnection.getHost().equalsIgnoreCase(sshConnection.getHost()) &&
-                this.sshConnection.getPassword().equalsIgnoreCase(sshConnection.getPassword()) &&
-                this.sshConnection.getUser().equalsIgnoreCase(sshConnection.getUser()) &&
-                this.sshConnection.getPort() == sshConnection.getPort();
+        return this.sshConnection.equals(sshConnection);
     }
 
     public boolean isDataSame(final String data) {
