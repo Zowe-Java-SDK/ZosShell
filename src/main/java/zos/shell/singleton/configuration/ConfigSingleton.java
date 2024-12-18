@@ -17,10 +17,7 @@ import zowe.client.sdk.core.ZosConnection;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ConfigSingleton {
 
@@ -28,8 +25,8 @@ public class ConfigSingleton {
 
     private List<Profile> profiles;
     private final ObjectMapper mapper = new ObjectMapper();
-    private final List<ZosConnection> zosConnections = new ArrayList<>();
-    private final List<SshConnection> sshConnections = new ArrayList<>();
+    private final LinkedHashSet<ZosConnection> zosConnections = new LinkedHashSet<>();
+    private final LinkedHashSet<SshConnection> sshConnections = new LinkedHashSet<>();
     private ConfigSettings configSettings;
     private ChangeWinService windowCmd;
 
@@ -144,7 +141,7 @@ public class ConfigSingleton {
 
     public List<ZosConnection> getZosConnections() {
         LOG.debug("*** getZosConnections ***");
-        return zosConnections;
+        return new ArrayList<>(this.zosConnections);
     }
 
     public Profile getProfileByIndex(int index) {
@@ -157,12 +154,15 @@ public class ConfigSingleton {
         if (sshConnections.isEmpty()) {
             return null;
         }
-        return sshConnections.get(index);
+        return new ArrayList<>(this.sshConnections).get(index);
     }
 
     public void setSshConnectionByIndex(final SshConnection sshConnection, final int index) {
         LOG.debug("*** setSshConnectionByIndex ***");
-        this.sshConnections.set(index, sshConnection);
+        List<SshConnection> lst = new ArrayList<>(this.sshConnections);
+        lst.set(index, sshConnection);
+        this.sshConnections.clear();
+        this.sshConnections.addAll(lst);
     }
 
     public ZosConnection getZosConnectionByIndex(int index) {
@@ -170,12 +170,15 @@ public class ConfigSingleton {
         if (zosConnections.isEmpty()) {
             return null;
         }
-        return zosConnections.get(index);
+        return new ArrayList<>(this.zosConnections).get(index);
     }
 
     public void setZosConnectionByIndex(final ZosConnection zosConnection, final int index) {
         LOG.debug("*** setZosConnectionByIndex ***");
-        this.zosConnections.set(index, zosConnection);
+        List<ZosConnection> lst = new ArrayList<>(this.zosConnections);
+        lst.set(index, zosConnection);
+        this.zosConnections.clear();
+        this.zosConnections.addAll(lst);
     }
 
     public ConfigSettings getConfigSettings() {
