@@ -29,7 +29,7 @@ public class ConfigSingleton {
     private List<Profile> profiles;
     private final ObjectMapper mapper = new ObjectMapper();
     private final List<ZosConnection> zosConnections = new ArrayList<>();
-    private final List<SshConnection> shhConnections = new ArrayList<>();
+    private final List<SshConnection> sshConnections = new ArrayList<>();
     private ConfigSettings configSettings;
     private ChangeWinService windowCmd;
 
@@ -111,7 +111,7 @@ public class ConfigSingleton {
                 sshport = Integer.parseInt(profile.getSshport());
             } catch (NumberFormatException ignored) {
             }
-            shhConnections.add(new SshConnection(profile.getHostname(),
+            sshConnections.add(new SshConnection(profile.getHostname(),
                     sshport, profile.getUsername() != null ? profile.getUsername() : "",
                     profile.getPassword() != null ? profile.getPassword() : ""));
         });
@@ -154,14 +154,14 @@ public class ConfigSingleton {
 
     public SshConnection getSshConnectionByIndex(int index) {
         LOG.debug("*** getSshConnectionByIndex ***");
-        if (shhConnections.isEmpty()) {
+        if (sshConnections.isEmpty()) {
             return null;
         }
-        return shhConnections.get(index);
+        return sshConnections.get(index);
     }
 
     public void setSshConnectionByIndex(final SshConnection sshConnection, final int index) {
-        this.shhConnections.set(index, sshConnection);
+        this.sshConnections.set(index, sshConnection);
     }
 
     public ZosConnection getZosConnectionByIndex(int index) {
