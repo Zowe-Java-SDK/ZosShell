@@ -161,6 +161,7 @@ public class ConfigSingleton {
     }
 
     public void setSshConnectionByIndex(final SshConnection sshConnection, final int index) {
+        LOG.debug("*** setSshConnectionByIndex ***");
         this.sshConnections.set(index, sshConnection);
     }
 
@@ -173,6 +174,7 @@ public class ConfigSingleton {
     }
 
     public void setZosConnectionByIndex(final ZosConnection zosConnection, final int index) {
+        LOG.debug("*** setZosConnectionByIndex ***");
         this.zosConnections.set(index, zosConnection);
     }
 
