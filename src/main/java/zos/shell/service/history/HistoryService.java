@@ -119,7 +119,8 @@ public class HistoryService {
 
     public String getLastHistoryByValue(final String str) {
         LOG.debug("*** getLastHistoryByValue ***");
-        List<String> lst = commandLst.stream().filter(c -> c.startsWith(str.toLowerCase())).collect(Collectors.toList());
+        List<String> lst = commandLst.stream().filter(
+                c -> c.toLowerCase().startsWith(str.toLowerCase())).collect(Collectors.toList());
         if (lst.isEmpty()) {
             terminal.println(Constants.NO_HISTORY);
             return null;
