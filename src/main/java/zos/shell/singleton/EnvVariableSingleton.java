@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class EnvVariableSingleton {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EnvVariableService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EnvVariableSingleton.class);
 
     private static class Holder {
         private static final EnvVariableSingleton instance = new EnvVariableSingleton();

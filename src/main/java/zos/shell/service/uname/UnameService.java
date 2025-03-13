@@ -15,7 +15,7 @@ import java.util.concurrent.Future;
 
 public class UnameService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TerminateService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UnameService.class);
 
     private final IssueConsole issueConsole;
     private final long timeout;
