@@ -93,7 +93,7 @@ public class Download {
 
     private String getTextContent(final String dataset, final String member)
             throws ZosmfRequestException, IOException {
-        LOG.debug("*** getTextContent member ***");
+        LOG.debug("*** getTextContent member with dataset and member ***");
         var inputStream = getInputStream(String.format("%s(%s)", dataset, member));
         return FileUtil.getTextStreamData(inputStream);
     }
