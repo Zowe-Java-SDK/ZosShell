@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.console.FutureConsole;
-import zos.shell.service.job.terminate.TerminateService;
 import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
 
