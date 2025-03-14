@@ -22,14 +22,17 @@ public class CheckSumService {
     }
 
     public void addCheckSum(final String target) {
+        LOG.debug("*** addCheckSum ***");
         checkSumSingleton.put(target, calculateCheckSum(target));
     }
 
     public String getCheckSum(final String target) {
+        LOG.debug("*** getCheckSum ***");
         return checkSumSingleton.get(target);
     }
 
     public String calculateCheckSum(final String target) {
+        LOG.debug("*** calculateCheckSum ***");
         byte[] hash = new byte[0];
         try {
             byte[] data = Files.readAllBytes(Paths.get(target));

@@ -14,6 +14,7 @@ public class EchoService {
     private final EnvVariableController envVariableController;
 
     public EchoService(final EnvVariableController envVariableController) {
+        LOG.debug("*** EchoService ***");
         this.envVariableController = envVariableController;
     }
 

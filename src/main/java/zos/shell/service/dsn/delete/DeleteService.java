@@ -29,7 +29,7 @@ public class DeleteService {
     private final long timeout;
 
     public DeleteService(final ZosConnection connection, final long timeout) {
-        LOG.debug("*** DeleteCmd ***");
+        LOG.debug("*** DeleteService ***");
         this.connection = connection;
         this.timeout = timeout;
     }
@@ -111,7 +111,7 @@ public class DeleteService {
     }
 
     private ResponseStatus processRequest(final String dataset, final String member) {
-        LOG.debug("*** processResult ***");
+        LOG.debug("*** processRequest ***");
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         var dsnDelete = new DsnDelete(connection);
         var futureDelete = new FutureDelete(dsnDelete, dataset, member);
