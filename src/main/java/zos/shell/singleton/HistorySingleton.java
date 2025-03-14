@@ -11,7 +11,6 @@ public class HistorySingleton {
 
     private HistoryService history;
 
-
     private static class Holder {
         private static final HistorySingleton instance = new HistorySingleton();
     }
