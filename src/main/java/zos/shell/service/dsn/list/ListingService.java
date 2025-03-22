@@ -44,13 +44,7 @@ public class ListingService {
 
         datasets = getDataSets(dataset);
         isDatasets = datasets.size() > 1;
-        try {
-            members = getMembers(dataset);
-        } catch (ZosmfRequestException e) {
-            if (datasets.isEmpty()) {
-                throw e;
-            }
-        }
+        members = getMembers(dataset);
 
         member.ifPresentOrElse((m) -> {
             int index = m.indexOf("*");
