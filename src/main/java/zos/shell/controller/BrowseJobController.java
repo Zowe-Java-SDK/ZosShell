@@ -19,8 +19,8 @@ public class BrowseJobController {
     public String browseJob(final String target) {
         LOG.debug("*** browseJob ***");
         ResponseStatus responseStatus = browseLogService.browseJob(target);
-        if (responseStatus.getMessage().split("\\n").length > 10000) {
-            return "too large of a job log to display, try downloadjob all...";
+        if (responseStatus.getMessage().split("\\n").length > Constants.BROWSE_LIMIT) {
+            return Constants.BROWSE_LIMIT_WARNING;
         }
         return responseStatus.getMessage();
     }
