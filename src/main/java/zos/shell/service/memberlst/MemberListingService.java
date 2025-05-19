@@ -58,14 +58,12 @@ public class MemberListingService {
         LOG.debug("*** memberLst ***");
         Future<List<Member>> submit = pool.submit(new FutureMemberListing(dsnList, dataset, timeout));
 
-        List<Member> members;
+        List<Member> members = List.of();
         try {
             members = submit.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
-            LOG.debug("in memberLst, exception error: {}", String.valueOf(e));
+            LOG.debug("exception error: {}", String.valueOf(e));
             submit.cancel(true);
-            throw new ZosmfRequestException(e.getMessage() != null && !e.getMessage().isBlank() ?
-                    e.getMessage() : Constants.COMMAND_INVALID_COMMAND);
         } catch (TimeoutException e) {
             submit.cancel(true);
             throw new ZosmfRequestException(Constants.TIMEOUT_MESSAGE);
