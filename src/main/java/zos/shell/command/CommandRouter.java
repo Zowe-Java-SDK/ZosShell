@@ -100,9 +100,10 @@ public class CommandRouter {
                 responseStatus = changeDirController.cd(currDataset, params[1].toUpperCase());
                 if (responseStatus.isStatus()) {
                     currDataset = responseStatus.getOptionalData();
-                    terminal.println("set to " + currDataset);
                 } else {
                     terminal.println(responseStatus.getMessage());
+                }
+                if (!currDataset.isBlank()) {
                     terminal.println("set to " + currDataset);
                 }
                 if (currDataset.length() > currDatasetMax) {
