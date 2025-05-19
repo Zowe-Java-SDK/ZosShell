@@ -142,7 +142,7 @@ public class CopyService {
                 return new ResponseStatus("specify valid dataset destination, try again...", false);
             }
 
-            // target is a member string without * (wild card)
+            // target is a member string without * (a wild card)
             var target = firstParam.substring(0, firstParam.indexOf("*"));
             members = DsnUtil.getMembersByStartsWithFilter(target, members);
             if (members.size() == 1) {
