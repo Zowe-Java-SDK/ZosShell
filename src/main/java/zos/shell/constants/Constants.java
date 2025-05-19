@@ -49,8 +49,7 @@ public final class Constants {
     public static final String NO_FILES = "no files, try again...";
     public static final String NO_HISTORY = "no history, try again...";
     public static final String NO_INFO = "no info...";
-    public static final String NO_LISTING =
-            "no listing results returned, connection problem or data set may not exist, try again...";
+    public static final String NO_LISTING = "no listing, try again...";
     public static final String NO_MEMBERS = "no members...";
     public static final String NO_PROCESS_FOUND = "no process found, try again...";
     public static final String MAKE_DIR_EXIT_MSG = "exited mkdir command...";
