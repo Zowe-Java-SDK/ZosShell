@@ -23,7 +23,7 @@ public final class FutureUtil {
         try {
             return future.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
-            LOG.debug("in getFutureResponse, exception error: {}", String.valueOf(e));
+            LOG.debug("exception error: {}", String.valueOf(e));
             future.cancel(true);
             boolean isErrMsg = e.getMessage() != null && !e.getMessage().isBlank();
             var errMsg = isErrMsg ? e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG;
@@ -49,7 +49,7 @@ public final class FutureUtil {
                 arrowMsg += Constants.ARROW;
                 results.append(arrowMsg).append(responseStatus.getMessage()).append("\n");
             } catch (InterruptedException | ExecutionException e) {
-                LOG.debug("in getFutureResponses, exception error: {}", String.valueOf(e));
+                LOG.debug("exception error: {}", String.valueOf(e));
                 future.cancel(true);
                 var isErrMsg = e.getMessage() != null && !e.getMessage().isBlank();
                 var errMsg = isErrMsg ? e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG;

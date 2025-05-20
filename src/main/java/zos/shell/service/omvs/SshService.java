@@ -33,7 +33,7 @@ public class SshService {
             // 10000 is the timeout value in milliseconds
             return issueUss.issueCommand(command, 10000);
         } catch (IssueUssException e) {
-            LOG.debug("in sshCommand, exception error: {}", String.valueOf(e));
+            LOG.debug("exception error: {}", String.valueOf(e));
             return e.getMessage();
         }
     }

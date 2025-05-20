@@ -102,7 +102,7 @@ public class DownloadDsnService {
                 results.add(new ResponseStatus(Constants.INVALID_DATASET_AND_MEMBER, false));
             }
         } catch (InterruptedException | ExecutionException e) {
-            LOG.debug("in download, exception error: {}", String.valueOf(e));
+            LOG.debug("exception error: {}", String.valueOf(e));
             submit.cancel(true);
             results.add(new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
                     e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG, false));
@@ -139,7 +139,7 @@ public class DownloadDsnService {
             try {
                 results.add(future.get(timeout, TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException e) {
-                LOG.debug("in downloadMembers, exception error: {}", String.valueOf(e));
+                LOG.debug("exception error: {}", String.valueOf(e));
                 future.cancel(true);
                 results.add(new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
                         e.getMessage() : Constants.EXECUTE_ERROR_MSG, false));
