@@ -169,8 +169,7 @@ public class ControllerFactoryContainer {
         if (this.changeDirController == null ||
                 (this.changeDirDependencyContainer != null && (
                         !(this.changeDirDependencyContainer.isZosConnectionSame(connection))))) {
-            var dsnList = new DsnList(connection);
-            var changeDirService = new ChangeDirService(dsnList);
+            var changeDirService = new ChangeDirService();
             this.changeDirController = new ChangeDirController(changeDirService);
             this.changeDirDependencyContainer = new DependencyCacheContainer(connection);
         }

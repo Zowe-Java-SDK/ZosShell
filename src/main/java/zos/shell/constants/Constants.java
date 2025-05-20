@@ -24,8 +24,6 @@ public final class Constants {
     public static final String DEFAULT_DOWNLOAD_PATH_MAC = "/ZosShell";
     public static final String DEFAULT_DOWNLOAD_PATH_WINDOWS = "C:\\ZosShell";
     public static final int DEFAULT_FONT_SIZE = 20;
-    public static final String DATASET_OR_HIGH_QUALIFIER_ERROR =
-            "invalid dataset or cant change to high qualifier level, try again...";
     public static final String DATASET_NOT_SPECIFIED = "no dataset specified, try again...";
     public static final String DEFAULT_PROMPT = ">";
     public static final String DEFAULT_TEXT_COLOR = "white";
@@ -43,7 +41,6 @@ public final class Constants {
     public static final String INVALID_MEMBER = "invalid member name format specified, try again...";
     public static final String INVALID_PARAMETER = "invalid parameter, try again...";
     public static final String INVALID_VALUE = "invalid value, try again...";
-    public static final String HIGH_QUALIFIER_ERROR = "cant change to high qualifier level, try again...";
     public static final String NO_CONNECTION_INFO = "no info, check connection settings...";
     public static final String NO_CONNECTION = "no connection to change too...";
     public static final String NO_FILES = "no files, try again...";
