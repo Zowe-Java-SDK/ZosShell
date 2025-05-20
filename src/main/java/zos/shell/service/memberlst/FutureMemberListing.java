@@ -23,7 +23,7 @@ public class FutureMemberListing implements Callable<List<Member>> {
     @Override
     public List<Member> call() throws Exception {
         return dsnList.getMembers(dataset,
-                new ListParams.Builder().attribute(AttributeType.MEMBER)
+                new ListParams.Builder().attribute(AttributeType.BASE)
                         .maxLength("0")  // return all
                         .responseTimeout(String.valueOf(this.timeout)).build());
     }
