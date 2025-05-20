@@ -326,7 +326,7 @@ public class CommandRouter {
                     boolean isAttributes = !"--l".equals(params[1]);
                     var value = params[2];
                     int size = params[2].length();
-                    if (size <= 9 && value.charAt(size - 1) == '*') {  // is member with wild card specified...
+                    if (size <= 9 && value.charAt(size - 1) == '*') {  // is a member with wild card specified...
                         if (isDatasetNotSpecified(currDataset)) {
                             return;
                         }

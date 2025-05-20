@@ -20,7 +20,7 @@ public class TriePreFix {
         // the last character of the prefix
         for (var i = 0; i < limit; i++) {
             lastNode = lastNode.getNode(prefix.charAt(i) - 'a');
-            // if none, return empty array
+            // if none, return an empty array
             if (lastNode == null) {
                 return new ArrayList<>();
             }

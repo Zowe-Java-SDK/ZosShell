@@ -64,7 +64,7 @@ public class Grep {
             index = findPosition(content.toString());
         }
 
-        // handle edge case if found on first line only
+        // handle an edge case if found on the first line only
         if (index == 0 && !content.toString().isBlank()) {
             lines.add(withMember ? content.insert(0, title).toString() : content.toString());
         }
@@ -96,7 +96,7 @@ public class Grep {
             }
         }
 
-        return lengthOfText; // meaning have not found a match
+        return lengthOfText; // meaning has not found a match
     }
 
     private void compileMisMatchShiftsTable() {

@@ -82,7 +82,7 @@ public class DeleteService {
                 return new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
             }
 
-            // transform target is a member string without * (wild card)
+            // transform target is a member string without * (a wild card)
             target = target.substring(0, target.indexOf("*"));
             members = DsnUtil.getMembersByStartsWithFilter(target, members);
             if (members.size() == 1) {

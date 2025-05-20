@@ -45,7 +45,7 @@ public class DownloadDsnService {
         List<Member> members;
 
         // dataset is current dataset
-        // target can be either a member in current dataset or a sequential dataset or dataset(member) notation
+        // target can be either a member in the current dataset or a sequential dataset or dataset(member) notation
 
         // download all members in dataset
         if ("*".equals(target)) {
@@ -70,7 +70,7 @@ public class DownloadDsnService {
                 var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
                 return List.of(new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false));
             }
-            // transform target is a member string without * (wild card)
+            // transform target is a member string without * (a wild card)
             target = target.substring(0, target.indexOf("*"));
             members = DsnUtil.getMembersByStartsWithFilter(target, members);
             if (members.isEmpty()) {
@@ -90,7 +90,7 @@ public class DownloadDsnService {
                         dataSetMember.getDataset(), dataSetMember.getMember(), isBinary));
                 results.add(submit.get(timeout, TimeUnit.SECONDS));
             } else if (DsnUtil.isMember(target)) {
-                // member in current dataset
+                // member in the current dataset
                 submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), pathService, dataset,
                         target, isBinary));
                 results.add(submit.get(timeout, TimeUnit.SECONDS));

@@ -46,7 +46,7 @@ public class BrowseLog {
             var msg = jobParams.getPrefix().orElse("n\\a") + " does not exist, try again...";
             return new ResponseStatus(msg, false);
         }
-        // select the active or input one first; if not found then get the highest job number
+        // select the active or input one first; if not found, then get the highest job number
         final Predicate<Job> isActive = j -> "ACTIVE".equalsIgnoreCase(j.getStatus().orElse(""));
         final Predicate<Job> isInput = j -> "INPUT".equalsIgnoreCase(j.getStatus().orElse(""));
 

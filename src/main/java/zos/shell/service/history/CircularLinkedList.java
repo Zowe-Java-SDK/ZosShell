@@ -11,7 +11,7 @@ public class CircularLinkedList<T> {
 
     // this function will add the new node at the end of the list.
     public void add(T data) {
-        // create new node
+        // create a new node
         var newNode = new Node<>(data);
 
         if (size == Constants.HISTORY_SIZE) {
@@ -23,7 +23,7 @@ public class CircularLinkedList<T> {
 
         // checks if the list is empty.
         if (head == null) {
-            // if list is empty, head, prev and tail would point to new node.
+            // if a list is empty, head, prev and tail would point to the new node.
             head = newNode;
             tail = newNode;
             newNode.next = head;
@@ -57,13 +57,13 @@ public class CircularLinkedList<T> {
     }
 
     private void setTail(Node<T> newNode) {
-        // tail will point to new node.
+        // tail will point to the new node.
         tail.next = newNode;
-        // hold a temp reference to current tail node
+        // hold a temp reference to the current tail node
         var temp = tail;
         // new node will become new tail.
         tail = newNode;
-        // circular tail will point to new head.
+        // the circular tail will point to the new head.
         tail.next = head;
         // link to previous tail node
         tail.prev = temp;

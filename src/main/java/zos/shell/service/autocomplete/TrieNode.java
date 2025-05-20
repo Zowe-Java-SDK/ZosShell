@@ -19,7 +19,7 @@ public class TrieNode {
     public TrieNode() {
         this.setChildren(new TrieNode[ALPHABET_SIZE]);
         this.setCmd(false);
-        // no character here as such leaf = true
+        // no character here as such a leaf = true
         // this is used for checking while looping through the parent
         // to form the command, any leaf set as true is the root and is
         // the end of the looping point, there is no character in
@@ -45,7 +45,7 @@ public class TrieNode {
                 node.children[index] = new TrieNode();
                 node.children[index].character = (char) letter;
             }
-            node.children[index].setLeaf(false); // character is here as such leaf = false
+            node.children[index].setLeaf(false); // character is here as such a leaf = false
             node.children[index].parent = node;
             node = node.children[index];
         }

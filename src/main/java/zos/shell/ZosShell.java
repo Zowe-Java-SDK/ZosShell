@@ -89,7 +89,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         var currConnection = ConnSingleton.getInstance().getCurrZosConnection();
         var currSshConnection = ConnSingleton.getInstance().getCurrSshConnection();
 
-        // setup initial first connection definition and prompt for username and password if applicable.
+        // setup the first connection definition and prompt for username and password if applicable.
         try {
             var host = currConnection.getHost();
             var zosmfport = currConnection.getZosmfPort();
@@ -210,7 +210,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             newCmd = historyService.getLastHistoryByValue(subStr);
         }
 
-        // set new command from history content
+        // set a new command from history content
         command = newCmd != null ? newCmd.split(" ") : null;
         return command;
     }

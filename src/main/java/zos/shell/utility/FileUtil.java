@@ -39,7 +39,7 @@ public final class FileUtil {
                 var str = new StringBuilder();
                 if (file.isDirectory()) {
                     str.append(file.getCanonicalPath());
-                } else { // is file remove file name and open directory only
+                } else { // is file, remove the file name and open directory only
                     for (var i = 0; i < arr.length - 1; i++) {
                         str.append(arr[i]).append("/");
                     }
