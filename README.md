@@ -97,7 +97,7 @@ The shell performs the following Linux-like commands:
     h | help <arg>          - list all commands-details; arg=-l, list all command names; arg=command, list command-detail 
     history <arg>           - arg is optional and indicates the number to display from bottom 
     hostname                - echo hostname connection
-    !n                      - n=number, echo command from history list   
+    !n                      - n=number, execute command from history list   
     !string                 - execute previous string=command from history list
     !!                      - execute previous command
     ls <arg>                - arg is optional; list members/datasets in PWD; arg=filter(*); filter is dataset or member value
