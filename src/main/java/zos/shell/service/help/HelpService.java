@@ -73,7 +73,7 @@ public class HelpService {
         for (var key : keys) {
             var value = HELP.get(key);
             var columnFormat = "%-30s - %-11s";
-            var helpValue = String.format(columnFormat, key, value.getValue());
+            var helpValue = String.format(columnFormat, value.getKey(), value.getValue());
             str.append(helpValue).append("\n");
             terminal.println(helpValue);
         }
