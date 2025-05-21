@@ -99,7 +99,7 @@ public class HelpService {
             terminal.println("command not found, try again...");
             return new SearchCache("help", new StringBuilder());
         }
-        var columnFormat = "%-30s - %-11s";
+        var columnFormat = "%s - %s";
         var helpValue = String.format(columnFormat, command, value.getValue());
         terminal.println(helpValue);
         return new SearchCache("help", new StringBuilder(helpValue));
