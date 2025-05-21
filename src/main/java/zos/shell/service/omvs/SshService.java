@@ -30,7 +30,7 @@ public class SshService {
 
         try {
             var issueUss = new IssueUss(sshConnection);
-            // 10000 is the timeout value in milliseconds
+            // 10,000 is the timeout value in milliseconds
             return issueUss.issueCommand(command, 10000);
         } catch (IssueUssException e) {
             LOG.debug("exception error: {}", String.valueOf(e));
