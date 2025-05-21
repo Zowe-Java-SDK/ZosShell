@@ -31,10 +31,6 @@ public class TsoService {
             var errMsg = "ACCOUNT_NUMBER is not set, use SET command and try again...";
             return new ResponseStatus(errMsg, false);
         }
-        if (!StrUtil.isStrNum(accountNumber)) {
-            var errMsg = "ACCOUNT_NUMBER is not a numeric value, use SET command and try again...";
-            return new ResponseStatus(errMsg, false);
-        }
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         Future<ResponseStatus> submit = pool.submit(new FutureTso(issueTso, accountNumber, command));
         ResponseStatus responseStatus = FutureUtil.getFutureResponse(submit, pool, timeout);
