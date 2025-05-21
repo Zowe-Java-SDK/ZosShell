@@ -85,74 +85,60 @@ The app works well on Windows and macOS.
   
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/save-demo.gif)
       
-The shell performs the following Linux like commands:    
+The shell performs the following Linux-like commands:    
     
     cat                     - display contents
-    cd <arg>                - where arg is a dataset value or empty
-    clear                   - clear the shell screen and start at top and empty out cached output for search command
-    cp | copy <arg> <arg>   - where arg can be ".", "*", member, sequential dataset or dataset(member)
-    echo <arg>              - display given input and translate any env value delimited with $
-    env                     - display environment variables
-    g | grep <arg> <arg2>   - where arg is search string and arg2 is member value
-    h | help                - list commands
-    history <arg>           - where arg is optional and indicates the number to display from bottom  
-    hostname                - display current hostname connection
-    !n                      - where n is a number, to execute command number n in history list   
-    !string                 - will execute the last history command starting with that “string”
-    !!                      - will execute the last history command
-    ls <arg>                - where arg is optional and indicates a dataset or member value
-                            - for member value only you can specified * wild card as last character
-    ls -l <arg>             - where arg is optional and indicates a dataset or member value
-                            - for member value only you can specified * wild card as last character
-    mkdir <arg>             - where arg is a dataset
-    ps                      - display all processes running
-    ps <arg>                - where arg is a task/job name   
-    pwd                     - show current working dataset
-    rm <arg>                - where arg is member with wildcard "*", member, dataset, or dataset with member value
+    cd <arg>                - arg is a dataset value or ..
+    clear                   - clear screen contents and search cache
+    cp | copy <arg> <arg>   - arg can be ".", member, dataset or dataset(member)
+    echo <arg>              - echo arg value and translate any env value delimited with $
+    env                     - echo all env variables
+    g | grep <arg> <arg2>   - arg is search string and arg2 is member value
+    h | help <arg>          - list all commands-details; arg=-l, list all command names; arg=command, list command-detail 
+    history <arg>           - arg is optional and indicates the number to display from bottom 
+    hostname                - echo hostname connection
+    !n                      - n=number, echo command from history list   
+    !string                 - execute previous string=command from history list
+    !!                      - execute previous command
+    ls <arg>                - arg is optional; list members/datasets in PWD; arg=filter(*); filter is dataset or member value
+    ls -l <arg>             - arg is optional; list members/datasets with attributes in PWD; arg=filter(*); filter is dataset or member value
+    mkdir <arg>             - arg is a dataset
+    ps <arg>                - arg is optional; list all tasks/jobs; arg=filter(*)   
+    pwd                     - current working dataset location
+    rm <arg>                - arg is member with wildcard "*", member, dataset, or dataset(member)
     set <arg>               - set environment variable with arg value in the following format: key=value
     touch <arg>             - create empty member if does not exist, arg represents a member or dataset(member)
-    uname                   - show current connected host name
+    uname                   - echo connection hostname and z/OS version
     usermod <arg>           - modify username or password of current connection, arg can be either -u or -p
-    vi <arg>                - where arg is a sequential dataset or member name, arg will be downloaded 
-                              and displayed for editing, use save command to save changes  
-    whoami                  - show current set connection's username  
+    vi <arg>                - arg is a member, sequential dataset, or dataset(member), arg will be downloaded
+    whoami                  - current connection's username  
   
-Along with following custom commands:  
+Along with the following custom commands:  
 
-    bj | browsejob <arg1> <arg2>        - where arg1 is a job name and arg2 is optional
-                                          if arg2 not specified, display job's JESMSGLG spool output
-                                          if arg2 is equal to "all", display all job's spool output
-    cancel <arg>                        - where arg is a task/job name  
-    change <arg>                        - where arg is a number representing a connection
+    bj | browsejob <arg1> <arg2>        - arg1=task/job name; display job's JESMSGLG spool output; arg2=optional or "all"; all=display all job's spool output
+    cancel <arg>                        - arg=task/job name; cancel  
+    change <arg>                        - arg=connection number, ordered connections defined in config.json
     color <arg> <arg2>                  - change color arg is prompt and text and arg2 is background color, i.e. blue, yellow, cyan etc..
-    connections                         - a list of connection(s)   
-    count members                       - return member count in current pwd dataset
-    count datasets                      - return dataset count in current pwd dataset
-    d | download <arg1> <arg2>          - download arg1 to local c:\ZosShell\pwd where arg1 is member or sequential dataset  
-                                          and arg2 is optional and only accepts "-b" for binary download      
-    dj | downloadjob <arg1> <arg2>      - download the latest job log where <arg1> is job name
-                                          if arg2 not specified, download job's JESMSGLG spool output
-                                          if arg2 is equal to "all", download all job's spool output
-    end                                 - end session closes shell UI window
-    files                               - list all files under local pwd drive value
-    ls --l <arg>                        - where arg is optional and indicates a dataset or member value
-                                        - for member value only you can specified * wild card as last character
-                                        - -- option means same view as ls -l but without attribute info
-    mvs <arg>                           - execute a mvs command where arg is a command string within double quotes
-    p | purge <arg>                     - purge a job name or job is arg can represent either  
-    rn | rename <arg> <arg>             - rename sequential dataset or member, both arg values either member or dataset type
-    save <arg>                          - save arg where arg is a file name from files command to the current pwd
-    search <arg>                        - search for arg within last job browse, tailjob or member cat command  
-    stop <arg>                          - where arg is a task/job name  
-    submit <arg>                        - where arg is a member name  
-    tail <arg1> <arg2> <arg3>           - where arg1 is job name and arg2 and arg3 are optional
-                                          use arg2 to specify either line limit or "all" value 
-                                          if "all" is specified, display output from all of job's spool content
-                                          line limit is 25 by default if not specified in arg2
-    t | timeout <arg>                   - where arg is optional, with arg value you set new timeout, without shows current value
-    tso <arg>                           - execute a tso command where arg is a command string within double quotes
+    connections                         - connection(s) list from config.json   
+    count members                       - number of members in PWD
+    count datasets                      - renumber of datasets in PWD
+    d | download <arg1> <arg2>          - arg1=member or sequential dataset; download to \ZosShell\pwd; arg2=optional or -b for binary download   
+    dj | downloadjob <arg1> <arg2>      - arg1=task/job name; download JESMSGLG spool output; arg2="all", download all spool content
+    end                                 - exit UI shell
+    files                               - list all files under local PWD drive value
+    ls --l <arg>                        - same as ls -l without attribute info
+    mvs <arg>                           - execute console command, arg=command in double quotes
+    p | purge <arg>                     - arg=job name or id; purge   
+    rn | rename <arg1> <arg2>           - rename member or sequential, arg1=old arg2=new
+    save <arg>                          - arg=file name from files command to the current PWD
+    search <arg>                        - search previous command contents  
+    stop <arg>                          - arg=task/job name; stop
+    submit <arg>                        - arg=task/job name; submit   
+    tail <arg1> <arg2> <arg3>           - arg1=task/job name; display content from bottom; arg2 & arg3 = optional; arg2=limit num (25 default) and arg3=all spool content
+    t | timeout <arg>                   - echo current timeout value or change value with arg
+    tso <arg>                           - execute OMVS/USS command via SSH connection, arg=command within double quotes
     ussh <arg>                          - execute a uss (unix) command via SSH connection where arg is a command string within double quotes
-    v | visited                         - a list of visited datasets  
+    v | visited                         - list of visited datasets  
   
 Key combinations provide the following functionality within the shell:    
     
