@@ -89,7 +89,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         var currConnection = ConnSingleton.getInstance().getCurrZosConnection();
         var currSshConnection = ConnSingleton.getInstance().getCurrSshConnection();
 
-        // setup the first connection definition and prompt for username and password if applicable.
+        // initialize the first connection definition and prompt for username and password if applicable.
         try {
             var host = currConnection.getHost();
             var zosmfport = currConnection.getZosmfPort();
