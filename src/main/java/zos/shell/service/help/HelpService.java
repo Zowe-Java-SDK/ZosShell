@@ -35,7 +35,7 @@ public class HelpService {
             Map.entry("help", Map.entry("h | help <arg>", "list all commands-details; arg=-l, list all command names; arg=command, list command-detail")),
             Map.entry("history", Map.entry("history <arg>", "arg is optional and indicates the number to display from bottom")),
             Map.entry("hostname", Map.entry("hostname", "echo hostname connection")),
-            Map.entry("!n", Map.entry("!n", "n=number, echo command from history list")),
+            Map.entry("!n", Map.entry("!n", "n=number, execute command from history list")),
             Map.entry("!string", Map.entry("!string", "execute previous command from history list")),
             Map.entry("!!", Map.entry("!!", "execute previous command")),
             Map.entry("ls", Map.entry("ls <arg>", "arg is optional; list members/datasets in PWD; arg=filter(*); filter is dataset or member value")),
