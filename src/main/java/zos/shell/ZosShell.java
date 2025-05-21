@@ -100,18 +100,25 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         "Check configuration file and try again...");
             }
 
-            if (username.isBlank() || password.isBlank()) {
-                terminal.println("Enter username and password for host " + host);
-                username = PromptUtil.getPromptInfo("username:", false);
-                String confirmPassword = null;
-                while (confirmPassword == null || !confirmPassword.equals(password)) {
-                    password = PromptUtil.getPromptInfo("password:", true);
-                    confirmPassword = PromptUtil.getPromptInfo("confirm password:", true);
+            var isAuthAttrsMissing = (username.isBlank() || password.isBlank());
+            if (isAuthAttrsMissing) {
+                if (username.isBlank()) {
+                    terminal.println("Enter username for " + host);
+                    username = PromptUtil.getPromptInfo("username:", false);
+                }
+
+                if (password.isBlank()) {
+                    terminal.println("Enter password for " + host + "/" + username);
+                    String confirmPassword = null;
+                    while (confirmPassword == null || !confirmPassword.equals(password)) {
+                        password = PromptUtil.getPromptInfo("password:", true);
+                        confirmPassword = PromptUtil.getPromptInfo("confirm password:", true);
+                    }
                 }
 
                 currConnection = new ZosConnection(host, zosmfport, username, password);
-
                 ValidateUtils.checkConnection(currConnection);
+
                 ConfigSingleton.getInstance().setZosConnectionByIndex(currConnection, 0);
                 ConnSingleton.getInstance().setCurrZosConnection(currConnection, 0);
                 currSshConnection = new SshConnection(host, currSshConnection.getPort(), username, password);
