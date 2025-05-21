@@ -294,11 +294,15 @@ public class CommandRouter {
                 break;
             case "h":
             case "help":
-                if (isParamsExceeded(1, params)) {
+                if (isParamsExceeded(2, params)) {
                     return;
                 }
                 if (params.length == 1) {
                     searchCache = HelpService.display(terminal);
+                } else if (params[1].equalsIgnoreCase("-l")) {
+                    searchCache = HelpService.displayCommandNames(terminal);
+                } else {
+                    searchCache = HelpService.displayCommand(terminal, params[1]);
                 }
                 break;
             case "history":

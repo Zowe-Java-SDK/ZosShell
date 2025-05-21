@@ -5,84 +5,104 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.service.search.SearchCache;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 
 public class HelpService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HelpService.class);
 
-    private static final List<String> HELP = List.of(
-            "bj | browsejob <arg1> <arg2> - where arg1 is a job name and arg2 is optional",
-            "                          if arg2 not specified, display job's JESMSGLG spool output",
-            "                          if arg2 is equal to \"all\", display all job's spool output",
-            "cancel <arg>            - where arg is a task/job name",
-            "cat                     - display contents",
-            "cd <arg>                - where arg is a dataset value or empty",
-            "change <arg>            - where arg is a number representing a connection",
-            "clear                   - clear the shell screen and start at top and empty out cached output for search command",
-            "color <arg> <arg2>      - change color arg is prompt and text ",
-            "                          and arg2 is background color, i.e. blue, yellow, cyan etc..",
-            "connections             - a list of connection(s)",
-            "count members           - return member count in dataset",
-            "count datasets          - return dataset count in dataset",
-            "cp | copy <arg> arg>    - where arg can be \".\", member, dataset or dataset(member)",
-            "d | download <arg1> <arg2>  - download arg1 to local c:\\ZosShell\\pwd where arg1 is member or sequential dataset",
-            "                          and arg2 is optional and only accepts \"-b\" for binary download ",
-            "dj | downloadjob <arg1> <arg2> - download the latest job log where <arg1> is job name",
-            "                          if arg2 not specified, download job's JESMSGLG spool output",
-            "                          if arg2 is equal to \"all\", download all job's spool output",
-            "echo <arg>              - display given input and translate any env value delimited with $",
-            "end                     - end session closes shell UI window",
-            "env                     - display environment variables",
-            "files                   - list all files under local pwd drive value",
-            "g | grep <arg> <arg2>   - where arg is search string and arg2 is member value",
-            "h | help                - list commands",
-            "history <arg>           - where arg is optional and indicates the number to display from bottom",
-            "hostname                - display current hostname connection",
-            "!n                      - where n is a number, to execute command number n in history list",
-            "!string                 - will execute the last history command starting with that \"string\"",
-            "!!                      - will execute the last history command",
-            "ls <arg>                - where arg is optional and indicates a dataset or member value",
-            "                        - for member value only you can specified * wild card as last character",
-            "ls -l <arg>             - where arg is optional and indicates a dataset or member value",
-            "                        - for member value only you can specified * wild card as last character",
-            "ls --l <arg>            - same as above without attribute info",
-            "mkdir <arg>             - where arg is a dataset",
-            "mvs <arg>               - execute a mvs command where arg is a command string within double quotes",
-            "ps                      - display all processes running",
-            "ps <arg>                - where arg is a task/job name",
-            "p | purge <arg>         - purge a job name or job is arg can represent either",
-            "pwd                     - show current working dataset",
-            "rn | rename <arg> <arg> - rename sequential dataset or member, both arg values either member or dataset type",
-            "rm <arg>                - where arg is member with wildcard \"*\", member, dataset, or dataset with member value",
-            "save <arg>              - save arg where arg is a file name from files command to the current pwd",
-            "search <arg>            - search for arg within last job browse, tailjob or member cat command",
-            "set <arg>               - set environment variable with arg value in the following format: key=value",
-            "stop <arg>              - where arg is a task/job name",
-            "submit <arg>            - where arg is a member name",
-            "tail <arg1> <arg2> <arg3> - where arg1 is job name and arg2 and arg3 are optional",
-            "                          use arg2 to specify either line limit or \"all\" value",
-            "                          if \"all\" is specified, display output from all of job's spool content",
-            "                          line limit is 25 by default if not specified in arg2",
-            "t | timeout <arg>       - where arg is optional, with arg value you set new timeout, without shows current value",
-            "touch <arg>             - create empty member if does not exist, arg represents a member or dataset(member)",
-            "tso <arg>               - execute a tso command where arg is a command string within double quotes",
-            "uname                   - show current connected host name",
-            "usermod <arg>           - modify username or password of current connection, arg can be either -u or -p",
-            "ussh <arg>              - execute USS/UNIX command via SSH connection where arg is a command string within double quotes",
-            "vi <arg>                - where arg is a sequential dataset or member name, arg will be downloaded",
-            "                          and displayed for editing, use save command to save changes",
-            "v | visited             - a list of visited datasets",
-            "whoami                  - show current set connection's username");
+    private static final Map<String, Map.Entry<String, String>> HELP = Map.ofEntries(
+            Map.entry("browsejob", Map.entry("bj | browsejob <arg1> <arg2>", "where arg1 is a job name and arg2 is optional; if arg2 not specified, display job's JESMSGLG spool output; if arg2 is equal to \"all\", display all job's spool output")),
+            Map.entry("cancel", Map.entry("cancel <arg>", "arg is a task/job name")),
+            Map.entry("cat", Map.entry("cat", "display contents")),
+            Map.entry("cd", Map.entry("cd <arg>", "arg is a dataset value or ..")),
+            Map.entry("change", Map.entry("change <arg>", "arg is connection number")),
+            Map.entry("clear", Map.entry("clear", "clear screen contents and search cache")),
+            Map.entry("color", Map.entry("color <arg> <arg2>", "change color arg is prompt and text and arg2 is background color, i.e. blue, yellow, cyan etc..")),
+            Map.entry("connections", Map.entry("connections", "connection(s) list")),
+            Map.entry("count members", Map.entry("count members", "number of members in PWD")),
+            Map.entry("count datasets", Map.entry("count datasets", "number of datasets in PWD")),
+            Map.entry("copy", Map.entry("cp | copy <arg> arg>", "arg can be \".\", member, dataset or dataset(member)")),
+            Map.entry("download", Map.entry("d | download <arg1> <arg2>", "download arg1 to local c:\\ZosShell\\pwd where arg1 is member or sequential dataset")),
+            Map.entry("downloadjob", Map.entry("dj | downloadjob <arg1> <arg2>", "<arg1> is task/job name; if arg2 not specified, download JESMSGLG spool output; if arg2 is \"all\", download all spool content")),
+            Map.entry("echo", Map.entry("echo <arg>", "echo arg value and translate any env value delimited with $")),
+            Map.entry("end", Map.entry("end", "exit UI shell")),
+            Map.entry("env", Map.entry("env", "echo all env variables")),
+            Map.entry("files", Map.entry("files", "list all files under local PWD drive value")),
+            Map.entry("grep", Map.entry("g | grep <arg> <arg2>", "arg is search string and arg2 is member value")),
+            Map.entry("help", Map.entry("h | help <arg>", "arg optional, without arg list all commands and its details, arg=command or -l, list one command or list all commands by name only")),
+            Map.entry("history", Map.entry("history <arg>", "arg is optional and indicates the number to display from bottom")),
+            Map.entry("hostname", Map.entry("hostname", "echo hostname connection")),
+            Map.entry("!n", Map.entry("!n", "n=number, echo command from history list")),
+            Map.entry("!string", Map.entry("!string", "execute previous command from history list")),
+            Map.entry("!!", Map.entry("!!", "execute previous command")),
+            Map.entry("ls", Map.entry("ls <arg>", "arg is optional and indicates a dataset or member value, for member value only you can specified * wild card as last character")),
+            Map.entry("ls -l", Map.entry("ls -l <arg>", "arg is optional and indicates a dataset or member value, for member value only you can specified * wild card as last character")),
+            Map.entry("ls --l", Map.entry("ls --l <arg>", "same as ls -l without attribute info")),
+            Map.entry("mkdir", Map.entry("mkdir <arg>", "arg is a dataset")),
+            Map.entry("mvs", Map.entry("mvs <arg>", "execute console command, arg=command in double quotes")),
+            Map.entry("ps", Map.entry("ps <arg>", "list all tasks/jobs, arg is optional, arg=filter, excepts wild card")),
+            Map.entry("purge", Map.entry("p | purge <arg>", "purge a job name or job id, arg can represent either")),
+            Map.entry("pwd", Map.entry("pwd", "current working dataset location")),
+            Map.entry("rename", Map.entry("rn | rename <arg> <arg>", "rename sequential dataset or member, both arg values either member or dataset")),
+            Map.entry("rm", Map.entry("rm <arg>", "arg is member with wildcard \"*\", member, dataset, or dataset(member)")),
+            Map.entry("save", Map.entry("save <arg>", "arg=file name from files command to the current PWD")),
+            Map.entry("search", Map.entry("search <arg>", "search previous command contents")),
+            Map.entry("set", Map.entry("set <arg>", "set environment variable with arg value in the following format: key=value")),
+            Map.entry("stop", Map.entry("stop <arg>", "where arg is a task/job name")),
+            Map.entry("submit", Map.entry("submit <arg>", "where arg is a member name")),
+            Map.entry("tail", Map.entry("search <arg>", "arg=search value, search previous command output")),
+            Map.entry("timeout", Map.entry("t | timeout <arg>", "echo current timeout value or change value with arg")),
+            Map.entry("touch", Map.entry("touch <arg>", "create empty member if does not exist, arg represents a member or dataset(member)")),
+            Map.entry("tso", Map.entry("tso <arg>", "execute tso command, arg=command in double quotes")),
+            Map.entry("uname", Map.entry("uname", "echo connection hostname and z/OS version")),
+            Map.entry("usermod", Map.entry("usermod <arg>", "modify username or password of current connection, arg can be either -u or -p")),
+            Map.entry("ussh", Map.entry("ussh <arg>", "execute OMVS/USS command via SSH connection, arg=command within double quotes")),
+            Map.entry("vi", Map.entry("vi <arg>", "arg is a member, sequential dataset, or dataset(member), arg will be downloaded")),
+            Map.entry("visited", Map.entry("v | visited", "list of visited datasets")),
+            Map.entry("whoami", Map.entry("whoami", "current connection's username"))
+    );
 
     public static SearchCache display(TextTerminal<?> terminal) {
         LOG.debug("*** display ***");
+        var keys = new ArrayList<>(HELP.keySet());
+        Collections.sort(keys);
         var str = new StringBuilder();
-        HELP.forEach(item -> {
-            str.append(item).append("\n");
-            terminal.println(item);
-        });
+        for (var key : keys) {
+            var value = HELP.get(key);
+            var columnFormat = "%-30s - %-11s";
+            var helpValue = String.format(columnFormat, key, value.getValue());
+            str.append(helpValue).append("\n");
+            terminal.println(helpValue);
+        }
         return new SearchCache("help", str);
+    }
+
+    public static SearchCache displayCommandNames(TextTerminal<?> terminal) {
+        LOG.debug("*** displayCommandNames ***");
+        var keys = new ArrayList<>(HELP.keySet());
+        Collections.sort(keys);
+        var str = new StringBuilder();
+        for (var key : keys) {
+            str.append(key).append("\n");
+            terminal.println(key);
+        }
+        return new SearchCache("help", str);
+    }
+
+    public static SearchCache displayCommand(TextTerminal<?> terminal, String command) {
+        LOG.debug("*** displayCommand ***");
+        var value = HELP.get(command);
+        if (value == null) {
+            terminal.println("command not found, try again...");
+            return new SearchCache("help", new StringBuilder());
+        }
+        var columnFormat = "%-30s - %-11s";
+        var helpValue = String.format(columnFormat, command, value.getValue());
+        terminal.println(helpValue);
+        return new SearchCache("help", new StringBuilder(helpValue));
     }
 
 }
