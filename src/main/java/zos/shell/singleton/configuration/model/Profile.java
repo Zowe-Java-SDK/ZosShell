@@ -13,8 +13,6 @@ public class Profile {
     private String prompt;
     private Window window;
 
-    //TODO add account num
-
     public Profile() {
     }
 
