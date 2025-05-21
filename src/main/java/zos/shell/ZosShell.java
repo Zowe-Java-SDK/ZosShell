@@ -42,7 +42,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             ConfigSingleton.getInstance().readConfig();
         } catch (NumberFormatException | IOException e) {
             var mainTerminal = terminalSingleton.getMainTerminal();
-            mainTerminal.println("Error reading or parsing console.json file, try again...");
+            mainTerminal.println("Error reading or parsing config.json file, try again...");
             mainTerminal.println("Error: " + e.getMessage());
             mainTerminal.read(true);
             mainTerminal.dispose();

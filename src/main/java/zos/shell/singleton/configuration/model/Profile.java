@@ -2,6 +2,7 @@ package zos.shell.singleton.configuration.model;
 
 public class Profile {
 
+    private String name;
     private String hostname;
     private String zosmfPort;
     private String sshport;
@@ -14,6 +15,14 @@ public class Profile {
     private Window window;
 
     public Profile() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getHostname() {
@@ -99,7 +108,8 @@ public class Profile {
     @Override
     public String toString() {
         return "Profile{" +
-                "hostname='" + hostname + '\'' +
+                "name='" + name + '\'' +
+                ", hostname='" + hostname + '\'' +
                 ", zosmfPort='" + zosmfPort + '\'' +
                 ", sshport='" + sshport + '\'' +
                 ", username='" + username + '\'' +
