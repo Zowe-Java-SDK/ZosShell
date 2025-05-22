@@ -16,7 +16,7 @@ public class HelpService {
     private static final Map<String, Map.Entry<String, String>> HELP = Map.ofEntries(
             Map.entry("browsejob", Map.entry("bj | browsejob <arg1> <arg2>", "arg1=task/job name; display job's JESMSGLG spool output; arg2=optional or \"all\"; all=display all job's spool output")),
             Map.entry("cancel", Map.entry("cancel <arg>", "arg=task/job name; cancel ")),
-            Map.entry("cat", Map.entry("cat", "display contents")),
+            Map.entry("cat", Map.entry("cat <arg>", "arg=member, display contents")),
             Map.entry("cd", Map.entry("cd <arg>", "arg is a dataset value or ..")),
             Map.entry("change", Map.entry("change <arg>", "arg=connection number, ordered connections defined in config.json")),
             Map.entry("clear", Map.entry("cls | clear", "clear screen contents and search cache")),
@@ -67,6 +67,20 @@ public class HelpService {
             Map.entry("whoami", Map.entry("whoami", "current connection's username"))
     );
 
+    private static final Map<String, Map.Entry<String, String>> HELP_WITH_ABBREVIATIONS = Map.ofEntries(
+            Map.entry("bj", Map.entry("bj | browsejob <arg1> <arg2>", "arg1=task/job name; display job's JESMSGLG spool output; arg2=optional or \"all\"; all=display all job's spool output")),
+            Map.entry("cls", Map.entry("cls | clear", "clear screen contents and search cache")),
+            Map.entry("cp", Map.entry("cp | copy <arg> arg>", "arg can be \".\", member, dataset or dataset(member)")),
+            Map.entry("d", Map.entry("d | download <arg1> <arg2>", "arg1=member or sequential dataset; download to \\ZosShell\\pwd; arg2=optional or -b for binary download")),
+            Map.entry("dj", Map.entry("dj | downloadjob <arg1> <arg2>", "arg1=task/job name; download JESMSGLG spool output; arg2=\"all\", download all spool content")),
+            Map.entry("g", Map.entry("g | grep <arg> <arg2>", "arg is search string and arg2 is member value")),
+            Map.entry("h", Map.entry("h | help <arg>", "list all commands-details; arg=-l, list all command names; arg=command, list command-detail")),
+            Map.entry("p", Map.entry("p | purge <arg>", "arg=job name or id; purge")),
+            Map.entry("rn", Map.entry("rn | rename <arg1> <arg2>", "rename member or sequential, arg1=old arg2=new")),
+            Map.entry("t", Map.entry("t | timeout <arg>", "echo current timeout value or change value with arg")),
+            Map.entry("v", Map.entry("v | visited", "list of visited datasets"))
+    );
+
     public static SearchCache display(TextTerminal<?> terminal) {
         LOG.debug("*** display ***");
         var keys = new ArrayList<>(HELP.keySet());
@@ -97,8 +111,17 @@ public class HelpService {
     public static SearchCache displayCommand(TextTerminal<?> terminal, String command) {
         LOG.debug("*** displayCommand ***");
         var value = HELP.get(command);
+        return displayCommandCommon(terminal, value);
+    }
+
+    public static SearchCache displayCommandAbbreviation(TextTerminal<?> terminal, String command) {
+        LOG.debug("*** displayCommandByAbbreviations ***");
+        var value = HELP_WITH_ABBREVIATIONS.get(command);
+        return displayCommandCommon(terminal, value);
+    }
+
+    private static SearchCache displayCommandCommon(TextTerminal<?> terminal, Map.Entry<String, String> value) {
         if (value == null) {
-            terminal.println("command not found, try again...");
             return new SearchCache("help", new StringBuilder());
         }
         var columnFormat = "%s - %s";

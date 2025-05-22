@@ -306,6 +306,12 @@ public class CommandRouter {
                     searchCache = HelpService.displayCommandNames(terminal);
                 } else {
                     searchCache = HelpService.displayCommand(terminal, params[1]);
+                    if (searchCache.getOutput().length() == 0) {
+                        searchCache = HelpService.displayCommandAbbreviation(terminal, params[1]);
+                    }
+                }
+                if (searchCache.getOutput().length() > 0) {
+                    terminal.println("command not found, try again...");
                 }
                 break;
             case "history":

@@ -87,7 +87,7 @@ The app works well on Windows and macOS.
       
 The shell performs the following Linux-like commands:    
     
-    cat                     - display contents
+    cat <arg>               - arg=member, display contents
     cd <arg>                - arg is a dataset value or ..
     cls | clear             - clear screen contents and search cache
     cp | copy <arg> <arg>   - arg can be ".", member, dataset or dataset(member)
