@@ -43,7 +43,7 @@ public final class Constants {
     public static final String INVALID_PARAMETER = "invalid parameter, try again...";
     public static final String INVALID_VALUE = "invalid value, try again...";
     public static final String NO_CONNECTION_INFO = "no info, check connection settings...";
-    public static final String NO_CONNECTION = "no connection to change too...";
+    public static final String NO_CONNECTION = "no connection, try again...";
     public static final String NO_FILES = "no files, try again...";
     public static final String NO_HISTORY = "no history, try again...";
     public static final String NO_INFO = "no info...";
