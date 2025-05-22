@@ -19,7 +19,7 @@ public class HelpService {
             Map.entry("cat", Map.entry("cat", "display contents")),
             Map.entry("cd", Map.entry("cd <arg>", "arg is a dataset value or ..")),
             Map.entry("change", Map.entry("change <arg>", "arg=connection number, ordered connections defined in config.json")),
-            Map.entry("clear", Map.entry("clear", "clear screen contents and search cache")),
+            Map.entry("clear", Map.entry("cls | clear", "clear screen contents and search cache")),
             Map.entry("color", Map.entry("color <arg> <arg2>", "change color arg is prompt and text and arg2 is background color, i.e. blue, yellow, cyan etc..")),
             Map.entry("connections", Map.entry("connections", "connection(s) list from config.json")),
             Map.entry("count members", Map.entry("count members", "number of members in PWD")),

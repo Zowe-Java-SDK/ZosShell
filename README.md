@@ -89,7 +89,7 @@ The shell performs the following Linux-like commands:
     
     cat                     - display contents
     cd <arg>                - arg is a dataset value or ..
-    clear                   - clear screen contents and search cache
+    cls | clear             - clear screen contents and search cache
     cp | copy <arg> <arg>   - arg can be ".", member, dataset or dataset(member)
     echo <arg>              - echo arg value and translate any env value delimited with $
     env                     - echo all env variables

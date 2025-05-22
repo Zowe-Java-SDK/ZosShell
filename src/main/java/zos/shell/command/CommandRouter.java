@@ -140,6 +140,7 @@ public class CommandRouter {
                 TerminalSingleton.getInstance().getMainTerminal()
                         .setPaneTitle(Constants.APP_TITLE + " - " + currConnection.getHost().toUpperCase());
                 break;
+            case "cls":
             case "clear":
                 terminal.println();
                 terminal.resetToBookmark("top");
