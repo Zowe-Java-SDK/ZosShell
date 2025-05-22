@@ -26,7 +26,7 @@ public class ChangeConnService {
 
     public ZosConnection changeZosConnection(final ZosConnection zosConnection, final String[] commands) {
         LOG.debug("*** changeZosConnection ***");
-        int index = Integer.parseInt(commands[1]);
+        int index = Integer.parseInt(commands[1]) - 1;
         var numOfConnections = configSingleton.getZosConnections().size() - 1;
         if (index < 0 || index > numOfConnections) {
             terminal.println(Constants.NO_CONNECTION);
@@ -74,7 +74,7 @@ public class ChangeConnService {
 
     public SshConnection changeSshConnection(final SshConnection sshConnection, final String[] commands) {
         LOG.debug("*** changeSshConnection ***");
-        int index = Integer.parseInt(commands[1]);
+        int index = Integer.parseInt(commands[1]) - 1;
         var numOfConnections = configSingleton.getZosConnections().size() - 1;
         if (index < 0 || index > numOfConnections) {
             return sshConnection;
@@ -94,7 +94,7 @@ public class ChangeConnService {
 
     public void displayConnections() {
         LOG.debug("*** displayConnections ***");
-        var i = new AtomicInteger(0);
+        var i = new AtomicInteger(1);
         configSingleton.getZosConnections().forEach(
                 c -> terminal.println(i.getAndIncrement() + " " + "hostname: " +
                         (c.getHost().isBlank() ? "n\\a" : c.getHost()) + ", zosmfport: " +
