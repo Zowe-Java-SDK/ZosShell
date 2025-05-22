@@ -6,7 +6,7 @@
 
     <groupId>org.zosshell</groupId>
     <artifactId>zosshell</artifactId>
-    <version>2.3.1</version>
+    <version>3.0.0</version>
 
     <developers>
         <developer>
