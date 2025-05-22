@@ -100,7 +100,7 @@ public class HelpService {
             return new SearchCache("help", new StringBuilder());
         }
         var columnFormat = "%s - %s";
-        var helpValue = String.format(columnFormat, command, value.getValue());
+        var helpValue = String.format(columnFormat, value.getKey(), value.getValue());
         terminal.println(helpValue);
         return new SearchCache("help", new StringBuilder(helpValue));
     }
