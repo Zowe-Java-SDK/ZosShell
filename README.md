@@ -152,7 +152,7 @@ Key combinations provide the following functionality within the shell:
     SHIFT DOWN arrow        - decrease font size
     TAB                     - command autofill key - type a few characters then click on TAB key 
     
-To quit from the command shell UI, you can either press 'X' windows close icon or enter 'end' keyword.  
+To quit from the command shell UI, you can either press 'X' windows close icon or enter: end, exit, or quit keyword.  
   
 ## Requirements  
 
