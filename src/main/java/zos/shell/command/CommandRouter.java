@@ -310,7 +310,7 @@ public class CommandRouter {
                         searchCache = HelpService.displayCommandAbbreviation(terminal, params[1]);
                     }
                 }
-                if (searchCache.getOutput().length() > 0) {
+                if (searchCache.getOutput().length() == 0) {
                     terminal.println(Constants.HELP_COMMAND_NOT_FOUND);
                 }
                 break;
