@@ -125,6 +125,8 @@ Along with the following custom commands:
     d | download <arg1> <arg2>          - arg1=member or sequential dataset; download to \ZosShell\pwd; arg2=optional or -b for binary download   
     dj | downloadjob <arg1> <arg2>      - arg1=task/job name; download JESMSGLG spool output; arg2="all", download all spool content
     end                                 - exit UI shell
+    exit                                - exit UI shell
+    quit                                - exit UI shell
     files                               - list all files under local PWD drive value
     ls --l <arg>                        - same as ls -l without attribute info
     mvs <arg>                           - execute console command, arg=command in double quotes

@@ -257,6 +257,8 @@ public class CommandRouter {
                 String echoResult = echoController.getEcho(echoArg);
                 terminal.println(echoResult);
                 break;
+            case "exit":
+            case "quit":
             case "end":
                 if (isParamsExceeded(1, params)) {
                     return;

@@ -141,7 +141,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         var commandRouter = new CommandRouter(terminal);
         do {
             String input = textIO.newStringInputReader().withMaxLength(80).read(PromptUtil.getPrompt());
-            if ("end".equalsIgnoreCase(input)) {
+            if ("end".equalsIgnoreCase(input) || "exit".equalsIgnoreCase(input) || "quit".equalsIgnoreCase(input)) {
                 break;
             }
             if (isFontSizeChanged()) {

@@ -29,6 +29,8 @@ public class HelpService {
             Map.entry("downloadjob", Map.entry("dj | downloadjob <arg1> <arg2>", "arg1=task/job name; download JESMSGLG spool output; arg2=\"all\", download all spool content")),
             Map.entry("echo", Map.entry("echo <arg>", "echo arg value and translate any env value delimited with $")),
             Map.entry("end", Map.entry("end", "exit UI shell")),
+            Map.entry("exit", Map.entry("exit", "exit UI shell")),
+            Map.entry("quit", Map.entry("quit", "exit UI shell")),
             Map.entry("env", Map.entry("env", "echo all env variables")),
             Map.entry("files", Map.entry("files", "list all files under local PWD drive value")),
             Map.entry("grep", Map.entry("g | grep <arg> <arg2>", "arg is search string and arg2 is member value")),
