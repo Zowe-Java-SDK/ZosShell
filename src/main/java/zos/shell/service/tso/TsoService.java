@@ -35,14 +35,7 @@ public class TsoService {
         Future<ResponseStatus> submit = pool.submit(new FutureTso(issueTso, accountNumber, command));
         ResponseStatus responseStatus = FutureUtil.getFutureResponse(submit, pool, timeout);
         if (!responseStatus.isStatus()) {
-            var consoleMsg = " or try default or different console name value..";
-            var errMsg = responseStatus.getMessage();
-            if (errMsg.contains("..")) {
-                errMsg = errMsg.replace("..", consoleMsg);
-            } else {
-                errMsg = errMsg + consoleMsg;
-            }
-            return new ResponseStatus(errMsg, false);
+            return new ResponseStatus(responseStatus.getMessage(), false);
         }
         return responseStatus;
     }
