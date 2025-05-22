@@ -30,6 +30,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     public static void main(String[] args) {
         LOG.debug("*** main ***");
+        var connectionIdentifier = "";
+        if (args.length > 0) {
+            connectionIdentifier = args[0];
+        }
         // initialize all Singleton objects needed for Shell processing and tracking
         // initialize TerminalSingleton object
         var terminalSingleton = TerminalSingleton.getInstance();
@@ -54,8 +58,30 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
         // initialize ConnSingleton object
         var connSingleton = ConnSingleton.getInstance();
-        connSingleton.setCurrZosConnection(ConfigSingleton.getInstance().getZosConnectionByIndex(0), 0);
-        connSingleton.setCurrSshConnection(ConfigSingleton.getInstance().getSshConnectionByIndex(0));
+        var numOfConnections = ConfigSingleton.getInstance().getZosConnections().size();
+
+        // set ConnSingleton connection based on connection identifier if applicable
+        if (!connectionIdentifier.isBlank()) {
+            try {
+                var numOfConnection = Integer.parseInt(connectionIdentifier) - 1;
+                if (numOfConnection > 0 && numOfConnection <= numOfConnections) {
+                    var zosConnection = ConfigSingleton.getInstance().getZosConnectionByIndex(numOfConnection);
+                    connSingleton.setCurrZosConnection(zosConnection, numOfConnection);
+                    var sshConnection = ConfigSingleton.getInstance().getSshConnectionByIndex(numOfConnection);
+                    connSingleton.setCurrSshConnection(sshConnection);
+                }
+            } catch (NumberFormatException ignored) {
+            }
+        }
+
+        // set ConnSingleton connection based on the first profile in the configuration file if applicable
+        if (connSingleton.getCurrZosConnection() == null) {
+            var index = 0;
+            var zosConnection = ConfigSingleton.getInstance().getZosConnectionByIndex(index);
+            connSingleton.setCurrZosConnection(zosConnection, index);
+            var sshConnection = ConfigSingleton.getInstance().getSshConnectionByIndex(index);
+            connSingleton.setCurrSshConnection(sshConnection);
+        }
         var title = Constants.APP_TITLE + " - " + connSingleton.getCurrSshConnection().getHost().toUpperCase();
         TerminalSingleton.getInstance().getMainTerminal().setPaneTitle(title);
 
