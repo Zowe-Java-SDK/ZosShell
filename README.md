@@ -166,11 +166,11 @@ At the root directory prompt, execute the following maven command:
   
     mvn clean install  
   
-Change directory to the target directory and execute the following command:  
+Change the directory to the target directory and execute the following command:  
   
     java -jar zosshell-2.1.1.jar   
   
-If you are planning to browse large job output you may want to set the JVM memory usage higher than the default, i.e.  
+If you are planning to browse large job output, you may want to set the JVM memory usage higher than the default, i.e.  
   
     java -jar -Xmx2G zosshell-2.1.1.jar   
   
@@ -188,11 +188,11 @@ A profile is a one-to-one relationship of [Profile.java](https://github.com/Zowe
    
 The first JSON array entry in the example below shows all the attributes defined to be read by the application.  
   
-The other JSON array entries shows that you don't need to specify all attributes and its values. The attributes required are those that specify a z/OSMF connection: hostname and zosmfport.    
+The other JSON array entries show that you don't need to specify all attributes and its values. The attributes required are those that specify a z/OSMF connection: hostname and zosmfport.    
    
 The username and password entries are optional. It is recommended to not specify those settings. When not specified, the application will prompt the end user for username and password for the current connection.   
     
-For further details on username and password usage see [here](https://github.com/Zowe-Java-SDK/ZosShell/issues/182).    
+For further details on username and password usage, see [here](https://github.com/Zowe-Java-SDK/ZosShell/issues/182).    
     
 Example of config.json:  
 
@@ -253,7 +253,7 @@ The following JSON variable settings are converted into environmental variables 
   
 Each of these environmental variables will appear at app startup via ENV command if any have a value specified within the configuration JSON file.
 
-Use SET command to define or change each environmental variable noted above as needed and the new settings will be used by the application accordingly.
+Use SET command to define or change each environmental variable noted above as needed, and the new settings will be used by the application accordingly.
   
 <b>PROMPT</b> setting controls what the shell prompt value should represent. By default, the prompt value is ">".  
   
@@ -274,7 +274,7 @@ For example:
   
 JSON configuration file is required for the application to work properly. Any error in finding the file or parsing the JSON string will result in the application being unusable; it will display an error and any input will close the app.    
     
-The following screenshot displays ZosShell shell window with custom windows properties defined within the "window" JSON section.  
+The following screenshot displays the ZosShell shell window with custom windows properties defined within the "window" JSON section.  
   
 Here the window is set to display its background in green and font as yellow/bold.   
   
@@ -284,7 +284,7 @@ Here the window is set to display its background in green and font as yellow/bol
     
 Logging framework log4j2 is configured for the project. log4j2 configuration is located under src/main/resources/log4j2.xml.  
     
-It is configured to produce output logging while application is running under the running directory where the application was kicked off.
+It is configured to produce output logging while the application is running under the running directory where the application was kicked off.
       
 You are free to change configuration accordingly for your needs. 
   
