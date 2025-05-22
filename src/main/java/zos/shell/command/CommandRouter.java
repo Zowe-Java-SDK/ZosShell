@@ -311,7 +311,7 @@ public class CommandRouter {
                     }
                 }
                 if (searchCache.getOutput().length() > 0) {
-                    terminal.println("command not found, try again...");
+                    terminal.println(Constants.HELP_COMMAND_NOT_FOUND);
                 }
                 break;
             case "history":

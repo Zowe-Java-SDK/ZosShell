@@ -121,6 +121,7 @@ public class HelpService {
     }
 
     private static SearchCache displayCommandCommon(TextTerminal<?> terminal, Map.Entry<String, String> value) {
+        LOG.debug("*** displayCommandCommon ***");
         if (value == null) {
             return new SearchCache("help", new StringBuilder());
         }
