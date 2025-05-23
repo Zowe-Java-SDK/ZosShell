@@ -9,11 +9,13 @@ public class ConfigSettings {
     private final String downloadPath;
     private final String consoleName;
     private final String accountNumber;
+    private final String browseLimit;
     private final String prompt;
     private final Window window;
 
     public ConfigSettings(final String hostName, final String downloadPath, final String consoleName,
-                          final String accountNumber, final String prompt, final Window window) {
+                          final String accountNumber, final String browseLimit, final String prompt,
+                          final Window window) {
         this.hostName = hostName;
         if (hostName != null && !hostName.isBlank()) {
             EnvVariableSingleton.getInstance().getVariables().put("HOSTNAME", hostName);
@@ -29,6 +31,10 @@ public class ConfigSettings {
         this.accountNumber = accountNumber;
         if (accountNumber != null && !accountNumber.isBlank()) {
             EnvVariableSingleton.getInstance().getVariables().put("ACCOUNT_NUMBER", accountNumber);
+        }
+        this.browseLimit = browseLimit;
+        if (browseLimit != null && !browseLimit.isBlank()) {
+            EnvVariableSingleton.getInstance().getVariables().put("BROWSE_LIMIT", browseLimit);
         }
         this.prompt = prompt;
         if (prompt != null && !prompt.isBlank()) {
@@ -53,6 +59,10 @@ public class ConfigSettings {
         return accountNumber;
     }
 
+    public String getBrowseLimit() {
+        return browseLimit;
+    }
+
     public String getPrompt() {
         return prompt;
     }
@@ -68,6 +78,7 @@ public class ConfigSettings {
                 ", downloadPath='" + downloadPath + '\'' +
                 ", consoleName='" + consoleName + '\'' +
                 ", accountNumber='" + accountNumber + '\'' +
+                ", browseLimit='" + browseLimit + '\'' +
                 ", prompt='" + prompt + '\'' +
                 ", window=" + window +
                 '}';

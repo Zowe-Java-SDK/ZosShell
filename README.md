@@ -212,6 +212,7 @@ Example of config.json:
             "downloadpath": "/ZosShell",
             "consolename": "",
             "accountnumber": "12345",
+            "browselimit": "",    
             "prompt": "$",
             "window": {
                         "fontsize": "xxx",
@@ -227,6 +228,7 @@ Example of config.json:
             "downloadpath": "C:\\ZosShell3",
             "consolename": "",
             "accountnumber": "",
+            "browselimit": "",   
             "prompt": "",
             "window": {}		
         },
@@ -237,6 +239,7 @@ Example of config.json:
             "downloadpath": "C:\\ZosShell",
             "consolename": "",
             "accountnumber": "",
+            "browselimit": "1000",   
             "prompt": "$(hostname)",
             "window": {}		
         }
@@ -255,6 +258,7 @@ The following JSON variable settings are converted into environmental variables 
     downloadpath as DOWNLOAD_PATH
     consolename as CONSOLE_NAME
     accountnumber as ACCOUNT_NUMBER
+    browselimit as BROWSE_LIMIT
     prompt as PROMPT
   
 Each of these environmental variables will appear at app startup via ENV command if any have a value specified within the configuration JSON file.

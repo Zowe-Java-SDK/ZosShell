@@ -39,6 +39,7 @@ public class ChangeConnService {
                         profile.getDownloadpath(),
                         profile.getConsolename(),
                         profile.getAccountnumber(),
+                        profile.getBrowselimit(),
                         profile.getPrompt(),
                         profile.getWindow()
                 ));

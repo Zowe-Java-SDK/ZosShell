@@ -11,6 +11,7 @@ public class Profile {
     private String downloadPath;
     private String consoleName;
     private String accountNumber;
+    private String browseLimit;
     private String prompt;
     private Window window;
 
@@ -89,6 +90,14 @@ public class Profile {
         this.accountNumber = accountnumber;
     }
 
+    public String getBrowselimit() {
+        return browseLimit;
+    }
+
+    public void setBrowselimit(String browselimit) {
+        this.browseLimit = browselimit;
+    }
+
     public String getPrompt() {
         return prompt;
     }
@@ -117,6 +126,7 @@ public class Profile {
                 ", downloadPath='" + downloadPath + '\'' +
                 ", consoleName='" + consoleName + '\'' +
                 ", accountNumber='" + accountNumber + '\'' +
+                ", browseLimit='" + browseLimit + '\'' +
                 ", prompt='" + prompt + '\'' +
                 ", window=" + window +
                 '}';

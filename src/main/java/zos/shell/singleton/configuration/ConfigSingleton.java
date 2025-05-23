@@ -88,6 +88,7 @@ public class ConfigSingleton {
                 profile.getDownloadpath(),
                 profile.getConsolename(),
                 profile.getAccountnumber(),
+                profile.getBrowselimit(),
                 profile.getPrompt(),
                 profile.getWindow());
     }
