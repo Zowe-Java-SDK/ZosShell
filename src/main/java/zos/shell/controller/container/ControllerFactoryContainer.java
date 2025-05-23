@@ -127,8 +127,12 @@ public class ControllerFactoryContainer {
                                 this.browseJobDependencyContainer.isTimeoutSame(timeout) &&
                                 this.browseJobDependencyContainer.isToggleSame(isAll))))) {
             var jobGet = new JobGet(connection);
+            if (this.envVariableController == null) {
+                var envVariableService = new EnvVariableService();
+                this.envVariableController = new EnvVariableController(envVariableService);
+            }
             var browseJobService = new BrowseLogService(jobGet, isAll, timeout);
-            this.browseJobController = new BrowseJobController(browseJobService);
+            this.browseJobController = new BrowseJobController(browseJobService, this.envVariableController);
             this.browseJobDependencyContainer = new DependencyCacheContainer(connection, isAll, timeout);
         }
         return this.browseJobController;
