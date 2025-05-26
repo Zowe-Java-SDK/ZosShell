@@ -707,13 +707,13 @@ public class CommandRouter {
                 if (isParamsExceeded(1, params)) {
                     return;
                 }
-                if (isDatasetNotSpecified(currDataset)) {
-                    return;
-                }
                 for (final String key : dataSets.keySet()) {
                     List<String> lst = dataSets.get(key);
                     lst.forEach(l -> terminal.println(
                             Strings.padStart(l.toUpperCase(), currDatasetMax, ' ') + Constants.ARROW + key));
+                }
+                if (dataSets.isEmpty()) {
+                    terminal.println(Constants.NO_VISITED_DATASETS);
                 }
                 break;
             case "vi":
