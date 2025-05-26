@@ -63,6 +63,6 @@ public final class Constants {
     public static final String TOO_MANY_PARAMETERS = "too many parameters, try again...";
     public static final String UTF8 = "UTF8";
     public static final String WINDOWS_EDITOR_NAME = "notepad";
-    public static final String OS_ERROR = "command is only supported on Windows and Mac OSX...";
+    public static final String OS_ERROR = "command is only supported on Windows and macOS...";
 
 }

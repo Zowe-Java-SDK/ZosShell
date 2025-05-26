@@ -144,7 +144,7 @@ Along with the following custom commands:
   
 Key combinations provide the following functionality within the shell:    
   
-All key combinations work on Windows and Mac OSX unless specified otherwise.  
+All key combinations work on Windows and macOS unless specified otherwise.  
       
     CTRL C                  - copy text
     CTRL V                  - paste coped text
@@ -152,8 +152,8 @@ All key combinations work on Windows and Mac OSX unless specified otherwise.
     DOWN arrow              - scroll down through history list
     CTRL UP arrow           - increase font size  (Windows)
     CTRL DOWN arrow         - decrease font size  (Windows)
-    SHIFT UP arrow          - increase font size  (Mac OSX)
-    SHIFT DOWN arrow        - decrease font size  (Mac OSX)
+    SHIFT UP arrow          - increase font size  (macOS)
+    SHIFT DOWN arrow        - decrease font size  (macOS)
     TAB                     - command autofill key - type a few characters then click on TAB key 
     
 To quit from the command shell UI, you can either press 'X' windows close icon or enter: end, exit, or quit keyword.  
