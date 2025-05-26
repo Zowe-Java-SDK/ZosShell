@@ -1,5 +1,6 @@
 package zos.shell.singleton;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.beryx.textio.ReadHandlerData;
 import org.beryx.textio.ReadInterruptionStrategy;
 import org.beryx.textio.TextIO;
@@ -125,32 +126,61 @@ public class TerminalSingleton {
             HistorySingleton.getInstance().getHistory().listDownCommands();
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
-        mainTerminal.registerHandler("shift UP", t -> {
-            if (disableKeys) {
-                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
-            }
-            fontSize++;
-            mainTerminal.setInputFontSize(fontSize);
-            mainTerminal.setPromptFontSize(fontSize);
-            mainTerminal.moveToLineStart();
-            mainTerminal.print(PromptUtil.getPrompt() + " Increased font size to " + fontSize + ".");
-            fontSizeChanged = true;
-            return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
-        });
-        mainTerminal.registerHandler("shift DOWN", t -> {
-            if (disableKeys) {
-                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
-            }
-            if (fontSize != defaultFontSize) {
-                fontSize--;
+        if (SystemUtils.IS_OS_WINDOWS) {
+            mainTerminal.registerHandler("ctrl UP", t -> {
+                if (disableKeys) {
+                    return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+                }
+                fontSize++;
                 mainTerminal.setInputFontSize(fontSize);
                 mainTerminal.setPromptFontSize(fontSize);
                 mainTerminal.moveToLineStart();
-                mainTerminal.print(PromptUtil.getPrompt() + " Decreased font size to " + fontSize + ".");
+                mainTerminal.print(PromptUtil.getPrompt() + " Increased font size to " + fontSize + ".");
                 fontSizeChanged = true;
-            }
-            return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
-        });
+                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+            });
+            mainTerminal.registerHandler("ctrl DOWN", t -> {
+                if (disableKeys) {
+                    return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+                }
+                if (fontSize != defaultFontSize) {
+                    fontSize--;
+                    mainTerminal.setInputFontSize(fontSize);
+                    mainTerminal.setPromptFontSize(fontSize);
+                    mainTerminal.moveToLineStart();
+                    mainTerminal.print(PromptUtil.getPrompt() + " Decreased font size to " + fontSize + ".");
+                    fontSizeChanged = true;
+                }
+                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+            });
+        } else {
+            mainTerminal.registerHandler("shift UP", t -> {
+                if (disableKeys) {
+                    return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+                }
+                fontSize++;
+                mainTerminal.setInputFontSize(fontSize);
+                mainTerminal.setPromptFontSize(fontSize);
+                mainTerminal.moveToLineStart();
+                mainTerminal.print(PromptUtil.getPrompt() + " Increased font size to " + fontSize + ".");
+                fontSizeChanged = true;
+                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+            });
+            mainTerminal.registerHandler("shift DOWN", t -> {
+                if (disableKeys) {
+                    return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+                }
+                if (fontSize != defaultFontSize) {
+                    fontSize--;
+                    mainTerminal.setInputFontSize(fontSize);
+                    mainTerminal.setPromptFontSize(fontSize);
+                    mainTerminal.moveToLineStart();
+                    mainTerminal.print(PromptUtil.getPrompt() + " Decreased font size to " + fontSize + ".");
+                    fontSizeChanged = true;
+                }
+                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+            });
+        }
         mainTerminal.registerHandler("TAB", t -> {
             if (disableKeys) {
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
