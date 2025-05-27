@@ -35,7 +35,7 @@ public class Edit {
         var datasetMember = DatasetMember.getDatasetAndMember(target);
 
         if (DsnUtil.isMember(target)) {
-            // member input specified from the the current dataset
+            // member input specified from the current dataset
             result = download.member(dataset, target);
             this.pathService.createPathsForMember(dataset, target);
         } else if (datasetMember != null) {
