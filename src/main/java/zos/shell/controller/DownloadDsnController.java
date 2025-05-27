@@ -2,6 +2,7 @@ package zos.shell.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.constants.Constants;
 import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.*;
@@ -91,7 +92,7 @@ public class DownloadDsnController {
         }
 
         if (!found) {
-            results.add("invalid member, dataset or dataset(member) specified, try again...");
+            results.add(Constants.INVALID_DATASET_AND_MEMBER_COMBINED);
             return results;
         }
 
