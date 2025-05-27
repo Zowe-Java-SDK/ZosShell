@@ -78,7 +78,7 @@ public class DownloadDsnController {
                 return warning(results);
             }
             found = true;
-            responseStatus = downloadAllMembersService.downloadAllMembers(target);
+            responseStatus = downloadAllMembersService.downloadAllMembers(dataset);
         } else if (target.contains("*")) {
             IntStream charCodes = target.chars();
             OptionalInt last = charCodes.reduce((first, second) -> second);

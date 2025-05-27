@@ -32,13 +32,13 @@ public class DownloadAllMembersService {
         this.timeout = timeout;
     }
 
-    public List<ResponseStatus> downloadAllMembers(final String dataset) {
+    public List<ResponseStatus> downloadAllMembers(final String target) {
         LOG.debug("*** downloadAllMembers ***");
         List<ResponseStatus> results = new ArrayList<>();
         List<Member> members;
 
         try {
-            members = new MemberListingService(new DsnList(connection), timeout).memberLst(dataset);
+            members = new MemberListingService(new DsnList(connection), timeout).memberLst(target);
         } catch (ZosmfRequestException e) {
             var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return List.of(new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false));
@@ -46,7 +46,7 @@ public class DownloadAllMembersService {
         if (members.isEmpty()) {
             results.add(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
         }
-        results.addAll(downloadMembersService.downloadMembers(dataset, members));
+        results.addAll(downloadMembersService.downloadMembers(target, members));
         return results;
     }
 

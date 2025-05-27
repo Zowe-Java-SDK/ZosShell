@@ -26,7 +26,7 @@ public class DownloadMemberListService {
 
     public DownloadMemberListService(final ZosConnection connection, final PathService pathService, final boolean isBinary,
                                      final long timeout) {
-        LOG.debug("*** DownloadMembersService ***");
+        LOG.debug("*** DownloadMemberListService ***");
         this.connection = connection;
         this.pathService = pathService;
         this.isBinary = isBinary;
@@ -59,7 +59,7 @@ public class DownloadMemberListService {
                 results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
             }
         }
-        
+
         return results;
     }
 

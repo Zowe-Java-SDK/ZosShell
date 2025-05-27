@@ -39,8 +39,7 @@ public class DownloadMemberService {
         Future<ResponseStatus> submit = null;
 
         try {
-            submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), pathService, dataset,
-                    target, isBinary));
+            submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), pathService, dataset, target, isBinary));
             results.add(submit.get(timeout, TimeUnit.SECONDS));
         } catch (InterruptedException | ExecutionException e) {
             LOG.debug("exception error: {}", String.valueOf(e));
