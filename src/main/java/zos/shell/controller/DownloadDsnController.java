@@ -42,19 +42,16 @@ public class DownloadDsnController {
     public List<String> download(final String dataset, final String target) {
         LOG.debug("*** download ***");
         List<String> results = new ArrayList<>();
-        var errMsg = "cannot download " + target + ", try again...";
 
         // TODO incorporate env variable downloadPath availability too..
         var configSettings = ConfigSingleton.getInstance().getConfigSettings();
         if (configSettings.getDownloadPath().isBlank()) {
-            results.add("downloadPath configuration missing");
-            results.add(errMsg);
+            results.add("downloadPath configuration missing, try again...");
             return results;
         }
         File dir = new File(configSettings.getDownloadPath());
         if (!dir.isDirectory()) {
-            results.add("downloadPath setting location " + configSettings.getDownloadPath() + " does not exist");
-            results.add(errMsg);
+            results.add("downloadPath " + configSettings.getDownloadPath() + " not found, try again...");
             return results;
         }
 
@@ -106,7 +103,6 @@ public class DownloadDsnController {
             return results;
         } else {
             responseStatus.forEach(r -> results.add(ResponseUtil.getMsgAfterArrow(r.getMessage())));
-            results.add(errMsg);
         }
         return results;
     }
