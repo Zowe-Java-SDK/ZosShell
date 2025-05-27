@@ -59,11 +59,7 @@ public class DownloadMemberListService {
                 results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
             }
         }
-
-        // results.get(0) not possible if we used FutureUtil.getFutureResponses
-        var file = new File(results.get(0).getOptionalData());
-        FileUtil.openFileLocation(file.getAbsolutePath());
-        pool.shutdownNow();
+        
         return results;
     }
 
