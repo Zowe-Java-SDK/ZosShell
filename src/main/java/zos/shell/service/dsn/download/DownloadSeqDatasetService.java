@@ -23,8 +23,8 @@ public class DownloadSeqDatasetService {
     private final boolean isBinary;
     private final long timeout;
 
-    public DownloadSeqDatasetService(final ZosConnection connection, final PathService pathService, final boolean isBinary,
-                                     final long timeout) {
+    public DownloadSeqDatasetService(final ZosConnection connection, final PathService pathService,
+                                     final boolean isBinary, final long timeout) {
         LOG.debug("*** DownloadSeqDatasetService ***");
         this.connection = connection;
         this.pathService = pathService;
@@ -37,6 +37,21 @@ public class DownloadSeqDatasetService {
         List<ResponseStatus> results = new ArrayList<>();
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         Future<ResponseStatus> submit = null;
+
+        try {
+            if (!isSeqDataset(target)) {
+                results.add(new ResponseStatus(Constants.DOWNLOAD_NOT_SEQ_DATASET_WARNING, false));
+                return results;
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            LOG.debug("exception error: {}", String.valueOf(e));
+            results.add(new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
+                    e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG, false));
+            return results;
+        } catch (TimeoutException e) {
+            results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
+            return results;
+        }
 
         try {
             submit = pool.submit(new FutureDatasetDownload(new DsnGet(connection), pathService, target, isBinary));
@@ -60,6 +75,23 @@ public class DownloadSeqDatasetService {
         }
 
         return results;
+    }
+
+    private boolean isSeqDataset(String target) throws ExecutionException, InterruptedException, TimeoutException {
+        LOG.debug("*** isSeqDataset ***");
+
+        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        ResponseStatus responseStatus;
+        Future<ResponseStatus> submit;
+
+        try {
+            submit = pool.submit(new FutureDatasetInfo(new DsnGet(connection), target));
+            responseStatus = submit.get(timeout, TimeUnit.SECONDS);
+        } finally {
+            pool.shutdown();
+        }
+
+        return responseStatus.getMessage().contains("dsorg=Optional[PS]");
     }
 
 }

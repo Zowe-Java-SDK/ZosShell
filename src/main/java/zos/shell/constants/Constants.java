@@ -30,6 +30,7 @@ public final class Constants {
     public static final String DELETE_NOTHING_ERROR = "nothing to delete, try again...";
     public static final String DOWNLOAD_FAIL = "download failed, try again...";
     public static final String DOWNLOAD_NOTHING_WARNING = "nothing to download, try again...";
+    public static final String DOWNLOAD_NOT_SEQ_DATASET_WARNING = "specify sequential dataset, try again...";
     public static final String EXECUTE_ERROR_MSG = "execute error...";
     public static final long FUTURE_TIMEOUT_VALUE = 10;
     public static final String HELP_COMMAND_NOT_FOUND = "command not found, try again...";
