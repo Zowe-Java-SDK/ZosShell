@@ -221,9 +221,6 @@ public class CommandRouter {
                         return;
                     }
                 }
-                if (isDatasetNotSpecified(currDataset)) {
-                    return;
-                }
                 var downloadDsnController = controllerContainer.getDownloadDsnController(currConnection, isBinary, timeout);
                 List<String> downloadResults = downloadDsnController.download(currDataset, params[1]);
                 downloadResults.forEach(terminal::println);

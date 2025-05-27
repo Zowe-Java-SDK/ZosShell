@@ -13,8 +13,7 @@ import zos.shell.service.dsn.concat.ConcatService;
 import zos.shell.service.dsn.copy.CopyService;
 import zos.shell.service.dsn.count.CountService;
 import zos.shell.service.dsn.delete.DeleteService;
-import zos.shell.service.dsn.download.Download;
-import zos.shell.service.dsn.download.DownloadDsnService;
+import zos.shell.service.dsn.download.*;
 import zos.shell.service.dsn.edit.EditService;
 import zos.shell.service.dsn.list.ListingService;
 import zos.shell.service.dsn.makedir.MakeDirService;
@@ -287,8 +286,15 @@ public class ControllerFactoryContainer {
                 this.pathService = new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
                         this.envVariableController);
             }
-            var downloadDsnService = new DownloadDsnService(connection, this.pathService, isBinary, timeout);
-            this.downloadDsnController = new DownloadDsnController(downloadDsnService);
+            var downloadMemberService = new DownloadMemberService(connection, this.pathService, isBinary, timeout);
+            var downloadPdsMemberService = new DownloadPdsMemberService(connection, this.pathService, isBinary, timeout);
+            var downloadSeqDatasetService = new DownloadSeqDatasetService(connection, this.pathService, isBinary, timeout);
+            var downloadAllMembersService = new DownloadAllMembersService(connection,
+                    new DownloadMemberListService(connection, this.pathService, isBinary, timeout), timeout);
+            var downloadMembersService = new DownloadMembersService(connection,
+                    new DownloadMemberListService(connection, this.pathService, isBinary, timeout), timeout);
+            this.downloadDsnController = new DownloadDsnController(downloadMemberService, downloadPdsMemberService,
+                    downloadSeqDatasetService, downloadAllMembersService, downloadMembersService);
             this.downloadDsnDependencyContainer = new DependencyCacheContainer(connection, isBinary, timeout);
         }
         return this.downloadDsnController;
