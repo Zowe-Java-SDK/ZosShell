@@ -17,7 +17,7 @@ public final class Constants {
     public static final String COPY_NO_MEMBER_ERROR =
             "first argument invalid for copy, specified a member, try again...";
     public static final int BROWSE_LIMIT = 10000;
-    public static final String BROWSE_LIMIT_WARNING = "too large of a job log to display, try downloadjob all...";
+    public static final String BROWSE_LIMIT_WARNING = "too large of a job log to display, try increasing browse limit...";
     public static final String DEFAULT_BACKGROUND_COLOR = "black";
     public static final String DEFAULT_CONFIG_MAC = "/ZosShell/config.json";
     public static final String DEFAULT_CONFIG_WINDOWS = "C:\\ZosShell\\config.json";
