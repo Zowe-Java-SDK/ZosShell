@@ -109,7 +109,7 @@ public class DownloadDsnController {
     }
 
     private static List<String> warning(List<String> results) {
-        results.add("PWD empty; cd to PDS(E), try again...");
+        results.add(Constants.DATASET_NOT_SPECIFIED);
         return results;
     }
 

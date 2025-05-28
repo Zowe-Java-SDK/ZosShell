@@ -24,7 +24,7 @@ public final class Constants {
     public static final String DEFAULT_DOWNLOAD_PATH_MAC = "/ZosShell";
     public static final String DEFAULT_DOWNLOAD_PATH_WINDOWS = "C:\\ZosShell";
     public static final int DEFAULT_FONT_SIZE = 20;
-    public static final String DATASET_NOT_SPECIFIED = "no dataset specified, try again...";
+    public static final String DATASET_NOT_SPECIFIED = "PWD empty; cd to dataset and try again...";
     public static final String DEFAULT_PROMPT = ">";
     public static final String DEFAULT_TEXT_COLOR = "white";
     public static final String DELETE_NOTHING_ERROR = "nothing to delete, try again...";
