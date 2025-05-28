@@ -122,7 +122,7 @@ Along with the following custom commands:
     connections                         - connection(s) list from config.json   
     count members                       - number of members in PWD
     count datasets                      - renumber of datasets in PWD
-    d | download <arg1> <arg2>          - arg1=member or sequential dataset; download to \ZosShell\pwd; arg2=optional or -b for binary download   
+    d | download <arg1> <arg2>          - arg1=member, dataset(member) or sequential dataset; download to \downloadpath\$HOSTNAME\pwd or \downloadpath\$HOSTNAME\SEQUENTIAL_DATASET; arg2=optional or -b for binary download   
     dj | downloadjob <arg1> <arg2>      - arg1=task/job name; download JESMSGLG spool output; arg2="all", download all spool content
     end                                 - exit UI shell
     exit                                - exit UI shell

@@ -42,7 +42,7 @@ public class Save {
         boolean isSequentialDataset = false;
 
         if (DsnUtil.isMember(target)) {
-            // member input specified from current dataset
+            // member input specified from the current dataset
             this.pathService.createPathsForMember(dataset, target);
         } else if (datasetMember != null) {
             // dataset(member) input specified
@@ -52,7 +52,7 @@ public class Save {
             this.pathService.createPathsForSequentialDataset(target);
             isSequentialDataset = true;
         } else {
-            return new ResponseStatus(Constants.INVALID_PARAMETER, false);
+            return new ResponseStatus(Constants.INVALID_DATASET_AND_MEMBER_COMBINED, false);
         }
 
         try (var br = new BufferedReader(new FileReader(this.pathService.getPathWithFile()))) {

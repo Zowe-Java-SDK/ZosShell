@@ -17,19 +17,20 @@ public final class Constants {
     public static final String COPY_NO_MEMBER_ERROR =
             "first argument invalid for copy, specified a member, try again...";
     public static final int BROWSE_LIMIT = 10000;
-    public static final String BROWSE_LIMIT_WARNING = "too large of a job log to display, try downloadjob all...";
+    public static final String BROWSE_LIMIT_WARNING = "too large of a job log to display, try increasing browse limit...";
     public static final String DEFAULT_BACKGROUND_COLOR = "black";
     public static final String DEFAULT_CONFIG_MAC = "/ZosShell/config.json";
     public static final String DEFAULT_CONFIG_WINDOWS = "C:\\ZosShell\\config.json";
     public static final String DEFAULT_DOWNLOAD_PATH_MAC = "/ZosShell";
     public static final String DEFAULT_DOWNLOAD_PATH_WINDOWS = "C:\\ZosShell";
     public static final int DEFAULT_FONT_SIZE = 20;
-    public static final String DATASET_NOT_SPECIFIED = "no dataset specified, try again...";
+    public static final String DATASET_NOT_SPECIFIED = "PWD empty; cd to dataset and try again...";
     public static final String DEFAULT_PROMPT = ">";
     public static final String DEFAULT_TEXT_COLOR = "white";
     public static final String DELETE_NOTHING_ERROR = "nothing to delete, try again...";
     public static final String DOWNLOAD_FAIL = "download failed, try again...";
     public static final String DOWNLOAD_NOTHING_WARNING = "nothing to download, try again...";
+    public static final String DOWNLOAD_NOT_SEQ_DATASET_WARNING = "specify sequential dataset, try again...";
     public static final String EXECUTE_ERROR_MSG = "execute error...";
     public static final long FUTURE_TIMEOUT_VALUE = 10;
     public static final String HELP_COMMAND_NOT_FOUND = "command not found, try again...";
@@ -38,6 +39,8 @@ public final class Constants {
     public static final String INVALID_COMMAND = "invalid command, try again...";
     public static final String INVALID_DATASET = "invalid dataset specified, try again...";
     public static final String INVALID_DATASET_AND_MEMBER = "invalid dataset or member specified, try again...";
+    public static final String INVALID_DATASET_AND_MEMBER_COMBINED =
+            "invalid member, dataset or dataset(member) specified, try again...";
     public static final String INVALID_NUMBER = "specify a number, try again...";
     public static final String INVALID_MEMBER = "invalid member name format specified, try again...";
     public static final String INVALID_PARAMETER = "invalid parameter, try again...";

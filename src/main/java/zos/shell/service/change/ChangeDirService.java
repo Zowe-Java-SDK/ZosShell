@@ -38,7 +38,7 @@ public class ChangeDirService {
             dataset = dataset.substring(0, str.length() - 1);
             return new ResponseStatus("success", true, dataset);
         } else {
-            return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false, currDataSet);
+            return new ResponseStatus(Constants.INVALID_DATASET, false, currDataSet);
         }
     }
 
