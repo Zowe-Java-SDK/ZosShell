@@ -650,9 +650,6 @@ public class CommandRouter {
                     return;
                 }
                 var touchController = controllerContainer.getTouchController(currConnection, timeout);
-                if (isDatasetNotSpecified(currDataset)) {
-                    return;
-                }
                 String touchResult = touchController.touch(currDataset, params[1]);
                 terminal.println(touchResult);
                 break;

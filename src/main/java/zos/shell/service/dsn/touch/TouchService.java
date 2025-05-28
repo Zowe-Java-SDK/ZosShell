@@ -39,8 +39,8 @@ public class TouchService {
 
         var datasetMember = DatasetMember.getDatasetAndMember(target);
 
-        if (!DsnUtil.isMember(target) && datasetMember == null) {
-            return new ResponseStatus(Constants.INVALID_PARAMETER, false);
+        if (DsnUtil.isMember(target) && dataset.isBlank()) {
+            return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
         }
 
         if (datasetMember != null) {
