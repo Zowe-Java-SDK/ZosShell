@@ -25,7 +25,7 @@ public class HelpService {
             Map.entry("count members", Map.entry("count members", "number of members in PWD")),
             Map.entry("count datasets", Map.entry("count datasets", "number of datasets in PWD")),
             Map.entry("copy", Map.entry("cp | copy <arg> arg>", "arg can be \".\", member, dataset or dataset(member)")),
-            Map.entry("download", Map.entry("d | download <arg1> <arg2>", "arg1=member, dataset(member) or sequential dataset; download to \\downloadpath\\$HOSTNAME\\pwd or \\downloadpath\\$HOSTNAME\\SEQUENTIAL_DATASET; arg2=optional or -b for binary download")),
+            Map.entry("download", Map.entry("d | download <arg1> <arg2>", "arg1=\"*\", member(*), dataset(member) or sequential dataset; download to \\downloadpath\\$HOSTNAME\\pwd or \\downloadpath\\$HOSTNAME\\SEQUENTIAL_DATASET; arg2=optional or -b for binary download")),
             Map.entry("downloadjob", Map.entry("dj | downloadjob <arg1> <arg2>", "arg1=task/job name; download JESMSGLG spool output; arg2=\"all\", download all spool content")),
             Map.entry("echo", Map.entry("echo <arg>", "echo arg value and translate any env value delimited with $")),
             Map.entry("end", Map.entry("end", "exit UI shell")),

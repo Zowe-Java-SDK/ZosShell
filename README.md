@@ -122,7 +122,7 @@ Along with the following custom commands:
     connections                         - connection(s) list from config.json   
     count members                       - number of members in PWD
     count datasets                      - renumber of datasets in PWD
-    d | download <arg1> <arg2>          - arg1=member, dataset(member) or sequential dataset; download to \downloadpath\$HOSTNAME\pwd or \downloadpath\$HOSTNAME\SEQUENTIAL_DATASET; arg2=optional or -b for binary download   
+    d | download <arg1> <arg2>          - arg1="*", member(*), dataset(member) or sequential dataset; download to \downloadpath\$HOSTNAME\pwd or \downloadpath\$HOSTNAME\SEQUENTIAL_DATASET; arg2=optional or -b for binary download   
     dj | downloadjob <arg1> <arg2>      - arg1=task/job name; download JESMSGLG spool output; arg2="all", download all spool content
     end                                 - exit UI shell
     exit                                - exit UI shell
@@ -135,7 +135,7 @@ Along with the following custom commands:
     save <arg>                          - arg=file name from files command to the current PWD
     search <arg>                        - search previous command contents  
     stop <arg>                          - arg=task/job name; stop
-    submit <arg>                        - arg=task/job name; submit   
+    submit <arg>                        - arg=member or dataset(member); submit  
     tail <arg1> <arg2> <arg3>           - arg1=task/job name; display content from bottom; arg2 & arg3 = optional; arg2=limit num (25 default) and arg3=all spool content
     t | timeout <arg>                   - echo current timeout value or change value with arg
     tso <arg>                           - execute OMVS/USS command via SSH connection, arg=command within double quotes
