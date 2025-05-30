@@ -3,8 +3,12 @@ package zos.shell.service.dsn.download;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.controller.EnvVariableController;
 import zos.shell.response.ResponseStatus;
+import zos.shell.service.env.EnvVariableService;
 import zos.shell.service.path.PathService;
+import zos.shell.singleton.ConnSingleton;
+import zos.shell.singleton.configuration.ConfigSingleton;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 import zowe.client.sdk.zosfiles.dsn.response.Member;
@@ -18,15 +22,13 @@ public class DownloadMemberListService {
     private static final Logger LOG = LoggerFactory.getLogger(DownloadMemberListService.class);
 
     private final ZosConnection connection;
-    private final PathService pathService;
     private final boolean isBinary;
     private final long timeout;
 
-    public DownloadMemberListService(final ZosConnection connection, final PathService pathService, final boolean isBinary,
+    public DownloadMemberListService(final ZosConnection connection, final boolean isBinary,
                                      final long timeout) {
         LOG.debug("*** DownloadMemberListService ***");
         this.connection = connection;
-        this.pathService = pathService;
         this.isBinary = isBinary;
         this.timeout = timeout;
     }
@@ -40,7 +42,9 @@ public class DownloadMemberListService {
         for (var member : members) {
             if (member.getMember().isPresent()) {
                 String name = member.getMember().get();
-                futures.add(pool.submit(new FutureMemberDownload(new DsnGet(connection), pathService, dataset, name, isBinary)));
+                futures.add(pool.submit(new FutureMemberDownload(new DsnGet(connection),
+                        new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
+                                new EnvVariableController(new EnvVariableService())), dataset, name, isBinary)));
             }
         }
 

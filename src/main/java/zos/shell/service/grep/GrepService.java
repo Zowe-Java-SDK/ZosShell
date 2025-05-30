@@ -3,10 +3,14 @@ package zos.shell.service.grep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.controller.EnvVariableController;
 import zos.shell.service.dsn.concat.ConcatService;
 import zos.shell.service.dsn.download.Download;
+import zos.shell.service.env.EnvVariableService;
 import zos.shell.service.memberlst.MemberListingService;
 import zos.shell.service.path.PathService;
+import zos.shell.singleton.ConnSingleton;
+import zos.shell.singleton.configuration.ConfigSingleton;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -102,7 +106,9 @@ public class GrepService {
     private List<String> futureResults(final String dataset, final List<String> result, final ExecutorService pool,
                                        final ArrayList<Future<List<String>>> futures, final List<Member> members) {
         for (var member : members) {
-            var concatService = new ConcatService(new Download(new DsnGet(connection), pathService, false), timeout);
+            var concatService = new ConcatService(new Download(new DsnGet(connection),
+                    new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
+                            new EnvVariableController(new EnvVariableService())), false), timeout);
             if (member.getMember().isPresent()) {
                 var name = member.getMember().get();
                 futures.add(pool.submit(new FutureGrep(concatService, dataset, name, pattern, true)));

@@ -290,9 +290,9 @@ public class ControllerFactoryContainer {
             var downloadPdsMemberService = new DownloadPdsMemberService(connection, this.pathService, isBinary, timeout);
             var downloadSeqDatasetService = new DownloadSeqDatasetService(connection, this.pathService, isBinary, timeout);
             var downloadAllMembersService = new DownloadAllMembersService(connection,
-                    new DownloadMemberListService(connection, this.pathService, isBinary, timeout), timeout);
+                    new DownloadMemberListService(connection, isBinary, timeout), timeout);
             var downloadMembersService = new DownloadMembersService(connection,
-                    new DownloadMemberListService(connection, this.pathService, isBinary, timeout), timeout);
+                    new DownloadMemberListService(connection, isBinary, timeout), timeout);
             this.downloadDsnController = new DownloadDsnController(downloadMemberService, downloadPdsMemberService,
                     downloadSeqDatasetService, downloadAllMembersService, downloadMembersService);
             this.downloadDsnDependencyContainer = new DependencyCacheContainer(connection, isBinary, timeout);
