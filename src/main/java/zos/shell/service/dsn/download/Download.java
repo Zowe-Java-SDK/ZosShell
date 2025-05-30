@@ -61,7 +61,8 @@ public class Download {
             }
             message += member + " downloaded to " + pathService.getPathWithFile();
         } catch (ZosmfRequestException e) {
-            return ResponseUtil.getByteResponseStatus(e);
+            ResponseStatus responseStatus = ResponseUtil.getByteResponseStatus(e);
+            return new ResponseStatus(message + responseStatus.getMessage(), false);
         } catch (IOException e) {
             return new ResponseStatus(message + e.getMessage(), false);
         }
@@ -82,7 +83,8 @@ public class Download {
             FileUtil.writeTextFile(textContent, pathService.getPath(), pathService.getPathWithFile());
 
         } catch (ZosmfRequestException e) {
-            return ResponseUtil.getByteResponseStatus(e);
+            ResponseStatus responseStatus = ResponseUtil.getByteResponseStatus(e);
+            return new ResponseStatus(message + responseStatus.getMessage(), false);
         } catch (IOException e) {
             return new ResponseStatus(message + e.getMessage(), false);
         }
