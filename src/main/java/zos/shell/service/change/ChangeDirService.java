@@ -5,13 +5,10 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.DsnUtil;
-import zowe.client.sdk.zosfiles.dsn.input.ListParams;
 
 public class ChangeDirService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChangeDirService.class);
-
-    private final ListParams params = new ListParams.Builder().build();
 
     public ChangeDirService() {
         LOG.debug("*** ChangeDirService ***");
