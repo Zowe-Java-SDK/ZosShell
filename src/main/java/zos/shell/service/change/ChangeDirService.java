@@ -37,6 +37,13 @@ public class ChangeDirService {
             }
             dataset = dataset.substring(0, str.length() - 1);
             return new ResponseStatus("success", true, dataset);
+        } else if (target.startsWith(".") && !currDataSet.isBlank()) {
+            var newDataset = currDataSet + target;
+            if (DsnUtil.isDataset(newDataset)) {
+                return new ResponseStatus("success", true, newDataset);
+            } else {
+                return new ResponseStatus(Constants.INVALID_DATASET, false, currDataSet);
+            }
         } else {
             return new ResponseStatus(Constants.INVALID_DATASET, false, currDataSet);
         }
