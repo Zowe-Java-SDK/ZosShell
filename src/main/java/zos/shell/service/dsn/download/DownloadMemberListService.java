@@ -39,27 +39,31 @@ public class DownloadMemberListService {
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
         var futures = new ArrayList<Future<ResponseStatus>>();
 
-        for (var member : members) {
-            if (member.getMember().isPresent()) {
-                String name = member.getMember().get();
-                futures.add(pool.submit(new FutureMemberDownload(new DsnGet(connection),
-                        new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
-                                new EnvVariableController(new EnvVariableService())), dataset, name, isBinary)));
+        try {
+            for (var member : members) {
+                if (member.getMember().isPresent()) {
+                    String name = member.getMember().get();
+                    futures.add(pool.submit(new FutureMemberDownload(new DsnGet(connection),
+                            new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
+                                    new EnvVariableController(new EnvVariableService())), dataset, name, isBinary)));
+                }
             }
-        }
 
-        for (var future : futures) {
-            try {
-                results.add(future.get(timeout, TimeUnit.SECONDS));
-            } catch (InterruptedException | ExecutionException e) {
-                LOG.debug("exception error: {}", String.valueOf(e));
-                future.cancel(true);
-                results.add(new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
-                        e.getMessage() : Constants.EXECUTE_ERROR_MSG, false));
-            } catch (TimeoutException e) {
-                future.cancel(true);
-                results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
+            for (var future : futures) {
+                try {
+                    results.add(future.get(timeout, TimeUnit.SECONDS));
+                } catch (InterruptedException | ExecutionException e) {
+                    LOG.debug("exception error: {}", String.valueOf(e));
+                    future.cancel(true);
+                    results.add(new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
+                            e.getMessage() : Constants.EXECUTE_ERROR_MSG, false));
+                } catch (TimeoutException e) {
+                    future.cancel(true);
+                    results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
+                }
             }
+        } finally {
+            pool.shutdown();
         }
 
         return results;
