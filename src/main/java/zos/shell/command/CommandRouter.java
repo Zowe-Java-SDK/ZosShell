@@ -736,7 +736,7 @@ public class CommandRouter {
 
     private void addVisited(final ZosConnection connection, final String dataset) {
         LOG.debug("*** addVisited ***");
-        // if valid hostname and dataset not in datasets multi-map add it
+        // if valid hostname and dataset not in datasets multimap add it
         if (connection == null || connection.getHost() == null && dataset.isBlank()) {
             return;
         }
