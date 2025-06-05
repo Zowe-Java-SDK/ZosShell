@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.ZosShell;
 import zos.shell.constants.Constants;
 import zos.shell.service.autocomplete.SearchCommandService;
+import zos.shell.service.history.HistoryService;
 import zos.shell.utility.PromptUtil;
 
 import javax.swing.*;
@@ -116,14 +117,14 @@ public class TerminalSingleton {
             if (disableKeys) {
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
-            HistorySingleton.getInstance().getHistory().listUpCommands();
+            HistorySingleton.getInstance().getHistory().navigateHistory(HistoryService.NavigationDirection.UP);
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         mainTerminal.registerHandler("DOWN", t -> {
             if (disableKeys) {
                 return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
             }
-            HistorySingleton.getInstance().getHistory().listDownCommands();
+            HistorySingleton.getInstance().getHistory().navigateHistory(HistoryService.NavigationDirection.DOWN);
             return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
         });
         if (SystemUtils.IS_OS_WINDOWS) {

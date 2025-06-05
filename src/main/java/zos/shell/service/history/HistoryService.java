@@ -26,26 +26,22 @@ public class HistoryService {
         this.terminal = terminal;
     }
 
-    public void listUpCommands() {
-        LOG.debug("*** listUpCommands ***");
-        if (circularLinkedList.getSize() > 1) {
-            TerminalSingleton.getInstance().getMainTerminal()
-                    .replaceInput(circularLinkedList.back().trim(), false);
-        } else if (circularLinkedList.getSize() == 1) {
-            TerminalSingleton.getInstance().getMainTerminal()
-                    .replaceInput(circularLinkedList.head.getData().trim(), false);
-        }
+    public enum NavigationDirection {
+        UP, DOWN
     }
 
-    public void listDownCommands() {
-        LOG.debug("*** listDownCommands ***");
-        if (circularLinkedList.getSize() > 1) {
-            TerminalSingleton.getInstance().getMainTerminal()
-                    .replaceInput(circularLinkedList.forward().trim(), false);
-        } else if (circularLinkedList.getSize() == 1) {
-            TerminalSingleton.getInstance().getMainTerminal()
-                    .replaceInput(circularLinkedList.head.getData().trim(), false);
+    public void navigateHistory(NavigationDirection direction) {
+        LOG.debug("*** navigate{} ***", direction);
+        if (circularLinkedList.getSize() <= 0) {
+            return;
         }
+        
+        var command = circularLinkedList.getSize() > 1
+            ? (direction == NavigationDirection.UP ? circularLinkedList.back() : circularLinkedList.forward())
+            : circularLinkedList.head.getData();
+            
+        TerminalSingleton.getInstance().getMainTerminal()
+            .replaceInput(command.trim(), false);
     }
 
     public void addHistory(final String[] params) {
