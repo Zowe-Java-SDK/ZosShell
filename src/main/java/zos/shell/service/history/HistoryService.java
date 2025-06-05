@@ -40,8 +40,7 @@ public class HistoryService {
             ? (direction == NavigationDirection.UP ? circularLinkedList.back() : circularLinkedList.forward())
             : circularLinkedList.head.getData();
             
-        TerminalSingleton.getInstance().getMainTerminal()
-            .replaceInput(command.trim(), false);
+        TerminalSingleton.getInstance().getMainTerminal().replaceInput(command.trim(), false);
     }
 
     public void addHistory(final String[] params) {
