@@ -36,7 +36,7 @@ public class HistoryService {
             return;
         }
         
-        String command = circularLinkedList.getSize() > 1
+        var command = circularLinkedList.getSize() > 1
             ? (direction == NavigationDirection.UP ? circularLinkedList.back() : circularLinkedList.forward())
             : circularLinkedList.head.getData();
             
