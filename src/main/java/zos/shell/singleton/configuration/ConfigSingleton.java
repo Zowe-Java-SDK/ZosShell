@@ -137,6 +137,14 @@ public class ConfigSingleton {
         result = windowCmd.setFontSize(window != null && window.getFontsize() != null ?
                 configSettings.getWindow().getFontsize() : String.valueOf(Constants.DEFAULT_FONT_SIZE));
         str.append(result != null ? result : "");
+        if (window != null && window.getPaneHeight() != null) {
+            result = windowCmd.setPaneHeight(window.getPaneHeight());
+            str.append(result != null ? "\n" + result : "");
+        }
+        if (window != null && window.getPaneWidth() != null) {
+            result = windowCmd.setPaneWidth(window.getPaneWidth());
+            str.append(result != null ? "\n" + result : "");
+        }
         terminal.println(str.toString());
     }
 

@@ -6,6 +6,8 @@ public class Window {
     private String fontBold;
     private String textColor;
     private String backGroundColor;
+    private String paneHeight;
+    private String paneWidth;
 
     public String getFontsize() {
         return fontsize;
@@ -39,6 +41,22 @@ public class Window {
         this.backGroundColor = backGroundColor;
     }
 
+    public String getPaneHeight() {
+        return paneHeight;
+    }
+
+    public void setPaneHeight(String paneHeight) {
+        this.paneHeight = paneHeight;
+    }
+
+    public String getPaneWidth() {
+        return paneWidth;
+    }
+
+    public void setPaneWidth(String paneWidth) {
+        this.paneWidth = paneWidth;
+    }
+
     @Override
     public String toString() {
         return "Window{" +
@@ -46,6 +64,8 @@ public class Window {
                 ", fontBold='" + fontBold + '\'' +
                 ", textColor='" + textColor + '\'' +
                 ", backGroundColor='" + backGroundColor + '\'' +
+                ", paneHeight='" + paneHeight + '\'' +
+                ", paneWidth='" + paneWidth + '\'' +
                 '}';
     }
 

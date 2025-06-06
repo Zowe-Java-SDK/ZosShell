@@ -35,11 +35,11 @@ public class HistoryService {
         if (circularLinkedList.getSize() <= 0) {
             return;
         }
-        
+
         var command = circularLinkedList.getSize() > 1
-            ? (direction == NavigationDirection.UP ? circularLinkedList.back() : circularLinkedList.forward())
-            : circularLinkedList.head.getData();
-            
+                ? (direction == NavigationDirection.UP ? circularLinkedList.back() : circularLinkedList.forward())
+                : circularLinkedList.head.getData();
+
         TerminalSingleton.getInstance().getMainTerminal().replaceInput(command.trim(), false);
     }
 

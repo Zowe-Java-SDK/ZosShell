@@ -56,5 +56,28 @@ public class ChangeWinService {
         return null;
     }
 
-}
+    public String setPaneHeight(final String height) {
+        LOG.debug("*** setPaneHeight ***");
+        if (height != null) {
+            try {
+                terminal.getProperties().setPaneHeight(Integer.parseInt(height));
+            } catch (NumberFormatException ignored) {
+            }
+            return "pane height " + height + " set";
+        }
+        return null;
+    }
 
+    public String setPaneWidth(final String width) {
+        LOG.debug("*** setPaneWidth ***");
+        if (width != null) {
+            try {
+                terminal.getProperties().setPaneWidth(Integer.parseInt(width));
+            } catch (NumberFormatException ignored) {
+            }
+            return "pane width " + width + " set";
+        }
+        return null;
+    }
+
+}
