@@ -45,7 +45,7 @@ public class CommandRouter {
         var currSshConnection = ConnSingleton.getInstance().getCurrSshConnection();
         ResponseStatus responseStatus;
 
-        var command = params[0];
+        var command = params[0].trim();
         HistorySingleton.getInstance().getHistory().addHistory(params);
         switch (command.toLowerCase()) {
             case "bj":
