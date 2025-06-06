@@ -51,67 +51,17 @@ import zowe.client.sdk.zosjobs.methods.JobGet;
 import zowe.client.sdk.zosjobs.methods.JobSubmit;
 import zowe.client.sdk.zostso.method.IssueTso;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ControllerFactoryContainer {
 
     private static final Logger LOG = LoggerFactory.getLogger(ControllerFactoryContainer.class);
-
-    private BrowseJobController browseJobController;
-    private DependencyCacheContainer browseJobDependencyContainer;
-    private CancelController cancelController;
-    private DependencyCacheContainer cancelDependencyContainer;
-    private ChangeConnController changeConnController;
-    private ChangeDirController changeDirController;
-    private DependencyCacheContainer changeDirDependencyContainer;
-    private ChangeWinController changeWinController;
-    private ConcatController concatController;
-    private DependencyCacheContainer concatDependencyContainer;
-    private ConsoleController consoleController;
-    private DependencyCacheContainer consoleDependencyContainer;
-    private CopyController copyController;
-    private DependencyCacheContainer copyDependencyContainer;
-    private CountController countController;
-    private DependencyCacheContainer countDependencyContainer;
-    private DeleteController deleteController;
-    private DependencyCacheContainer deleteDependencyContainer;
-    private DownloadDsnController downloadDsnController;
-    private DependencyCacheContainer downloadDsnDependencyContainer;
-    private DownloadJobController downloadJobController;
-    private DependencyCacheContainer downloadJobDependencyContainer;
-    private EchoController echoController;
-    private EditController editController;
-    private DependencyCacheContainer editDependencyContainer;
-    private EnvVariableController envVariableController;
-    private GrepController grepController;
-    private DependencyCacheContainer grepDependencyContainer;
-    private ListingController listingController;
-    private DependencyCacheContainer listingDependencyContainer;
-    private LocalFilesController localFilesController;
-    private MakeDirController makeDirController;
-    private DependencyCacheContainer makeDirDependencyContainer;
-    private ProcessLstController processLstController;
-    private DependencyCacheContainer processLstDependencyContainer;
-    private PurgeController purgeController;
-    private DependencyCacheContainer purgeDependencyContainer;
-    private RenameController renameController;
-    private DependencyCacheContainer renameDependencyContainer;
-    private SaveController saveController;
-    private DependencyCacheContainer saveDependencyContainer;
-    private SearchCacheController searchCacheController;
-    private StopController stopController;
-    private DependencyCacheContainer stopDependencyContainer;
-    private SubmitController submitController;
-    private DependencyCacheContainer submitDependencyContainer;
-    private TailController tailController;
-    private DependencyCacheContainer tailDependencyContainer;
-    private TouchController touchController;
-    private DependencyCacheContainer touchDependencyContainer;
-    private TsoController tsoController;
-    private DependencyCacheContainer tsoDependencyContainer;
-    private UnameController unameController;
-    private DependencyCacheContainer unameDependencyContainer;
-    private UssController ussController;
-    private DependencyCacheContainer ussDependencyContainer;
-    private PathService pathService;
+    private final EnvVariableController envVariableController = new EnvVariableController(new EnvVariableService());
+    private final PathService pathService =
+            new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(), this.envVariableController);
+    private final Map<ContainerType.Name, Object> controllers = new HashMap<>();
+    private final Map<ContainerType.Name, DependencyCacheContainer> dependencies = new HashMap<>();
 
     public ControllerFactoryContainer() {
         LOG.debug("*** ControllerFactoryContainer ***");
@@ -120,172 +70,158 @@ public class ControllerFactoryContainer {
     public BrowseJobController getBrowseJobController(final ZosConnection connection, final boolean isAll,
                                                       final long timeout) {
         LOG.debug("*** getBrowseJobController ***");
-        if (this.browseJobController == null ||
-                (this.browseJobDependencyContainer != null && (
-                        !(this.browseJobDependencyContainer.isZosConnectionSame(connection) &&
-                                this.browseJobDependencyContainer.isTimeoutSame(timeout) &&
-                                this.browseJobDependencyContainer.isToggleSame(isAll))))) {
+        var controller = (BrowseJobController) controllers.get(ContainerType.Name.BROWSE_JOB);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.BROWSE_JOB);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, isAll, timeout)) {
             var jobGet = new JobGet(connection);
-            if (this.envVariableController == null) {
-                var envVariableService = new EnvVariableService();
-                this.envVariableController = new EnvVariableController(envVariableService);
-            }
-            var browseJobService = new BrowseLogService(jobGet, isAll, timeout);
-            this.browseJobController = new BrowseJobController(browseJobService, this.envVariableController);
-            this.browseJobDependencyContainer = new DependencyCacheContainer(connection, isAll, timeout);
+            var service = new BrowseLogService(jobGet, isAll, timeout);
+            controller = new BrowseJobController(service, this.envVariableController);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, isAll, timeout);
+            this.controllers.put(ContainerType.Name.BROWSE_JOB, controller);
+            this.dependencies.put(ContainerType.Name.BROWSE_JOB, dependencyCacheContainer);
         }
-        return this.browseJobController;
+        return controller;
     }
 
     public CancelController getCancelController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getCancelController ***");
-        if (this.cancelController == null ||
-                (this.cancelDependencyContainer != null && (
-                        !(this.cancelDependencyContainer.isZosConnectionSame(connection) &&
-                                this.cancelDependencyContainer.isTimeoutSame(timeout))))) {
-
+        var controller = (CancelController) controllers.get(ContainerType.Name.CANCEL);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.CANCEL);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, false, timeout)) {
             var issueConsole = new IssueConsole(connection);
-            if (this.envVariableController == null) {
-                var envVariableService = new EnvVariableService();
-                this.envVariableController = new EnvVariableController(envVariableService);
-            }
-            var cancelService = new TerminateService(issueConsole, timeout);
-            this.cancelController = new CancelController(cancelService,
-                    ConfigSingleton.getInstance(), this.envVariableController);
-            this.cancelDependencyContainer = new DependencyCacheContainer(connection, timeout);
+            var service = new TerminateService(issueConsole, timeout);
+            controller = new CancelController(service, ConfigSingleton.getInstance(), this.envVariableController);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.CANCEL, controller);
+            this.dependencies.put(ContainerType.Name.CANCEL, dependencyCacheContainer);
         }
-        return this.cancelController;
+        return controller;
     }
 
     public ChangeConnController getChangeConnController(final TextTerminal<?> terminal) {
         LOG.debug("*** getChangeConnController ***");
-        if (this.changeConnController == null) {
-            var changeConnService = new ChangeConnService(terminal);
-            this.changeConnController = new ChangeConnController(changeConnService);
-            return this.changeConnController;
+        var controller = (ChangeConnController) controllers.get(ContainerType.Name.CHANGE_CONNECTION);
+        if (controller == null) {
+            var service = new ChangeConnService(terminal);
+            controller = new ChangeConnController(service);
+            this.controllers.put(ContainerType.Name.CHANGE_CONNECTION, controller);
         }
-        return this.changeConnController;
+        return controller;
     }
 
     public ChangeDirController getChangeDirController(final ZosConnection connection) {
         LOG.debug("*** getChangeDirController ***");
-        if (this.changeDirController == null ||
-                (this.changeDirDependencyContainer != null && (
-                        !(this.changeDirDependencyContainer.isZosConnectionSame(connection))))) {
-            var changeDirService = new ChangeDirService();
-            this.changeDirController = new ChangeDirController(changeDirService);
-            this.changeDirDependencyContainer = new DependencyCacheContainer(connection);
+        var controller = (ChangeDirController) controllers.get(ContainerType.Name.CHANGE_DIRECTORY);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.CHANGE_DIRECTORY);
+        if (controller == null || dependencyCacheContainer != null &&
+                !dependencyCacheContainer.isZosConnectionSame(connection)) {
+            var service = new ChangeDirService();
+            controller = new ChangeDirController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection);
+            this.controllers.put(ContainerType.Name.CHANGE_DIRECTORY, controller);
+            this.dependencies.put(ContainerType.Name.CHANGE_DIRECTORY, dependencyCacheContainer);
         }
-        return this.changeDirController;
+        return controller;
     }
 
     public ChangeWinController getChangeWinController(final TextTerminal<?> terminal) {
         LOG.debug("*** getChangeWinController ***");
-        if (this.changeWinController == null) {
-            var changeWinService = new ChangeWinService(terminal);
-            this.changeWinController = new ChangeWinController(changeWinService);
-            return this.changeWinController;
+        var controller = (ChangeWinController) controllers.get(ContainerType.Name.CHANGE_WINDOW);
+        if (controller == null) {
+            var service = new ChangeWinService(terminal);
+            controller = new ChangeWinController(service);
+            this.controllers.put(ContainerType.Name.CHANGE_DIRECTORY, controller);
         }
-        return this.changeWinController;
+        return controller;
     }
 
     public ConcatController getConcatController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getConcatController ***");
-        if (this.concatController == null ||
-                (this.concatDependencyContainer != null && (
-                        !(this.concatDependencyContainer.isZosConnectionSame(connection) &&
-                                this.concatDependencyContainer.isTimeoutSame(timeout))))) {
+        var controller = (ConcatController) controllers.get(ContainerType.Name.CONCAT);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.CONCAT);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
             var dsnGet = new DsnGet(connection);
-            if (this.envVariableController == null) {
-                var envVariableService = new EnvVariableService();
-                this.envVariableController = new EnvVariableController(envVariableService);
-            }
-            if (this.pathService == null) {
-                this.pathService = new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
-                        this.envVariableController);
-            }
             var download = new Download(dsnGet, this.pathService, false);
-            var concatService = new ConcatService(download, timeout);
-            this.concatController = new ConcatController(concatService);
-            this.concatDependencyContainer = new DependencyCacheContainer(connection, timeout);
+            var service = new ConcatService(download, timeout);
+            controller = new ConcatController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.CONCAT, controller);
+            this.dependencies.put(ContainerType.Name.CONCAT, dependencyCacheContainer);
         }
-        return this.concatController;
+        return controller;
     }
 
     public ConsoleController getConsoleController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getConsoleController ***");
-        if (this.consoleController == null ||
-                (this.consoleDependencyContainer != null && (
-                        !(this.consoleDependencyContainer.isZosConnectionSame(connection) &&
-                                this.consoleDependencyContainer.isTimeoutSame(timeout))))) {
-            var consoleService = new ConsoleService(connection, timeout);
-            if (this.envVariableController == null) {
-                var envVariableService = new EnvVariableService();
-                this.envVariableController = new EnvVariableController(envVariableService);
-            }
-            this.consoleController = new ConsoleController(consoleService,
-                    ConfigSingleton.getInstance(), this.envVariableController);
-            this.consoleDependencyContainer = new DependencyCacheContainer(connection, timeout);
+        var controller = (ConsoleController) controllers.get(ContainerType.Name.CONSOLE);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.CONSOLE);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
+            var service = new ConsoleService(connection, timeout);
+            controller = new ConsoleController(service, ConfigSingleton.getInstance(), this.envVariableController);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.CONSOLE, controller);
+            this.dependencies.put(ContainerType.Name.CONSOLE, dependencyCacheContainer);
         }
-        return this.consoleController;
+        return controller;
     }
 
     public CopyController getCopyController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getCopyController ***");
-        if (this.copyController == null ||
-                (this.copyDependencyContainer != null && (
-                        !(this.copyDependencyContainer.isZosConnectionSame(connection) &&
-                                this.copyDependencyContainer.isTimeoutSame(timeout))))) {
-            var copyService = new CopyService(connection, timeout);
-            this.copyController = new CopyController(copyService);
-            this.copyDependencyContainer = new DependencyCacheContainer(connection, timeout);
+        var controller = (CopyController) controllers.get(ContainerType.Name.COPY);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.COPY);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
+            var service = new CopyService(connection, timeout);
+            controller = new CopyController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.COPY, controller);
+            this.dependencies.put(ContainerType.Name.COPY, dependencyCacheContainer);
         }
-        return this.copyController;
+        return controller;
     }
 
     public CountController getCountController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getCountController ***");
-        if (this.countController == null ||
-                (this.countDependencyContainer != null && (
-                        !(this.countDependencyContainer.isZosConnectionSame(connection) &&
-                                this.countDependencyContainer.isTimeoutSame(timeout))))) {
+        var controller = (CountController) controllers.get(ContainerType.Name.COUNT);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.COUNT);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
             var dsnList = new DsnList(connection);
-            var countService = new CountService(dsnList, timeout);
-            this.countController = new CountController(countService);
-            this.countDependencyContainer = new DependencyCacheContainer(connection, timeout);
+            var service = new CountService(dsnList, timeout);
+            controller = new CountController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.COUNT, controller);
+            this.dependencies.put(ContainerType.Name.COUNT, dependencyCacheContainer);
         }
-        return this.countController;
+        return controller;
     }
 
     public DeleteController getDeleteController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getDeleteController ***");
-        if (this.deleteController == null ||
-                (this.deleteDependencyContainer != null && (
-                        !(this.deleteDependencyContainer.isZosConnectionSame(connection) &&
-                                this.deleteDependencyContainer.isTimeoutSame(timeout))))) {
-            var deleteService = new DeleteService(connection, timeout);
-            this.deleteController = new DeleteController(deleteService);
-            this.deleteDependencyContainer = new DependencyCacheContainer(connection, timeout);
+        var controller = (DeleteController) controllers.get(ContainerType.Name.DELETE);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.DELETE);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
+            var service = new DeleteService(connection, timeout);
+            controller = new DeleteController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.DELETE, controller);
+            this.dependencies.put(ContainerType.Name.DELETE, dependencyCacheContainer);
         }
-        return this.deleteController;
+        return controller;
     }
 
     public DownloadDsnController getDownloadDsnController(final ZosConnection connection, final boolean isBinary,
                                                           final long timeout) {
         LOG.debug("*** getDownloadDsnController ***");
-        if (this.downloadDsnController == null ||
-                (this.downloadDsnDependencyContainer != null && (
-                        !(this.downloadDsnDependencyContainer.isZosConnectionSame(connection) &&
-                                this.downloadDsnDependencyContainer.isTimeoutSame(timeout) &&
-                                this.downloadDsnDependencyContainer.isToggleSame(isBinary))))) {
-            if (this.envVariableController == null) {
-                var envVariableService = new EnvVariableService();
-                this.envVariableController = new EnvVariableController(envVariableService);
-            }
-            if (this.pathService == null) {
-                this.pathService = new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
-                        this.envVariableController);
-            }
+        var controller = (DownloadDsnController) controllers.get(ContainerType.Name.DELETE);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.DELETE);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, isBinary, timeout)) {
             var downloadMemberService = new DownloadMemberService(connection, this.pathService, isBinary, timeout);
             var downloadPdsMemberService = new DownloadPdsMemberService(connection, this.pathService, isBinary, timeout);
             var downloadSeqDatasetService = new DownloadSeqDatasetService(connection, this.pathService, isBinary, timeout);
@@ -293,336 +229,323 @@ public class ControllerFactoryContainer {
                     new DownloadMemberListService(connection, isBinary, timeout), timeout);
             var downloadMembersService = new DownloadMembersService(connection,
                     new DownloadMemberListService(connection, isBinary, timeout), timeout);
-            this.downloadDsnController = new DownloadDsnController(downloadMemberService, downloadPdsMemberService,
+            controller = new DownloadDsnController(downloadMemberService, downloadPdsMemberService,
                     downloadSeqDatasetService, downloadAllMembersService, downloadMembersService);
-            this.downloadDsnDependencyContainer = new DependencyCacheContainer(connection, isBinary, timeout);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, isBinary, timeout);
+            this.controllers.put(ContainerType.Name.DELETE, controller);
+            this.dependencies.put(ContainerType.Name.DELETE, dependencyCacheContainer);
         }
-        return this.downloadDsnController;
+        return controller;
     }
 
     public DownloadJobController getDownloadJobController(final ZosConnection connection, final boolean isAll,
                                                           final long timeout) {
         LOG.debug("*** getDownloadJobController ***");
-        if (this.downloadJobController == null ||
-                (this.downloadJobDependencyContainer != null && (
-                        !(this.downloadJobDependencyContainer.isZosConnectionSame(connection) &&
-                                this.downloadJobDependencyContainer.isTimeoutSame(timeout) &&
-                                this.downloadJobDependencyContainer.isToggleSame(isAll))))) {
+        var controller = (DownloadJobController) controllers.get(ContainerType.Name.DOWNLOAD_JOB);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.DOWNLOAD_JOB);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, isAll, timeout)) {
             var jobGet = new JobGet(connection);
-            if (this.envVariableController == null) {
-                var envVariableService = new EnvVariableService();
-                this.envVariableController = new EnvVariableController(envVariableService);
-            }
-            if (this.pathService == null) {
-                this.pathService = new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
-                        this.envVariableController);
-            }
-            var downloadJobService = new DownloadJobService(jobGet, this.pathService, isAll, timeout);
-            this.downloadJobController = new DownloadJobController(downloadJobService);
-            this.downloadJobDependencyContainer = new DependencyCacheContainer(connection, isAll, timeout);
+            var service = new DownloadJobService(jobGet, this.pathService, isAll, timeout);
+            controller = new DownloadJobController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, isAll, timeout);
+            this.controllers.put(ContainerType.Name.DOWNLOAD_JOB, controller);
+            this.dependencies.put(ContainerType.Name.DOWNLOAD_JOB, dependencyCacheContainer);
         }
-        return this.downloadJobController;
+        return controller;
     }
 
     public EchoController getEchoController() {
         LOG.debug("*** getEchoController ***");
-        if (this.echoController == null) {
-            if (this.envVariableController == null) {
-                var envVariableService = new EnvVariableService();
-                this.envVariableController = new EnvVariableController(envVariableService);
-            }
-            var echoService = new EchoService(this.envVariableController);
-            this.echoController = new EchoController(echoService);
+        var controller = (EchoController) controllers.get(ContainerType.Name.ECHO);
+        if (controller == null) {
+            var service = new EchoService(this.envVariableController);
+            controller = new EchoController(service);
+            this.controllers.put(ContainerType.Name.ECHO, controller);
         }
-        return this.echoController;
+        return controller;
     }
 
     public EditController getEditController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getEditController ***");
-        if (this.editController == null ||
-                (this.editDependencyContainer != null && (
-                        !(this.editDependencyContainer.isZosConnectionSame(connection) &&
-                                this.editDependencyContainer.isTimeoutSame(timeout))))) {
+        var controller = (EditController) controllers.get(ContainerType.Name.EDIT);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.EDIT);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
             var dsnGet = new DsnGet(connection);
-            if (this.envVariableController == null) {
-                var envVariableService = new EnvVariableService();
-                this.envVariableController = new EnvVariableController(envVariableService);
-            }
-            if (this.pathService == null) {
-                this.pathService = new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
-                        this.envVariableController);
-            }
             var download = new Download(dsnGet, this.pathService, false);
             var checkSumService = new CheckSumService();
             var editService = new EditService(download, this.pathService, checkSumService, timeout);
-            this.editController = new EditController(editService);
-            this.editDependencyContainer = new DependencyCacheContainer(connection, timeout);
+            controller = new EditController(editService);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.EDIT, controller);
+            this.dependencies.put(ContainerType.Name.EDIT, dependencyCacheContainer);
         }
-        return this.editController;
+        return controller;
     }
 
     public EnvVariableController getEnvVariableController() {
         LOG.debug("*** getEnvVariableController ***");
-        if (this.envVariableController == null) {
-            var envVariableService = new EnvVariableService();
-            this.envVariableController = new EnvVariableController(envVariableService);
-            return this.envVariableController;
-        }
         return this.envVariableController;
     }
 
     public GrepController getGrepController(final ZosConnection connection, final String target, final long timeout) {
         LOG.debug("*** getGrepController ***");
-        if (this.grepController == null ||
-                (this.grepDependencyContainer != null && (
-                        !(this.grepDependencyContainer.isZosConnectionSame(connection) &&
-                                this.grepDependencyContainer.isTimeoutSame(timeout) &&
-                                this.grepDependencyContainer.isDataSame(target))))) {
-            if (this.envVariableController == null) {
-                var envVariableService = new EnvVariableService();
-                this.envVariableController = new EnvVariableController(envVariableService);
-            }
-            if (this.pathService == null) {
-                this.pathService = new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
-                        this.envVariableController);
-            }
-            var grepService = new GrepService(connection, this.pathService, target, timeout);
-            this.grepController = new GrepController(grepService);
-            this.grepDependencyContainer = new DependencyCacheContainer(connection, target, timeout);
+        var controller = (GrepController) controllers.get(ContainerType.Name.GREP);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.GREP);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, target, timeout)) {
+            var service = new GrepService(connection, this.pathService, target, timeout);
+            controller = new GrepController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, target, timeout);
+            this.controllers.put(ContainerType.Name.GREP, controller);
+            this.dependencies.put(ContainerType.Name.GREP, dependencyCacheContainer);
         }
-        return this.grepController;
+        return controller;
     }
 
     public ListingController getListingController(final ZosConnection connection, final TextTerminal<?> terminal,
                                                   final long timeout) {
         LOG.debug("*** getListingController ***");
-        if (this.listingController == null ||
-                (this.listingDependencyContainer != null && (
-                        !(this.listingDependencyContainer.isZosConnectionSame(connection) &&
-                                this.listingDependencyContainer.isTimeoutSame(timeout))))) {
+        var controller = (ListingController) controllers.get(ContainerType.Name.LIST);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.LIST);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
             var dsnList = new DsnList(connection);
-            var listingService = new ListingService(terminal, dsnList, timeout);
-            this.listingController = new ListingController(listingService);
-            this.listingDependencyContainer = new DependencyCacheContainer(connection, timeout);
+            var service = new ListingService(terminal, dsnList, timeout);
+            controller = new ListingController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.LIST, controller);
+            this.dependencies.put(ContainerType.Name.LIST, dependencyCacheContainer);
         }
-        return this.listingController;
+        return controller;
     }
 
     public LocalFilesController getLocalFilesController() {
         LOG.debug("*** getLocalFilesController ***");
-        if (this.localFilesController == null) {
-            var localFilesService = new LocalFileService();
-            this.localFilesController = new LocalFilesController(localFilesService);
-            return this.localFilesController;
+        var controller = (LocalFilesController) controllers.get(ContainerType.Name.LOCAL_FILE);
+        if (controller == null) {
+            var service = new LocalFileService();
+            controller = new LocalFilesController(service);
+            this.controllers.put(ContainerType.Name.LOCAL_FILE, controller);
         }
-        return this.localFilesController;
+        return controller;
     }
 
     public MakeDirController getMakeDirController(final ZosConnection connection, final TextTerminal<?> terminal,
                                                   final long timeout) {
         LOG.debug("*** getMakeDirController ***");
-        if (this.makeDirController == null ||
-                (this.makeDirDependencyContainer != null && (
-                        !(this.makeDirDependencyContainer.isZosConnectionSame(connection) &&
-                                this.makeDirDependencyContainer.isTimeoutSame(timeout))))) {
+        var controller = (MakeDirController) controllers.get(ContainerType.Name.MAKE_DIR);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.MAKE_DIR);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
             var dsnCreate = new DsnCreate(connection);
-            var makeDirService = new MakeDirService(dsnCreate, timeout);
-            this.makeDirController = new MakeDirController(terminal, makeDirService);
-            this.makeDirDependencyContainer = new DependencyCacheContainer(connection, timeout);
+            var service = new MakeDirService(dsnCreate, timeout);
+            controller = new MakeDirController(terminal, service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.MAKE_DIR, controller);
+            this.dependencies.put(ContainerType.Name.MAKE_DIR, dependencyCacheContainer);
         }
-        return this.makeDirController;
+        return controller;
     }
 
     public ProcessLstController getProcessLstController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getProcessLstController ***");
-        if (this.processLstController == null ||
-                (this.processLstDependencyContainer != null && (
-                        !(this.processLstDependencyContainer.isZosConnectionSame(connection) &&
-                                this.processLstDependencyContainer.isTimeoutSame(timeout))))) {
-            var processLstService = new ProcessLstService(new JobGet(connection), timeout);
-            this.processLstController = new ProcessLstController(processLstService);
-            this.processLstDependencyContainer = new DependencyCacheContainer(connection, timeout);
+        var controller = (ProcessLstController) controllers.get(ContainerType.Name.PROCESS_LIST);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.PROCESS_LIST);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
+            var service = new ProcessLstService(new JobGet(connection), timeout);
+            controller = new ProcessLstController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.PROCESS_LIST, controller);
+            this.dependencies.put(ContainerType.Name.PROCESS_LIST, dependencyCacheContainer);
         }
-        return this.processLstController;
+        return controller;
     }
 
     public PurgeController getPurgeController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getPurgeController ***");
-        if (this.purgeController == null ||
-                (this.purgeDependencyContainer != null && (
-                        !(this.purgeDependencyContainer.isZosConnectionSame(connection) &&
-                                this.purgeDependencyContainer.isTimeoutSame(timeout))))) {
+        var controller = (PurgeController) controllers.get(ContainerType.Name.PURGE);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.PURGE);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
             var jobDelete = new JobDelete(connection);
             var jobGet = new JobGet(connection);
-            var purgeService = new PurgeService(jobDelete, jobGet, timeout);
-            this.purgeController = new PurgeController(purgeService);
-            this.purgeDependencyContainer = new DependencyCacheContainer(connection, timeout);
+            var service = new PurgeService(jobDelete, jobGet, timeout);
+            controller = new PurgeController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.PURGE, controller);
+            this.dependencies.put(ContainerType.Name.PURGE, dependencyCacheContainer);
         }
-        return this.purgeController;
+        return controller;
     }
 
     public RenameController getRenameController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getRenameController ***");
-        if (this.renameController == null ||
-                (this.renameDependencyContainer != null && (
-                        !(this.renameDependencyContainer.isZosConnectionSame(connection) &&
-                                this.renameDependencyContainer.isTimeoutSame(timeout))))) {
-            var renameService = new RenameService(connection, timeout);
-            this.renameController = new RenameController(renameService);
-            this.renameDependencyContainer = new DependencyCacheContainer(connection, timeout);
+        var controller = (RenameController) controllers.get(ContainerType.Name.RENAME);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.RENAME);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
+            var service = new RenameService(connection, timeout);
+            controller = new RenameController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.RENAME, controller);
+            this.dependencies.put(ContainerType.Name.RENAME, dependencyCacheContainer);
         }
-        return this.renameController;
+        return controller;
     }
 
     public SaveController getSaveController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getSaveController ***");
-        if (this.saveController == null ||
-                (this.saveDependencyContainer != null && (
-                        !(this.saveDependencyContainer.isZosConnectionSame(connection) &&
-                                this.saveDependencyContainer.isTimeoutSame(timeout))))) {
+        var controller = (SaveController) controllers.get(ContainerType.Name.SAVE);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.SAVE);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
             var checkSumService = new CheckSumService();
-            if (this.envVariableController == null) {
-                var envVariableService = new EnvVariableService();
-                this.envVariableController = new EnvVariableController(envVariableService);
-            }
-            if (this.pathService == null) {
-                this.pathService = new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
-                        this.envVariableController);
-            }
-            var saveService = new SaveService(new DsnWrite(connection), this.pathService, checkSumService, timeout);
-            this.saveController = new SaveController(saveService);
-            this.saveDependencyContainer = new DependencyCacheContainer(connection, timeout);
+            var service = new SaveService(new DsnWrite(connection), this.pathService, checkSumService, timeout);
+            controller = new SaveController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.SAVE, controller);
+            this.dependencies.put(ContainerType.Name.SAVE, dependencyCacheContainer);
         }
-        return this.saveController;
+        return controller;
     }
 
     public SearchCacheController getSearchCacheController() {
         LOG.debug("*** getSearchCacheController ***");
-        if (this.searchCacheController == null) {
-            var searchCacheService = new SearchCacheService();
-            this.searchCacheController = new SearchCacheController(searchCacheService);
-            return this.searchCacheController;
+        var controller = (SearchCacheController) controllers.get(ContainerType.Name.SEARCH_CACHE);
+        if (controller == null) {
+            var service = new SearchCacheService();
+            controller = new SearchCacheController(service);
+            this.controllers.put(ContainerType.Name.SEARCH_CACHE, controller);
         }
-        return this.searchCacheController;
+        return controller;
     }
 
     public StopController getStopController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getStopController ***");
-        if (this.stopController == null ||
-                (this.stopDependencyContainer != null && (
-                        !(this.stopDependencyContainer.isZosConnectionSame(connection) &&
-                                this.stopDependencyContainer.isTimeoutSame(timeout))))) {
+        var controller = (StopController) controllers.get(ContainerType.Name.STOP);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.STOP);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
             var issueConsole = new IssueConsole(connection);
-            if (this.envVariableController == null) {
-                var envVariableService = new EnvVariableService();
-                this.envVariableController = new EnvVariableController(envVariableService);
-            }
-            var stopService = new TerminateService(issueConsole, timeout);
-            this.stopController = new StopController(stopService,
+            var service = new TerminateService(issueConsole, timeout);
+            controller = new StopController(service,
                     ConfigSingleton.getInstance(), this.envVariableController);
-            this.stopDependencyContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.STOP, controller);
+            this.dependencies.put(ContainerType.Name.STOP, dependencyCacheContainer);
         }
-        return this.stopController;
+        return controller;
     }
 
     public SubmitController getSubmitController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getSubmitController ***");
-        if (this.submitController == null ||
-                (this.submitDependencyContainer != null && (
-                        !(this.submitDependencyContainer.isZosConnectionSame(connection) &&
-                                this.submitDependencyContainer.isTimeoutSame(timeout))))) {
+        var controller = (SubmitController) controllers.get(ContainerType.Name.SUBMIT);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.SUBMIT);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
             var jobSubmit = new JobSubmit(connection);
-            var submitService = new SubmitService(jobSubmit, timeout);
-            this.submitController = new SubmitController(submitService);
-            this.submitDependencyContainer = new DependencyCacheContainer(connection, timeout);
+            var service = new SubmitService(jobSubmit, timeout);
+            controller = new SubmitController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.SUBMIT, controller);
+            this.dependencies.put(ContainerType.Name.SUBMIT, dependencyCacheContainer);
         }
-        return this.submitController;
+        return controller;
     }
 
     public TailController getTailController(final ZosConnection connection, final TextTerminal<?> terminal,
                                             final long timeout) {
         LOG.debug("*** getTailController ***");
-        if (this.tailController == null ||
-                (this.tailDependencyContainer != null && (
-                        !(this.tailDependencyContainer.isZosConnectionSame(connection) &&
-                                this.tailDependencyContainer.isTimeoutSame(timeout))))) {
+        var controller = (TailController) controllers.get(ContainerType.Name.TAIL);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.TAIL);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
             var jobGet = new JobGet(connection);
-            var tailService = new TailService(terminal, jobGet, timeout);
-            this.tailController = new TailController(tailService);
-            this.tailDependencyContainer = new DependencyCacheContainer(connection, timeout);
+            var service = new TailService(terminal, jobGet, timeout);
+            controller = new TailController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.TAIL, controller);
+            this.dependencies.put(ContainerType.Name.TAIL, dependencyCacheContainer);
         }
-        return this.tailController;
+        return controller;
     }
 
     public TouchController getTouchController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getTouchController ***");
-        if (this.touchController == null ||
-                (this.touchDependencyContainer != null && (
-                        !(this.touchDependencyContainer.isZosConnectionSame(connection) &&
-                                this.touchDependencyContainer.isTimeoutSame(timeout))))) {
+        var controller = (TouchController) controllers.get(ContainerType.Name.TOUCH);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.TOUCH);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
             var dsnWrite = new DsnWrite(connection);
             var dsnList = new DsnList(connection);
-            var touchService = new TouchService(dsnWrite, dsnList, timeout);
-            this.touchController = new TouchController(touchService);
-            this.touchDependencyContainer = new DependencyCacheContainer(connection, timeout);
+            var service = new TouchService(dsnWrite, dsnList, timeout);
+            controller = new TouchController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.TOUCH, controller);
+            this.dependencies.put(ContainerType.Name.TOUCH, dependencyCacheContainer);
         }
-        return this.touchController;
+        return controller;
     }
 
     public TsoController getTsoController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getTsoController ***");
-        if (this.tsoController == null ||
-                (this.tsoDependencyContainer != null && (
-                        !(this.tsoDependencyContainer.isZosConnectionSame(connection) &&
-                                this.tsoDependencyContainer.isTimeoutSame(timeout))))) {
+        var controller = (TsoController) controllers.get(ContainerType.Name.TSO);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.TSO);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
             var issueTso = new IssueTso(connection);
-            var tsoService = new TsoService(issueTso, timeout);
-            if (this.envVariableController == null) {
-                var envVariableService = new EnvVariableService();
-                this.envVariableController = new EnvVariableController(envVariableService);
-            }
-            this.tsoController = new TsoController(tsoService,
-                    ConfigSingleton.getInstance(), this.getEnvVariableController());
-            this.tsoDependencyContainer = new DependencyCacheContainer(connection, timeout);
+            var service = new TsoService(issueTso, timeout);
+            controller = new TsoController(service, ConfigSingleton.getInstance(), this.envVariableController);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.TSO, controller);
+            this.dependencies.put(ContainerType.Name.TSO, dependencyCacheContainer);
         }
-        return this.tsoController;
+        return controller;
     }
 
     public UnameController getUnameController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getUnameController ***");
-        if (this.unameController == null ||
-                (this.unameDependencyContainer != null && (
-                        !(this.unameDependencyContainer.isZosConnectionSame(connection) &&
-                                this.unameDependencyContainer.isTimeoutSame(timeout))))) {
+        var controller = (UnameController) controllers.get(ContainerType.Name.UNAME);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.UNAME);
+        if (controller == null || dependencyCacheContainer != null &&
+                dependencyCacheContainer.isValid(connection, timeout)) {
             var issueConsole = new IssueConsole(connection);
-            var unameService = new UnameService(issueConsole, timeout);
-            if (this.envVariableController == null) {
-                var envVariableService = new EnvVariableService();
-                this.envVariableController = new EnvVariableController(envVariableService);
-            }
-            this.unameController = new UnameController(unameService,
-                    ConfigSingleton.getInstance(), this.envVariableController);
-            this.unameDependencyContainer = new DependencyCacheContainer(connection, timeout);
+            var service = new UnameService(issueConsole, timeout);
+            controller = new UnameController(service, ConfigSingleton.getInstance(), this.envVariableController);
+            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            this.controllers.put(ContainerType.Name.UNAME, controller);
+            this.dependencies.put(ContainerType.Name.UNAME, dependencyCacheContainer);
         }
-        return this.unameController;
+        return controller;
     }
 
     public UsermodController getUsermodController(final ZosConnection connection, final int index) {
         LOG.debug("*** getUsermodController ***");
-        var usermodService = new UsermodService(connection, index);
-        return new UsermodController(usermodService);
+        var controller = (UsermodController) controllers.get(ContainerType.Name.USERMOD);
+        if (controller == null) {
+            var service = new UsermodService(connection, index);
+            controller = new UsermodController(service);
+            this.controllers.put(ContainerType.Name.USERMOD, controller);
+        }
+        return controller;
     }
 
     public UssController getUssController(final SshConnection connection) {
         LOG.debug("*** getUssController ***");
-        if (this.ussController == null ||
-                (this.ussDependencyContainer != null &&
-                        !(this.ussDependencyContainer.isSshConnectionSame(connection)))) {
-            var sshService = new SshService(connection);
-            this.ussController = new UssController(sshService);
-            this.ussDependencyContainer = new DependencyCacheContainer(connection);
+        var controller = (UssController) controllers.get(ContainerType.Name.USS);
+        var dependencyCacheContainer = dependencies.get(ContainerType.Name.USS);
+        if (controller == null || dependencyCacheContainer != null &&
+                !(dependencyCacheContainer.isSshConnectionSame(connection))) {
+            var service = new SshService(connection);
+            controller = new UssController(service);
+            dependencyCacheContainer = new DependencyCacheContainer(connection);
+            this.controllers.put(ContainerType.Name.USS, controller);
+            this.dependencies.put(ContainerType.Name.USS, dependencyCacheContainer);
         }
-        return this.ussController;
+        return controller;
     }
 
 }

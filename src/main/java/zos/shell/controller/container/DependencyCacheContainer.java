@@ -59,19 +59,31 @@ public class DependencyCacheContainer {
         return this.sshConnection.equals(sshConnection);
     }
 
-    public boolean isDataSame(final String data) {
-        LOG.debug("*** isDataSame ***");
-        return this.data.equalsIgnoreCase(data);
-    }
-
     public boolean isToggleSame(final boolean toggle) {
         LOG.debug("*** isToggleSame ***");
         return this.toggle == toggle;
     }
 
+    private boolean isDataSame(final String data) {
+        LOG.debug("*** isDataSame ***");
+        return this.data.equals(data);
+    }
+    
     public boolean isTimeoutSame(final long timeout) {
         LOG.debug("*** isTimeoutSame ***");
         return this.timeout == timeout;
+    }
+
+    public boolean isValid(ZosConnection connection, boolean toggle, long timeout) {
+        return !isZosConnectionSame(connection) || !isTimeoutSame(timeout) || isToggleSame(toggle);
+    }
+
+    public boolean isValid(ZosConnection connection, String data, long timeout) {
+        return !isZosConnectionSame(connection) || !isTimeoutSame(timeout) || isDataSame(data);
+    }
+
+    public boolean isValid(ZosConnection connection, long timeout) {
+        return isZosConnectionSame(connection) && isTimeoutSame(timeout);
     }
 
 }
