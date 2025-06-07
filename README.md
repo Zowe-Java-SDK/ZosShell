@@ -222,7 +222,9 @@ Example of config.json:
                         "fontsize": "xxx",
                         "fontbold": "xxxxx",
                         "textcolor": "xxxx",
-                        "backgroundcolor": "xxx"
+                        "backgroundcolor": "xxx",
+                        "paneHeight": "800",
+                        "paneWidth": "1200"
                       }		
         },
         {
