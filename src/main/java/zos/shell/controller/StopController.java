@@ -2,11 +2,13 @@ package zos.shell.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.controller.dependency.Dependency;
+import zos.shell.controller.dependency.DependencyController;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.job.terminate.TerminateService;
 import zos.shell.singleton.configuration.ConfigSingleton;
 
-public class StopController {
+public class StopController extends DependencyController {
 
     private static final Logger LOG = LoggerFactory.getLogger(StopController.class);
 
@@ -15,7 +17,8 @@ public class StopController {
     private final EnvVariableController envVariableController;
 
     public StopController(final TerminateService terminateService, final ConfigSingleton configSingleton,
-                          final EnvVariableController envVariableController) {
+                          final EnvVariableController envVariableController, final Dependency dependency) {
+        super(dependency);
         LOG.debug("*** TerminateController ***");
         this.terminateService = terminateService;
         this.configSingleton = configSingleton;

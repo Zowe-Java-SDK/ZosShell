@@ -1,4 +1,4 @@
-package zos.shell.controller.container;
+package zos.shell.controller.dependency;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

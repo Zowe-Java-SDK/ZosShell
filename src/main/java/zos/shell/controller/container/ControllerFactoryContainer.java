@@ -4,6 +4,7 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.controller.*;
+import zos.shell.controller.dependency.Dependency;
 import zos.shell.service.change.ChangeConnService;
 import zos.shell.service.change.ChangeDirService;
 import zos.shell.service.change.ChangeWinService;
@@ -61,7 +62,6 @@ public class ControllerFactoryContainer {
     private final PathService pathService =
             new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(), this.envVariableController);
     private final Map<ContainerType.Name, Object> controllers = new HashMap<>();
-    private final Map<ContainerType.Name, Dependency> dependencies = new HashMap<>();
 
     public ControllerFactoryContainer() {
         LOG.debug("*** ControllerFactoryContainer ***");
@@ -71,14 +71,12 @@ public class ControllerFactoryContainer {
                                                       final long timeout) {
         LOG.debug("*** getBrowseJobController ***");
         var controller = (BrowseJobController) controllers.get(ContainerType.Name.BROWSE_JOB);
-        var dependency = dependencies.get(ContainerType.Name.BROWSE_JOB);
-        var newDependency = new Dependency.Builder().zosConnection(connection).toggle(isAll).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).toggle(isAll).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var jobGet = new JobGet(connection);
             var service = new BrowseLogService(jobGet, isAll, timeout);
-            controller = new BrowseJobController(service, this.envVariableController);
+            controller = new BrowseJobController(service, this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.BROWSE_JOB, controller);
-            this.dependencies.put(ContainerType.Name.BROWSE_JOB, newDependency);
         }
         return controller;
     }
@@ -86,14 +84,13 @@ public class ControllerFactoryContainer {
     public CancelController getCancelController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getCancelController ***");
         var controller = (CancelController) controllers.get(ContainerType.Name.CANCEL);
-        var dependency = dependencies.get(ContainerType.Name.CANCEL);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var issueConsole = new IssueConsole(connection);
             var service = new TerminateService(issueConsole, timeout);
-            controller = new CancelController(service, ConfigSingleton.getInstance(), this.envVariableController);
+            controller = new CancelController(
+                    service, ConfigSingleton.getInstance(), this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.CANCEL, controller);
-            this.dependencies.put(ContainerType.Name.CANCEL, newDependency);
         }
         return controller;
     }
@@ -109,16 +106,13 @@ public class ControllerFactoryContainer {
         return controller;
     }
 
-    public ChangeDirController getChangeDirController(final ZosConnection connection) {
+    public ChangeDirController getChangeDirController() {
         LOG.debug("*** getChangeDirController ***");
         var controller = (ChangeDirController) controllers.get(ContainerType.Name.CHANGE_DIRECTORY);
-        var dependency = dependencies.get(ContainerType.Name.CHANGE_DIRECTORY);
-        var newDependency = new Dependency.Builder().zosConnection(connection).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        if (controller == null) {
             var service = new ChangeDirService();
             controller = new ChangeDirController(service);
             this.controllers.put(ContainerType.Name.CHANGE_DIRECTORY, controller);
-            this.dependencies.put(ContainerType.Name.CHANGE_DIRECTORY, newDependency);
         }
         return controller;
     }
@@ -137,15 +131,13 @@ public class ControllerFactoryContainer {
     public ConcatController getConcatController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getConcatController ***");
         var controller = (ConcatController) controllers.get(ContainerType.Name.CONCAT);
-        var dependency = dependencies.get(ContainerType.Name.CONCAT);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var dsnGet = new DsnGet(connection);
             var download = new Download(dsnGet, this.pathService, false);
             var service = new ConcatService(download, timeout);
-            controller = new ConcatController(service);
+            controller = new ConcatController(service, dependency);
             this.controllers.put(ContainerType.Name.CONCAT, controller);
-            this.dependencies.put(ContainerType.Name.CONCAT, newDependency);
         }
         return controller;
     }
@@ -153,13 +145,11 @@ public class ControllerFactoryContainer {
     public ConsoleController getConsoleController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getConsoleController ***");
         var controller = (ConsoleController) controllers.get(ContainerType.Name.CONSOLE);
-        var dependency = dependencies.get(ContainerType.Name.CONSOLE);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var service = new ConsoleService(connection, timeout);
-            controller = new ConsoleController(service, ConfigSingleton.getInstance(), this.envVariableController);
+            controller = new ConsoleController(service, ConfigSingleton.getInstance(), this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.CONSOLE, controller);
-            this.dependencies.put(ContainerType.Name.CONSOLE, newDependency);
         }
         return controller;
     }
@@ -167,13 +157,11 @@ public class ControllerFactoryContainer {
     public CopyController getCopyController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getCopyController ***");
         var controller = (CopyController) controllers.get(ContainerType.Name.COPY);
-        var dependency = dependencies.get(ContainerType.Name.COPY);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var service = new CopyService(connection, timeout);
-            controller = new CopyController(service);
+            controller = new CopyController(service, dependency);
             this.controllers.put(ContainerType.Name.COPY, controller);
-            this.dependencies.put(ContainerType.Name.COPY, newDependency);
         }
         return controller;
     }
@@ -181,14 +169,12 @@ public class ControllerFactoryContainer {
     public CountController getCountController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getCountController ***");
         var controller = (CountController) controllers.get(ContainerType.Name.COUNT);
-        var dependency = dependencies.get(ContainerType.Name.COUNT);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var dsnList = new DsnList(connection);
             var service = new CountService(dsnList, timeout);
-            controller = new CountController(service);
+            controller = new CountController(service, dependency);
             this.controllers.put(ContainerType.Name.COUNT, controller);
-            this.dependencies.put(ContainerType.Name.COUNT, newDependency);
         }
         return controller;
     }
@@ -196,13 +182,11 @@ public class ControllerFactoryContainer {
     public DeleteController getDeleteController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getDeleteController ***");
         var controller = (DeleteController) controllers.get(ContainerType.Name.DELETE);
-        var dependency = dependencies.get(ContainerType.Name.DELETE);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var service = new DeleteService(connection, timeout);
-            controller = new DeleteController(service);
+            controller = new DeleteController(service, dependency);
             this.controllers.put(ContainerType.Name.DELETE, controller);
-            this.dependencies.put(ContainerType.Name.DELETE, newDependency);
         }
         return controller;
     }
@@ -211,9 +195,8 @@ public class ControllerFactoryContainer {
                                                           final long timeout) {
         LOG.debug("*** getDownloadDsnController ***");
         var controller = (DownloadDsnController) controllers.get(ContainerType.Name.DELETE);
-        var dependency = dependencies.get(ContainerType.Name.DELETE);
-        var newDependency = new Dependency.Builder().zosConnection(connection).toggle(isBinary).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).toggle(isBinary).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var downloadMemberService = new DownloadMemberService(connection, this.pathService, isBinary, timeout);
             var downloadPdsMemberService = new DownloadPdsMemberService(connection, this.pathService, isBinary, timeout);
             var downloadSeqDatasetService = new DownloadSeqDatasetService(connection, this.pathService, isBinary, timeout);
@@ -222,9 +205,8 @@ public class ControllerFactoryContainer {
             var downloadMembersService = new DownloadMembersService(connection,
                     new DownloadMemberListService(connection, isBinary, timeout), timeout);
             controller = new DownloadDsnController(downloadMemberService, downloadPdsMemberService,
-                    downloadSeqDatasetService, downloadAllMembersService, downloadMembersService);
+                    downloadSeqDatasetService, downloadAllMembersService, downloadMembersService, dependency);
             this.controllers.put(ContainerType.Name.DELETE, controller);
-            this.dependencies.put(ContainerType.Name.DELETE, newDependency);
         }
         return controller;
     }
@@ -233,14 +215,12 @@ public class ControllerFactoryContainer {
                                                           final long timeout) {
         LOG.debug("*** getDownloadJobController ***");
         var controller = (DownloadJobController) controllers.get(ContainerType.Name.DOWNLOAD_JOB);
-        var dependency = dependencies.get(ContainerType.Name.DOWNLOAD_JOB);
-        var newDependency = new Dependency.Builder().zosConnection(connection).toggle(isAll).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).toggle(isAll).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var jobGet = new JobGet(connection);
             var service = new DownloadJobService(jobGet, this.pathService, isAll, timeout);
-            controller = new DownloadJobController(service);
+            controller = new DownloadJobController(service, dependency);
             this.controllers.put(ContainerType.Name.DOWNLOAD_JOB, controller);
-            this.dependencies.put(ContainerType.Name.DOWNLOAD_JOB, newDependency);
         }
         return controller;
     }
@@ -259,16 +239,14 @@ public class ControllerFactoryContainer {
     public EditController getEditController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getEditController ***");
         var controller = (EditController) controllers.get(ContainerType.Name.EDIT);
-        var dependency = dependencies.get(ContainerType.Name.EDIT);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var dsnGet = new DsnGet(connection);
             var download = new Download(dsnGet, this.pathService, false);
             var checkSumService = new CheckSumService();
             var editService = new EditService(download, this.pathService, checkSumService, timeout);
-            controller = new EditController(editService);
+            controller = new EditController(editService, dependency);
             this.controllers.put(ContainerType.Name.EDIT, controller);
-            this.dependencies.put(ContainerType.Name.EDIT, newDependency);
         }
         return controller;
     }
@@ -281,13 +259,11 @@ public class ControllerFactoryContainer {
     public GrepController getGrepController(final ZosConnection connection, final String target, final long timeout) {
         LOG.debug("*** getGrepController ***");
         var controller = (GrepController) controllers.get(ContainerType.Name.GREP);
-        var dependency = dependencies.get(ContainerType.Name.GREP);
-        var newDependency = new Dependency.Builder().zosConnection(connection).data(target).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).data(target).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var service = new GrepService(connection, this.pathService, target, timeout);
-            controller = new GrepController(service);
+            controller = new GrepController(service, dependency);
             this.controllers.put(ContainerType.Name.GREP, controller);
-            this.dependencies.put(ContainerType.Name.GREP, newDependency);
         }
         return controller;
     }
@@ -296,14 +272,12 @@ public class ControllerFactoryContainer {
                                                   final long timeout) {
         LOG.debug("*** getListingController ***");
         var controller = (ListingController) controllers.get(ContainerType.Name.LIST);
-        var dependency = dependencies.get(ContainerType.Name.LIST);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var dsnList = new DsnList(connection);
             var service = new ListingService(terminal, dsnList, timeout);
-            controller = new ListingController(service);
+            controller = new ListingController(service, dependency);
             this.controllers.put(ContainerType.Name.LIST, controller);
-            this.dependencies.put(ContainerType.Name.LIST, newDependency);
         }
         return controller;
     }
@@ -323,14 +297,12 @@ public class ControllerFactoryContainer {
                                                   final long timeout) {
         LOG.debug("*** getMakeDirController ***");
         var controller = (MakeDirController) controllers.get(ContainerType.Name.MAKE_DIR);
-        var dependency = dependencies.get(ContainerType.Name.MAKE_DIR);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var dsnCreate = new DsnCreate(connection);
             var service = new MakeDirService(dsnCreate, timeout);
-            controller = new MakeDirController(terminal, service);
+            controller = new MakeDirController(terminal, service, dependency);
             this.controllers.put(ContainerType.Name.MAKE_DIR, controller);
-            this.dependencies.put(ContainerType.Name.MAKE_DIR, newDependency);
         }
         return controller;
     }
@@ -338,13 +310,11 @@ public class ControllerFactoryContainer {
     public ProcessLstController getProcessLstController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getProcessLstController ***");
         var controller = (ProcessLstController) controllers.get(ContainerType.Name.PROCESS_LIST);
-        var dependency = dependencies.get(ContainerType.Name.PROCESS_LIST);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var service = new ProcessLstService(new JobGet(connection), timeout);
-            controller = new ProcessLstController(service);
+            controller = new ProcessLstController(service, dependency);
             this.controllers.put(ContainerType.Name.PROCESS_LIST, controller);
-            this.dependencies.put(ContainerType.Name.PROCESS_LIST, newDependency);
         }
         return controller;
     }
@@ -352,15 +322,13 @@ public class ControllerFactoryContainer {
     public PurgeController getPurgeController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getPurgeController ***");
         var controller = (PurgeController) controllers.get(ContainerType.Name.PURGE);
-        var dependency = dependencies.get(ContainerType.Name.PURGE);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var jobDelete = new JobDelete(connection);
             var jobGet = new JobGet(connection);
             var service = new PurgeService(jobDelete, jobGet, timeout);
-            controller = new PurgeController(service);
+            controller = new PurgeController(service, dependency);
             this.controllers.put(ContainerType.Name.PURGE, controller);
-            this.dependencies.put(ContainerType.Name.PURGE, newDependency);
         }
         return controller;
     }
@@ -368,13 +336,11 @@ public class ControllerFactoryContainer {
     public RenameController getRenameController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getRenameController ***");
         var controller = (RenameController) controllers.get(ContainerType.Name.RENAME);
-        var dependency = dependencies.get(ContainerType.Name.RENAME);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var service = new RenameService(connection, timeout);
-            controller = new RenameController(service);
+            controller = new RenameController(service, dependency);
             this.controllers.put(ContainerType.Name.RENAME, controller);
-            this.dependencies.put(ContainerType.Name.RENAME, newDependency);
         }
         return controller;
     }
@@ -382,14 +348,12 @@ public class ControllerFactoryContainer {
     public SaveController getSaveController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getSaveController ***");
         var controller = (SaveController) controllers.get(ContainerType.Name.SAVE);
-        var dependency = dependencies.get(ContainerType.Name.SAVE);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var checkSumService = new CheckSumService();
             var service = new SaveService(new DsnWrite(connection), this.pathService, checkSumService, timeout);
-            controller = new SaveController(service);
+            controller = new SaveController(service, dependency);
             this.controllers.put(ContainerType.Name.SAVE, controller);
-            this.dependencies.put(ContainerType.Name.SAVE, newDependency);
         }
         return controller;
     }
@@ -408,14 +372,12 @@ public class ControllerFactoryContainer {
     public StopController getStopController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getStopController ***");
         var controller = (StopController) controllers.get(ContainerType.Name.STOP);
-        var dependency = dependencies.get(ContainerType.Name.STOP);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var issueConsole = new IssueConsole(connection);
             var service = new TerminateService(issueConsole, timeout);
-            controller = new StopController(service, ConfigSingleton.getInstance(), this.envVariableController);
+            controller = new StopController(service, ConfigSingleton.getInstance(), this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.STOP, controller);
-            this.dependencies.put(ContainerType.Name.STOP, newDependency);
         }
         return controller;
     }
@@ -423,14 +385,12 @@ public class ControllerFactoryContainer {
     public SubmitController getSubmitController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getSubmitController ***");
         var controller = (SubmitController) controllers.get(ContainerType.Name.SUBMIT);
-        var dependency = dependencies.get(ContainerType.Name.SUBMIT);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var jobSubmit = new JobSubmit(connection);
             var service = new SubmitService(jobSubmit, timeout);
-            controller = new SubmitController(service);
+            controller = new SubmitController(service, dependency);
             this.controllers.put(ContainerType.Name.SUBMIT, controller);
-            this.dependencies.put(ContainerType.Name.SUBMIT, newDependency);
         }
         return controller;
     }
@@ -439,14 +399,12 @@ public class ControllerFactoryContainer {
                                             final long timeout) {
         LOG.debug("*** getTailController ***");
         var controller = (TailController) controllers.get(ContainerType.Name.TAIL);
-        var dependency = dependencies.get(ContainerType.Name.TAIL);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var jobGet = new JobGet(connection);
             var service = new TailService(terminal, jobGet, timeout);
-            controller = new TailController(service);
+            controller = new TailController(service, dependency);
             this.controllers.put(ContainerType.Name.TAIL, controller);
-            this.dependencies.put(ContainerType.Name.TAIL, newDependency);
         }
         return controller;
     }
@@ -454,15 +412,13 @@ public class ControllerFactoryContainer {
     public TouchController getTouchController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getTouchController ***");
         var controller = (TouchController) controllers.get(ContainerType.Name.TOUCH);
-        var dependency = dependencies.get(ContainerType.Name.TOUCH);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var dsnWrite = new DsnWrite(connection);
             var dsnList = new DsnList(connection);
             var service = new TouchService(dsnWrite, dsnList, timeout);
-            controller = new TouchController(service);
+            controller = new TouchController(service, dependency);
             this.controllers.put(ContainerType.Name.TOUCH, controller);
-            this.dependencies.put(ContainerType.Name.TOUCH, newDependency);
         }
         return controller;
     }
@@ -470,14 +426,12 @@ public class ControllerFactoryContainer {
     public TsoController getTsoController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getTsoController ***");
         var controller = (TsoController) controllers.get(ContainerType.Name.TSO);
-        var dependency = dependencies.get(ContainerType.Name.TSO);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var issueTso = new IssueTso(connection);
             var service = new TsoService(issueTso, timeout);
-            controller = new TsoController(service, ConfigSingleton.getInstance(), this.envVariableController);
+            controller = new TsoController(service, ConfigSingleton.getInstance(), this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.TSO, controller);
-            this.dependencies.put(ContainerType.Name.TSO, newDependency);
         }
         return controller;
     }
@@ -485,14 +439,12 @@ public class ControllerFactoryContainer {
     public UnameController getUnameController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getUnameController ***");
         var controller = (UnameController) controllers.get(ContainerType.Name.UNAME);
-        var dependency = dependencies.get(ContainerType.Name.UNAME);
-        var newDependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var issueConsole = new IssueConsole(connection);
             var service = new UnameService(issueConsole, timeout);
-            controller = new UnameController(service, ConfigSingleton.getInstance(), this.envVariableController);
+            controller = new UnameController(service, ConfigSingleton.getInstance(), this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.UNAME, controller);
-            this.dependencies.put(ContainerType.Name.UNAME, newDependency);
         }
         return controller;
     }
@@ -511,13 +463,11 @@ public class ControllerFactoryContainer {
     public UssController getUssController(final SshConnection connection) {
         LOG.debug("*** getUssController ***");
         var controller = (UssController) controllers.get(ContainerType.Name.USS);
-        var dependency = dependencies.get(ContainerType.Name.USS);
-        var newDependency = new Dependency.Builder().sshConnection(connection).build();
-        if (controller == null || dependency != null && !dependency.equals(newDependency)) {
+        var dependency = new Dependency.Builder().sshConnection(connection).build();
+        if (controller == null || controller.isNotValid(dependency)) {
             var service = new SshService(connection);
-            controller = new UssController(service);
+            controller = new UssController(service, dependency);
             this.controllers.put(ContainerType.Name.USS, controller);
-            this.dependencies.put(ContainerType.Name.USS, newDependency);
         }
         return controller;
     }

@@ -2,11 +2,13 @@ package zos.shell.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.controller.dependency.Dependency;
+import zos.shell.controller.dependency.DependencyController;
 import zos.shell.service.uname.UnameService;
 import zos.shell.singleton.configuration.ConfigSingleton;
 import zowe.client.sdk.core.ZosConnection;
 
-public class UnameController {
+public class UnameController extends DependencyController {
 
     private static final Logger LOG = LoggerFactory.getLogger(UnameController.class);
 
@@ -15,7 +17,8 @@ public class UnameController {
     private final EnvVariableController envVariableController;
 
     public UnameController(final UnameService unameService, final ConfigSingleton configSingleton,
-                           final EnvVariableController envVariableController) {
+                           final EnvVariableController envVariableController, final Dependency dependency) {
+        super(dependency);
         LOG.debug("*** UnameController ***");
         this.unameService = unameService;
         this.configSingleton = configSingleton;

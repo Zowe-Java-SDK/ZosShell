@@ -3,10 +3,12 @@ package zos.shell.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.controller.dependency.Dependency;
+import zos.shell.controller.dependency.DependencyController;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.job.browse.BrowseLogService;
 
-public class BrowseJobController {
+public class BrowseJobController extends DependencyController {
 
     private static final Logger LOG = LoggerFactory.getLogger(BrowseJobController.class);
 
@@ -14,7 +16,9 @@ public class BrowseJobController {
     private final EnvVariableController envVariableController;
 
     public BrowseJobController(final BrowseLogService browseLogService,
-                               final EnvVariableController envVariableController) {
+                               final EnvVariableController envVariableController,
+                               final Dependency dependency) {
+        super(dependency);
         LOG.debug("*** BrowseJobController ***");
         this.browseLogService = browseLogService;
         this.envVariableController = envVariableController;

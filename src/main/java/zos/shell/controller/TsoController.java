@@ -2,11 +2,13 @@ package zos.shell.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.controller.dependency.Dependency;
+import zos.shell.controller.dependency.DependencyController;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.tso.TsoService;
 import zos.shell.singleton.configuration.ConfigSingleton;
 
-public class TsoController {
+public class TsoController extends DependencyController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TsoController.class);
 
@@ -15,7 +17,8 @@ public class TsoController {
     private final EnvVariableController envVariableController;
 
     public TsoController(final TsoService tsoService, final ConfigSingleton configSingleton,
-                         final EnvVariableController envVariableController) {
+                         final EnvVariableController envVariableController, final Dependency dependency) {
+        super(dependency);
         LOG.debug("*** TsoController ***");
         this.tsoService = tsoService;
         this.configSingleton = configSingleton;

@@ -2,16 +2,19 @@ package zos.shell.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.controller.dependency.Dependency;
+import zos.shell.controller.dependency.DependencyController;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.touch.TouchService;
 
-public class TouchController {
+public class TouchController extends DependencyController {
 
     private static final Logger LOG = LoggerFactory.getLogger(TouchController.class);
 
     private final TouchService touchService;
 
-    public TouchController(final TouchService touchService) {
+    public TouchController(final TouchService touchService, final Dependency dependency) {
+        super(dependency);
         LOG.debug("*** TouchController ***");
         this.touchService = touchService;
     }

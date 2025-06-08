@@ -96,7 +96,7 @@ public class CommandRouter {
                 if (isParamsExceeded(2, params)) {
                     return;
                 }
-                var changeDirController = controllerContainer.getChangeDirController(currConnection);
+                var changeDirController = controllerContainer.getChangeDirController();
                 responseStatus = changeDirController.cd(currDataset, params[1].toUpperCase());
                 if (responseStatus.isStatus()) {
                     currDataset = responseStatus.getOptionalData();
