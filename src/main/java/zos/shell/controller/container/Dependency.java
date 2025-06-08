@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 
-public class DependencyCacheContainer {
+public class Dependency {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DependencyCacheContainer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Dependency.class);
 
     private ZosConnection zosConnection;
     private SshConnection sshConnection;
@@ -15,30 +15,30 @@ public class DependencyCacheContainer {
     private boolean toggle;
     private long timeout;
 
-    public DependencyCacheContainer(final ZosConnection zosConnection, final long timeout) {
+    public Dependency(final ZosConnection zosConnection, final long timeout) {
         LOG.debug("*** DependencyContainer zosConnection timeout ***");
         this.zosConnection = zosConnection;
         this.timeout = timeout;
     }
 
-    public DependencyCacheContainer(final ZosConnection zosConnection, final boolean toggle, final long timeout) {
+    public Dependency(final ZosConnection zosConnection, final boolean toggle, final long timeout) {
         LOG.debug("*** DependencyContainer zosConnection toggle timeout ***");
         this.zosConnection = zosConnection;
         this.toggle = toggle;
         this.timeout = timeout;
     }
 
-    public DependencyCacheContainer(final ZosConnection zosConnection) {
+    public Dependency(final ZosConnection zosConnection) {
         LOG.debug("*** DependencyContainer zosConnection ***");
         this.zosConnection = zosConnection;
     }
 
-    public DependencyCacheContainer(final SshConnection sshConnection) {
+    public Dependency(final SshConnection sshConnection) {
         LOG.debug("*** DependencyContainer sshConnection ***");
         this.sshConnection = sshConnection;
     }
 
-    public DependencyCacheContainer(final ZosConnection zosConnection, final String data, final long timeout) {
+    public Dependency(final ZosConnection zosConnection, final String data, final long timeout) {
         LOG.debug("*** DependencyContainer zosConnection data timeout ***");
         this.zosConnection = zosConnection;
         if (data == null) {

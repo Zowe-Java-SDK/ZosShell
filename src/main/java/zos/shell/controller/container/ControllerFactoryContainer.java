@@ -61,7 +61,7 @@ public class ControllerFactoryContainer {
     private final PathService pathService =
             new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(), this.envVariableController);
     private final Map<ContainerType.Name, Object> controllers = new HashMap<>();
-    private final Map<ContainerType.Name, DependencyCacheContainer> dependencies = new HashMap<>();
+    private final Map<ContainerType.Name, Dependency> dependencies = new HashMap<>();
 
     public ControllerFactoryContainer() {
         LOG.debug("*** ControllerFactoryContainer ***");
@@ -77,7 +77,7 @@ public class ControllerFactoryContainer {
             var jobGet = new JobGet(connection);
             var service = new BrowseLogService(jobGet, isAll, timeout);
             controller = new BrowseJobController(service, this.envVariableController);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, isAll, timeout);
+            dependencyCacheContainer = new Dependency(connection, isAll, timeout);
             this.controllers.put(ContainerType.Name.BROWSE_JOB, controller);
             this.dependencies.put(ContainerType.Name.BROWSE_JOB, dependencyCacheContainer);
         }
@@ -93,7 +93,7 @@ public class ControllerFactoryContainer {
             var issueConsole = new IssueConsole(connection);
             var service = new TerminateService(issueConsole, timeout);
             controller = new CancelController(service, ConfigSingleton.getInstance(), this.envVariableController);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.CANCEL, controller);
             this.dependencies.put(ContainerType.Name.CANCEL, dependencyCacheContainer);
         }
@@ -119,7 +119,7 @@ public class ControllerFactoryContainer {
                 !dependencyCacheContainer.isZosConnectionSame(connection)) {
             var service = new ChangeDirService();
             controller = new ChangeDirController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection);
+            dependencyCacheContainer = new Dependency(connection);
             this.controllers.put(ContainerType.Name.CHANGE_DIRECTORY, controller);
             this.dependencies.put(ContainerType.Name.CHANGE_DIRECTORY, dependencyCacheContainer);
         }
@@ -147,7 +147,7 @@ public class ControllerFactoryContainer {
             var download = new Download(dsnGet, this.pathService, false);
             var service = new ConcatService(download, timeout);
             controller = new ConcatController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.CONCAT, controller);
             this.dependencies.put(ContainerType.Name.CONCAT, dependencyCacheContainer);
         }
@@ -162,7 +162,7 @@ public class ControllerFactoryContainer {
                 dependencyCacheContainer.isValid(connection, timeout)) {
             var service = new ConsoleService(connection, timeout);
             controller = new ConsoleController(service, ConfigSingleton.getInstance(), this.envVariableController);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.CONSOLE, controller);
             this.dependencies.put(ContainerType.Name.CONSOLE, dependencyCacheContainer);
         }
@@ -177,7 +177,7 @@ public class ControllerFactoryContainer {
                 dependencyCacheContainer.isValid(connection, timeout)) {
             var service = new CopyService(connection, timeout);
             controller = new CopyController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.COPY, controller);
             this.dependencies.put(ContainerType.Name.COPY, dependencyCacheContainer);
         }
@@ -193,7 +193,7 @@ public class ControllerFactoryContainer {
             var dsnList = new DsnList(connection);
             var service = new CountService(dsnList, timeout);
             controller = new CountController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.COUNT, controller);
             this.dependencies.put(ContainerType.Name.COUNT, dependencyCacheContainer);
         }
@@ -208,7 +208,7 @@ public class ControllerFactoryContainer {
                 dependencyCacheContainer.isValid(connection, timeout)) {
             var service = new DeleteService(connection, timeout);
             controller = new DeleteController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.DELETE, controller);
             this.dependencies.put(ContainerType.Name.DELETE, dependencyCacheContainer);
         }
@@ -231,7 +231,7 @@ public class ControllerFactoryContainer {
                     new DownloadMemberListService(connection, isBinary, timeout), timeout);
             controller = new DownloadDsnController(downloadMemberService, downloadPdsMemberService,
                     downloadSeqDatasetService, downloadAllMembersService, downloadMembersService);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, isBinary, timeout);
+            dependencyCacheContainer = new Dependency(connection, isBinary, timeout);
             this.controllers.put(ContainerType.Name.DELETE, controller);
             this.dependencies.put(ContainerType.Name.DELETE, dependencyCacheContainer);
         }
@@ -248,7 +248,7 @@ public class ControllerFactoryContainer {
             var jobGet = new JobGet(connection);
             var service = new DownloadJobService(jobGet, this.pathService, isAll, timeout);
             controller = new DownloadJobController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, isAll, timeout);
+            dependencyCacheContainer = new Dependency(connection, isAll, timeout);
             this.controllers.put(ContainerType.Name.DOWNLOAD_JOB, controller);
             this.dependencies.put(ContainerType.Name.DOWNLOAD_JOB, dependencyCacheContainer);
         }
@@ -277,7 +277,7 @@ public class ControllerFactoryContainer {
             var checkSumService = new CheckSumService();
             var editService = new EditService(download, this.pathService, checkSumService, timeout);
             controller = new EditController(editService);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.EDIT, controller);
             this.dependencies.put(ContainerType.Name.EDIT, dependencyCacheContainer);
         }
@@ -297,7 +297,7 @@ public class ControllerFactoryContainer {
                 dependencyCacheContainer.isValid(connection, target, timeout)) {
             var service = new GrepService(connection, this.pathService, target, timeout);
             controller = new GrepController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, target, timeout);
+            dependencyCacheContainer = new Dependency(connection, target, timeout);
             this.controllers.put(ContainerType.Name.GREP, controller);
             this.dependencies.put(ContainerType.Name.GREP, dependencyCacheContainer);
         }
@@ -314,7 +314,7 @@ public class ControllerFactoryContainer {
             var dsnList = new DsnList(connection);
             var service = new ListingService(terminal, dsnList, timeout);
             controller = new ListingController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.LIST, controller);
             this.dependencies.put(ContainerType.Name.LIST, dependencyCacheContainer);
         }
@@ -342,7 +342,7 @@ public class ControllerFactoryContainer {
             var dsnCreate = new DsnCreate(connection);
             var service = new MakeDirService(dsnCreate, timeout);
             controller = new MakeDirController(terminal, service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.MAKE_DIR, controller);
             this.dependencies.put(ContainerType.Name.MAKE_DIR, dependencyCacheContainer);
         }
@@ -357,7 +357,7 @@ public class ControllerFactoryContainer {
                 dependencyCacheContainer.isValid(connection, timeout)) {
             var service = new ProcessLstService(new JobGet(connection), timeout);
             controller = new ProcessLstController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.PROCESS_LIST, controller);
             this.dependencies.put(ContainerType.Name.PROCESS_LIST, dependencyCacheContainer);
         }
@@ -374,7 +374,7 @@ public class ControllerFactoryContainer {
             var jobGet = new JobGet(connection);
             var service = new PurgeService(jobDelete, jobGet, timeout);
             controller = new PurgeController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.PURGE, controller);
             this.dependencies.put(ContainerType.Name.PURGE, dependencyCacheContainer);
         }
@@ -389,7 +389,7 @@ public class ControllerFactoryContainer {
                 dependencyCacheContainer.isValid(connection, timeout)) {
             var service = new RenameService(connection, timeout);
             controller = new RenameController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.RENAME, controller);
             this.dependencies.put(ContainerType.Name.RENAME, dependencyCacheContainer);
         }
@@ -405,7 +405,7 @@ public class ControllerFactoryContainer {
             var checkSumService = new CheckSumService();
             var service = new SaveService(new DsnWrite(connection), this.pathService, checkSumService, timeout);
             controller = new SaveController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.SAVE, controller);
             this.dependencies.put(ContainerType.Name.SAVE, dependencyCacheContainer);
         }
@@ -433,7 +433,7 @@ public class ControllerFactoryContainer {
             var service = new TerminateService(issueConsole, timeout);
             controller = new StopController(service,
                     ConfigSingleton.getInstance(), this.envVariableController);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.STOP, controller);
             this.dependencies.put(ContainerType.Name.STOP, dependencyCacheContainer);
         }
@@ -449,7 +449,7 @@ public class ControllerFactoryContainer {
             var jobSubmit = new JobSubmit(connection);
             var service = new SubmitService(jobSubmit, timeout);
             controller = new SubmitController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.SUBMIT, controller);
             this.dependencies.put(ContainerType.Name.SUBMIT, dependencyCacheContainer);
         }
@@ -466,7 +466,7 @@ public class ControllerFactoryContainer {
             var jobGet = new JobGet(connection);
             var service = new TailService(terminal, jobGet, timeout);
             controller = new TailController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.TAIL, controller);
             this.dependencies.put(ContainerType.Name.TAIL, dependencyCacheContainer);
         }
@@ -483,7 +483,7 @@ public class ControllerFactoryContainer {
             var dsnList = new DsnList(connection);
             var service = new TouchService(dsnWrite, dsnList, timeout);
             controller = new TouchController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.TOUCH, controller);
             this.dependencies.put(ContainerType.Name.TOUCH, dependencyCacheContainer);
         }
@@ -499,7 +499,7 @@ public class ControllerFactoryContainer {
             var issueTso = new IssueTso(connection);
             var service = new TsoService(issueTso, timeout);
             controller = new TsoController(service, ConfigSingleton.getInstance(), this.envVariableController);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.TSO, controller);
             this.dependencies.put(ContainerType.Name.TSO, dependencyCacheContainer);
         }
@@ -515,7 +515,7 @@ public class ControllerFactoryContainer {
             var issueConsole = new IssueConsole(connection);
             var service = new UnameService(issueConsole, timeout);
             controller = new UnameController(service, ConfigSingleton.getInstance(), this.envVariableController);
-            dependencyCacheContainer = new DependencyCacheContainer(connection, timeout);
+            dependencyCacheContainer = new Dependency(connection, timeout);
             this.controllers.put(ContainerType.Name.UNAME, controller);
             this.dependencies.put(ContainerType.Name.UNAME, dependencyCacheContainer);
         }
@@ -541,7 +541,7 @@ public class ControllerFactoryContainer {
                 !(dependencyCacheContainer.isSshConnectionSame(connection))) {
             var service = new SshService(connection);
             controller = new UssController(service);
-            dependencyCacheContainer = new DependencyCacheContainer(connection);
+            dependencyCacheContainer = new Dependency(connection);
             this.controllers.put(ContainerType.Name.USS, controller);
             this.dependencies.put(ContainerType.Name.USS, dependencyCacheContainer);
         }
