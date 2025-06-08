@@ -5,20 +5,23 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.controller.dependency.Dependency;
+import zos.shell.controller.dependency.DependencyController;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.makedir.MakeDirService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.StrUtil;
 import zowe.client.sdk.zosfiles.dsn.input.CreateParams;
 
-public class MakeDirController {
+public class MakeDirController extends DependencyController {
 
     private static final Logger LOG = LoggerFactory.getLogger(MakeDirController.class);
 
     private final MakeDirService makeDirService;
     private final TextTerminal<?> terminal;
 
-    public MakeDirController(final TextTerminal<?> terminal, final MakeDirService makeDirService) {
+    public MakeDirController(final TextTerminal<?> terminal, final MakeDirService makeDirService, final Dependency dependency) {
+        super(dependency);
         LOG.debug("*** MakeDirController ***");
         this.terminal = terminal;
         this.makeDirService = makeDirService;

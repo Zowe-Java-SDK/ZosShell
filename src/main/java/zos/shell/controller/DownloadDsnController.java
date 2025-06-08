@@ -3,6 +3,8 @@ package zos.shell.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.controller.dependency.Dependency;
+import zos.shell.controller.dependency.DependencyController;
 import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.*;
@@ -16,7 +18,7 @@ import java.util.List;
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
-public class DownloadDsnController {
+public class DownloadDsnController extends DependencyController {
 
     private static final Logger LOG = LoggerFactory.getLogger(DownloadDsnController.class);
 
@@ -30,8 +32,9 @@ public class DownloadDsnController {
                                  final DownloadPdsMemberService downloadPdsMemberService,
                                  final DownloadSeqDatasetService downloadSeqDatasetService,
                                  final DownloadAllMembersService downloadAllMembersService,
-                                 final DownloadMembersService downloadMembersService) {
-
+                                 final DownloadMembersService downloadMembersService,
+                                 final Dependency dependency) {
+        super(dependency);
         LOG.debug("*** DownloadDsnController ***");
         this.downloadMemberService = downloadMemberService;
         this.downloadPdsMemberService = downloadPdsMemberService;

@@ -2,15 +2,18 @@ package zos.shell.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.controller.dependency.Dependency;
+import zos.shell.controller.dependency.DependencyController;
 import zos.shell.service.grep.GrepService;
 
-public class GrepController {
+public class GrepController extends DependencyController {
 
     private static final Logger LOG = LoggerFactory.getLogger(GrepController.class);
 
     private final GrepService grepService;
 
-    public GrepController(final GrepService grepService) {
+    public GrepController(final GrepService grepService, final Dependency dependency) {
+        super(dependency);
         LOG.debug("*** GrepController ***");
         this.grepService = grepService;
     }

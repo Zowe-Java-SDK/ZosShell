@@ -2,16 +2,19 @@ package zos.shell.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.controller.dependency.Dependency;
+import zos.shell.controller.dependency.DependencyController;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.rename.RenameService;
 
-public class RenameController {
+public class RenameController extends DependencyController {
 
     private static final Logger LOG = LoggerFactory.getLogger(RenameController.class);
 
     private final RenameService renameService;
 
-    public RenameController(final RenameService renameService) {
+    public RenameController(final RenameService renameService, final Dependency dependency) {
+        super(dependency);
         LOG.debug("*** RenameController ***");
         this.renameService = renameService;
     }
