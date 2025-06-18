@@ -39,7 +39,6 @@ import zos.shell.service.tso.TsoService;
 import zos.shell.service.uname.UnameService;
 import zos.shell.service.usermod.UsermodService;
 import zos.shell.singleton.ConnSingleton;
-import zos.shell.singleton.configuration.ConfigSingleton;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
@@ -59,8 +58,7 @@ public class ControllerFactoryContainer {
 
     private static final Logger LOG = LoggerFactory.getLogger(ControllerFactoryContainer.class);
     private final EnvVariableController envVariableController = new EnvVariableController(new EnvVariableService());
-    private final PathService pathService =
-            new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(), this.envVariableController);
+    private final PathService pathService = new PathService(ConnSingleton.getInstance(), this.envVariableController);
     private final Map<ContainerType.Name, Object> controllers = new HashMap<>();
 
     public ControllerFactoryContainer() {
@@ -88,8 +86,7 @@ public class ControllerFactoryContainer {
         if (controller == null || controller.isNotValid(dependency)) {
             var issueConsole = new IssueConsole(connection);
             var service = new TerminateService(issueConsole, timeout);
-            controller = new CancelController(
-                    service, ConfigSingleton.getInstance(), this.envVariableController, dependency);
+            controller = new CancelController(service, this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.CANCEL, controller);
         }
         return controller;
@@ -148,7 +145,7 @@ public class ControllerFactoryContainer {
         var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
         if (controller == null || controller.isNotValid(dependency)) {
             var service = new ConsoleService(connection, timeout);
-            controller = new ConsoleController(service, ConfigSingleton.getInstance(), this.envVariableController, dependency);
+            controller = new ConsoleController(service, this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.CONSOLE, controller);
         }
         return controller;
@@ -205,7 +202,8 @@ public class ControllerFactoryContainer {
             var downloadMembersService = new DownloadMembersService(connection,
                     new DownloadMemberListService(connection, isBinary, timeout), timeout);
             controller = new DownloadDsnController(downloadMemberService, downloadPdsMemberService,
-                    downloadSeqDatasetService, downloadAllMembersService, downloadMembersService, dependency);
+                    downloadSeqDatasetService, downloadAllMembersService, downloadMembersService,
+                    this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.DELETE, controller);
         }
         return controller;
@@ -286,7 +284,7 @@ public class ControllerFactoryContainer {
         LOG.debug("*** getLocalFilesController ***");
         var controller = (LocalFilesController) controllers.get(ContainerType.Name.LOCAL_FILE);
         if (controller == null) {
-            var service = new LocalFileService();
+            var service = new LocalFileService(this.envVariableController);
             controller = new LocalFilesController(service);
             this.controllers.put(ContainerType.Name.LOCAL_FILE, controller);
         }
@@ -376,7 +374,7 @@ public class ControllerFactoryContainer {
         if (controller == null || controller.isNotValid(dependency)) {
             var issueConsole = new IssueConsole(connection);
             var service = new TerminateService(issueConsole, timeout);
-            controller = new StopController(service, ConfigSingleton.getInstance(), this.envVariableController, dependency);
+            controller = new StopController(service, this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.STOP, controller);
         }
         return controller;
@@ -430,7 +428,7 @@ public class ControllerFactoryContainer {
         if (controller == null || controller.isNotValid(dependency)) {
             var issueTso = new IssueTso(connection);
             var service = new TsoService(issueTso, timeout);
-            controller = new TsoController(service, ConfigSingleton.getInstance(), this.envVariableController, dependency);
+            controller = new TsoController(service, this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.TSO, controller);
         }
         return controller;
@@ -443,7 +441,7 @@ public class ControllerFactoryContainer {
         if (controller == null || controller.isNotValid(dependency)) {
             var issueConsole = new IssueConsole(connection);
             var service = new UnameService(issueConsole, timeout);
-            controller = new UnameController(service, ConfigSingleton.getInstance(), this.envVariableController, dependency);
+            controller = new UnameController(service, this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.UNAME, controller);
         }
         return controller;

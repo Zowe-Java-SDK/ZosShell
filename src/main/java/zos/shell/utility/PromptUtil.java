@@ -26,7 +26,7 @@ public final class PromptUtil {
                 int endIndex = promptStr.indexOf(")");
                 if (endIndex != 1) {
                     var valueStr = promptStr.substring(startIndex + 2, endIndex);
-                    var replacePromptStr = envVariableController.getValueByEnv(valueStr.trim());
+                    var replacePromptStr = envVariableController.getValueByEnv(valueStr);
                     if (replacePromptStr != null && !replacePromptStr.isBlank()) {
                         promptStr = promptStr.replace("$(" + valueStr + ")", replacePromptStr);
                     }

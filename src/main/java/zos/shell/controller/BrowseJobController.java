@@ -27,7 +27,7 @@ public class BrowseJobController extends DependencyController {
     public String browseJob(final String target) {
         LOG.debug("*** browseJob ***");
         ResponseStatus responseStatus = browseLogService.browseJob(target);
-        String browseLimit = envVariableController.getValueByEnv("BROWSE_LIMIT").trim();
+        String browseLimit = envVariableController.getValueByEnv("BROWSE_LIMIT");
         int browseLimitInt = 0;
         if (!browseLimit.isBlank()) {
             try {

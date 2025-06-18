@@ -8,7 +8,6 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.service.env.EnvVariableService;
 import zos.shell.service.path.PathService;
 import zos.shell.singleton.ConnSingleton;
-import zos.shell.singleton.configuration.ConfigSingleton;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 import zowe.client.sdk.zosfiles.dsn.response.Member;
@@ -44,7 +43,7 @@ public class DownloadMemberListService {
                 if (member.getMember().isPresent()) {
                     String name = member.getMember().get();
                     futures.add(pool.submit(new FutureMemberDownload(new DsnGet(connection),
-                            new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
+                            new PathService(ConnSingleton.getInstance(),
                                     new EnvVariableController(new EnvVariableService())), dataset, name, isBinary)));
                 }
             }
