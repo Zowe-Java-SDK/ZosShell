@@ -30,7 +30,7 @@ public class UsermodService {
         this.index = index;
     }
 
-    public String changePassword() {
+    public void changePassword() {
         LOG.debug("*** changePassword ***");
         String confirmPassword = null;
         var password = "";
@@ -44,10 +44,9 @@ public class UsermodService {
         ConnSingleton.getInstance().setCurrZosConnection(zosConnection, index);
         ConfigSingleton.getInstance().setSshConnectionByIndex(sshConnection, index);
         ConnSingleton.getInstance().setCurrSshConnection(sshConnection);
-        return "password changed";
     }
 
-    public String changeUsername() {
+    public void changeUsername() {
         LOG.debug("*** changeUsername ***");
         var username = PromptUtil.getPromptInfo("username:", false);
         var zosConnection = new ZosConnection(this.host, this.zosmfPort, username, this.password);
@@ -56,7 +55,6 @@ public class UsermodService {
         ConnSingleton.getInstance().setCurrZosConnection(zosConnection, index);
         ConfigSingleton.getInstance().setSshConnectionByIndex(sshConnection, index);
         ConnSingleton.getInstance().setCurrSshConnection(sshConnection);
-        return "username changed";
     }
 
 }

@@ -18,11 +18,12 @@ public class UsermodController {
 
     public String change(final String flag) {
         LOG.debug("*** change ***");
-        if ("-u".equalsIgnoreCase(flag)) {
-            return usermodService.changeUsername();
-        }
         if ("-p".equalsIgnoreCase(flag)) {
-            return usermodService.changePassword();
+            usermodService.changePassword();
+            return "password changed";
+        } else if ("-u".equalsIgnoreCase(flag)) {
+            usermodService.changeUsername();
+            return "username changed";
         } else {
             return Constants.INVALID_COMMAND;
         }
