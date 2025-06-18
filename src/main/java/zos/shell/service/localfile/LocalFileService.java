@@ -4,6 +4,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.controller.EnvVariableController;
 import zos.shell.singleton.configuration.ConfigSingleton;
 
 import java.io.File;
@@ -20,8 +21,11 @@ public class LocalFileService {
     private static final String DIRECTORY_PATH_WINDOWS = Constants.DEFAULT_DOWNLOAD_PATH_WINDOWS + "\\";
     private static final String DIRECTORY_PATH_MAC = Constants.DEFAULT_DOWNLOAD_PATH_MAC + "/";
 
-    public LocalFileService() {
+    private final EnvVariableController envVariableController;
+
+    public LocalFileService(EnvVariableController envVariableController) {
         LOG.debug("*** LocalFileService ***");
+        this.envVariableController = envVariableController;
     }
 
     public StringBuilder listFiles(final String target) {
@@ -33,8 +37,9 @@ public class LocalFileService {
         LOG.debug("*** getFiles ***");
         var result = new StringBuilder();
         String path;
+        String downloadPath = envVariableController.getValueByEnv("DOWNLOAD_PATH");
         var configSettings = ConfigSingleton.getInstance().getConfigSettings();
-        var configPath = configSettings != null ? configSettings.getDownloadPath() : "";
+        var configPath = configSettings != null ? downloadPath : "";
         var targetValue = target != null && !target.isBlank() ? target : "";
         if (SystemUtils.IS_OS_WINDOWS) {
             var configPathValue = configPath + (!configPath.endsWith("\\") ? "\\" : "") + targetValue;

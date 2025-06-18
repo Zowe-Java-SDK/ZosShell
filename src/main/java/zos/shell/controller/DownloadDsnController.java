@@ -8,7 +8,6 @@ import zos.shell.controller.dependency.DependencyController;
 import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.download.*;
-import zos.shell.singleton.configuration.ConfigSingleton;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
 
@@ -27,12 +26,14 @@ public class DownloadDsnController extends DependencyController {
     private final DownloadSeqDatasetService downloadSeqDatasetService;
     private final DownloadAllMembersService downloadAllMembersService;
     private final DownloadMembersService downloadMembersService;
+    private final EnvVariableController envVariableController;
 
     public DownloadDsnController(final DownloadMemberService downloadMemberService,
                                  final DownloadPdsMemberService downloadPdsMemberService,
                                  final DownloadSeqDatasetService downloadSeqDatasetService,
                                  final DownloadAllMembersService downloadAllMembersService,
                                  final DownloadMembersService downloadMembersService,
+                                 final EnvVariableController envVariableController,
                                  final Dependency dependency) {
         super(dependency);
         LOG.debug("*** DownloadDsnController ***");
@@ -41,21 +42,21 @@ public class DownloadDsnController extends DependencyController {
         this.downloadSeqDatasetService = downloadSeqDatasetService;
         this.downloadAllMembersService = downloadAllMembersService;
         this.downloadMembersService = downloadMembersService;
+        this.envVariableController = envVariableController;
     }
 
     public List<String> download(final String dataset, final String target) {
         LOG.debug("*** download ***");
         List<String> results = new ArrayList<>();
 
-        // TODO incorporate env variable downloadPath availability too..
-        var configSettings = ConfigSingleton.getInstance().getConfigSettings();
-        if (configSettings.getDownloadPath().isBlank()) {
+        String downloadPath = envVariableController.getValueByEnv("DOWNLOAD_PATH");
+        if (downloadPath.isBlank()) {
             results.add("downloadPath configuration missing, try again...");
             return results;
         }
-        File dir = new File(configSettings.getDownloadPath());
+        File dir = new File(downloadPath);
         if (!dir.isDirectory()) {
-            results.add("downloadPath " + configSettings.getDownloadPath() + " not found, try again...");
+            results.add("downloadPath " + downloadPath + " not found, try again...");
             return results;
         }
 
@@ -116,6 +117,4 @@ public class DownloadDsnController extends DependencyController {
         return results;
     }
 
-
 }
-

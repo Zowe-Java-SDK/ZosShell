@@ -10,7 +10,6 @@ import zos.shell.service.env.EnvVariableService;
 import zos.shell.service.memberlst.MemberListingService;
 import zos.shell.service.path.PathService;
 import zos.shell.singleton.ConnSingleton;
-import zos.shell.singleton.configuration.ConfigSingleton;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -107,7 +106,7 @@ public class GrepService {
                                        final ArrayList<Future<List<String>>> futures, final List<Member> members) {
         for (var member : members) {
             var concatService = new ConcatService(new Download(new DsnGet(connection),
-                    new PathService(ConfigSingleton.getInstance(), ConnSingleton.getInstance(),
+                    new PathService(ConnSingleton.getInstance(),
                             new EnvVariableController(new EnvVariableService())), false), timeout);
             if (member.getMember().isPresent()) {
                 var name = member.getMember().get();

@@ -35,7 +35,7 @@ public class EnvVariableService {
         while (m.find()) {
             value = m.group(1);
         }
-        envVariableSingleton.getVariables().put(key.toUpperCase(), value);
+        envVariableSingleton.getVariables().put(key.toUpperCase().trim(), value.trim());
     }
 
 }
