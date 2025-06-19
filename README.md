@@ -223,8 +223,8 @@ Example of config.json:
                         "fontbold": "xxxxx",
                         "textcolor": "xxxx",
                         "backgroundcolor": "xxx",
-                        "paneHeight": "800",
-                        "paneWidth": "1200"
+                        "paneHeight": "xxx",
+                        "paneWidth": "xxx"
                       }		
         },
         {
@@ -257,6 +257,9 @@ Explanation of some of the variable settings:
     consolename specifies the console name to use to perform MVS console command
     accountnumber specifies the account number needed to perform TSO command
     prompt specifies value to display for the application prompt
+    window is a subsection specifies values to control the application window settings
+  
+NOTE: The following are the default values for paneHeight (480) and paneWidth (640); values lower than these are ignored, and the default(s) is used instead.  
    
 The following JSON variable settings are converted into environmental variables within the shell:
   
@@ -288,11 +291,11 @@ For example:
     info=with
     STARTWITH> 
   
-JSON configuration file is required for the application to work properly. Any error in finding the file or parsing the JSON string will result in the application being unusable; it will display an error and any input will close the app.    
+JSON configuration file is required for the application to work properly. Any error in finding the file or parsing the JSON string will result in the application being unusable; it will display an error, and any input will close the app.    
     
 The following screenshot displays the ZosShell shell window with custom windows properties defined within the "window" JSON section.  
   
-Here the window is set to display its background in green and font as yellow/bold.   
+Here the window is set to display its background in green and font as yellow/bold.  
   
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/colors.gif)    
 

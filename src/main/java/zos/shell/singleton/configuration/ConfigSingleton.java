@@ -22,7 +22,8 @@ import java.util.*;
 public class ConfigSingleton {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConfigSingleton.class);
-
+    private static final int PANE_WIDTH_DEFAULT_VALUE = 640;
+    private static final int PANE_HEIGHT_DEFAULT_VALUE = 480;
     private List<Profile> profiles;
     private final ObjectMapper mapper = new ObjectMapper();
     private final LinkedHashSet<ZosConnection> zosConnections = new LinkedHashSet<>();
@@ -137,13 +138,37 @@ public class ConfigSingleton {
         result = windowCmd.setFontSize(window != null && window.getFontsize() != null ?
                 configSettings.getWindow().getFontsize() : String.valueOf(Constants.DEFAULT_FONT_SIZE));
         str.append(result != null ? result : "");
-        if (window != null && window.getPaneHeight() != null) {
-            result = windowCmd.setPaneHeight(window.getPaneHeight());
-            str.append(result != null ? "\n" + result : "");
-        }
-        if (window != null && window.getPaneWidth() != null) {
-            result = windowCmd.setPaneWidth(window.getPaneWidth());
-            str.append(result != null ? "\n" + result : "");
+
+        if (window != null) {
+            var paneWidth = window.getPaneWidth();
+            var paneHeight = window.getPaneHeight();
+            if (paneWidth != null || paneHeight != null) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (paneWidth != null) {
+                try {
+                    if (Integer.parseInt(paneWidth) < PANE_WIDTH_DEFAULT_VALUE) {
+                        paneWidth = String.valueOf(PANE_WIDTH_DEFAULT_VALUE);
+                    }
+                    result = windowCmd.setPaneWidth(paneWidth);
+                    str.append(result != null ? "\n" + result : "");
+                } catch (NumberFormatException ignored) {
+                }
+            }
+            if (paneHeight != null) {
+                try {
+                    if (Integer.parseInt(paneHeight) < PANE_HEIGHT_DEFAULT_VALUE) {
+                        paneHeight = String.valueOf(PANE_HEIGHT_DEFAULT_VALUE);
+                    }
+                    result = windowCmd.setPaneHeight(paneHeight);
+                    str.append(result != null ? "\n" + result : "");
+                } catch (NumberFormatException ignored) {
+                }
+            }
         }
         terminal.println(str.toString());
     }
