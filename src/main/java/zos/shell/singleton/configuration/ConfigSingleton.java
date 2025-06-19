@@ -179,7 +179,7 @@ public class ConfigSingleton {
             LOG.warn("Window update delay interrupted", e);
         }
     }
-    
+
     public List<ZosConnection> getZosConnections() {
         LOG.debug("*** getZosConnections ***");
         return new ArrayList<>(this.zosConnections);
