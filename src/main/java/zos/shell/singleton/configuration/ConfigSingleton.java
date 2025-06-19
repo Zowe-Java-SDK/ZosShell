@@ -22,6 +22,8 @@ import java.util.*;
 public class ConfigSingleton {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConfigSingleton.class);
+    private static final int WINDOW_UPDATE_DELAY_MS = 500;
+    private static final String DEFAULT_EMPTY_STRING = "";
     private static final int PANE_WIDTH_DEFAULT_VALUE = 640;
     private static final int PANE_HEIGHT_DEFAULT_VALUE = 480;
     private List<Profile> profiles;
@@ -98,8 +100,8 @@ public class ConfigSingleton {
         LOG.debug("*** createZosConnections ***");
         profiles.forEach(profile -> zosConnections.add(new ZosConnection(profile.getHostname(),
                 profile.getZosmfport() != null ? profile.getZosmfport() : "0",
-                profile.getUsername() != null ? profile.getUsername() : "",
-                profile.getPassword() != null ? profile.getPassword() : "")));
+                profile.getUsername() != null ? profile.getUsername() : DEFAULT_EMPTY_STRING,
+                profile.getPassword() != null ? profile.getPassword() : DEFAULT_EMPTY_STRING)));
     }
 
     private void createSshConnections() {
@@ -111,8 +113,8 @@ public class ConfigSingleton {
             } catch (NumberFormatException ignored) {
             }
             sshConnections.add(new SshConnection(profile.getHostname(),
-                    sshport, profile.getUsername() != null ? profile.getUsername() : "",
-                    profile.getPassword() != null ? profile.getPassword() : ""));
+                    sshport, profile.getUsername() != null ? profile.getUsername() : DEFAULT_EMPTY_STRING,
+                    profile.getPassword() != null ? profile.getPassword() : DEFAULT_EMPTY_STRING));
         });
     }
 
@@ -129,25 +131,21 @@ public class ConfigSingleton {
         String result;
         result = windowCmd.setTextColor(window != null && window.getTextcolor() != null ?
                 configSettings.getWindow().getTextcolor() : Constants.DEFAULT_TEXT_COLOR);
-        str.append(result != null ? result + "\n" : "");
+        str.append(result != null ? result + "\n" : DEFAULT_EMPTY_STRING);
         result = windowCmd.setBackGroundColor(window != null && window.getBackgroundcolor() != null ?
                 configSettings.getWindow().getBackgroundcolor() : Constants.DEFAULT_BACKGROUND_COLOR);
-        str.append(result != null ? result + "\n" : "");
+        str.append(result != null ? result + "\n" : DEFAULT_EMPTY_STRING);
         result = windowCmd.setBold(window != null && "true".equalsIgnoreCase(configSettings.getWindow().getFontbold()));
-        str.append(result != null ? result + "\n" : "");
+        str.append(result != null ? result + "\n" : DEFAULT_EMPTY_STRING);
         result = windowCmd.setFontSize(window != null && window.getFontsize() != null ?
                 configSettings.getWindow().getFontsize() : String.valueOf(Constants.DEFAULT_FONT_SIZE));
-        str.append(result != null ? result : "");
+        str.append(result != null ? result : DEFAULT_EMPTY_STRING);
 
         if (window != null) {
             var paneWidth = window.getPaneWidth();
             var paneHeight = window.getPaneHeight();
             if (paneWidth != null || paneHeight != null) {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                delayWindowUpdate();
             }
             if (paneWidth != null) {
                 try {
@@ -155,7 +153,7 @@ public class ConfigSingleton {
                         paneWidth = String.valueOf(PANE_WIDTH_DEFAULT_VALUE);
                     }
                     result = windowCmd.setPaneWidth(paneWidth);
-                    str.append(result != null ? "\n" + result : "");
+                    str.append(result != null ? "\n" + result : DEFAULT_EMPTY_STRING);
                 } catch (NumberFormatException ignored) {
                 }
             }
@@ -165,7 +163,7 @@ public class ConfigSingleton {
                         paneHeight = String.valueOf(PANE_HEIGHT_DEFAULT_VALUE);
                     }
                     result = windowCmd.setPaneHeight(paneHeight);
-                    str.append(result != null ? "\n" + result : "");
+                    str.append(result != null ? "\n" + result : DEFAULT_EMPTY_STRING);
                 } catch (NumberFormatException ignored) {
                 }
             }
@@ -173,6 +171,15 @@ public class ConfigSingleton {
         terminal.println(str.toString());
     }
 
+    private void delayWindowUpdate() {
+        try {
+            Thread.sleep(WINDOW_UPDATE_DELAY_MS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            LOG.warn("Window update delay interrupted", e);
+        }
+    }
+    
     public List<ZosConnection> getZosConnections() {
         LOG.debug("*** getZosConnections ***");
         return new ArrayList<>(this.zosConnections);
