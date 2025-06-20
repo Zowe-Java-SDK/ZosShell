@@ -86,7 +86,7 @@ public class EchoService {
     private static String extractQuotedData(String str, QuoteType quoteType) {
         LOG.debug("*** extractQuotedData ***");
         char quoteChar;
-        if ("\"".equals(quoteType.value)) {
+        if ("\"".equals(quoteType.getValue())) {
             quoteChar = '"';
         } else {
             quoteChar = '\'';
