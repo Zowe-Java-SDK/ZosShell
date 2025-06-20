@@ -85,7 +85,7 @@ public class DeleteService {
             // transform target is a member string without * (a wild card)
             target = target.substring(0, target.indexOf("*"));
             members = DsnUtil.getMembersByStartsWithFilter(target, members);
-            if (members.size() == 1) {
+            if (members.size() == 1 && members.get(0).getMember().isPresent()) {
                 return processRequest(currDataSet, members.get(0).getMember().get());
             }
 
