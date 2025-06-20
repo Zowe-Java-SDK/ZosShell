@@ -1,5 +1,6 @@
 package zos.shell.singleton.configuration.model;
 
+@SuppressWarnings("unused")
 public class Profile {
 
     private String name;
