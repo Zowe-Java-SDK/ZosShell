@@ -31,7 +31,7 @@ public class ConfigSingleton {
     private final LinkedHashSet<ZosConnection> zosConnections = new LinkedHashSet<>();
     private final LinkedHashSet<SshConnection> sshConnections = new LinkedHashSet<>();
     private ConfigSettings configSettings;
-    private ChangeWinService windowCmd;
+    private ChangeWinService changeWinService;
 
     private static class Holder {
         private static final ConfigSingleton instance = new ConfigSingleton();
@@ -121,23 +121,23 @@ public class ConfigSingleton {
     public void updateWindowSittings(final TextTerminal<?> terminal) {
         LOG.debug("*** updateWindowSittings ***");
         var str = new StringBuilder();
-        if (windowCmd == null) {
-            windowCmd = new ChangeWinService(TerminalSingleton.getInstance().getTerminal());
+        if (changeWinService == null) {
+            changeWinService = new ChangeWinService(TerminalSingleton.getInstance().getTerminal());
         }
         if (this.configSettings == null) {
             return;
         }
         var window = configSettings.getWindow();
         String result;
-        result = windowCmd.setTextColor(window != null && window.getTextcolor() != null ?
+        result = changeWinService.setTextColor(window != null && window.getTextcolor() != null ?
                 configSettings.getWindow().getTextcolor() : Constants.DEFAULT_TEXT_COLOR);
         str.append(result != null ? result + "\n" : DEFAULT_EMPTY_STRING);
-        result = windowCmd.setBackGroundColor(window != null && window.getBackgroundcolor() != null ?
+        result = changeWinService.setBackGroundColor(window != null && window.getBackgroundcolor() != null ?
                 configSettings.getWindow().getBackgroundcolor() : Constants.DEFAULT_BACKGROUND_COLOR);
         str.append(result != null ? result + "\n" : DEFAULT_EMPTY_STRING);
-        result = windowCmd.setBold(window != null && "true".equalsIgnoreCase(configSettings.getWindow().getFontbold()));
+        result = changeWinService.setBold(window != null && "true".equalsIgnoreCase(configSettings.getWindow().getFontbold()));
         str.append(result != null ? result + "\n" : DEFAULT_EMPTY_STRING);
-        result = windowCmd.setFontSize(window != null && window.getFontsize() != null ?
+        result = changeWinService.setFontSize(window != null && window.getFontsize() != null ?
                 configSettings.getWindow().getFontsize() : String.valueOf(Constants.DEFAULT_FONT_SIZE));
         str.append(result != null ? result : DEFAULT_EMPTY_STRING);
 
@@ -152,7 +152,7 @@ public class ConfigSingleton {
                     if (Integer.parseInt(paneWidth) < PANE_WIDTH_DEFAULT_VALUE) {
                         paneWidth = String.valueOf(PANE_WIDTH_DEFAULT_VALUE);
                     }
-                    result = windowCmd.setPaneWidth(paneWidth);
+                    result = changeWinService.setPaneWidth(paneWidth);
                     str.append(result != null ? "\n" + result : DEFAULT_EMPTY_STRING);
                 } catch (NumberFormatException ignored) {
                 }
@@ -162,7 +162,7 @@ public class ConfigSingleton {
                     if (Integer.parseInt(paneHeight) < PANE_HEIGHT_DEFAULT_VALUE) {
                         paneHeight = String.valueOf(PANE_HEIGHT_DEFAULT_VALUE);
                     }
-                    result = windowCmd.setPaneHeight(paneHeight);
+                    result = changeWinService.setPaneHeight(paneHeight);
                     str.append(result != null ? "\n" + result : DEFAULT_EMPTY_STRING);
                 } catch (NumberFormatException ignored) {
                 }
