@@ -135,7 +135,8 @@ public class ConfigSingleton {
         result = changeWinService.setBackGroundColor(window != null && window.getBackgroundcolor() != null ?
                 configSettings.getWindow().getBackgroundcolor() : Constants.DEFAULT_BACKGROUND_COLOR);
         str.append(result != null ? result + "\n" : DEFAULT_EMPTY_STRING);
-        result = changeWinService.setBold(window != null && "true".equalsIgnoreCase(configSettings.getWindow().getFontbold()));
+        result = changeWinService.setBold(window != null &&
+                "true".equalsIgnoreCase(configSettings.getWindow().getFontbold()));
         str.append(result != null ? result + "\n" : DEFAULT_EMPTY_STRING);
         result = changeWinService.setFontSize(window != null && window.getFontsize() != null ?
                 configSettings.getWindow().getFontsize() : String.valueOf(Constants.DEFAULT_FONT_SIZE));
