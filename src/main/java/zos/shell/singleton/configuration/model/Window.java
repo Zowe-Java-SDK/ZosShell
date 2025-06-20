@@ -1,5 +1,6 @@
 package zos.shell.singleton.configuration.model;
 
+@SuppressWarnings("unused")
 public class Window {
 
     private String fontsize;
