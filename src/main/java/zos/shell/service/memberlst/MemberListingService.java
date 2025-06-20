@@ -34,7 +34,7 @@ public class MemberListingService {
         try {
             members = submit.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
-            LOG.debug("exception error: {}", String.valueOf(e));
+            LOG.debug(String.valueOf(e));
             submit.cancel(true);
             throw new ZosmfRequestException(e.getMessage() != null && !e.getMessage().isBlank() ?
                     e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG);
@@ -62,7 +62,7 @@ public class MemberListingService {
         try {
             members = submit.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
-            LOG.debug("exception error: {}", String.valueOf(e));
+            LOG.debug(String.valueOf(e));
             submit.cancel(true);
         } catch (TimeoutException e) {
             submit.cancel(true);

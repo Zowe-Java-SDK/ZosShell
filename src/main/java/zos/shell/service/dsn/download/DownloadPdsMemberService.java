@@ -43,7 +43,7 @@ public class DownloadPdsMemberService {
                     dataSetMember.getDataset(), dataSetMember.getMember(), isBinary));
             results.add(submit.get(timeout, TimeUnit.SECONDS));
         } catch (InterruptedException | ExecutionException e) {
-            LOG.debug("exception error: {}", String.valueOf(e));
+            LOG.debug(String.valueOf(e));
             submit.cancel(true);
             results.add(new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
                     e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG, false));
