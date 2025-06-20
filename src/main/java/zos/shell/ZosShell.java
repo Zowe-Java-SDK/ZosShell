@@ -105,7 +105,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         TerminalSingleton.getInstance().getTerminal().setBookmark("top");
 
         // with TerminalSingleton fully initialize update window terminal with the configured properties
-        ConfigSingleton.getInstance().updateWindowSittings(TerminalSingleton.getInstance().getTerminal());
+        ConfigSingleton.getInstance().updateWindowSettings(TerminalSingleton.getInstance().getTerminal());
 
         // initialize HistorySingleton object
         HistorySingleton.getInstance().setHistory(TerminalSingleton.getInstance().getTerminal());

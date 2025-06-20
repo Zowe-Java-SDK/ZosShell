@@ -118,8 +118,8 @@ public class ConfigSingleton {
         });
     }
 
-    public void updateWindowSittings(final TextTerminal<?> terminal) {
-        LOG.debug("*** updateWindowSittings ***");
+    public void updateWindowSettings(final TextTerminal<?> terminal) {
+        LOG.debug("*** updateWindowSettings ***");
         var str = new StringBuilder();
         if (changeWinService == null) {
             changeWinService = new ChangeWinService(TerminalSingleton.getInstance().getTerminal());

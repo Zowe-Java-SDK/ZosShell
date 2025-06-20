@@ -57,7 +57,7 @@ public class ChangeConnService {
         }
 
         if (!username.isBlank() && !password.isBlank()) {
-            ConfigSingleton.getInstance().updateWindowSittings(terminal);
+            ConfigSingleton.getInstance().updateWindowSettings(terminal);
             return zosConnectionByIndex;
         }
 
@@ -68,7 +68,7 @@ public class ChangeConnService {
             password = PromptUtil.getPromptInfo("password:", true);
             confirmPassword = PromptUtil.getPromptInfo("confirm password:", true);
         }
-        ConfigSingleton.getInstance().updateWindowSittings(terminal);
+        ConfigSingleton.getInstance().updateWindowSettings(terminal);
         configSingleton.setZosConnectionByIndex(new ZosConnection(host, zosmfport, username, password), index);
         return configSingleton.getZosConnectionByIndex(index);
     }
