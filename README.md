@@ -194,13 +194,13 @@ You can override the default file name and its location by setting the following
   
 The configuration file consists of JSON data. The configuration JSON string is defined as a JSON array structure. The array will consist of one or more profile(s).
   
-A profile is a one-to-one relationship of [Profile.java](https://github.com/Zowe-Java-SDK/ZosShell/blob/master/src/main/java/zos/shell/singleton/configuration/model/Profile.java) file within the project. It contains variables as a placeholder for configuration information, such as z/OSMF and SSH connection information, properties to control the Window environment and much more.  
+A profile is a one-to-one relationship of the [Profile.java](https://github.com/Zowe-Java-SDK/ZosShell/blob/master/src/main/java/zos/shell/singleton/configuration/model/Profile.java) file within the project. It contains variables as a placeholder for configuration information, such as z/OSMF and SSH connection information, properties to control the Window environment and much more.  
    
 The first JSON array entry in the example below shows all the attributes defined to be read by the application.  
   
 The other JSON array entries show that you don't need to specify all attributes and its values. The attributes required are those that specify a z/OSMF connection: hostname and zosmfport.    
    
-The username and password entries are optional. It is recommended to not specify those settings. When not specified, the application will prompt the end user for username and password for the current connection.   
+The username and password entries are optional. It is recommended to not specify those settings. When not specified, the application will prompt the end user for a username and password for the current connection.   
     
 For further details on username and password usage, see [here](https://github.com/Zowe-Java-SDK/ZosShell/issues/182).    
     
@@ -274,7 +274,7 @@ Each of these environmental variables will appear at app startup via ENV command
 
 Use SET command to define or change each environmental variable noted above as needed, and the new settings will be used by the application accordingly.
   
-<b>PROMPT</b> setting controls what the shell prompt value should represent. By default, the prompt value is ">".  
+<b>PROMPT</b> setting controls what the shell prompt value should represent. By default, the prompt value is ">."  
   
 A prompt can be set and changed directly with the SET command. It can parse other ENV variables' value to use within its prompt value.  
   
@@ -301,7 +301,7 @@ Here the window is set to display its background in green and font as yellow/bol
 
 ## Troubleshooting
     
-Logging framework log4j2 is configured for the project. log4j2 configuration is located under src/main/resources/log4j2.xml.  
+Logging framework log4j2 is configured for the project. Log4j2 configuration is located under src/main/resources/log4j2.xml.  
     
 It is configured to produce output logging while the application is running under the running directory where the application was kicked off.
       
