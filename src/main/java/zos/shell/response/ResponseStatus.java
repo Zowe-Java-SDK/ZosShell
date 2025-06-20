@@ -2,7 +2,7 @@ package zos.shell.response;
 
 public class ResponseStatus {
 
-    private String message;
+    private final String message;
     private final boolean status;
     private String optionalData;
 
@@ -19,10 +19,6 @@ public class ResponseStatus {
 
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(final String message) {
-        this.message = message;
     }
 
     public boolean isStatus() {
