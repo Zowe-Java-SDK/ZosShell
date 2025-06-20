@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalLong;
 
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class Dependency {
 
     private static final Logger LOG = LoggerFactory.getLogger(Dependency.class);
