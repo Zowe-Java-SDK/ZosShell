@@ -20,7 +20,9 @@ public final class ResponseUtil {
 
     public static ResponseStatus getByteResponseStatus(ZosmfRequestException e) {
         LOG.debug("*** getByteResponseStatus ***");
-        var byteMsg = (byte[]) e.getResponse().getResponsePhrase().get();
+        var byteMsg = (byte[]) e.getResponse().getResponsePhrase().orElseThrow(() ->
+                new IllegalStateException("Response phrase is not present"));
+
         var errorStream = new ByteArrayInputStream(byteMsg);
         String errMsg;
         try {
