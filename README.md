@@ -4,7 +4,7 @@ ZosShell provides a client like Linux shell to perform z/OS system service comma
   
 The commands exploit the z/OSMF Rest API layer on z/OS. 
   
-ZosShell acts like a Bash shell. It provides similar bash concepts and processing. Examples of shell functionality are: keeping track of command history, changing directories represented as a partition dataset, history shortcuts with exclamation mark, auto command type ahead with TAB key and much more. It also caches each command output that can be searched by the search command.  
+ZosShell acts like a Bash shell. It provides similar bash concepts and processing. Examples of shell functionality are: keeping track of command history, changing directories represented as a partition dataset, history shortcuts with exclamation mark, auto command type ahead with a TAB key and much more. It also caches each command output that can be searched by the search command.  
 
 The project arose because of a need for something more simple, direct and less verbiage than [Zowe CLI](https://github.com/zowe/zowe-cli) for the most common commands. 
   
