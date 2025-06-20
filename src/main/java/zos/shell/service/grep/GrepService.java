@@ -81,8 +81,10 @@ public class GrepService {
             return futureResults(dataset, result, pool, futures, members);
         } else {
             pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-            var concatService = new ConcatService(new Download(new DsnGet(connection), pathService, false), timeout);
-            Future<List<String>> submit = pool.submit(new FutureGrep(concatService, dataset, target, pattern, false));
+            var concatService = new ConcatService(
+                    new Download(new DsnGet(connection), pathService, false), timeout);
+            Future<List<String>> submit = pool.submit(
+                    new FutureGrep(concatService, dataset, target, pattern, false));
 
             try {
                 result.addAll(submit.get(timeout, TimeUnit.SECONDS));
