@@ -449,13 +449,8 @@ public class ControllerFactoryContainer {
 
     public UsermodController getUsermodController(final ZosConnection connection, final int index) {
         LOG.debug("*** getUsermodController ***");
-        var controller = (UsermodController) controllers.get(ContainerType.Name.USERMOD);
-        if (controller == null) {
-            var service = new UsermodService(connection, index);
-            controller = new UsermodController(service);
-            this.controllers.put(ContainerType.Name.USERMOD, controller);
-        }
-        return controller;
+        var service = new UsermodService(connection, index);
+        return new UsermodController(service);
     }
 
     public UssController getUssController(final SshConnection connection) {

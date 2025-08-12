@@ -31,7 +31,6 @@ public class ContainerType {
         TOUCH,
         TSO,
         UNAME,
-        USERMOD,
         USS
     }
 
