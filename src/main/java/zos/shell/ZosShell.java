@@ -16,9 +16,7 @@ import zos.shell.singleton.configuration.ConfigSingleton;
 import zos.shell.utility.PromptUtil;
 import zos.shell.utility.StrUtil;
 import zowe.client.sdk.core.SshConnection;
-import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.core.ZosConnectionFactory;
-import zowe.client.sdk.utility.ValidateUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
