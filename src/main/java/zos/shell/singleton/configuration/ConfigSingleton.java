@@ -13,6 +13,7 @@ import zos.shell.singleton.configuration.model.Profile;
 import zos.shell.singleton.configuration.record.ConfigSettings;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.core.ZosConnectionFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,7 +99,8 @@ public class ConfigSingleton {
 
     private void createZosConnections() {
         LOG.debug("*** createZosConnections ***");
-        profiles.forEach(profile -> zosConnections.add(new ZosConnection(profile.getHostname(),
+        profiles.forEach(profile -> zosConnections.add(
+                ZosConnectionFactory.createBasicConnection(profile.getHostname(),
                 profile.getZosmfport() != null ? profile.getZosmfport() : "0",
                 profile.getUsername() != null ? profile.getUsername() : DEFAULT_EMPTY_STRING,
                 profile.getPassword() != null ? profile.getPassword() : DEFAULT_EMPTY_STRING)));

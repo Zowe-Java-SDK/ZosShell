@@ -7,6 +7,7 @@ import zos.shell.singleton.configuration.ConfigSingleton;
 import zos.shell.utility.PromptUtil;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.core.ZosConnectionFactory;
 
 public class UsermodService {
 
@@ -38,7 +39,7 @@ public class UsermodService {
             password = PromptUtil.getPromptInfo("password:", true);
             confirmPassword = PromptUtil.getPromptInfo("confirm password:", true);
         }
-        var zosConnection = new ZosConnection(this.host, this.zosmfPort, this.username, password);
+        var zosConnection = ZosConnectionFactory.createBasicConnection(this.host, this.zosmfPort, this.username, password);
         var sshConnection = new SshConnection(this.host, this.sshPort, this.username, password);
         ConfigSingleton.getInstance().setZosConnectionByIndex(zosConnection, index);
         ConnSingleton.getInstance().setCurrZosConnection(zosConnection, index);
@@ -49,7 +50,7 @@ public class UsermodService {
     public void changeUsername() {
         LOG.debug("*** changeUsername ***");
         var username = PromptUtil.getPromptInfo("username:", false);
-        var zosConnection = new ZosConnection(this.host, this.zosmfPort, username, this.password);
+        var zosConnection = ZosConnectionFactory.createBasicConnection(this.host, this.zosmfPort, username, this.password);
         var sshConnection = new SshConnection(this.host, this.sshPort, username, this.password);
         ConfigSingleton.getInstance().setZosConnectionByIndex(zosConnection, index);
         ConnSingleton.getInstance().setCurrZosConnection(zosConnection, index);

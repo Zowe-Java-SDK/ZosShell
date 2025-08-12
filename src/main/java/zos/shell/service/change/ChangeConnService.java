@@ -9,6 +9,7 @@ import zos.shell.singleton.configuration.record.ConfigSettings;
 import zos.shell.utility.PromptUtil;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.core.ZosConnectionFactory;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -69,7 +70,8 @@ public class ChangeConnService {
             confirmPassword = PromptUtil.getPromptInfo("confirm password:", true);
         }
         ConfigSingleton.getInstance().updateWindowSettings(terminal);
-        configSingleton.setZosConnectionByIndex(new ZosConnection(host, zosmfport, username, password), index);
+        configSingleton.setZosConnectionByIndex(
+                ZosConnectionFactory.createBasicConnection(host, zosmfport, username, password), index);
         return configSingleton.getZosConnectionByIndex(index);
     }
 

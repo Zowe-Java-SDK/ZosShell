@@ -17,6 +17,7 @@ import zos.shell.utility.PromptUtil;
 import zos.shell.utility.StrUtil;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
+import zowe.client.sdk.core.ZosConnectionFactory;
 import zowe.client.sdk.utility.ValidateUtils;
 
 import java.io.IOException;
@@ -142,9 +143,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                     }
                 }
 
-                currConnection = new ZosConnection(host, zosmfport, username, password);
-                ValidateUtils.checkConnection(currConnection);
-
+                currConnection = ZosConnectionFactory.createBasicConnection(host, zosmfport, username, password);
                 ConfigSingleton.getInstance().setZosConnectionByIndex(currConnection, 0);
                 ConnSingleton.getInstance().setCurrZosConnection(currConnection, 0);
                 currSshConnection = new SshConnection(host, currSshConnection.getPort(), username, password);
