@@ -37,7 +37,7 @@ public class Console {
 
         ConsoleResponse consoleResponse;
         var params = new IssueConsoleParams(command);
-        params.setProcessResponse(true);
+        params.setProcessResponse();
         try {
             consoleResponse = !(consoleName == null || consoleName.isBlank()) ?
                     execute(consoleName, params) : execute(params);
