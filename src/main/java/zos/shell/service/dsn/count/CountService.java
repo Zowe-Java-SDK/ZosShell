@@ -9,8 +9,8 @@ import zos.shell.service.memberlst.MemberListingService;
 import zos.shell.utility.DsnUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
-import zowe.client.sdk.zosfiles.dsn.response.Dataset;
-import zowe.client.sdk.zosfiles.dsn.response.Member;
+import zowe.client.sdk.zosfiles.dsn.model.Dataset;
+import zowe.client.sdk.zosfiles.dsn.model.Member;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -5,22 +5,20 @@ import org.slf4j.LoggerFactory;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
-import zowe.client.sdk.zostso.method.IssueTso;
-import zowe.client.sdk.zostso.response.IssueResponse;
+import zowe.client.sdk.zostso.methods.TsoCmd;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Tso {
 
     private static final Logger LOG = LoggerFactory.getLogger(Tso.class);
 
-    private final zowe.client.sdk.zostso.method.IssueTso issueTso;
-    private final String accountNumber;
+    private final TsoCmd issueTso;
 
-    public Tso(IssueTso issueTso, String accountNumber) {
+    public Tso(TsoCmd issueTso) {
         LOG.debug("*** Tso ***");
         this.issueTso = issueTso;
-        this.accountNumber = accountNumber;
     }
 
     public ResponseStatus issueCommand(String command) {
@@ -32,7 +30,7 @@ public class Tso {
             command = m.group(1);
         }
 
-        IssueResponse response;
+        List<String> response;
         try {
             response = execute(command);
         } catch (ZosmfRequestException e) {
@@ -40,12 +38,12 @@ public class Tso {
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
 
-        return new ResponseStatus(response.getCommandResponses().orElse("no response"), true);
+        return new ResponseStatus(String.join("\n", response), true);
     }
 
-    private IssueResponse execute(final String command) throws ZosmfRequestException {
+    private List<String> execute(final String command) throws ZosmfRequestException {
         LOG.debug("*** issue ***");
-        return issueTso.issueCommand(accountNumber, command);
+        return issueTso.issueCommand(command);
     }
 
 }

@@ -1,8 +1,8 @@
 package zos.shell.service.datasetlst;
 
-import zowe.client.sdk.zosfiles.dsn.input.ListParams;
+import zowe.client.sdk.zosfiles.dsn.input.DsnListInputData;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
-import zowe.client.sdk.zosfiles.dsn.response.Dataset;
+import zowe.client.sdk.zosfiles.dsn.model.Dataset;
 import zowe.client.sdk.zosfiles.dsn.types.AttributeType;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class FutureDatasetListing implements Callable<List<Dataset>> {
     @Override
     public List<Dataset> call() throws Exception {
         return dsnList.getDatasets(dataset,
-                new ListParams.Builder().attribute(AttributeType.BASE)
+                new DsnListInputData.Builder().attribute(AttributeType.BASE)
                         .maxLength("0")  // return all
                         .responseTimeout(String.valueOf(this.timeout)).build());
     }

@@ -49,7 +49,7 @@ import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
 import zowe.client.sdk.zosjobs.methods.JobDelete;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 import zowe.client.sdk.zosjobs.methods.JobSubmit;
-import zowe.client.sdk.zostso.method.IssueTso;
+import zowe.client.sdk.zostso.methods.TsoCmd;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -421,14 +421,16 @@ public class ControllerFactoryContainer {
         return controller;
     }
 
-    public TsoController getTsoController(final ZosConnection connection, final long timeout) {
+    public TsoController getTsoController(final ZosConnection connection,
+                                          final String accountNumber,
+                                          final long timeout) {
         LOG.debug("*** getTsoController ***");
         var controller = (TsoController) controllers.get(ContainerType.Name.TSO);
-        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).data(accountNumber).build();
         if (controller == null || controller.isNotValid(dependency)) {
-            var issueTso = new IssueTso(connection);
+            var issueTso = new TsoCmd(connection, accountNumber);
             var service = new TsoService(issueTso, timeout);
-            controller = new TsoController(service, this.envVariableController, dependency);
+            controller = new TsoController(service, dependency);
             this.controllers.put(ContainerType.Name.TSO, controller);
         }
         return controller;

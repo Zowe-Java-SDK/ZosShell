@@ -1,8 +1,8 @@
 package zos.shell.service.job.browse;
 
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
-import zowe.client.sdk.zosjobs.input.JobFile;
 import zowe.client.sdk.zosjobs.methods.JobGet;
+import zowe.client.sdk.zosjobs.model.JobFile;
 
 import java.util.List;
 import java.util.concurrent.Callable;

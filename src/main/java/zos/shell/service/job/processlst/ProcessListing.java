@@ -6,9 +6,9 @@ import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
-import zowe.client.sdk.zosjobs.input.GetJobParams;
+import zowe.client.sdk.zosjobs.input.JobGetInputData;
 import zowe.client.sdk.zosjobs.methods.JobGet;
-import zowe.client.sdk.zosjobs.response.Job;
+import zowe.client.sdk.zosjobs.model.Job;
 
 import java.util.Comparator;
 import java.util.List;
@@ -18,7 +18,7 @@ public class ProcessListing {
     private static final Logger LOG = LoggerFactory.getLogger(ProcessListing.class);
 
     private final JobGet jobGet;
-    private final GetJobParams.Builder getJobParams = new GetJobParams.Builder("*");
+    private final JobGetInputData.Builder getJobParams = new JobGetInputData.Builder("*");
 
     public ProcessListing(final JobGet jobGet) {
         LOG.debug("*** ProcessListing ***");

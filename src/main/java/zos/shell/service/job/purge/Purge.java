@@ -6,10 +6,10 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
-import zowe.client.sdk.zosjobs.input.ModifyJobParams;
+import zowe.client.sdk.zosjobs.input.JobModifyInputData;
 import zowe.client.sdk.zosjobs.methods.JobDelete;
 import zowe.client.sdk.zosjobs.methods.JobGet;
-import zowe.client.sdk.zosjobs.response.Job;
+import zowe.client.sdk.zosjobs.model.Job;
 
 import java.util.Comparator;
 import java.util.List;
@@ -87,7 +87,7 @@ public class Purge {
         }
 
         try {
-            delete.deleteCommon(new ModifyJobParams.Builder(
+            delete.deleteCommon(new JobModifyInputData.Builder(
                     job.getJobName().get(), job.getJobId().get()).version("1.0").build());
             var msg = "Job Name: " + job.getJobName().get() + ", Job Id: " + job.getJobId().get() + " purged successfully...";
             return new ResponseStatus(msg, true);

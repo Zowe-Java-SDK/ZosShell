@@ -1,7 +1,7 @@
 package zos.shell.service.tso;
 
 import zos.shell.response.ResponseStatus;
-import zowe.client.sdk.zostso.method.IssueTso;
+import zowe.client.sdk.zostso.methods.TsoCmd;
 
 import java.util.concurrent.Callable;
 
@@ -9,8 +9,8 @@ public class FutureTso extends Tso implements Callable<ResponseStatus> {
 
     private final String command;
 
-    public FutureTso(final IssueTso issueTso, final String accountNumber, final String command) {
-        super(issueTso, accountNumber);
+    public FutureTso(final TsoCmd issueTso, final String command) {
+        super(issueTso);
         this.command = command;
     }
 

@@ -12,20 +12,16 @@ public class TsoController extends DependencyController {
     private static final Logger LOG = LoggerFactory.getLogger(TsoController.class);
 
     private final TsoService tsoService;
-    private final EnvVariableController envVariableController;
 
-    public TsoController(final TsoService tsoService, final EnvVariableController envVariableController,
-                         final Dependency dependency) {
+    public TsoController(final TsoService tsoService, final Dependency dependency) {
         super(dependency);
         LOG.debug("*** TsoController ***");
         this.tsoService = tsoService;
-        this.envVariableController = envVariableController;
     }
 
     public String issueCommand(final String command) {
         LOG.debug("*** issueCommand ***");
-        String accountNumber = envVariableController.getValueByEnv("ACCOUNT_NUMBER");
-        ResponseStatus responseStatus = tsoService.issueCommand(accountNumber, command);
+        ResponseStatus responseStatus = tsoService.issueCommand(command);
         return responseStatus.getMessage();
     }
 
