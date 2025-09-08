@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
-import zowe.client.sdk.zosfiles.dsn.response.Member;
+import zowe.client.sdk.zosfiles.dsn.model.Member;
 
 import java.util.List;
 import java.util.concurrent.*;

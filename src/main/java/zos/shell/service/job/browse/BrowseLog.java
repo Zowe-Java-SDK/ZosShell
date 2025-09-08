@@ -6,10 +6,10 @@ import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
-import zowe.client.sdk.zosjobs.input.GetJobParams;
-import zowe.client.sdk.zosjobs.input.JobFile;
+import zowe.client.sdk.zosjobs.input.JobGetInputData;
 import zowe.client.sdk.zosjobs.methods.JobGet;
-import zowe.client.sdk.zosjobs.response.Job;
+import zowe.client.sdk.zosjobs.model.Job;
+import zowe.client.sdk.zosjobs.model.JobFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class BrowseLog {
 
     protected ResponseStatus browseLog(final String target) {
         LOG.debug("*** browseLog ***");
-        var jobParams = new GetJobParams.Builder("*").prefix(target).build();
+        var jobParams = new JobGetInputData.Builder("*").prefix(target).build();
         try {
             jobs = retrieve.getCommon(jobParams);
         } catch (ZosmfRequestException e) {

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.FutureUtil;
-import zowe.client.sdk.zosfiles.dsn.input.CreateParams;
+import zowe.client.sdk.zosfiles.dsn.input.DsnCreateInputData;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
 
 import java.util.concurrent.ExecutorService;
@@ -25,7 +25,7 @@ public class MakeDirService {
         this.timeout = timeout;
     }
 
-    public ResponseStatus create(final String dataset, final CreateParams params) {
+    public ResponseStatus create(final String dataset, final DsnCreateInputData params) {
         LOG.debug("*** create ***");
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         Future<ResponseStatus> submit = pool.submit(new FutureMakeDirectory(dsnCreate, dataset, params));

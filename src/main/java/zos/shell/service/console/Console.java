@@ -7,7 +7,7 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosconsole.ConsoleConstants;
-import zowe.client.sdk.zosconsole.input.IssueConsoleParams;
+import zowe.client.sdk.zosconsole.input.IssueConsoleInputData;
 import zowe.client.sdk.zosconsole.method.IssueConsole;
 import zowe.client.sdk.zosconsole.response.ConsoleResponse;
 
@@ -36,7 +36,7 @@ public class Console {
         }
 
         ConsoleResponse consoleResponse;
-        var params = new IssueConsoleParams(command);
+        var params = new IssueConsoleInputData(command);
         params.setProcessResponse();
         try {
             consoleResponse = !(consoleName == null || consoleName.isBlank()) ?
@@ -50,12 +50,12 @@ public class Console {
                 consoleResponse.getCommandResponse().orElse("no data"), true);
     }
 
-    private ConsoleResponse execute(final IssueConsoleParams params) throws ZosmfRequestException {
+    private ConsoleResponse execute(final IssueConsoleInputData params) throws ZosmfRequestException {
         LOG.debug("*** execute issue common command with default consoleName ***");
         return issueConsole.issueCommandCommon(ConsoleConstants.RES_DEF_CN, params);
     }
 
-    private ConsoleResponse execute(final String consoleName, final IssueConsoleParams params)
+    private ConsoleResponse execute(final String consoleName, final IssueConsoleInputData params)
             throws ZosmfRequestException {
         LOG.debug("*** execute issue common command with consoleName ***");
         return issueConsole.issueCommandCommon(consoleName, params);

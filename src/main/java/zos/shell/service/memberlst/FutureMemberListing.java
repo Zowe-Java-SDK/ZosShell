@@ -1,8 +1,8 @@
 package zos.shell.service.memberlst;
 
-import zowe.client.sdk.zosfiles.dsn.input.ListParams;
+import zowe.client.sdk.zosfiles.dsn.input.DsnListInputData;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
-import zowe.client.sdk.zosfiles.dsn.response.Member;
+import zowe.client.sdk.zosfiles.dsn.model.Member;
 import zowe.client.sdk.zosfiles.dsn.types.AttributeType;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class FutureMemberListing implements Callable<List<Member>> {
     @Override
     public List<Member> call() throws Exception {
         return dsnList.getMembers(dataset,
-                new ListParams.Builder().attribute(AttributeType.BASE)
+                new DsnListInputData.Builder().attribute(AttributeType.BASE)
                         .maxLength("0")  // return all
                         .responseTimeout(String.valueOf(this.timeout)).build());
     }

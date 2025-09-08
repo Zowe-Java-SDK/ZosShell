@@ -660,7 +660,13 @@ public class CommandRouter {
                 StringBuilder tsoCommandCandidate = getCommandFromParams(params);
                 long tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {
-                    var tsoController = controllerContainer.getTsoController(currConnection, timeout);
+                    envVariableController = controllerContainer.getEnvVariableController();
+                    String accountNumber = envVariableController.getValueByEnv("ACCOUNT_NUMBER");
+                    if (accountNumber == null || accountNumber.isBlank()) {
+                        terminal.println("ACCOUNT_NUMBER is not set, use SET command and try again...");
+                        break;
+                    }
+                    var tsoController = controllerContainer.getTsoController(currConnection, accountNumber, timeout);
                     String tsoResult = tsoController.issueCommand(tsoCommandCandidate.toString());
                     searchCache = new SearchCache("tso", new StringBuilder(tsoResult));
                     terminal.println(tsoResult);

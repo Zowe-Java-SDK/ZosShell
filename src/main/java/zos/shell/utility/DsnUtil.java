@@ -2,7 +2,7 @@ package zos.shell.utility;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zowe.client.sdk.zosfiles.dsn.response.Member;
+import zowe.client.sdk.zosfiles.dsn.model.Member;
 
 import java.util.List;
 import java.util.Locale;

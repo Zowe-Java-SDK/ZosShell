@@ -11,7 +11,7 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.makedir.MakeDirService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.StrUtil;
-import zowe.client.sdk.zosfiles.dsn.input.CreateParams;
+import zowe.client.sdk.zosfiles.dsn.input.DsnCreateInputData;
 
 public class MakeDirController extends DependencyController {
 
@@ -43,7 +43,7 @@ public class MakeDirController extends DependencyController {
             terminal.println(Constants.DATASET_NOT_SPECIFIED);
             return;
         }
-        var createParamsBuilder = new CreateParams.Builder();
+        var createParamsBuilder = new DsnCreateInputData.Builder();
         var isSequential = false;
         terminal.println("To quit, enter 'q', 'quit' or 'exit' at any prompt.");
         String input;
