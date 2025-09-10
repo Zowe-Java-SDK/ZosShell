@@ -1,5 +1,6 @@
 package zos.shell.utility;
 
+import kong.unirest.core.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
@@ -40,8 +41,8 @@ public final class ResponseUtil {
         if (response == null || response.getResponsePhrase().isEmpty()) {
             return null;
         }
-        if (response.getResponsePhrase().get() instanceof JSONObject)
-                && "{}".equals(response.getResponsePhrase().get().toString())) {
+        if (response.getResponsePhrase().get() instanceof JSONObject &&
+                ("{}".equals(response.getResponsePhrase().get().toString()))) {
             return "http status error code: " +
                     (response.getStatusCode().isPresent() ? response.getStatusCode().getAsInt() : "") +
                     ", status text: " + response.getStatusText().orElse("") + ", response phrase: " +
