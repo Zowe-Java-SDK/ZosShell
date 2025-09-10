@@ -40,6 +40,14 @@ public final class ResponseUtil {
         if (response == null || response.getResponsePhrase().isEmpty()) {
             return null;
         }
+        if (response.getResponsePhrase().get() instanceof JSONObject
+                && "{}".equals(response.getResponsePhrase().get().toString())) {
+            return "http status error code: " +
+                    (response.getStatusCode().isPresent() ? response.getStatusCode().getAsInt() : "") +
+                    ", status text: " + response.getStatusText().orElse("") + ", response phrase: " +
+                    response.getResponsePhrase().get();
+        }
+
         return response.getResponsePhrase().get().toString();
     }
 
