@@ -40,7 +40,7 @@ public final class ResponseUtil {
         if (response == null || response.getResponsePhrase().isEmpty()) {
             return null;
         }
-        if (response.getResponsePhrase().get() instanceof JSONObject
+        if (response.getResponsePhrase().get() instanceof JSONObject)
                 && "{}".equals(response.getResponsePhrase().get().toString())) {
             return "http status error code: " +
                     (response.getStatusCode().isPresent() ? response.getStatusCode().getAsInt() : "") +
