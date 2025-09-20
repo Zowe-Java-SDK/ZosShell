@@ -172,17 +172,17 @@ At the root directory prompt, execute the following maven command:
   
 Change the directory to the target directory and execute the following command:  
   
-    java -jar zosshell-2.1.1.jar   
+    java -jar zosshell-4.1.0.jar   
   
 Since version 3.0.0, you can send an argument value to the java command above, for instance:  
   
-    java -jar zosshell-2.1.1.jar 2  
+    java -jar zosshell-4.1.0.jar 2  
   
 This will load the second profile defined in config.json at startup instead of the first one, which is done by default.  
   
 If you are planning to browse large job output, you may want to set the JVM memory usage higher than the default, i.e.  
   
-    java -jar -Xmx2G zosshell-2.1.1.jar   
+    java -jar -Xmx2G zosshell-4.1.0.jar   
   
 ### Terminal configuration properties
   
