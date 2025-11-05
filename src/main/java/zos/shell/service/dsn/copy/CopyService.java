@@ -146,7 +146,7 @@ public class CopyService {
             var target = firstParam.substring(0, firstParam.indexOf("*"));
             members = DsnUtil.getMembersByStartsWithFilter(target, members);
             if (members.size() == 1) {
-                var name = members.get(0).getMember().orElse("");
+                var name = members.get(0).getMember();
                 fromDataSetName = currDataSet + "(" + name + ")";
                 return processRequest(fromDataSetName, toDataSetName, false);
             }
@@ -158,7 +158,7 @@ public class CopyService {
             List<Future<ResponseStatus>> futures = new ArrayList<>();
             ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
             for (var member : members) {
-                var name = member.getMember().orElse("");
+                var name = member.getMember();
                 fromDataSetName = currDataSet + "(" + name + ")";
                 var destination = toDataSetName + "(" + name + ")";
                 var dsnCopy = new DsnCopy(connection);

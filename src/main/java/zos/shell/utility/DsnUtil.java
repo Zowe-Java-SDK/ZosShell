@@ -84,15 +84,15 @@ public class DsnUtil {
 
     public static List<Member> getMembersByFilter(final String filter, final List<Member> members) {
         LOG.debug("*** getMembersByFilter ***");
-        Predicate<Member> isMemberPresent = m -> m.getMember().isPresent();
-        Predicate<Member> isMemberFound = m -> m.getMember().orElse("").equalsIgnoreCase(filter.toUpperCase());
+        Predicate<Member> isMemberPresent = m -> !m.getMember().isBlank();
+        Predicate<Member> isMemberFound = m -> m.getMember().equalsIgnoreCase(filter.toUpperCase());
         return members.stream().filter(isMemberPresent.and(isMemberFound)).collect(Collectors.toList());
     }
 
     public static List<Member> getMembersByStartsWithFilter(final String filter, final List<Member> members) {
         LOG.debug("*** getMembersByStartsWithFilter ***");
-        Predicate<Member> isMemberPresent = m -> m.getMember().isPresent();
-        Predicate<Member> isMemberFound = m -> m.getMember().orElse("").startsWith(filter.toUpperCase());
+        Predicate<Member> isMemberPresent = m -> !m.getMember().isBlank();
+        Predicate<Member> isMemberFound = m -> m.getMember().startsWith(filter.toUpperCase());
         return members.stream().filter(isMemberPresent.and(isMemberFound)).collect(Collectors.toList());
     }
 

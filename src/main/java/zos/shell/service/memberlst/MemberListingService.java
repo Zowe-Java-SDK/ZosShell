@@ -49,8 +49,8 @@ public class MemberListingService {
             return false;
         }
 
-        Predicate<Member> isMemberPresent = m -> m.getMember().isPresent();
-        Predicate<Member> isMemberEquals = m -> m.getMember().orElse("").equalsIgnoreCase(member);
+        Predicate<Member> isMemberPresent = m -> !m.getMember().isBlank();
+        Predicate<Member> isMemberEquals = m -> m.getMember().equalsIgnoreCase(member);
         return members.stream().anyMatch(isMemberPresent.and(isMemberEquals));
     }
 

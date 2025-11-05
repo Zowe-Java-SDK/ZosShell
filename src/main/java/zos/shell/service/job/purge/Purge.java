@@ -45,7 +45,7 @@ public class Purge {
             return new ResponseStatus("job not found", false);
         }
 
-        jobs.sort(Comparator.comparing(job -> job.getJobId().orElse(""), Comparator.reverseOrder()));
+        jobs.sort(Comparator.comparing(Job::getJobId, Comparator.reverseOrder()));
         return purge(jobs.get(0));
     }
 
@@ -82,14 +82,14 @@ public class Purge {
         if (job.getStatus().isEmpty()) {
             return new ResponseStatus("job status not found", false);
         }
-        if (!"OUTPUT".equals(job.getStatus().get())) {
+        if (!"OUTPUT".equals(job.getStatus())) {
             return new ResponseStatus("cannot purge active job", false);
         }
 
         try {
             delete.deleteCommon(new JobModifyInputData.Builder(
-                    job.getJobName().get(), job.getJobId().get()).version("1.0").build());
-            var msg = "Job Name: " + job.getJobName().get() + ", Job Id: " + job.getJobId().get() + " purged successfully...";
+                    job.getJobName(), job.getJobId()).version("1.0").build());
+            var msg = "Job Name: " + job.getJobName() + ", Job Id: " + job.getJobId() + " purged successfully...";
             return new ResponseStatus(msg, true);
         } catch (ZosmfRequestException e) {
             final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());

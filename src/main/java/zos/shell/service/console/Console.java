@@ -7,9 +7,9 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosconsole.ConsoleConstants;
-import zowe.client.sdk.zosconsole.input.IssueConsoleInputData;
-import zowe.client.sdk.zosconsole.method.IssueConsole;
-import zowe.client.sdk.zosconsole.response.ConsoleResponse;
+import zowe.client.sdk.zosconsole.input.ConsoleCmdInputData;
+import zowe.client.sdk.zosconsole.method.ConsoleCmd;
+import zowe.client.sdk.zosconsole.response.ConsoleCmdResponse;
 
 import java.util.regex.Pattern;
 
@@ -17,10 +17,10 @@ public class Console {
 
     private static final Logger LOG = LoggerFactory.getLogger(Console.class);
 
-    private final IssueConsole issueConsole;
+    private final ConsoleCmd issueConsole;
     private final String consoleName;
 
-    public Console(final IssueConsole issueConsole, final String consoleName) {
+    public Console(final ConsoleCmd issueConsole, final String consoleName) {
         LOG.debug("*** Console ***");
         this.issueConsole = issueConsole;
         this.consoleName = consoleName;
@@ -35,8 +35,8 @@ public class Console {
             command = m.group(1);
         }
 
-        ConsoleResponse consoleResponse;
-        var params = new IssueConsoleInputData(command);
+        ConsoleCmdResponse consoleResponse;
+        var params = new ConsoleCmdInputData(command);
         params.setProcessResponse();
         try {
             consoleResponse = !(consoleName == null || consoleName.isBlank()) ?
@@ -47,15 +47,15 @@ public class Console {
         }
 
         return new ResponseStatus(Constants.MVS_EXECUTION_SUCCESS + "\n" +
-                consoleResponse.getCommandResponse().orElse("no data"), true);
+                consoleResponse.getCmdResponse(), true);
     }
 
-    private ConsoleResponse execute(final IssueConsoleInputData params) throws ZosmfRequestException {
+    private ConsoleCmdResponse execute(final ConsoleCmdInputData params) throws ZosmfRequestException {
         LOG.debug("*** execute issue common command with default consoleName ***");
         return issueConsole.issueCommandCommon(ConsoleConstants.RES_DEF_CN, params);
     }
 
-    private ConsoleResponse execute(final String consoleName, final IssueConsoleInputData params)
+    private ConsoleCmdResponse execute(final String consoleName, final ConsoleCmdInputData params)
             throws ZosmfRequestException {
         LOG.debug("*** execute issue common command with consoleName ***");
         return issueConsole.issueCommandCommon(consoleName, params);

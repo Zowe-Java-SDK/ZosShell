@@ -41,8 +41,8 @@ public class Submit {
             final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
-        return new ResponseStatus("Job Name: " + job.getJobName().orElse("n\\a") +
-                ", Job Id: " + job.getJobId().orElse("n\\a"), true);
+        return new ResponseStatus("Job Name: " + job.getJobName() +
+                ", Job Id: " + job.getJobId(), true);
     }
 
 }

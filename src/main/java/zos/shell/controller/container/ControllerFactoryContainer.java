@@ -41,7 +41,7 @@ import zos.shell.service.usermod.UsermodService;
 import zos.shell.singleton.ConnSingleton;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
-import zowe.client.sdk.zosconsole.method.IssueConsole;
+import zowe.client.sdk.zosconsole.method.ConsoleCmd;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
@@ -84,7 +84,7 @@ public class ControllerFactoryContainer {
         var controller = (CancelController) controllers.get(ContainerType.Name.CANCEL);
         var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
         if (controller == null || controller.isNotValid(dependency)) {
-            var issueConsole = new IssueConsole(connection);
+            var issueConsole = new ConsoleCmd(connection);
             var service = new TerminateService(issueConsole, timeout);
             controller = new CancelController(service, this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.CANCEL, controller);
@@ -372,7 +372,7 @@ public class ControllerFactoryContainer {
         var controller = (StopController) controllers.get(ContainerType.Name.STOP);
         var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
         if (controller == null || controller.isNotValid(dependency)) {
-            var issueConsole = new IssueConsole(connection);
+            var issueConsole = new ConsoleCmd(connection);
             var service = new TerminateService(issueConsole, timeout);
             controller = new StopController(service, this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.STOP, controller);
@@ -441,7 +441,7 @@ public class ControllerFactoryContainer {
         var controller = (UnameController) controllers.get(ContainerType.Name.UNAME);
         var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
         if (controller == null || controller.isNotValid(dependency)) {
-            var issueConsole = new IssueConsole(connection);
+            var issueConsole = new ConsoleCmd(connection);
             var service = new UnameService(issueConsole, timeout);
             controller = new UnameController(service, this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.UNAME, controller);
@@ -451,7 +451,7 @@ public class ControllerFactoryContainer {
 
     public UsermodController getUsermodController(final ZosConnection connection, final int index) {
         LOG.debug("*** getUsermodController ***");
-        var service = new UsermodService(connection, index);
+        var service = new UsermodService(connection, index - 1);
         return new UsermodController(service);
     }
 

@@ -75,7 +75,7 @@ public class GrepService {
         } else if (memberWildCard) {
             var value = target.substring(0, target.indexOf("*")).toUpperCase();
             members = members.stream()
-                    .filter(m -> m.getMember().isPresent() && m.getMember().get().startsWith(value))
+                    .filter(m -> !m.getMember().isBlank() && m.getMember().startsWith(value))
                     .collect(Collectors.toList());
 
             return futureResults(dataset, result, pool, futures, members);
@@ -110,8 +110,8 @@ public class GrepService {
             var concatService = new ConcatService(new Download(new DsnGet(connection),
                     new PathService(ConnSingleton.getInstance(),
                             new EnvVariableController(new EnvVariableService())), false), timeout);
-            if (member.getMember().isPresent()) {
-                var name = member.getMember().get();
+            if (!member.getMember().isBlank()) {
+                var name = member.getMember();
                 futures.add(pool.submit(new FutureGrep(concatService, dataset, name, pattern, true)));
             }
         }

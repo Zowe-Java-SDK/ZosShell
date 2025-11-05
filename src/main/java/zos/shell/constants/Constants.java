@@ -23,6 +23,7 @@ public final class Constants {
     public static final String DEFAULT_CONFIG_WINDOWS = "C:\\ZosShell\\config.json";
     public static final String DEFAULT_DOWNLOAD_PATH_MAC = "/ZosShell";
     public static final String DEFAULT_DOWNLOAD_PATH_WINDOWS = "C:\\ZosShell";
+    public static final String DEFAULT_EMPTY_USER_PASSWORD_VALUE = "-1";
     public static final int DEFAULT_FONT_SIZE = 20;
     public static final String DATASET_NOT_SPECIFIED = "PWD empty; cd to dataset and try again...";
     public static final String DEFAULT_PROMPT = ">";

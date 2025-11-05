@@ -47,8 +47,8 @@ public class BrowseLog {
             return new ResponseStatus(msg, false);
         }
         // select the active or input one first; if not found, then get the highest job number
-        final Predicate<Job> isActive = j -> "ACTIVE".equalsIgnoreCase(j.getStatus().orElse(""));
-        final Predicate<Job> isInput = j -> "INPUT".equalsIgnoreCase(j.getStatus().orElse(""));
+        final Predicate<Job> isActive = j -> "ACTIVE".equalsIgnoreCase(j.getStatus());
+        final Predicate<Job> isInput = j -> "INPUT".equalsIgnoreCase(j.getStatus());
 
         Optional<Job> jobStillRunning = jobs.stream().filter(isActive.or(isInput)).findAny();
         Job job = jobStillRunning.orElse(jobs.get(0));
@@ -57,7 +57,7 @@ public class BrowseLog {
             files = retrieve.getSpoolFilesByJob(job);
         } catch (ZosmfRequestException e) {
             var msg = ResponseUtil.getResponsePhrase(e.getResponse());
-            var errMsg = "error retrieving spool content for job id " + job.getJobId().orElse("n\\a") +
+            var errMsg = "error retrieving spool content for job id " + job.getJobId() +
                     ", " + (msg != null ? msg : e.getMessage());
             return new ResponseStatus(errMsg, false);
         }

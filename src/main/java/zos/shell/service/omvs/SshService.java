@@ -3,8 +3,8 @@ package zos.shell.service.omvs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zowe.client.sdk.core.SshConnection;
-import zowe.client.sdk.zosuss.exception.IssueUssException;
-import zowe.client.sdk.zosuss.method.IssueUss;
+import zowe.client.sdk.zosuss.exception.UssCmdException;
+import zowe.client.sdk.zosuss.method.UssCmd;
 
 import java.util.regex.Pattern;
 
@@ -29,10 +29,10 @@ public class SshService {
         }
 
         try {
-            var issueUss = new IssueUss(sshConnection);
+            var issueUss = new UssCmd(sshConnection);
             // 10,000 is the timeout value in milliseconds
             return issueUss.issueCommand(command, 10000);
-        } catch (IssueUssException e) {
+        } catch (UssCmdException e) {
             LOG.debug(String.valueOf(e));
             return e.getMessage();
         }

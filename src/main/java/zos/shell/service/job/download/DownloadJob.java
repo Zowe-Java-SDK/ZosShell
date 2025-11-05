@@ -10,6 +10,7 @@ import zos.shell.service.path.PathService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.FileUtil;
 import zowe.client.sdk.zosjobs.methods.JobGet;
+import zowe.client.sdk.zosjobs.model.Job;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -42,8 +43,8 @@ public class DownloadJob {
 
         var output = responseStatus.getMessage();
         browseLogService.jobs.sort(
-                Comparator.comparing(job -> job.getJobId().orElse(""), Comparator.reverseOrder()));
-        String id = browseLogService.jobs.get(0).getJobId().orElse(null);
+                Comparator.comparing(Job::getJobId, Comparator.reverseOrder()));
+        String id = browseLogService.jobs.get(0).getJobId();
 
         this.pathService.createPathsForMember(target, id);
         try {

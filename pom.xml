@@ -118,33 +118,7 @@
         <dependency>
             <groupId>org.zowe.client.java.sdk</groupId>
             <artifactId>zowe-client-java-sdk</artifactId>
-            <version>5.0.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.googlecode.json-simple</groupId>
-                    <artifactId>json-simple</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.jcraft</groupId>
-                    <artifactId>jsch</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.starxg</groupId>
-                    <artifactId>java-keytar</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.konghq</groupId>
-                    <artifactId>unirest-java-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.konghq</groupId>
-                    <artifactId>unirest-objectmapper-jackson</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>5.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

@@ -74,7 +74,7 @@ public class ListingService {
         // ls
         var line = new StringBuilder();
         for (var item : members) {
-            line.append(String.format("%-8s", item.getMember().orElse("")));
+            line.append(String.format("%-8s", item.getMember()));
             line.append(" ");
         }
         terminal.println(line.toString());
@@ -108,7 +108,7 @@ public class ListingService {
     private void displayDataSets(final String ignoreCurrDataSet, final boolean isColumnView, final boolean isAttributes) {
         LOG.debug("*** displayDataSets ***");
         if (this.datasets.isEmpty() || (this.datasets.size() == 1
-                && ignoreCurrDataSet.equalsIgnoreCase(this.datasets.get(0).getDsname().orElse("")))) {
+                && ignoreCurrDataSet.equalsIgnoreCase(this.datasets.get(0).getDsname()))) {
             return;
         }
         if (!isColumnView && isAttributes) { // ls -l
@@ -116,18 +116,18 @@ public class ListingService {
             terminal.println(String.format(columnFormat,
                     "cdate", "rdate", "vol", "dsorg", "recfm", "blksz", "dsntp", "dsname"));
             this.datasets.forEach(ds -> {
-                var dsname = ds.getDsname().orElse("n\\a");
+                var dsname = ds.getDsname();
                 if (!dsname.equalsIgnoreCase(ignoreCurrDataSet)) {
-                    terminal.println(String.format(columnFormat, ds.getCdate().orElse("n\\a"),
-                            ds.getRdate().orElse("n\\a"), ds.getVol().orElse("n\\a"),
-                            ds.getDsorg().orElse("n\\a"), ds.getRecfm().orElse("n\\a"),
-                            ds.getBlksz().orElse("n\\a"), ds.getDsntp().orElse("n\\a"),
+                    terminal.println(String.format(columnFormat, ds.getCdate(),
+                            ds.getRdate(), ds.getVol(),
+                            ds.getDsorg(), ds.getRecfm(),
+                            ds.getBlksz(), ds.getDsntp(),
                             dsname));
                 }
             });
         } else { // ls
             this.datasets.forEach(ds -> {
-                var dsname = ds.getDsname().orElse("");
+                var dsname = ds.getDsname();
                 if (!dsname.equalsIgnoreCase(ignoreCurrDataSet)) {
                     terminal.println(dsname);
                 }
@@ -147,12 +147,12 @@ public class ListingService {
         if (isAttributes) {
             terminal.println(String.format(columnFormat, "user", "cdate", "mdate", "mod", "member"));
             for (var member : this.members) {
-                terminal.println(String.format(columnFormat, member.getUser().orElse("n\\a"),
-                        member.getC4date().orElse("n\\a"), member.getM4date().orElse("n\\a"),
-                        member.getMod().orElse(0), member.getMember().orElse("n\\a")));
+                terminal.println(String.format(columnFormat, member.getUser(),
+                        member.getC4date(), member.getM4date(),
+                        member.getMod(), member.getMember()));
             }
         } else {
-            this.members.forEach(m -> terminal.println(m.getMember().orElse("")));
+            this.members.forEach(m -> terminal.println(m.getMember()));
         }
     }
 
