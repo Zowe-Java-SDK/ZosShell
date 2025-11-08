@@ -38,17 +38,17 @@ public class ProcessListing {
             final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
         }
-        jobs.sort(Comparator.comparing((Job j) -> j.getJobName().orElse(""))
-                .thenComparing(j -> j.getStatus().orElse(""))
-                .thenComparing(j -> j.getJobId().orElse("")));
+        jobs.sort(Comparator.comparing(Job::getJobName)
+                .thenComparing(Job::getStatus)
+                .thenComparing(Job::getJobId));
         if (jobs.isEmpty()) {
             return new ResponseStatus(Constants.NO_PROCESS_FOUND, false);
         }
         var str = new StringBuilder();
         jobs.forEach(job -> {
-            var jobName = job.getJobName().orElse("");
-            var jobId = job.getJobId().orElse("");
-            var jobStatus = job.getStatus().orElse("");
+            var jobName = job.getJobName();
+            var jobId = job.getJobId();
+            var jobStatus = job.getStatus();
             str.append(String.format("%-8s %-8s %-8s", jobName, jobId, jobStatus));
             str.append("\n");
         });

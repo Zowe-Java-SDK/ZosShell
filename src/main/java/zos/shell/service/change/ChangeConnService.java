@@ -57,7 +57,9 @@ public class ChangeConnService {
             return zosConnection;
         }
 
-        if (!username.isBlank() && !password.isBlank()) {
+        var isAuthAttrsNotMissing = !(username.equals(Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE) ||
+                password.equals(Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE));
+        if (isAuthAttrsNotMissing) {
             ConfigSingleton.getInstance().updateWindowSettings(terminal);
             return zosConnectionByIndex;
         }

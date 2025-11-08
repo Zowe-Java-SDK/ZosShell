@@ -102,8 +102,10 @@ public class ConfigSingleton {
         profiles.forEach(profile -> zosConnections.add(
                 ZosConnectionFactory.createBasicConnection(profile.getHostname(),
                         profile.getZosmfport() != null ? profile.getZosmfport() : "0",
-                        profile.getUsername() != null ? profile.getUsername() : DEFAULT_EMPTY_STRING,
-                        profile.getPassword() != null ? profile.getPassword() : DEFAULT_EMPTY_STRING)));
+                        profile.getUsername() != null && !profile.getUsername().isBlank() ?
+                                profile.getUsername() : Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE,
+                        profile.getPassword() != null && !profile.getPassword().isBlank() ?
+                                profile.getPassword() : Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE)));
     }
 
     private void createSshConnections() {

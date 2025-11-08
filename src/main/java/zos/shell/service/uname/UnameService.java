@@ -6,7 +6,7 @@ import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.console.FutureConsole;
 import zos.shell.utility.FutureUtil;
-import zowe.client.sdk.zosconsole.method.IssueConsole;
+import zowe.client.sdk.zosconsole.method.ConsoleCmd;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,10 +16,10 @@ public class UnameService {
 
     private static final Logger LOG = LoggerFactory.getLogger(UnameService.class);
 
-    private final IssueConsole issueConsole;
+    private final ConsoleCmd issueConsole;
     private final long timeout;
 
-    public UnameService(final IssueConsole issueConsole, final long timeout) {
+    public UnameService(final ConsoleCmd issueConsole, final long timeout) {
         LOG.debug("*** UnameService ***");
         this.issueConsole = issueConsole;
         this.timeout = timeout;

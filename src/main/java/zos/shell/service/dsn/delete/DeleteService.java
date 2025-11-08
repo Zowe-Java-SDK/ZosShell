@@ -85,14 +85,14 @@ public class DeleteService {
             // transform target is a member string without * (a wild card)
             target = target.substring(0, target.indexOf("*"));
             members = DsnUtil.getMembersByStartsWithFilter(target, members);
-            if (members.size() == 1 && members.get(0).getMember().isPresent()) {
-                return processRequest(currDataSet, members.get(0).getMember().get());
+            if (members.size() == 1 && !members.get(0).getMember().isBlank()) {
+                return processRequest(currDataSet, members.get(0).getMember());
             }
 
             List<Future<ResponseStatus>> futures = new ArrayList<>();
             ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
             for (var member : members) {
-                var name = member.getMember().orElse("");
+                var name = member.getMember();
                 var dsnDelete = new DsnDelete(connection);
                 var future = new FutureDelete(dsnDelete, currDataSet, name);
                 futures.add(pool.submit(future));

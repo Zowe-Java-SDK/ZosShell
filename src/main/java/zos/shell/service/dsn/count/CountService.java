@@ -57,7 +57,7 @@ public class CountService {
         }
 
         datasets.forEach(item -> {
-            if (!item.getDsname().orElse("n\\a").equalsIgnoreCase(dataset)) {
+            if (!item.getDsname().equalsIgnoreCase(dataset)) {
                 dataSetCount.getAndIncrement();
             }
         });

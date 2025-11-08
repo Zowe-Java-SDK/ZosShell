@@ -125,14 +125,15 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                         "Check configuration file and try again...");
             }
 
-            var isAuthAttrsMissing = (username.isBlank() || password.isBlank());
+            var isAuthAttrsMissing = (username.equals(Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE) ||
+                    password.equals(Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE));
             if (isAuthAttrsMissing) {
-                if (username.isBlank()) {
+                if (username.equals(Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE)) {
                     terminal.println("Enter username for " + host);
                     username = PromptUtil.getPromptInfo("username:", false);
                 }
 
-                if (password.isBlank()) {
+                if (password.equals(Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE)) {
                     terminal.println("Enter password for " + host + "/" + username);
                     String confirmPassword = null;
                     while (confirmPassword == null || !confirmPassword.equals(password)) {

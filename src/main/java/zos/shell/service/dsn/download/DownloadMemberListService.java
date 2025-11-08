@@ -40,8 +40,8 @@ public class DownloadMemberListService {
 
         try {
             for (var member : members) {
-                if (member.getMember().isPresent()) {
-                    String name = member.getMember().get();
+                if (!member.getMember().isBlank()) {
+                    String name = member.getMember();
                     futures.add(pool.submit(new FutureMemberDownload(new DsnGet(connection),
                             new PathService(ConnSingleton.getInstance(),
                                     new EnvVariableController(new EnvVariableService())), dataset, name, isBinary)));
