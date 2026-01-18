@@ -101,7 +101,7 @@ public class ConfigSingleton {
         LOG.debug("*** createZosConnections ***");
         profiles.forEach(profile -> zosConnections.add(
                 ZosConnectionFactory.createBasicConnection(profile.getHostname(),
-                        profile.getZosmfport() != null ? profile.getZosmfport() : "0",
+                        Integer.parseInt(profile.getZosmfport()),
                         profile.getUsername() != null && !profile.getUsername().isBlank() ?
                                 profile.getUsername() : Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE,
                         profile.getPassword() != null && !profile.getPassword().isBlank() ?
@@ -111,7 +111,7 @@ public class ConfigSingleton {
     private void createSshConnections() {
         LOG.debug("*** createSshConnections ***");
         profiles.forEach(profile -> {
-            int sshport = 0;
+            int sshport = 1;
             try {
                 sshport = Integer.parseInt(profile.getSshport());
             } catch (NumberFormatException ignored) {

@@ -120,7 +120,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             var zosmfport = currConnection.getZosmfPort();
             var username = currConnection.getUser();
             var password = currConnection.getPassword();
-            if (host.isBlank() || zosmfport.isBlank() || "0".equals(zosmfport)) {
+            if (host.isBlank() || zosmfport == 0) {
                 throw new IllegalStateException("Error: Hostname or z/OSMF port value(s) missing\n" +
                         "Check configuration file and try again...");
             }

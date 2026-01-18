@@ -51,7 +51,7 @@ public class ChangeConnService {
         var password = zosConnectionByIndex.getPassword();
         var zosmfport = zosConnectionByIndex.getZosmfPort();
 
-        if (host.isBlank() || zosmfport.isBlank()) {
+        if (host.isBlank() || zosmfport == 0) {
             terminal.println("Error: Hostname or z/OSMF port value(s) missing");
             terminal.println("Check configuration file and try again...");
             return zosConnection;
@@ -103,7 +103,7 @@ public class ChangeConnService {
         configSingleton.getZosConnections().forEach(
                 c -> terminal.println(i.getAndIncrement() + " " + "hostname: " +
                         (c.getHost().isBlank() ? "n\\a" : c.getHost()) + ", zosmfport: " +
-                        (c.getZosmfPort().isBlank() ? "n\\a" : c.getZosmfPort())));
+                        c.getZosmfPort()));
         if (configSingleton.getZosConnections().isEmpty()) {
             terminal.println(Constants.NO_CONNECTION_INFO);
         }
