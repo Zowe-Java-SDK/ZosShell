@@ -47,6 +47,7 @@ public class CommandRouter {
 
         var command = params[0].trim();
         HistorySingleton.getInstance().getHistory().addHistory(params);
+        var envVariableController = controllerContainer.getEnvVariableController();
         switch (command.toLowerCase()) {
             case "bj":
             case "browsejob":
@@ -588,7 +589,6 @@ public class CommandRouter {
                         setKeyValueStr.append(setValuesLst[i]).append(" ");
                     }
                 }
-                var envVariableController = controllerContainer.getEnvVariableController();
                 String setResult = envVariableController.set(setKeyValueStr.toString());
                 terminal.println(setResult);
                 break;
@@ -660,7 +660,6 @@ public class CommandRouter {
                 StringBuilder tsoCommandCandidate = getCommandFromParams(params);
                 long tsoCommandCount = tsoCommandCandidate.codePoints().filter(ch -> ch == '\"').count();
                 if (isCommandValid(tsoCommandCount, tsoCommandCandidate)) {
-                    envVariableController = controllerContainer.getEnvVariableController();
                     String accountNumber = envVariableController.getValueByEnv("ACCOUNT_NUMBER");
                     if (accountNumber == null || accountNumber.isBlank()) {
                         terminal.println("ACCOUNT_NUMBER is not set, use SET command and try again...");
