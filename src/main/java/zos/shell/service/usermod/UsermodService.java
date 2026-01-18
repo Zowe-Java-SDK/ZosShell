@@ -14,7 +14,7 @@ public class UsermodService {
     private static final Logger LOG = LoggerFactory.getLogger(UsermodService.class);
 
     private final String host;
-    private final String zosmfPort;
+    private final int zosmfPort;
     private final String username;
     private final String password;
     private final int sshPort;
