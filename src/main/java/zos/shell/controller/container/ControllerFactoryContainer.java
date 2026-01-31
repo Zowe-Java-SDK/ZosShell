@@ -451,7 +451,7 @@ public class ControllerFactoryContainer {
 
     public UsermodController getUsermodController(final ZosConnection connection, final int index) {
         LOG.debug("*** getUsermodController ***");
-        var service = new UsermodService(connection, index - 1);
+        var service = new UsermodService(connection, index == 0 ? index : index - 1);
         return new UsermodController(service);
     }
 
