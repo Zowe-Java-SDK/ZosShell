@@ -42,7 +42,7 @@ public abstract class AbstractCommand implements CommandHandler {
      * Custom usage string (for full control over placeholders)
      */
     protected String usage() {
-        return name(); // default usage is just the command name
+        return name(); // the default usage is just the command name
     }
 
     @Override
@@ -87,11 +87,22 @@ public abstract class AbstractCommand implements CommandHandler {
 
         // print usage line using our custom usage() method
         ctx.terminal.println("usage: " + usage());
-        if (!options().getOptions().isEmpty()) {
-            // print options below usage
-            formatter.printOptions(writer, formatter.getWidth(), options(),
-                    formatter.getLeftPadding(), formatter.getDescPadding());
+
+        // print the description of the command right after usage
+        String desc = description();
+        if (desc != null && !desc.isBlank()) {
+            ctx.terminal.println(desc);
         }
+
+        // print options if any
+        if (!options().getOptions().isEmpty()) {
+            formatter.printOptions(writer,
+                    formatter.getWidth(),
+                    options(),
+                    formatter.getLeftPadding(),
+                    formatter.getDescPadding());
+        }
+
         writer.flush();
     }
 }

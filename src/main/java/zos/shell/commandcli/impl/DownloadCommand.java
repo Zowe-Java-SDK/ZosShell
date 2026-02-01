@@ -23,13 +23,21 @@ public class DownloadCommand extends AbstractCommand {
 
     @Override
     protected String description() {
-        return "Download a dataset";
+        return "Download a sequential dataset or member";
+    }
+
+    @Override
+    protected String usage() {
+        return "download [OPTION] <SOURCE>";
     }
 
     @Override
     protected Options options() {
         Options opts = new Options();
-        opts.addOption(Option.builder("b").longOpt("binary").desc("Download in binary mode").build());
+        opts.addOption(Option.builder("b")
+                .longOpt("binary")
+                .desc("Download in binary mode")
+                .build());
         return opts;
     }
 
@@ -37,7 +45,7 @@ public class DownloadCommand extends AbstractCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.size() != 1) {
-            ctx.terminal.println("Usage: download <dataset> [-b]");
+            ctx.terminal.println("Usage: download [OPTION] <SOURCE>");
             return;
         }
 

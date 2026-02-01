@@ -13,7 +13,7 @@ public class ChangeCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "change [INDEX_NUM]";
+        return "change <INDEX_NUM>";
     }
 
     @Override
