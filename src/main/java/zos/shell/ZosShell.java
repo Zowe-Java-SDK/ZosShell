@@ -174,7 +174,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 continue;
             }
 
-            String[] tokens = StrUtil.stripEmptyStrings(input.trim().split("\\s+"));
+            var tokens = StrUtil.stripEmptyStrings(input.trim().split("\\s+"));
             if (tokens.length == 0) continue;
 
             if (tokens[0].startsWith("!")) {
