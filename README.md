@@ -120,8 +120,7 @@ Along with the following custom commands:
     change <arg>                        - arg=connection number, ordered connections defined in config.json
     color <arg> <arg2>                  - change color arg is prompt and text and arg2 is background color, i.e. blue, yellow, cyan etc..
     connections                         - connection(s) list from config.json   
-    count members                       - number of members in PWD
-    count datasets                      - renumber of datasets in PWD
+    count <arg>                         - number of members or datasets in PWD, arg = -m | -d | --members | --datasets
     d | download <arg1> <arg2>          - arg1="*", member(*), dataset(member) or sequential dataset; download to \downloadpath\$HOSTNAME\pwd or \downloadpath\$HOSTNAME\SEQUENTIAL_DATASET; arg2=optional or -b for binary download   
     dj | downloadjob <arg1> <arg2>      - arg1=task/job name; download JESMSGLG spool output; arg2="all", download all spool content
     end                                 - exit UI shell
