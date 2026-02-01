@@ -9,7 +9,7 @@ public class RenameCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "rename";
+        return "rename <SOURCE> <DEST>";
     }
 
     @Override
@@ -19,14 +19,14 @@ public class RenameCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Rename a dataset or member";
+        return "Rename a sequential dataset or member";
     }
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.size() != 2) {
-            ctx.terminal.println("Usage: rename <old_name> <new_name>");
+            ctx.terminal.println("Usage: rename <SOURCE> <DEST>");
             return;
         }
 

@@ -10,19 +10,19 @@ public class CatCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "cat [SEQUENTIAL_DATASET_NAME] [MEMBER]";
+        return "cat <SOURCE>";
     }
 
     @Override
     protected String description() {
-        return "Catenate a file";
+        return "Display the contents of a sequential dataset or member";
     }
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.isEmpty()) {
-            ctx.terminal.println("cat [SEQUENTIAL_DATASET_NAME] [MEMBER]");
+            ctx.terminal.println("cat <SOURCE>");
             return;
         }
 

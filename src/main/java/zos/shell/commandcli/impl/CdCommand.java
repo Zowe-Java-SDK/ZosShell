@@ -10,19 +10,19 @@ public class CdCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "cd [PDS_NAME] .MLQ_NAME]";
+        return "cd <SOURCE>";
     }
 
     @Override
     protected String description() {
-        return "change directory";
+        return "Change directory to a PDS or MLQ";
     }
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.isEmpty()) {
-            ctx.terminal.println("cd [PDS_NAME] [.MLQ_NAME]");
+            ctx.terminal.println("cd <SOURCE>");
             return;
         }
 
