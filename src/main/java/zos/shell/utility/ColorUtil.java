@@ -3,7 +3,7 @@ package zos.shell.utility;
 import java.awt.*;
 import java.lang.reflect.Field;
 
-public class ColorUtil {
+public final class ColorUtil {
 
     private ColorUtil() {
         throw new IllegalStateException("Utility class");
