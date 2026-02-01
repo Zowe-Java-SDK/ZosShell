@@ -12,7 +12,7 @@ public class LsCommand extends AbstractCommand {
 
     @Override
     protected String name() {
-        return "ls [-l] [PDS_NAME] [MEMBER]";
+        return "ls";
     }
 
     @Override
@@ -21,26 +21,31 @@ public class LsCommand extends AbstractCommand {
     }
 
     @Override
+    protected String usage() {
+        return "ls [OPTION] [PDS_NAME] [MEMBER]";
+    }
+
+    @Override
     protected Options options() {
         Options o = new Options();
         o.addOption("l", "long", false, "long listing with attributes");
-        o.addOption(null, "no-attr", false, "long listing without attributes");
+        o.addOption(null, "long-no-attr", false, "long listing without attribute info");
         return o;
     }
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         if (cmd.getArgList().size() > 2) {
-            ctx.terminal.println("ls [-l] [PDS_NAME] [MEMBER]");
+            ctx.terminal.println("ls [OPTION] [PDS_NAME] [MEMBER]");
             return;
         }
 
-        boolean longList = cmd.hasOption("l") || cmd.hasOption("no-attr");
+        boolean longList = cmd.hasOption("l") || cmd.hasOption("long-no-attr");
         boolean withAttr = cmd.hasOption("l");
 
-        var listingController =
-                ControllerFactoryContainerHolder.container()
-                        .getListingController(ctx.zosConnection, ctx.terminal, ctx.timeout);
+        var listingController = ControllerFactoryContainerHolder
+                .container()
+                .getListingController(ctx.zosConnection, ctx.terminal, ctx.timeout);
 
         var args = cmd.getArgList();
 

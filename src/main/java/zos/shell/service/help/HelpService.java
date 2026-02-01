@@ -42,7 +42,7 @@ public class HelpService {
             Map.entry("!!", Map.entry("!!", "execute previous command")),
             Map.entry("ls", Map.entry("ls <arg>", "arg is optional; list members/datasets in PWD; arg=filter(*); filter is dataset or member value")),
             Map.entry("ls -l", Map.entry("ls -l <arg>", "arg is optional; list members/datasets with attributes in PWD; arg=filter(*); filter is dataset or member value")),
-            Map.entry("ls --l", Map.entry("ls --l <arg>", "same as ls -l without attribute info")),
+            Map.entry("ls --long-no-attr", Map.entry("ls --long-no-attr <arg>", "same as ls -l without attribute info")),
             Map.entry("mkdir", Map.entry("mkdir <arg>", "arg is a dataset")),
             Map.entry("mvs", Map.entry("mvs <arg>", "execute console command, arg=command in double quotes")),
             Map.entry("ps", Map.entry("ps <arg>", "arg is optional; list all tasks/jobs; arg=filter(*)")),

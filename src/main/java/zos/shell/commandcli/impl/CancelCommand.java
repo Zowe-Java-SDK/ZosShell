@@ -9,7 +9,7 @@ public class CancelCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "cancel [JOB_NAME]";
+        return "cancel <JOB_NAME>";
     }
 
     @Override

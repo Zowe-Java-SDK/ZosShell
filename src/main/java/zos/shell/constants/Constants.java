@@ -57,7 +57,7 @@ public final class Constants {
     public static final String NO_VISITED_DATASETS = "no visited datasets to list, try again...";
     public static final String MAKE_DIR_EXIT_MSG = "exited mkdir command...";
     public static final String MAC_EDITOR_NAME = "open -a TextEdit";
-    public static final String MISSING_COUNT_PARAM = "specified either \"count members\" or \"count datasets\"";
+    public static final String MISSING_COUNT_PARAM = "Error: You must specify either -m/--member or -d/--dataset...";
     public static final String MISSING_PARAMETERS = "missing parameter(s), try again...";
     public static final String MVS_EXECUTION_SUCCESS = "mvs command executed...";
     public static final String SEQUENTIAL_DIRECTORY_LOCATION = "SEQUENTIAL_DATASET";

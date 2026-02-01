@@ -12,7 +12,7 @@ public class BrowseJobCommand extends AbstractCommand {
 
     @Override
     protected String name() {
-        return "browsejob [JOB_NAME]";
+        return "browsejob";
     }
 
     @Override
@@ -23,6 +23,11 @@ public class BrowseJobCommand extends AbstractCommand {
     @Override
     protected String description() {
         return "Browse JES job output";
+    }
+
+    @Override
+    protected String usage() {
+        return "browsejob [OPTION] <JOB_NAME>";
     }
 
     @Override

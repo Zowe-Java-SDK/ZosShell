@@ -1,17 +1,16 @@
 package zos.shell.commandcli.impl;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
-import zos.shell.commandcli.AbstractCommand;
 import zos.shell.commandcli.CommandContext;
+import zos.shell.commandcli.NoOptionCommand;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 import zos.shell.utility.ColorUtil;
 
-public class ColorCommand extends AbstractCommand {
+public class ColorCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "color";
+        return "color <FOURGOUND_COLOR_NAME> [BACKGROUND_COLOR_NAME]";
     }
 
     @Override
@@ -22,11 +21,6 @@ public class ColorCommand extends AbstractCommand {
     @Override
     protected String description() {
         return "Change terminal color settings";
-    }
-
-    @Override
-    protected Options options() {
-        return new Options();
     }
 
     @Override

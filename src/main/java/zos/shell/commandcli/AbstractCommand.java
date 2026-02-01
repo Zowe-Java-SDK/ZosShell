@@ -5,19 +5,45 @@ import org.apache.commons.cli.*;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
+/**
+ * Base class for commands.
+ * Provides clean usage, help support, and argument parsing via Apache Commons CLI.
+ */
 public abstract class AbstractCommand implements CommandHandler {
 
+    /**
+     * Command name, e.g., "ls"
+     */
     protected abstract String name();
 
-    protected String[] aliases() {              // optional aliases
+    /**
+     * Optional command aliases, e.g., "bj" for "browsejob"
+     */
+    protected String[] aliases() {
         return new String[0];
     }
 
+    /**
+     * Short description for help output
+     */
     protected abstract String description();
 
+    /**
+     * Command options
+     */
     protected abstract Options options();
 
+    /**
+     * Main command logic
+     */
     protected abstract void run(CommandContext ctx, CommandLine cmd) throws Exception;
+
+    /**
+     * Custom usage string (for full control over placeholders)
+     */
+    protected String usage() {
+        return name(); // default usage is just the command name
+    }
 
     @Override
     public final void execute(CommandContext ctx, String input) {
@@ -27,7 +53,7 @@ public abstract class AbstractCommand implements CommandHandler {
 
             Options opts = options();
 
-            // auto help flags
+            // auto help flag
             opts.addOption("h", "help", false, "display help");
 
             CommandLineParser parser = new DefaultParser();
@@ -41,33 +67,31 @@ public abstract class AbstractCommand implements CommandHandler {
             run(ctx, cmd);
 
         } catch (ParseException e) {
-            ctx.terminal.println(e.getMessage());
+            ctx.terminal.println("Error: " + e.getMessage());
             printHelp(ctx);
         } catch (Exception e) {
-            ctx.terminal.println(e.getMessage());
+            ctx.terminal.println("Exception: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
+    /**
+     * Print help/usage cleanly
+     */
     protected void printHelp(CommandContext ctx) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(120);
 
-        // Create a PrintWriter that writes to your terminal
+        // terminal writer for Commons CLI
         PrintWriter writer = new PrintWriter(new TerminalWriter(ctx.terminal), true);
 
-        formatter.printHelp(
-                writer,
-                120,
-                name(),
-                description(),
-                options(),
-                2,  // left padding
-                2,          // desc padding
-                null,
-                true
-        );
+        // print usage line using our custom usage() method
+        ctx.terminal.println("usage: " + usage());
+        if (!options().getOptions().isEmpty()) {
+            // print options below usage
+            formatter.printOptions(writer, formatter.getWidth(), options(),
+                    formatter.getLeftPadding(), formatter.getDescPadding());
+        }
         writer.flush();
     }
-
 }

@@ -10,7 +10,7 @@ public class CdCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "cd [PDS_NAME] [.MLQ_NAME]";
+        return "cd [PDS_NAME] .MLQ_NAME]";
     }
 
     @Override

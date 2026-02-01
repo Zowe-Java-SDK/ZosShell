@@ -11,7 +11,7 @@ public class CopyCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "copy [SOURCE] [DEST]";
+        return "copy <SOURCE> <DEST>";
     }
 
     @Override
@@ -23,7 +23,7 @@ public class CopyCommand extends NoOptionCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         List<String> args = cmd.getArgList();
         if (args.size() != 2) {
-            ctx.terminal.println("Usage: copy [SOURCE] [DEST]");
+            ctx.terminal.println("Usage: copy <SOURCE> <DEST>");
             return;
         }
 

@@ -128,7 +128,7 @@ Along with the following custom commands:
     exit                                - exit UI shell
     quit                                - exit UI shell
     files                               - list all files under local PWD drive value
-    ls --l <arg>                        - same as ls -l without attribute info
+    ls --long-no-attr <arg>             - same as ls -l without attribute info
     mvs <arg>                           - execute console command, arg=command in double quotes
     p | purge <arg>                     - arg=job name or id; purge   
     rn | rename <arg1> <arg2>           - rename member or sequential, arg1=old arg2=new
