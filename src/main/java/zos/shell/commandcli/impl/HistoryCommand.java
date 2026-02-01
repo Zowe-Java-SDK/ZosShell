@@ -10,21 +10,17 @@ public class HistoryCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "history";
+        return "history [NUMBER]";
     }
 
     @Override
     protected String description() {
-        return "Show command history";
+        return "Show command history; NUMBER is optional and limits the number of commands" +
+                " displayed starting from the bottom of the history";
     }
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
-        if (!cmd.getArgList().isEmpty()) {
-            ctx.terminal.println(Constants.INVALID_COMMAND);
-            return;
-        }
-
         var args = cmd.getArgs();
         if (args.length == 0) {
             HistorySingleton.getInstance().getHistory().displayHistory();

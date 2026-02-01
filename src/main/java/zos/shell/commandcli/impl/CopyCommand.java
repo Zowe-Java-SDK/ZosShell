@@ -16,7 +16,7 @@ public class CopyCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Copy a dataset or member";
+        return "Copy a sequential dataset or member";
     }
 
     @Override

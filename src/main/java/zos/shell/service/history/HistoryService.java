@@ -65,12 +65,12 @@ public class HistoryService {
     }
 
     public void displayHistory() {
-        LOG.debug("*** displayHistory 1 ***");
+        LOG.debug("*** displayHistory ***");
         displayAll();
     }
 
     public void displayHistory(final String param) {
-        LOG.debug("*** displayHistory 2 ***");
+        LOG.debug("*** displayHistory with count ***");
         int num;
         try {
             num = Integer.parseInt(param);
