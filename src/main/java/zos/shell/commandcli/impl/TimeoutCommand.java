@@ -1,0 +1,52 @@
+package zos.shell.commandcli.impl;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Options;
+import zos.shell.commandcli.AbstractCommand;
+import zos.shell.commandcli.CommandContext;
+
+public class TimeoutCommand extends AbstractCommand {
+
+    @Override
+    protected String name() {
+        return "timeout [NEW_VALUE]";
+    }
+
+    @Override
+    protected String[] aliases() {
+        return new String[]{"t"};
+    }
+
+    @Override
+    protected String description() {
+        return "Display or set timeout value";
+    }
+
+    @Override
+    protected Options options() {
+        return new Options();
+    }
+
+    @Override
+    protected void run(CommandContext ctx, CommandLine cmd) {
+        var args = cmd.getArgs();
+
+        if (args.length == 0) {
+            ctx.terminal.println("timeout value is " + ctx.timeout + " seconds.");
+            return;
+        }
+
+        if (cmd.getArgList().size() != 1) {
+            ctx.terminal.println("Usage: timeout [NEW_VALUE]");
+            return;
+        }
+
+        try {
+            ctx.timeout = Long.parseLong(args[0]);
+            ctx.terminal.println("timeout value set to " + ctx.timeout + " seconds.");
+        } catch (NumberFormatException e) {
+            ctx.terminal.println("Invalid timeout value");
+        }
+    }
+
+}

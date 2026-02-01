@@ -1,0 +1,41 @@
+package zos.shell.commandcli.impl;
+
+import org.apache.commons.cli.CommandLine;
+import zos.shell.commandcli.CommandContext;
+import zos.shell.commandcli.NoOptionCommand;
+import zos.shell.constants.Constants;
+import zos.shell.controller.container.ControllerFactoryContainerHolder;
+
+public class SubmitCommand extends NoOptionCommand {
+
+    @Override
+    protected String name() {
+        return "submit [JOB_NAME]";
+    }
+
+    @Override
+    protected String description() {
+        return "Submit a job to the system";
+    }
+
+    @Override
+    protected void run(CommandContext ctx, CommandLine cmd) {
+        var args = cmd.getArgList();
+        if (args.isEmpty()) {
+            ctx.terminal.println(Constants.MISSING_PARAMETERS);
+            return;
+        }
+
+        if (cmd.getArgList().size() != 1) {
+            ctx.terminal.println("Usage: submit [JOB_NAME]");
+            return;
+        }
+
+        var ctrl = ControllerFactoryContainerHolder.container()
+                .getSubmitController(ctx.zosConnection, ctx.timeout);
+
+        ctx.terminal.println(ctrl.submit(ctx.currDataset, args.get(0)));
+    }
+
+}
+

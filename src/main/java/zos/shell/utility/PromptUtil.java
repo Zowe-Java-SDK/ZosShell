@@ -3,7 +3,7 @@ package zos.shell.utility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.controller.container.ControllerFactoryContainer;
+import zos.shell.controller.container.ControllerFactoryContainerHolder;
 import zos.shell.singleton.TerminalSingleton;
 
 public final class PromptUtil {
@@ -17,7 +17,7 @@ public final class PromptUtil {
     @SuppressWarnings("SameReturnValue")
     public static String getPrompt() {
         LOG.debug("*** getPrompt ***");
-        var controllerFactoryContainer = new ControllerFactoryContainer();
+        var controllerFactoryContainer = ControllerFactoryContainerHolder.container();
         var envVariableController = controllerFactoryContainer.getEnvVariableController();
         var promptStr = envVariableController.getValueByEnv("PROMPT");
         if (promptStr != null && !promptStr.isBlank()) {

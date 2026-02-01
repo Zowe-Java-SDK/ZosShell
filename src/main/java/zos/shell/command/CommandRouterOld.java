@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.controller.container.ControllerFactoryContainer;
+import zos.shell.controller.container.ControllerFactoryContainerHolder;
 import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.help.HelpService;
@@ -20,18 +21,18 @@ import zowe.client.sdk.core.ZosConnection;
 
 import java.util.List;
 
-public class CommandRouter {
+public class CommandRouterOld {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CommandRouter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CommandRouterOld.class);
     private static final ListMultimap<String, String> dataSets = ArrayListMultimap.create();
-    private static final ControllerFactoryContainer controllerContainer = new ControllerFactoryContainer();
+    private static final ControllerFactoryContainer controllerContainer = ControllerFactoryContainerHolder.container();
     private final TextTerminal<?> terminal;
     private long timeout = Constants.FUTURE_TIMEOUT_VALUE;
     private String currDataset = "";
     private int currDatasetMax = 0;
     private SearchCache searchCache;
 
-    public CommandRouter(final TextTerminal<?> terminal) {
+    public CommandRouterOld(final TextTerminal<?> terminal) {
         this.terminal = terminal;
     }
 
@@ -128,9 +129,9 @@ public class CommandRouter {
                 }
                 var previousCurrConnection = currConnection;
                 var changeConnController = controllerContainer.getChangeConnController(terminal);
-                currConnection = changeConnController.changeZosConnection(currConnection, params);
+                currConnection = changeConnController.changeZosConnection(currConnection, 1);
                 ConnSingleton.getInstance().setCurrZosConnection(currConnection, changeIndex);
-                currSshConnection = changeConnController.changeSshConnection(currSshConnection, params);
+                currSshConnection = changeConnController.changeSshConnection(currSshConnection, 1);
                 ConnSingleton.getInstance().setCurrSshConnection(currSshConnection);
                 if (previousCurrConnection != currConnection) {
                     var msg = String.format("Connection changed:\nhost:%s\nuser:%s\nzosmfport:%s\nsshport:%s",

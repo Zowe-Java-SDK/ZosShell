@@ -1,0 +1,78 @@
+package zos.shell.commandcli.impl;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Options;
+import zos.shell.commandcli.AbstractCommand;
+import zos.shell.commandcli.CommandContext;
+import zos.shell.constants.Constants;
+import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.utility.DsnUtil;
+
+public class LsCommand extends AbstractCommand {
+
+    @Override
+    protected String name() {
+        return "ls [-l] [PDS_NAME] [MEMBER]";
+    }
+
+    @Override
+    protected String description() {
+        return "List dataset(s) or member(s)";
+    }
+
+    @Override
+    protected Options options() {
+        Options o = new Options();
+        o.addOption("l", "long", false, "long listing with attributes");
+        o.addOption(null, "no-attr", false, "long listing without attributes");
+        return o;
+    }
+
+    @Override
+    protected void run(CommandContext ctx, CommandLine cmd) {
+        if (cmd.getArgList().size() > 2) {
+            ctx.terminal.println("ls [-l] [PDS_NAME] [MEMBER]");
+            return;
+        }
+
+        boolean longList = cmd.hasOption("l") || cmd.hasOption("no-attr");
+        boolean withAttr = cmd.hasOption("l");
+
+        var listingController =
+                ControllerFactoryContainerHolder.container()
+                        .getListingController(ctx.zosConnection, ctx.terminal, ctx.timeout);
+
+        var args = cmd.getArgList();
+
+        if (args.isEmpty()) {
+            if (ctx.currDataset.isBlank()) {
+                ctx.terminal.println(Constants.DATASET_NOT_SPECIFIED);
+                return;
+            }
+            listingController.ls(ctx.currDataset);
+            return;
+        }
+
+        String target = args.get(0);
+
+        if (DsnUtil.isDataset(target)) {
+            if (longList)
+                listingController.lsl(null, target, withAttr);
+            else
+                listingController.ls(target);
+            return;
+        }
+
+        if (ctx.currDataset.isBlank()) {
+            ctx.terminal.println(Constants.DATASET_NOT_SPECIFIED);
+            return;
+        }
+
+        if (longList)
+            listingController.lsl(target, ctx.currDataset, withAttr);
+        else
+            listingController.ls(target, ctx.currDataset);
+    }
+
+}
+

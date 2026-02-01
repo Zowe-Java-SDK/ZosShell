@@ -61,7 +61,7 @@ public class ControllerFactoryContainer {
     private final PathService pathService = new PathService(ConnSingleton.getInstance(), this.envVariableController);
     private final Map<ContainerType.Name, Object> controllers = new HashMap<>();
 
-    public ControllerFactoryContainer() {
+    ControllerFactoryContainer() {
         LOG.debug("*** ControllerFactoryContainer ***");
     }
 

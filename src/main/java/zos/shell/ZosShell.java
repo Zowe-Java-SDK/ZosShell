@@ -6,7 +6,7 @@ import org.beryx.textio.swing.SwingTextTerminal;
 import org.beryx.textio.web.RunnerData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.command.CommandRouter;
+import zos.shell.commandcli.CommandRouter;
 import zos.shell.constants.Constants;
 import zos.shell.service.history.HistoryService;
 import zos.shell.singleton.ConnSingleton;
@@ -188,8 +188,13 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             command = StrUtil.stripEmptyStrings(command);
             if (isExclamationMark(command)) {
                 command = retrieveFromHistory(command);
+                if (command == null) {
+                    continue;
+                }
+                commandRouter.routeCommand(String.join(" ", command));
+            } else {
+                commandRouter.routeCommand(input);
             }
-            commandRouter.routeCommand(command, input);
         } while (true);
 
         textIO.dispose();
