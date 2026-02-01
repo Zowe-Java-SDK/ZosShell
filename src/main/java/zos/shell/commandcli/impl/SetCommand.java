@@ -1,12 +1,11 @@
 package zos.shell.commandcli.impl;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
-import zos.shell.commandcli.AbstractCommand;
 import zos.shell.commandcli.CommandContext;
+import zos.shell.commandcli.NoOptionCommand;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 
-public class SetCommand extends AbstractCommand {
+public class SetCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
@@ -16,12 +15,6 @@ public class SetCommand extends AbstractCommand {
     @Override
     protected String description() {
         return "Set an environment variable (KEY=VALUE)";
-    }
-
-    @Override
-    protected Options options() {
-        // SET has no flags; expects a single KEY=VALUE argument
-        return new Options();
     }
 
     @Override

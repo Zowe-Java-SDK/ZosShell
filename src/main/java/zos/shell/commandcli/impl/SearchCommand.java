@@ -1,12 +1,11 @@
 package zos.shell.commandcli.impl;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
-import zos.shell.commandcli.AbstractCommand;
 import zos.shell.commandcli.CommandContext;
+import zos.shell.commandcli.NoOptionCommand;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 
-public class SearchCommand extends AbstractCommand {
+public class SearchCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
@@ -21,11 +20,6 @@ public class SearchCommand extends AbstractCommand {
     @Override
     protected String description() {
         return "Search previous command output";
-    }
-
-    @Override
-    protected Options options() {
-        return new Options();
     }
 
     @Override

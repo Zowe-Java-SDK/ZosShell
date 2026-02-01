@@ -1,11 +1,10 @@
 package zos.shell.commandcli.impl;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
-import zos.shell.commandcli.AbstractCommand;
 import zos.shell.commandcli.CommandContext;
+import zos.shell.commandcli.NoOptionCommand;
 
-public class TimeoutCommand extends AbstractCommand {
+public class TimeoutCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
@@ -20,11 +19,6 @@ public class TimeoutCommand extends AbstractCommand {
     @Override
     protected String description() {
         return "Display or set timeout value";
-    }
-
-    @Override
-    protected Options options() {
-        return new Options();
     }
 
     @Override

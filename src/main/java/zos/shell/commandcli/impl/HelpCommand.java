@@ -1,14 +1,13 @@
 package zos.shell.commandcli.impl;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
-import zos.shell.commandcli.AbstractCommand;
 import zos.shell.commandcli.CommandContext;
+import zos.shell.commandcli.NoOptionCommand;
 import zos.shell.constants.Constants;
 import zos.shell.service.help.HelpService;
 import zos.shell.service.search.SearchCache;
 
-public class HelpCommand extends AbstractCommand {
+public class HelpCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
@@ -23,11 +22,6 @@ public class HelpCommand extends AbstractCommand {
     @Override
     protected String description() {
         return "Display help information";
-    }
-
-    @Override
-    protected Options options() {
-        return new Options();
     }
 
     @Override
