@@ -32,7 +32,10 @@ public class DownloadJobCommand extends AbstractCommand {
     @Override
     protected Options options() {
         Options opts = new Options();
-        opts.addOption(Option.builder("a").longOpt("all").desc("Download all job steps").build());
+        opts.addOption(Option.builder("a")
+                .longOpt("all")
+                .desc("Download all job steps")
+                .build());
         return opts;
     }
 

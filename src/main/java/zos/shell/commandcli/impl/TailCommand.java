@@ -12,7 +12,7 @@ public class TailCommand extends AbstractCommand {
 
     @Override
     protected String name() {
-        return "tail [JOB_NAME]";
+        return "tail <SOURCE>";
     }
 
     @Override

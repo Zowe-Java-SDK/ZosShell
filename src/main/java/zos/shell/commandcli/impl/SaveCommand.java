@@ -9,19 +9,19 @@ public class SaveCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "save [DATASET_NAME]";
+        return "save <SOURCE>";
     }
 
     @Override
     protected String description() {
-        return "Save a dataset";
+        return "Save a sequential dataset or member";
     }
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.isEmpty()) {
-            ctx.terminal.println("Usage: save [DATASET_NAME]");
+            ctx.terminal.println("Usage: save <SOURCE>");
             return;
         }
 

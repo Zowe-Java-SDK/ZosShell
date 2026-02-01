@@ -11,12 +11,12 @@ public class RmCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "rm [PDS_NAME] [SEQUENTIAL_DS_NAME] [MEMBER]";
+        return "rm <SOURCE>";
     }
 
     @Override
     protected String description() {
-        return "remove dataset(s) or member(s)";
+        return "Remove sequential dataset(s) or member(s)";
     }
 
     @Override

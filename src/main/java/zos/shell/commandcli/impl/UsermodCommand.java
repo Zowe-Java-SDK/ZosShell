@@ -1,6 +1,7 @@
 package zos.shell.commandcli.impl;
 
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import zos.shell.commandcli.AbstractCommand;
 import zos.shell.commandcli.CommandContext;
@@ -24,21 +25,45 @@ public class UsermodCommand extends AbstractCommand {
     }
 
     @Override
+    protected String usage() {
+        return "usermod <flag>";
+    }
+
+    @Override
     protected Options options() {
-        return new Options();
+        Options opts = new Options();
+        opts.addOption(Option.builder("u")
+                .longOpt("user")
+                .desc("Modify the user name")
+                .build());
+        opts.addOption(Option.builder("p")
+                .longOpt("password")
+                .desc("Modify the password")
+                .build());
+        return opts;
     }
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
-        var args = cmd.getArgList();
-        if (args.size() != 1) {
-            ctx.terminal.println("Usage: usermod <flag>");
+        if (!cmd.hasOption("u") && !cmd.hasOption("p")) {
+            ctx.terminal.println("Error: must specify either -u or -p");
+            ctx.terminal.println("Usage: " + usage());
             return;
         }
 
         var controller = ControllerFactoryContainerHolder.container()
                 .getUsermodController(ctx.zosConnection, ctx.currZosConnectionIndex);
-        String result = controller.change(args.get(0));
-        ctx.terminal.println(result);
+
+        String result = "";
+
+        if (cmd.hasOption("u")) {
+            result += controller.change("-u") + "\n";
+        }
+        if (cmd.hasOption("p")) {
+            result += controller.change("-p") + "\n";
+        }
+
+        ctx.terminal.println(result.trim());
     }
 }
+

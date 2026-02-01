@@ -14,7 +14,7 @@ public class PwdCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "show current dataset";
+        return "Display current dataset";
     }
 
     @Override

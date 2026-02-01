@@ -15,7 +15,7 @@ public class PsCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "process list";
+        return "List jobs on system";
     }
 
     @Override

@@ -14,7 +14,7 @@ public class HostnameCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Issue a hostname command";
+        return "Display the hostname setting";
     }
 
     @Override
