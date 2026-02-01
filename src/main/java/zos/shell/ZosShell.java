@@ -164,28 +164,44 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         var commandRouter = new CommandRouter(terminal);
         var historyResolver = new HistoryCommandResolver(terminal, HistorySingleton.getInstance().getHistory());
         while (true) {
-            var input = textIO.newStringInputReader().withMaxLength(80).read(PromptUtil.getPrompt());
-            if ("end".equalsIgnoreCase(input) || "exit".equalsIgnoreCase(input) || "quit".equalsIgnoreCase(input)) {
+            // read input
+            var input = textIO.newStringInputReader()
+                    .withMaxLength(80)
+                    .read(PromptUtil.getPrompt());
+
+            // exit conditions
+            if ("end".equalsIgnoreCase(input) ||
+                    "exit".equalsIgnoreCase(input) ||
+                    "quit".equalsIgnoreCase(input)) {
                 break;
             }
 
+            // skip loop if the font size changed
             if (isFontSizeChanged()) {
                 terminal.println("Font size updated.");
                 continue;
             }
 
-            var tokens = StrUtil.stripEmptyStrings(input.trim().split("\\s+"));
-            if (tokens.length == 0) continue;
 
+            // split input into tokens and strip empty strings
+            var tokens = StrUtil.stripEmptyStrings(input.trim().split("\\s+"));
+
+            if (tokens.length == 0) {
+                continue; // skip empty input
+            }
+
+            // handle exclamation history commands
             if (tokens[0].startsWith("!")) {
                 tokens = historyResolver.resolve(tokens);
                 if (tokens == null) continue;
             }
 
+            // handle input with a prompt prefix (optional)
             if (tokens[0].equalsIgnoreCase(PromptUtil.getPrompt()) && tokens.length > 1) {
                 tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
             }
 
+            // route the command
             commandRouter.routeCommand(String.join(" ", tokens));
         }
 
