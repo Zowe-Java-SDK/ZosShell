@@ -5,6 +5,7 @@ import org.apache.commons.cli.Options;
 import zos.shell.commandcli.AbstractCommand;
 import zos.shell.commandcli.CommandContext;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.utility.ColorUtil;
 
 public class ColorCommand extends AbstractCommand {
 
@@ -32,11 +33,20 @@ public class ColorCommand extends AbstractCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.isEmpty() || args.size() > 2) {
-            ctx.terminal.println("Usage: color <fg> [bg]");
+            ctx.terminal.println("Usage: color <FOURGOUND_COLOR_NAME> [BACKGROUND_COLOR_NAME]");
             return;
         }
 
-        var controller = ControllerFactoryContainerHolder.container()
+        try {
+            ColorUtil.validate(args.get(0));
+            ColorUtil.validate(args.size() == 2 ? args.get(1) : null);
+        } catch (IllegalArgumentException e) {
+            ctx.terminal.println(e.getMessage());
+            return;
+        }
+
+        var controller = ControllerFactoryContainerHolder
+                .container()
                 .getChangeWinController(ctx.terminal);
         String result = controller.changeColorSettings(args.get(0), args.size() == 2 ? args.get(1) : null);
         ctx.terminal.println(result);

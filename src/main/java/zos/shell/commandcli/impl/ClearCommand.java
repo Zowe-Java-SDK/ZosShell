@@ -34,6 +34,7 @@ public class ClearCommand extends NoOptionCommand {
         if (ctx.searchCache != null) {
             ctx.searchCache.getOutput().setLength(0);
             ctx.searchCache = null;
+            System.gc();
         }
         ctx.terminal.println();
     }

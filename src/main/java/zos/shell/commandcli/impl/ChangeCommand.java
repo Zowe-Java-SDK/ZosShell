@@ -58,7 +58,7 @@ public class ChangeCommand extends NoOptionCommand {
         ctx.currZosConnectionIndex = changeIndex;
 
         TerminalSingleton.getInstance().getMainTerminal()
-                .setPaneTitle("ZOS Shell - " + ctx.zosConnection.getHost().toUpperCase());
+                .setPaneTitle(Constants.APP_TITLE + " - " + ctx.zosConnection.getHost().toUpperCase());
         var msg = String.format("Connection changed:\nhost:%s\nuser:%s\nzosmfport:%s\nsshport:%s",
                 ctx.zosConnection.getHost(), ctx.zosConnection.getUser(), ctx.zosConnection.getZosmfPort(),
                 ctx.sshConnection.getPort());
