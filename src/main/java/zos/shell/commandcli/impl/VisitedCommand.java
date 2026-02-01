@@ -32,7 +32,8 @@ public class VisitedCommand extends NoOptionCommand {
         }
         CommandContext.dataSets.keySet().forEach(host -> {
             List<String> lst = CommandContext.dataSets.get(host);
-            lst.forEach(d -> ctx.terminal.println(String.format("%" + ctx.currDatasetMax + "s -> %s", d.toUpperCase(), host)));
+            lst.forEach(d -> ctx.terminal.println(
+                    String.format("%" + ctx.currDatasetMax + "s -> %s", d.toUpperCase(), host)));
         });
     }
 }
