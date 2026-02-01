@@ -9,7 +9,7 @@ public class EchoCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "echo [TEXT]";
+        return "echo <STRING>";
     }
 
     @Override
@@ -21,7 +21,7 @@ public class EchoCommand extends NoOptionCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.isEmpty()) {
-            ctx.terminal.println("Usage: echo [TEXT]");
+            ctx.terminal.println("Usage: echo <STRING>");
             return;
         }
 

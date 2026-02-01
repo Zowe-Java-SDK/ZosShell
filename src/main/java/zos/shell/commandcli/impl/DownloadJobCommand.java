@@ -25,6 +25,11 @@ public class DownloadJobCommand extends AbstractCommand {
     }
 
     @Override
+    protected String usage() {
+        return "downloadjob [OPTION] <JOB_NAME>";
+    }
+
+    @Override
     protected Options options() {
         Options opts = new Options();
         opts.addOption(Option.builder("a").longOpt("all").desc("Download all job steps").build());
@@ -35,7 +40,7 @@ public class DownloadJobCommand extends AbstractCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.size() != 1) {
-            ctx.terminal.println("Usage: downloadjob <job_name> [-a]");
+            ctx.terminal.println("Usage: downloadjob [OPTION] <JOB_NAME>");
             return;
         }
 
