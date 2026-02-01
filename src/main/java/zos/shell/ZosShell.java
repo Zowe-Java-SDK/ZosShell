@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.commandcli.CommandRouter;
 import zos.shell.constants.Constants;
-import zos.shell.service.history.HistoryService;
+import zos.shell.resolver.HistoryCommandResolver;
 import zos.shell.singleton.ConnSingleton;
 import zos.shell.singleton.HistorySingleton;
 import zos.shell.singleton.TerminalSingleton;
@@ -21,7 +21,6 @@ import zowe.client.sdk.core.ZosConnectionFactory;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
@@ -163,46 +162,34 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         }
 
         var commandRouter = new CommandRouter(terminal);
-        do {
-            String input = textIO.newStringInputReader().withMaxLength(80).read(PromptUtil.getPrompt());
+        var historyResolver = new HistoryCommandResolver(terminal, HistorySingleton.getInstance().getHistory());
+        while (true) {
+            var input = textIO.newStringInputReader().withMaxLength(80).read(PromptUtil.getPrompt());
             if ("end".equalsIgnoreCase(input) || "exit".equalsIgnoreCase(input) || "quit".equalsIgnoreCase(input)) {
                 break;
             }
+
             if (isFontSizeChanged()) {
-                terminal.println("Front size set.");
+                terminal.println("Font size updated.");
                 continue;
             }
-            var inputs = Arrays.stream(input.split(" ")).collect(Collectors.toList());
-            String[] command;
-            if (inputs.get(0).equalsIgnoreCase(PromptUtil.getPrompt())) {
-                command = new String[inputs.size() - 1];
-                for (int i = 1; i < inputs.size(); i++) {
-                    command[i - 1] = inputs.get(i);
-                }
-            } else {
-                command = new String[inputs.size()];
-                for (int i = 0; i < inputs.size(); i++) {
-                    command[i] = inputs.get(i);
-                }
+
+            String[] tokens = StrUtil.stripEmptyStrings(input.trim().split("\\s+"));
+            if (tokens.length == 0) continue;
+
+            if (tokens[0].startsWith("!")) {
+                tokens = historyResolver.resolve(tokens);
+                if (tokens == null) continue;
             }
-            command = StrUtil.stripEmptyStrings(command);
-            if (isExclamationMark(command)) {
-                command = retrieveFromHistory(command);
-                if (command == null) {
-                    continue;
-                }
-                commandRouter.routeCommand(String.join(" ", command));
-            } else {
-                commandRouter.routeCommand(input);
+
+            if (tokens[0].equalsIgnoreCase(PromptUtil.getPrompt()) && tokens.length > 1) {
+                tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
             }
-        } while (true);
+
+            commandRouter.routeCommand(String.join(" ", tokens));
+        }
 
         textIO.dispose();
-    }
-
-    private boolean isExclamationMark(final String[] command) {
-        LOG.debug("*** isExclamationMark ***");
-        return command[0].startsWith("!");
     }
 
     private boolean isFontSizeChanged() {
@@ -212,43 +199,6 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             return true;
         }
         return false;
-    }
-
-    private String[] retrieveFromHistory(String[] command) {
-        LOG.debug("*** retrieveFromHistory ***");
-        // local variables copies from singletons
-        TextTerminal<?> terminal = TerminalSingleton.getInstance().getTerminal();
-        HistoryService historyService = HistorySingleton.getInstance().getHistory();
-
-        var str = new StringBuilder();
-        for (var i = 0; i < command.length; i++) {
-            str.append(command[i]);
-            if (i + 1 != command.length) {
-                str.append(" ");
-            }
-        }
-
-        var cmd = str.toString();
-        if (cmd.length() == 1) {
-            terminal.println(Constants.MISSING_PARAMETERS);
-            return null;
-        }
-
-        var subStr = cmd.substring(1);
-        boolean isStrNum = StrUtil.isStrNum(subStr);
-
-        String newCmd;
-        if ("!".equals(subStr)) {
-            newCmd = historyService.getLastHistory();
-        } else if (isStrNum) {
-            newCmd = historyService.getHistoryByIndex(Integer.parseInt(subStr) - 1);
-        } else {
-            newCmd = historyService.getLastHistoryByValue(subStr);
-        }
-
-        // set a new command from history content
-        command = newCmd != null ? newCmd.split(" ") : null;
-        return command;
     }
 
 }
