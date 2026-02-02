@@ -37,7 +37,7 @@ public final class Constants {
     public static final String HELP_COMMAND_NOT_FOUND = "command not found, try again...";
     public static final int HISTORY_SIZE = 200;
     public static final String INVALID_ARGUMENTS = "invalid arguments, try again...";
-    public static final String INVALID_COMMAND = "invalid command, try again...";
+    public static final String INVALID_COMMAND = "invalid command; run the command with -h to see usage information and try again.";
     public static final String INVALID_DATASET = "invalid dataset specified, try again...";
     public static final String INVALID_DATASET_AND_MEMBER = "invalid dataset or member specified, try again...";
     public static final String INVALID_DATASET_AND_MEMBER_COMBINED =
