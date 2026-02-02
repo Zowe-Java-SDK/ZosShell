@@ -27,7 +27,7 @@ public class ColorCommand extends NoOptionCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.isEmpty() || args.size() > 2) {
-            ctx.terminal.println("Usage: color <FOURGOUND_COLOR_NAME> [BACKGROUND_COLOR_NAME]");
+            ctx.terminal.println("Usage: color <FOREGROUND_COLOR_NAME> [BACKGROUND_COLOR_NAME]");
             return;
         }
 

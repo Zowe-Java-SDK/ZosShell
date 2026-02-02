@@ -26,7 +26,7 @@ public class DownloadJobCommand extends AbstractCommand {
 
     @Override
     protected String usage() {
-        return "downloadjob [OPTION] <JOB_NAME>";
+        return "downloadjob [OPTION] <JOBNAME>";
     }
 
     @Override
@@ -43,7 +43,7 @@ public class DownloadJobCommand extends AbstractCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.size() != 1) {
-            ctx.terminal.println("Usage: downloadjob [OPTION] <JOB_NAME>");
+            ctx.terminal.println("Usage: downloadjob [OPTION] <JOBNAME>");
             return;
         }
 

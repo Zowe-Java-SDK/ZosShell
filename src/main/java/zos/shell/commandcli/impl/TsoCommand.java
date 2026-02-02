@@ -20,11 +20,6 @@ public class TsoCommand extends NoOptionCommand {
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
-        if (cmd.getArgList().isEmpty()) {
-            ctx.terminal.println("Missing TSO command");
-            return;
-        }
-
         if (cmd.getArgList().size() != 1) {
             ctx.terminal.println("Usage: tso \"[COMMAND_STRING]\"");
             return;

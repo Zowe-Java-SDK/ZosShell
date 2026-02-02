@@ -5,6 +5,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import zos.shell.commandcli.AbstractCommand;
 import zos.shell.commandcli.CommandContext;
+import zos.shell.constants.Constants;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 import zos.shell.service.search.SearchCache;
 
@@ -27,7 +28,7 @@ public class BrowseJobCommand extends AbstractCommand {
 
     @Override
     protected String usage() {
-        return "browsejob [OPTION] <JOB_NAME>";
+        return "browsejob [OPTION] <JOBNAME>";
     }
 
     @Override
@@ -43,8 +44,8 @@ public class BrowseJobCommand extends AbstractCommand {
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
-        if (args.isEmpty()) {
-            ctx.terminal.println("usage: browsejob [JOB_NAME] [-a, --all]");
+        if (args.size() != 1) {
+            ctx.terminal.println("Usage: browsejob [OPTION] <JOBNAME>");
             return;
         }
 

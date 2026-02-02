@@ -21,6 +21,10 @@ public class HistoryCommand extends NoOptionCommand {
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgs();
+        if (args.length > 1) {
+            ctx.terminal.println("Usage: history [NUMBER]");
+            return;
+        }
         if (args.length == 0) {
             HistorySingleton.getInstance().getHistory().displayHistory();
         } else {

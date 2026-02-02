@@ -22,8 +22,8 @@ public class RmCommand extends NoOptionCommand {
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
-        if (args.isEmpty()) {
-            ctx.terminal.println(Constants.MISSING_PARAMETERS);
+        if (args.size() != 1) {
+            ctx.terminal.println("Usage: rm <SOURCE>");
             return;
         }
 

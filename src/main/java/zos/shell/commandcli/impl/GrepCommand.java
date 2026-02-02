@@ -19,14 +19,14 @@ public class GrepCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Search content in a dataset";
+        return "Search content in a sequential dataset(s) or member(s)";
     }
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.size() != 2) {
-            ctx.terminal.println("Usage: grep <pattern> <dataset>");
+            ctx.terminal.println("Usage: grep [PATTERN] [SOURCE]");
             return;
         }
 

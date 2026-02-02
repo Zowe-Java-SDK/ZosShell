@@ -3,6 +3,7 @@ package zos.shell.commandcli.impl;
 import org.apache.commons.cli.CommandLine;
 import zos.shell.commandcli.CommandContext;
 import zos.shell.commandcli.NoOptionCommand;
+import zos.shell.constants.Constants;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 import zos.shell.service.search.SearchCache;
 
@@ -21,8 +22,8 @@ public class CatCommand extends NoOptionCommand {
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
-        if (args.isEmpty()) {
-            ctx.terminal.println("cat <SOURCE>");
+        if (args.size() != 1) {
+            ctx.terminal.println("Usage: cat <SOURCE>");
             return;
         }
 

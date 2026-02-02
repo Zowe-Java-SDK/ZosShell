@@ -10,7 +10,7 @@ public class TouchCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "touch [JOB_NAME]";
+        return "touch [JOBNAME]";
     }
 
     @Override
@@ -27,7 +27,7 @@ public class TouchCommand extends NoOptionCommand {
         }
 
         if (cmd.getArgList().size() != 1) {
-            ctx.terminal.println("Usage: touch [JOB_NAME]");
+            ctx.terminal.println("Usage: touch [JOBNAME]");
             return;
         }
 

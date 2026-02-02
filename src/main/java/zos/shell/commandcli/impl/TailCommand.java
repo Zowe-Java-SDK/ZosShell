@@ -12,12 +12,12 @@ public class TailCommand extends AbstractCommand {
 
     @Override
     protected String name() {
-        return "tail <SOURCE>";
+        return "tail <JOBNAME>";
     }
 
     @Override
     protected String description() {
-        return "Display the last part of a sequential dataset or member";
+        return "Display the contents of a job from the bottom";
     }
 
     @Override
@@ -34,14 +34,9 @@ public class TailCommand extends AbstractCommand {
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
-        String[] args = cmd.getArgs();
-        if (args.length == 0) {
-            ctx.terminal.println("Missing dataset or file");
-            return;
-        }
-
+        var args = cmd.getArgs();
         if (cmd.getArgList().size() != 1) {
-            ctx.terminal.println("Usage: tail [JOB_NAME]");
+            ctx.terminal.println("Usage: tail [JOBNAME]");
             return;
         }
 
