@@ -10,4 +10,3 @@ public abstract class NoOptionCommand extends AbstractCommand {
     }
 
 }
-

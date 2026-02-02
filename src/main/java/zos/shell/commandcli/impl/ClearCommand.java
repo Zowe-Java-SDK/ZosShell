@@ -3,7 +3,6 @@ package zos.shell.commandcli.impl;
 import org.apache.commons.cli.CommandLine;
 import zos.shell.commandcli.CommandContext;
 import zos.shell.commandcli.NoOptionCommand;
-import zos.shell.constants.Constants;
 
 public class ClearCommand extends NoOptionCommand {
 

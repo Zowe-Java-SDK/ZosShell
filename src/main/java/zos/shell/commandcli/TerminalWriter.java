@@ -27,4 +27,3 @@ public class TerminalWriter extends Writer {
     }
 
 }
-
