@@ -24,7 +24,6 @@ public class ShellStateMachine {
 
     private ShellState state = ShellState.READ_INPUT;
     private String input;
-    private String[] tokens;
 
     public ShellStateMachine(TextIO textIO) {
         this.textIO = textIO;
@@ -71,7 +70,7 @@ public class ShellStateMachine {
             return;
         }
 
-        tokens = StrUtil.stripEmptyStrings(input.trim().split("\\s+"));
+        var tokens = StrUtil.stripEmptyStrings(input.trim().split("\\s+"));
         if (tokens.length == 0) {
             state = ShellState.READ_INPUT;
             return;
