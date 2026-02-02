@@ -45,9 +45,6 @@ public class ShellStateMachine {
                 case PROCESS_INPUT:
                     processInput();
                     break;
-                case EXIT:
-                    // no-op
-                    break;
                 default:
                     throw new IllegalStateException("Unexpected state: " + state);
             }
