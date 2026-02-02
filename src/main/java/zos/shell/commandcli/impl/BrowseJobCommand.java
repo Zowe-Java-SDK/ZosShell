@@ -5,7 +5,6 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import zos.shell.commandcli.AbstractCommand;
 import zos.shell.commandcli.CommandContext;
-import zos.shell.constants.Constants;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 import zos.shell.service.search.SearchCache;
 
