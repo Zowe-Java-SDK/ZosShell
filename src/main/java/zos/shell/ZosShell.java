@@ -164,13 +164,4 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         textIO.dispose();
     }
 
-    private boolean isFontSizeChanged() {
-        LOG.debug("*** isFontSizeChanged ***");
-        if (TerminalSingleton.getInstance().isFontSizeChanged()) {
-            TerminalSingleton.getInstance().setFontSizeChanged(false);
-            return true;
-        }
-        return false;
-    }
-
 }
