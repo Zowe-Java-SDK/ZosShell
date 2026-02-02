@@ -10,7 +10,7 @@ public class TsoCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "tso \"[COMMAND_STRING]\"";
+        return "tso \"<COMMAND_STRING>\"";
     }
 
     @Override
@@ -21,7 +21,7 @@ public class TsoCommand extends NoOptionCommand {
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         if (cmd.getArgList().size() != 1) {
-            ctx.terminal.println("Usage: tso \"[COMMAND_STRING]\"");
+            printHelp(ctx);
             return;
         }
 

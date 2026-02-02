@@ -27,7 +27,7 @@ public class VisitedCommand extends NoOptionCommand {
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         if (cmd.getArgList().size() != 1) {
-            ctx.terminal.println(Constants.INVALID_COMMAND);
+            printHelp(ctx);
             return;
         }
         if (CommandContext.dataSets.isEmpty()) {

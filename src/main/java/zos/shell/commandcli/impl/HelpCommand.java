@@ -43,6 +43,11 @@ public class HelpCommand extends AbstractCommand {
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
+        if (cmd.getArgList().size() != 1) {
+            printHelp(ctx);
+            return;
+        }
+
         SearchCache searchCache;
 
         if (cmd.hasOption("l")) {

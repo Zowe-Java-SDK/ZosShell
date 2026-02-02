@@ -10,7 +10,7 @@ public class MvsCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "mvs \"[COMMAND_STRING]\"";
+        return "mvs \"<COMMAND_STRING]>\"";
     }
 
     @Override
@@ -22,7 +22,7 @@ public class MvsCommand extends NoOptionCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         // Everything after "mvs" is treated as the console command
         if (cmd.getArgList().size() != 1) {
-            ctx.terminal.println("Usage: mvs \"[COMMAND_STRING]\"");
+            printHelp(ctx);
             return;
         }
 

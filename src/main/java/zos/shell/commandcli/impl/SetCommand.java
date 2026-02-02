@@ -9,7 +9,7 @@ public class SetCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "set [KEY=VALE]";
+        return "set <KEY=VALE>";
     }
 
     @Override
@@ -20,7 +20,7 @@ public class SetCommand extends NoOptionCommand {
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         if (cmd.getArgList().size() != 1) {
-            ctx.terminal.println("Usage: set KEY=VALUE");
+            printHelp(ctx);
             return;
         }
 

@@ -26,7 +26,7 @@ public class GrepCommand extends NoOptionCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.size() != 2) {
-            ctx.terminal.println("Usage: grep [PATTERN] [SOURCE]");
+            printHelp(ctx);
             return;
         }
 

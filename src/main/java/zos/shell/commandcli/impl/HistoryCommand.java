@@ -22,7 +22,7 @@ public class HistoryCommand extends NoOptionCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgs();
         if (args.length > 1) {
-            ctx.terminal.println("Usage: history [NUMBER]");
+            printHelp(ctx);
             return;
         }
         if (args.length == 0) {

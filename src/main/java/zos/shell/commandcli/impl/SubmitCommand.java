@@ -9,7 +9,7 @@ public class SubmitCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "submit [JOBNAME]";
+        return "submit <JOBNAME>";
     }
 
     @Override
@@ -21,7 +21,7 @@ public class SubmitCommand extends NoOptionCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (cmd.getArgList().size() != 1) {
-            ctx.terminal.println("Usage: submit [JOBNAME]");
+            printHelp(ctx);
             return;
         }
 

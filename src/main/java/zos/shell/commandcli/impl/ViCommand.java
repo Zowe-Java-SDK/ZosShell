@@ -9,7 +9,7 @@ public class ViCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "vi";
+        return "vi <SOURCE>";
     }
 
     @Override
@@ -26,7 +26,7 @@ public class ViCommand extends NoOptionCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.size() != 1) {
-            ctx.terminal.println("Usage: vi <member>");
+            printHelp(ctx);
             return;
         }
 

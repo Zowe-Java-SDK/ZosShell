@@ -22,7 +22,7 @@ public class CdCommand extends NoOptionCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.size() != 1) {
-            ctx.terminal.println("Usage: cd <SOURCE>");
+            printHelp(ctx);
             return;
         }
 

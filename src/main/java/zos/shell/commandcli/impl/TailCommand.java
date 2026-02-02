@@ -36,7 +36,7 @@ public class TailCommand extends AbstractCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgs();
         if (cmd.getArgList().size() != 1) {
-            ctx.terminal.println("Usage: tail [JOBNAME]");
+            printHelp(ctx);
             return;
         }
 

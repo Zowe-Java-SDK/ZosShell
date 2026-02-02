@@ -31,7 +31,7 @@ public class TimeoutCommand extends NoOptionCommand {
         }
 
         if (cmd.getArgList().size() != 1) {
-            ctx.terminal.println("Usage: timeout [NEW_VALUE]");
+            printHelp(ctx);
             return;
         }
 

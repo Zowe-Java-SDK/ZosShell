@@ -31,7 +31,7 @@ public class ChangeCommand extends NoOptionCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.size() != 1) {
-            ctx.terminal.println("Usage: change [INDEX_NUM]");
+            printHelp(ctx);
             return;
         }
 

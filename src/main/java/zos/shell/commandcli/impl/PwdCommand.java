@@ -20,7 +20,7 @@ public class PwdCommand extends NoOptionCommand {
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         if (!cmd.getArgList().isEmpty()) {
-            ctx.terminal.println(Constants.INVALID_COMMAND);
+            printHelp(ctx);
             return;
         }
 

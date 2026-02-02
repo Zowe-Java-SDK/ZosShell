@@ -26,7 +26,7 @@ public class RenameCommand extends NoOptionCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.size() != 2) {
-            ctx.terminal.println("Usage: rename <SOURCE> <DEST>");
+            printHelp(ctx);
             return;
         }
 

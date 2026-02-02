@@ -26,7 +26,7 @@ public class PurgeCommand extends NoOptionCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (cmd.getArgList().size() != 1) {
-            ctx.terminal.println("Usage: purge [JOBNAME]");
+            printHelp(ctx);
             return;
         }
 

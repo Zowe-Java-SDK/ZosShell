@@ -9,7 +9,7 @@ public class StopCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "stop [JOBNAME]";
+        return "stop <JOBNAME]>";
     }
 
     @Override
@@ -21,7 +21,7 @@ public class StopCommand extends NoOptionCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (cmd.getArgList().size() != 1) {
-            ctx.terminal.println("Usage: stop [JOBNAME]");
+            printHelp(ctx);
             return;
         }
 

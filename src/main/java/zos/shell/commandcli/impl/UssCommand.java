@@ -9,7 +9,7 @@ public class UssCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "ussh \"[COMMAND_STRING]\"";
+        return "ussh \"<COMMAND_STRING>\"";
     }
 
     @Override
@@ -20,7 +20,7 @@ public class UssCommand extends NoOptionCommand {
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         if (cmd.getArgList().size() != 1) {
-            ctx.terminal.println("Usage: ussh \"[COMMAND_STRING]\"");
+            printHelp(ctx);
             return;
         }
 

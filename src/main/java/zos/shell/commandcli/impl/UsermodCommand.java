@@ -46,8 +46,7 @@ public class UsermodCommand extends AbstractCommand {
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         if (!cmd.hasOption("u") && !cmd.hasOption("p")) {
-            ctx.terminal.println("Error: must specify either -u or -p");
-            ctx.terminal.println("Usage: " + usage());
+            printHelp(ctx);
             return;
         }
 

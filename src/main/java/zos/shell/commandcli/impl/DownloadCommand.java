@@ -45,7 +45,7 @@ public class DownloadCommand extends AbstractCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.size() != 1) {
-            ctx.terminal.println("Usage: download [OPTION] <SOURCE>");
+            printHelp(ctx);
             return;
         }
 

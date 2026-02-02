@@ -36,7 +36,7 @@ public class LsCommand extends AbstractCommand {
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         if (cmd.getArgList().size() > 2) {
-            ctx.terminal.println("ls [OPTION] [SOURCE]");
+            printHelp(ctx);
             return;
         }
 

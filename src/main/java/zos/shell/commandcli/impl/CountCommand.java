@@ -42,7 +42,7 @@ public class CountCommand extends AbstractCommand {
         boolean datasetOpt = cmd.hasOption("d");
 
         if (!memberOpt && !datasetOpt) {
-            ctx.terminal.println(Constants.MISSING_COUNT_PARAM);
+            printHelp(ctx);
             return;
         }
 

@@ -9,7 +9,7 @@ public class SearchCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "search";
+        return "search {PATTERN";
     }
 
     @Override
@@ -26,7 +26,7 @@ public class SearchCommand extends NoOptionCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.size() != 1) {
-            ctx.terminal.println("Usage: search <PATTERN>");
+            printHelp(ctx);
             return;
         }
 

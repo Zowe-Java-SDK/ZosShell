@@ -44,7 +44,7 @@ public class BrowseJobCommand extends AbstractCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.size() != 1) {
-            ctx.terminal.println("Usage: browsejob [OPTION] <JOBNAME>");
+            printHelp(ctx);
             return;
         }
 
