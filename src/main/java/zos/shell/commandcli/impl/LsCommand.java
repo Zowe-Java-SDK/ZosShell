@@ -17,7 +17,7 @@ public class LsCommand extends AbstractCommand {
 
     @Override
     protected String description() {
-        return "List dataset(s) or member(s)";
+        return "List datasets/members. SOURCE can contain a wild card.";
     }
 
     @Override

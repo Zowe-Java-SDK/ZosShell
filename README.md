@@ -93,7 +93,7 @@ The shell performs the following Linux-like commands:
     cp | copy <arg> <arg>   - arg can be ".", member, dataset or dataset(member)
     echo <arg>              - echo arg value and translate any environment value delimited with $
     env                     - echo all environment variables
-    g | grep <arg> <arg2>   - arg is search string and arg2 is member value
+    g | grep <arg> <arg2>   - arg is search string and arg2 is member value can contain wild card
     h | help <arg>          - list all commands-details; arg=-l, list all command names; arg=command, list command-detail 
     history <arg>           - arg is optional and indicates the number to display from bottom 
     hostname                - echo hostname connection

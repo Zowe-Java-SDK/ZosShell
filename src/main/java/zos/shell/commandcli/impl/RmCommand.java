@@ -15,7 +15,7 @@ public class RmCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Remove sequential dataset(s) or member(s)";
+        return "Remove sequential dataset, member or dataset(member). SOURCE can contain a wild card.";
     }
 
     @Override

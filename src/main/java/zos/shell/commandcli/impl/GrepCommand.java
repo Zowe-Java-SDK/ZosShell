@@ -9,7 +9,7 @@ public class GrepCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "grep";
+        return "grep <PATTERN> <SOURCE>";
     }
 
     @Override
@@ -19,7 +19,7 @@ public class GrepCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Search content in a sequential dataset(s) or member(s)";
+        return "Search content in a sequential dataset or member. SOURCE can contain a wild card.";
     }
 
     @Override
