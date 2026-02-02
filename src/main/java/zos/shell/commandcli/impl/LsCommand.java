@@ -49,17 +49,25 @@ public class LsCommand extends AbstractCommand {
 
         var args = cmd.getArgList();
 
+        // no source specified
         if (args.isEmpty()) {
             if (ctx.currDataset.isBlank()) {
                 ctx.terminal.println(Constants.DATASET_NOT_SPECIFIED);
                 return;
             }
-            listingController.ls(ctx.currDataset);
+            if (longList) {
+                listingController.lsl(ctx.currDataset, withAttr);
+            } else {
+                listingController.ls(ctx.currDataset);
+            }
             return;
         }
 
+        // at this point, source specified check if
+        // it is either partition dataset or member
         String target = args.get(0);
 
+        // list dataset
         if (DsnUtil.isDataset(target)) {
             if (longList)
                 listingController.lsl(null, target, withAttr);
@@ -68,16 +76,17 @@ public class LsCommand extends AbstractCommand {
             return;
         }
 
+        // error out if no pwd set
         if (ctx.currDataset.isBlank()) {
             ctx.terminal.println(Constants.DATASET_NOT_SPECIFIED);
             return;
         }
 
-        if (longList)
+        // list member
+        if (longList) {
             listingController.lsl(target, ctx.currDataset, withAttr);
-        else
+        } else {
             listingController.ls(target, ctx.currDataset);
+        }
     }
-
 }
-
