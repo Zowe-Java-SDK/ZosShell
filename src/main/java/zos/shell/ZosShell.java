@@ -182,10 +182,8 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
                 continue;
             }
 
-
             // split input into tokens and strip empty strings
             var tokens = StrUtil.stripEmptyStrings(input.trim().split("\\s+"));
-
             if (tokens.length == 0) {
                 continue; // skip empty input
             }

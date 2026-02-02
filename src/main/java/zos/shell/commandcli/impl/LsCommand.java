@@ -22,7 +22,7 @@ public class LsCommand extends AbstractCommand {
 
     @Override
     protected String usage() {
-        return "ls [OPTION] [PDS_NAME] [MEMBER]";
+        return "ls [OPTION] [SOURCE]";
     }
 
     @Override
@@ -36,7 +36,7 @@ public class LsCommand extends AbstractCommand {
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         if (cmd.getArgList().size() > 2) {
-            ctx.terminal.println("ls [OPTION] [PDS_NAME] [MEMBER]");
+            ctx.terminal.println("ls [OPTION] [SOURCE]");
             return;
         }
 
