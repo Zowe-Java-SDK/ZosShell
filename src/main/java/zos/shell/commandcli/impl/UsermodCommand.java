@@ -26,7 +26,7 @@ public class UsermodCommand extends AbstractCommand {
 
     @Override
     protected String usage() {
-        return "usermod <flag>";
+        return "usermod <OPTION>";
     }
 
     @Override
