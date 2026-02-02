@@ -34,4 +34,3 @@ public class FilesCommand extends NoOptionCommand {
         ctx.searchCache = new SearchCache("files", result);
     }
 }
-

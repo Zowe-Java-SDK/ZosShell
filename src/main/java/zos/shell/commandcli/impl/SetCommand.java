@@ -38,5 +38,3 @@ public class SetCommand extends NoOptionCommand {
         ctx.terminal.println(env.set(kv));
     }
 }
-
-

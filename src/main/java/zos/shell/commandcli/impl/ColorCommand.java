@@ -46,4 +46,3 @@ public class ColorCommand extends NoOptionCommand {
         ctx.terminal.println(result);
     }
 }
-

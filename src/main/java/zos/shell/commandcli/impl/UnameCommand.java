@@ -31,4 +31,3 @@ public class UnameCommand extends NoOptionCommand {
     }
 
 }
-

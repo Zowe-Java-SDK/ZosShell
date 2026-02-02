@@ -38,4 +38,3 @@ public class PsCommand extends NoOptionCommand {
     }
 
 }
-

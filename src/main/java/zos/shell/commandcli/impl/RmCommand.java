@@ -44,4 +44,3 @@ public class RmCommand extends NoOptionCommand {
     }
 
 }
-

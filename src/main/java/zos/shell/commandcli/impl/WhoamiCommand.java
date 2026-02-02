@@ -28,4 +28,3 @@ public class WhoamiCommand extends NoOptionCommand {
     }
 
 }
-

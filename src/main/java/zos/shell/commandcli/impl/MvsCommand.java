@@ -37,5 +37,3 @@ public class MvsCommand extends NoOptionCommand {
         ctx.searchCache = new SearchCache("mvs", new StringBuilder(result));
     }
 }
-
-

@@ -35,4 +35,3 @@ public class CatCommand extends NoOptionCommand {
     }
 
 }
-

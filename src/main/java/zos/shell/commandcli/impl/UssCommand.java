@@ -34,4 +34,3 @@ public class UssCommand extends NoOptionCommand {
         ctx.terminal.println(result);
     }
 }
-

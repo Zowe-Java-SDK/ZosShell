@@ -28,4 +28,3 @@ public class HostnameCommand extends NoOptionCommand {
     }
 
 }
-

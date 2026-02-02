@@ -62,6 +62,7 @@ public class CommandRegistry {
         register("history", new HistoryCommand());
         register("hostname", new HostnameCommand());
         register("whoami", new WhoamiCommand());
+        register("uname", new UnameCommand());
         register("set", new SetCommand());
 
         // Search / Help
