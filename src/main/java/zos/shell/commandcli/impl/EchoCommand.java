@@ -14,7 +14,7 @@ public class EchoCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Echo text to the terminal";
+        return "Echo string to the terminal and translate any environment variable with $";
     }
 
     @Override

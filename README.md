@@ -91,8 +91,8 @@ The shell performs the following Linux-like commands:
     cd <arg>                - arg is a dataset value or ..
     cls | clear             - clear screen contents and search cache
     cp | copy <arg> <arg>   - arg can be ".", member, dataset or dataset(member)
-    echo <arg>              - echo arg value and translate any env value delimited with $
-    env                     - echo all env variables
+    echo <arg>              - echo arg value and translate any environment value delimited with $
+    env                     - echo all environment variables
     g | grep <arg> <arg2>   - arg is search string and arg2 is member value
     h | help <arg>          - list all commands-details; arg=-l, list all command names; arg=command, list command-detail 
     history <arg>           - arg is optional and indicates the number to display from bottom 
@@ -115,14 +115,14 @@ The shell performs the following Linux-like commands:
   
 Along with the following custom commands:  
 
-    bj | browsejob <arg1> <arg2>        - arg1=task/job name; display job's JESMSGLG spool output; arg2=optional or "all"; all=display all job's spool output
+    bj | browsejob <arg1> <arg2>        - arg1=task/job name; display job's JESMSGLG spool output; arg2=-a or --all (optional); all=display all job's spool output
     cancel <arg>                        - arg=task/job name; cancel  
     change <arg>                        - arg=connection number, ordered connections defined in config.json
     color <arg> <arg2>                  - change color arg is prompt and text and arg2 is background color, i.e. blue, yellow, cyan etc..
     connections                         - connection(s) list from config.json   
     count <arg>                         - number of members or datasets in PWD, arg = -m | -d | --members | --datasets
     d | download <arg1> <arg2>          - arg1="*", member(*), dataset(member) or sequential dataset; download to \downloadpath\$HOSTNAME\pwd or \downloadpath\$HOSTNAME\SEQUENTIAL_DATASET; arg2=optional or -b for binary download   
-    dj | downloadjob <arg1> <arg2>      - arg1=task/job name; download JESMSGLG spool output; arg2="all", download all spool content
+    dj | downloadjob <arg1> <arg2>      - arg1=task/job name; download JESMSGLG spool output; arg2=-a or --all (optional), all=download all spool content
     end                                 - exit UI shell
     exit                                - exit UI shell
     quit                                - exit UI shell
