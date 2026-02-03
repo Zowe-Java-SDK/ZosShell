@@ -9,7 +9,7 @@ public class SearchCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "search {PATTERN";
+        return "search <PATTERN>";
     }
 
     @Override

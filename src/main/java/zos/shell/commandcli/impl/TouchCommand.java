@@ -22,7 +22,7 @@ public class TouchCommand extends NoOptionCommand {
     protected void run(CommandContext ctx, CommandLine cmd) {
         var args = cmd.getArgList();
         if (args.isEmpty()) {
-            ctx.terminal.println(Constants.MISSING_PARAMETERS);
+            printHelp(ctx);
             return;
         }
 
