@@ -15,7 +15,7 @@ public class CdCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Change directory to a PDS or MLQ";
+        return "Change directory to a PDS or .MLQ";
     }
 
     @Override
