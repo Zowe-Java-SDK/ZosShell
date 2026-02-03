@@ -6,22 +6,18 @@ import org.beryx.textio.swing.SwingTextTerminal;
 import org.beryx.textio.web.RunnerData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.command.CommandRouter;
 import zos.shell.constants.Constants;
-import zos.shell.service.history.HistoryService;
 import zos.shell.singleton.ConnSingleton;
 import zos.shell.singleton.HistorySingleton;
 import zos.shell.singleton.TerminalSingleton;
 import zos.shell.singleton.configuration.ConfigSingleton;
+import zos.shell.state.ShellStateMachine;
 import zos.shell.utility.PromptUtil;
-import zos.shell.utility.StrUtil;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnectionFactory;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
 public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
@@ -162,88 +158,10 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             throw new RuntimeException(e);
         }
 
-        var commandRouter = new CommandRouter(terminal);
-        do {
-            String input = textIO.newStringInputReader().withMaxLength(80).read(PromptUtil.getPrompt());
-            if ("end".equalsIgnoreCase(input) || "exit".equalsIgnoreCase(input) || "quit".equalsIgnoreCase(input)) {
-                break;
-            }
-            if (isFontSizeChanged()) {
-                terminal.println("Front size set.");
-                continue;
-            }
-            var inputs = Arrays.stream(input.split(" ")).collect(Collectors.toList());
-            String[] command;
-            if (inputs.get(0).equalsIgnoreCase(PromptUtil.getPrompt())) {
-                command = new String[inputs.size() - 1];
-                for (int i = 1; i < inputs.size(); i++) {
-                    command[i - 1] = inputs.get(i);
-                }
-            } else {
-                command = new String[inputs.size()];
-                for (int i = 0; i < inputs.size(); i++) {
-                    command[i] = inputs.get(i);
-                }
-            }
-            command = StrUtil.stripEmptyStrings(command);
-            if (isExclamationMark(command)) {
-                command = retrieveFromHistory(command);
-            }
-            commandRouter.routeCommand(command, input);
-        } while (true);
+        var stateMachine = new ShellStateMachine(textIO);
+        stateMachine.run();
 
         textIO.dispose();
-    }
-
-    private boolean isExclamationMark(final String[] command) {
-        LOG.debug("*** isExclamationMark ***");
-        return command[0].startsWith("!");
-    }
-
-    private boolean isFontSizeChanged() {
-        LOG.debug("*** isFontSizeChanged ***");
-        if (TerminalSingleton.getInstance().isFontSizeChanged()) {
-            TerminalSingleton.getInstance().setFontSizeChanged(false);
-            return true;
-        }
-        return false;
-    }
-
-    private String[] retrieveFromHistory(String[] command) {
-        LOG.debug("*** retrieveFromHistory ***");
-        // local variables copies from singletons
-        TextTerminal<?> terminal = TerminalSingleton.getInstance().getTerminal();
-        HistoryService historyService = HistorySingleton.getInstance().getHistory();
-
-        var str = new StringBuilder();
-        for (var i = 0; i < command.length; i++) {
-            str.append(command[i]);
-            if (i + 1 != command.length) {
-                str.append(" ");
-            }
-        }
-
-        var cmd = str.toString();
-        if (cmd.length() == 1) {
-            terminal.println(Constants.MISSING_PARAMETERS);
-            return null;
-        }
-
-        var subStr = cmd.substring(1);
-        boolean isStrNum = StrUtil.isStrNum(subStr);
-
-        String newCmd;
-        if ("!".equals(subStr)) {
-            newCmd = historyService.getLastHistory();
-        } else if (isStrNum) {
-            newCmd = historyService.getHistoryByIndex(Integer.parseInt(subStr) - 1);
-        } else {
-            newCmd = historyService.getLastHistoryByValue(subStr);
-        }
-
-        // set a new command from history content
-        command = newCmd != null ? newCmd.split(" ") : null;
-        return command;
     }
 
 }

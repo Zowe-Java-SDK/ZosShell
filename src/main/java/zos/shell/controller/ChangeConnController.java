@@ -17,14 +17,14 @@ public class ChangeConnController {
         this.changeConnService = changeConnService;
     }
 
-    public ZosConnection changeZosConnection(final ZosConnection connection, final String[] commands) {
+    public ZosConnection changeZosConnection(final ZosConnection connection, final int index) {
         LOG.debug("*** changeZosConnection ***");
-        return changeConnService.changeZosConnection(connection, commands);
+        return changeConnService.changeZosConnection(connection, index);
     }
 
-    public SshConnection changeSshConnection(final SshConnection connection, final String[] commands) {
+    public SshConnection changeSshConnection(final SshConnection connection, final int index) {
         LOG.debug("*** changeSshConnection ***");
-        return changeConnService.changeSshConnection(connection, commands);
+        return changeConnService.changeSshConnection(connection, index);
     }
 
     public void displayConnections() {

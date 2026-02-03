@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class DsnUtil {
+public final class DsnUtil {
 
     private DsnUtil() {
         throw new IllegalStateException("Utility class");

@@ -91,9 +91,9 @@ The shell performs the following Linux-like commands:
     cd <arg>                - arg is a dataset value or ..
     cls | clear             - clear screen contents and search cache
     cp | copy <arg> <arg>   - arg can be ".", member, dataset or dataset(member)
-    echo <arg>              - echo arg value and translate any env value delimited with $
-    env                     - echo all env variables
-    g | grep <arg> <arg2>   - arg is search string and arg2 is member value
+    echo <arg>              - echo arg value and translate any environment value delimited with $
+    env                     - echo all environment variables
+    g | grep <arg> <arg2>   - arg is search string and arg2 is member value can contain wild card
     h | help <arg>          - list all commands-details; arg=-l, list all command names; arg=command, list command-detail 
     history <arg>           - arg is optional and indicates the number to display from bottom 
     hostname                - echo hostname connection
@@ -110,25 +110,24 @@ The shell performs the following Linux-like commands:
     touch <arg>             - create empty member if does not exist, arg represents a member or dataset(member)
     uname                   - echo connection hostname and z/OS version
     usermod <arg>           - modify username or password of current connection, arg can be either -u or -p
-    vi <arg>                - arg is a member, sequential dataset, or dataset(member), arg will be downloaded
     whoami                  - current connection's username  
   
 Along with the following custom commands:  
 
-    bj | browsejob <arg1> <arg2>        - arg1=task/job name; display job's JESMSGLG spool output; arg2=optional or "all"; all=display all job's spool output
+    bj | browsejob <arg1> <arg2>        - arg1=task/job name; display job's JESMSGLG spool output; arg2=-a or --all (optional); all=display all job's spool output
     cancel <arg>                        - arg=task/job name; cancel  
     change <arg>                        - arg=connection number, ordered connections defined in config.json
     color <arg> <arg2>                  - change color arg is prompt and text and arg2 is background color, i.e. blue, yellow, cyan etc..
     connections                         - connection(s) list from config.json   
-    count members                       - number of members in PWD
-    count datasets                      - renumber of datasets in PWD
+    count <arg>                         - number of members or datasets in PWD, arg = -m | -d | --members | --datasets
     d | download <arg1> <arg2>          - arg1="*", member(*), dataset(member) or sequential dataset; download to \downloadpath\$HOSTNAME\pwd or \downloadpath\$HOSTNAME\SEQUENTIAL_DATASET; arg2=optional or -b for binary download   
-    dj | downloadjob <arg1> <arg2>      - arg1=task/job name; download JESMSGLG spool output; arg2="all", download all spool content
+    dj | downloadjob <arg1> <arg2>      - arg1=task/job name; download JESMSGLG spool output; arg2=-a or --all (optional), all=download all spool content
+    edit <arg>                          - arg is a member, sequential dataset, or dataset(member), arg will be downloaded
     end                                 - exit UI shell
     exit                                - exit UI shell
     quit                                - exit UI shell
     files                               - list all files under local PWD drive value
-    ls --l <arg>                        - same as ls -l without attribute info
+    ls --long-no-attr <arg>             - same as ls -l without attribute info
     mvs <arg>                           - execute console command, arg=command in double quotes
     p | purge <arg>                     - arg=job name or id; purge   
     rn | rename <arg1> <arg2>           - rename member or sequential, arg1=old arg2=new

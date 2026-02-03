@@ -10,7 +10,6 @@ import zowe.client.sdk.zosjobs.input.JobGetInputData;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 import zowe.client.sdk.zosjobs.model.Job;
 
-import java.util.Comparator;
 import java.util.List;
 
 public class ProcessListing {

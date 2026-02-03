@@ -25,9 +25,8 @@ public class ChangeConnService {
         this.terminal = terminal;
     }
 
-    public ZosConnection changeZosConnection(final ZosConnection zosConnection, final String[] commands) {
+    public ZosConnection changeZosConnection(final ZosConnection zosConnection, final int index) {
         LOG.debug("*** changeZosConnection ***");
-        int index = Integer.parseInt(commands[1]) - 1;
         var numOfConnections = configSingleton.getZosConnections().size() - 1;
         if (index < 0 || index > numOfConnections) {
             terminal.println(Constants.NO_CONNECTION);
@@ -77,9 +76,8 @@ public class ChangeConnService {
         return configSingleton.getZosConnectionByIndex(index);
     }
 
-    public SshConnection changeSshConnection(final SshConnection sshConnection, final String[] commands) {
+    public SshConnection changeSshConnection(final SshConnection sshConnection, final int index) {
         LOG.debug("*** changeSshConnection ***");
-        int index = Integer.parseInt(commands[1]) - 1;
         var numOfConnections = configSingleton.getZosConnections().size() - 1;
         if (index < 0 || index > numOfConnections) {
             return sshConnection;

@@ -10,10 +10,8 @@ import zos.shell.service.path.PathService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.FileUtil;
 import zowe.client.sdk.zosjobs.methods.JobGet;
-import zowe.client.sdk.zosjobs.model.Job;
 
 import java.io.IOException;
-import java.util.Comparator;
 
 public class DownloadJob {
 
