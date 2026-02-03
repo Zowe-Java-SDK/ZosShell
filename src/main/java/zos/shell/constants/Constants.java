@@ -9,10 +9,6 @@ public final class Constants {
     public static final String APP_TITLE = "ZosShell";
     public static final String ARROW = " ==> ";
     public static final String COMMAND_EXECUTION_ERROR_MSG = "error executing command, try again...";
-    public static final String COMMAND_EXTRA_TEXT_INVALID_COMMAND =
-            "invalid command, remove extra text beyond second double quote and try again...";
-    public static final String COMMAND_INVALID_COMMAND =
-            "invalid command, please use double quotes only around the command string and try again...";
     public static final String COPY_NOTHING_WARNING = "nothing to copy, try again...";
     public static final String COPY_NO_MEMBER_ERROR =
             "first argument invalid for copy, specified a member, try again...";
