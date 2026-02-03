@@ -34,7 +34,7 @@ public class TsoCommand extends NoOptionCommand {
         String acct = env.getValueByEnv("ACCOUNT_NUMBER");
 
         if (acct == null || acct.isBlank()) {
-            ctx.terminal.println("ACCOUNT_NUMBER not set");
+            ctx.terminal.println("ACCOUNT_NUMBER not set. Use the SET command to configure it.");
             return;
         }
 
