@@ -10,7 +10,7 @@ public class TouchCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "touch <JOBNAME>";
+        return "touch <NAME>";
     }
 
     @Override
