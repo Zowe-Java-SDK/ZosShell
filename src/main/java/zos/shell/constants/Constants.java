@@ -39,13 +39,11 @@ public final class Constants {
     public static final String INVALID_ARGUMENTS = "invalid arguments, try again...";
     public static final String INVALID_COMMAND = "invalid command, try again...";
     public static final String INVALID_DATASET = "invalid dataset specified, try again...";
-    public static final String INVALID_DATASET_AND_MEMBER = "invalid dataset or member specified, try again...";
     public static final String INVALID_DATASET_AND_MEMBER_COMBINED =
             "invalid member, dataset or dataset(member) specified, try again...";
     public static final String INVALID_NUMBER = "invalid number, try again...";
     public static final String INVALID_MEMBER = "invalid member name format specified, try again...";
     public static final String INVALID_PARAMETER = "invalid parameter, try again...";
-    public static final String INVALID_VALUE = "invalid value, try again...";
     public static final String NO_CONNECTION_INFO = "no info, check connection settings...";
     public static final String NO_CONNECTION = "no connection, try again...";
     public static final String NO_FILES = "no files, try again...";
@@ -57,7 +55,6 @@ public final class Constants {
     public static final String NO_VISITED_DATASETS = "no visited datasets to list, try again...";
     public static final String MAKE_DIR_EXIT_MSG = "exited mkdir command...";
     public static final String MAC_EDITOR_NAME = "open -a TextEdit";
-    public static final String MISSING_COUNT_PARAM = "Error: You must specify either -m/--member or -d/--dataset...";
     public static final String MISSING_PARAMETERS = "missing parameter(s), try again...";
     public static final String MVS_EXECUTION_SUCCESS = "mvs command executed...";
     public static final String SEQUENTIAL_DIRECTORY_LOCATION = "SEQUENTIAL_DATASET";
@@ -65,7 +62,6 @@ public final class Constants {
     public static final int THREAD_POOL_MIN = 1;
     public static final int THREAD_POOL_MAX = 10;
     public static final String TIMEOUT_MESSAGE = "command exceeded timeout value, try again by increasing timeout value..";
-    public static final String TOO_MANY_PARAMETERS = "too many parameters, try again...";
     public static final String UTF8 = "UTF8";
     public static final String WINDOWS_EDITOR_NAME = "notepad";
     public static final String OS_ERROR = "command is only supported on Windows and macOS...";
