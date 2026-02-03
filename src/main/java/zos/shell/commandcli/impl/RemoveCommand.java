@@ -6,7 +6,7 @@ import zos.shell.commandcli.NoOptionCommand;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 import zos.shell.singleton.TerminalSingleton;
 
-public class RmCommand extends NoOptionCommand {
+public class RemoveCommand extends NoOptionCommand {
 
     @Override
     protected String name() {

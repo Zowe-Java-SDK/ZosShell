@@ -5,7 +5,7 @@ import zos.shell.commandcli.CommandContext;
 import zos.shell.commandcli.NoOptionCommand;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 
-public class ViCommand extends NoOptionCommand {
+public class EditCommand extends NoOptionCommand {
 
     @Override
     protected String name() {

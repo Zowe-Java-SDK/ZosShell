@@ -6,7 +6,7 @@ import zos.shell.commandcli.NoOptionCommand;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 import zos.shell.response.ResponseStatus;
 
-public class CdCommand extends NoOptionCommand {
+public class ChangeDirectoryCommand extends NoOptionCommand {
 
     @Override
     protected String name() {

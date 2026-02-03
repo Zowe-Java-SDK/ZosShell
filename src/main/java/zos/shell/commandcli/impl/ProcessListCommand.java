@@ -6,7 +6,7 @@ import zos.shell.commandcli.NoOptionCommand;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 import zos.shell.service.search.SearchCache;
 
-public class PsCommand extends NoOptionCommand {
+public class ProcessListCommand extends NoOptionCommand {
 
     @Override
     protected String name() {

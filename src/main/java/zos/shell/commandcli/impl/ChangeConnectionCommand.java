@@ -9,7 +9,7 @@ import zos.shell.singleton.ConnSingleton;
 import zos.shell.singleton.TerminalSingleton;
 import zos.shell.singleton.configuration.ConfigSingleton;
 
-public class ChangeCommand extends NoOptionCommand {
+public class ChangeConnectionCommand extends NoOptionCommand {
 
     @Override
     protected String name() {

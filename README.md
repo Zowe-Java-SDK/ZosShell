@@ -110,7 +110,6 @@ The shell performs the following Linux-like commands:
     touch <arg>             - create empty member if does not exist, arg represents a member or dataset(member)
     uname                   - echo connection hostname and z/OS version
     usermod <arg>           - modify username or password of current connection, arg can be either -u or -p
-    vi <arg>                - arg is a member, sequential dataset, or dataset(member), arg will be downloaded
     whoami                  - current connection's username  
   
 Along with the following custom commands:  
@@ -123,6 +122,7 @@ Along with the following custom commands:
     count <arg>                         - number of members or datasets in PWD, arg = -m | -d | --members | --datasets
     d | download <arg1> <arg2>          - arg1="*", member(*), dataset(member) or sequential dataset; download to \downloadpath\$HOSTNAME\pwd or \downloadpath\$HOSTNAME\SEQUENTIAL_DATASET; arg2=optional or -b for binary download   
     dj | downloadjob <arg1> <arg2>      - arg1=task/job name; download JESMSGLG spool output; arg2=-a or --all (optional), all=download all spool content
+    edit <arg>                          - arg is a member, sequential dataset, or dataset(member), arg will be downloaded
     end                                 - exit UI shell
     exit                                - exit UI shell
     quit                                - exit UI shell

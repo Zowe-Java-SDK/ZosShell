@@ -8,7 +8,7 @@ import zos.shell.constants.Constants;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 import zos.shell.utility.DsnUtil;
 
-public class LsCommand extends AbstractCommand {
+public class ListCommand extends AbstractCommand {
 
     @Override
     protected String name() {

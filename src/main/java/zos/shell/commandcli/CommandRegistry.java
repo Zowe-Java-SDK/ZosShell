@@ -21,17 +21,17 @@ public class CommandRegistry {
         register("downloadjob", new DownloadJobCommand());
 
         // File operations
-        register("mkdir", new MkdirCommand());
-        register("vi", new ViCommand());
+        register("mkdir", new MakeDirectoryCommand());
+        register("edit", new EditCommand());
         register("v", new VisitedCommand());
         register("visited", new VisitedCommand());
         register("g", new GrepCommand());
         register("grep", new GrepCommand());
         register("cat", new CatCommand());
-        register("ls", new LsCommand());
+        register("ls", new ListCommand());
         register("touch", new TouchCommand());
-        register("rm", new RmCommand());
-        register("remove", new RmCommand());
+        register("rm", new RemoveCommand());
+        register("remove", new RemoveCommand());
         register("save", new SaveCommand());
         register("cp", new CopyCommand());
         register("copy", new CopyCommand());
@@ -39,7 +39,7 @@ public class CommandRegistry {
         register("rename", new RenameCommand());
 
         // Job / Process commands
-        register("ps", new PsCommand());
+        register("ps", new ProcessListCommand());
         register("submit", new SubmitCommand());
         register("cancel", new CancelCommand());
         register("p", new PurgeCommand());
@@ -47,10 +47,10 @@ public class CommandRegistry {
         register("stop", new StopCommand());
 
         // Connection / Environment
-        register("cd", new CdCommand());
+        register("cd", new ChangeDirectoryCommand());
         register("pwd", new PwdCommand());
         register("connections", new ConnectionsCommand());
-        register("change", new ChangeCommand());
+        register("change", new ChangeConnectionCommand());
 
         // Terminal / Shell
         register("t", new TimeoutCommand());
