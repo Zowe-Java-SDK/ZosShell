@@ -120,7 +120,7 @@ public class ControllerFactoryContainer {
         if (controller == null) {
             var service = new ChangeWinService(terminal);
             controller = new ChangeWinController(service);
-            this.controllers.put(ContainerType.Name.CHANGE_DIRECTORY, controller);
+            this.controllers.put(ContainerType.Name.CHANGE_WINDOW, controller);
         }
         return controller;
     }
