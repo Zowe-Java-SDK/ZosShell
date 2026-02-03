@@ -19,7 +19,7 @@ public class GrepCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Search content in a sequential dataset or member. SOURCE can contain a wild card.";
+        return "Search content in a sequential dataset, member or dataset(member). SOURCE can contain a wild card for member name only.";
     }
 
     @Override

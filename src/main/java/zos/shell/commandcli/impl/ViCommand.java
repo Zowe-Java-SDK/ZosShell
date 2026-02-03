@@ -19,7 +19,7 @@ public class ViCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Edit a dataset or member";
+        return "Edit a sequential dataset, member or dataset(member)";
     }
 
     @Override

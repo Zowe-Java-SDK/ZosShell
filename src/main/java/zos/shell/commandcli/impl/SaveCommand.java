@@ -14,7 +14,7 @@ public class SaveCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Save a sequential dataset or member";
+        return "Save a sequential dataset, member and dataset(member)";
     }
 
     @Override

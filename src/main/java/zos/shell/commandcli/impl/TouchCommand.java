@@ -15,7 +15,7 @@ public class TouchCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Create empty member";
+        return "Create empty member or dataset(member)";
     }
 
     @Override
