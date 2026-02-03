@@ -20,7 +20,7 @@ public class PsCommand extends NoOptionCommand {
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
-        if (cmd.getArgList().size() != 1) {
+        if (cmd.getArgList().size() > 1) {
             printHelp(ctx);
             return;
         }
