@@ -3,8 +3,11 @@ package zos.shell.commandcli.impl;
 import org.apache.commons.cli.CommandLine;
 import zos.shell.commandcli.CommandContext;
 import zos.shell.commandcli.NoOptionCommand;
+import zos.shell.constants.Constants;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.record.DatasetMember;
 import zos.shell.singleton.TerminalSingleton;
+import zos.shell.utility.DsnUtil;
 
 public class RemoveCommand extends NoOptionCommand {
 
@@ -27,8 +30,23 @@ public class RemoveCommand extends NoOptionCommand {
         }
 
         String target = args.get(0);
+        String prompt;
 
-        ctx.terminal.printf("Are you sure you want to delete %s y/n", target);
+        if (!ctx.currDataset.isBlank() && ("*".equals(target) || ".".equals(target))) {
+            prompt = "Are you sure you want to delete all from " + ctx.currDataset + " y/n";
+        } else if (!ctx.currDataset.isBlank() && DsnUtil.isMember(target)) {
+            String candidate = ctx.currDataset + "(" + target + ")";
+            prompt = "Are you sure you want to delete " + candidate + " y/n";
+        } else if (ctx.currDataset.isBlank() && DsnUtil.isDataset(target)) {
+            prompt = "Are you sure you want to delete dataset " + target + " y/n";
+        } else if (ctx.currDataset.isBlank() && DatasetMember.getDatasetAndMember(target) == null) {
+            ctx.terminal.println(Constants.DATASET_NOT_SPECIFIED);
+            return;
+        } else {
+            prompt = "Are you sure you want to delete " + target + " y/n";
+        }
+
+        ctx.terminal.printf("%s", prompt);
         String answer = TerminalSingleton.getInstance()
                 .getMainTextIO().newStringInputReader().read("?");
 
