@@ -4,7 +4,7 @@ import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.commandcli.CommandRouter;
+import zos.shell.command.CommandRouter;
 import zos.shell.resolver.HistoryCommandResolver;
 import zos.shell.singleton.HistorySingleton;
 import zos.shell.singleton.TerminalSingleton;
