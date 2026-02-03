@@ -18,7 +18,8 @@ public class RemoveCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Remove sequential dataset, member or dataset(member). SOURCE can contain a wild card.";
+        return "Remove a sequential dataset, member, or dataset(member).\n" +
+                "SOURCE can be a single name, a wildcard (*), the current dataset (.), or include a wildcard.";
     }
 
     @Override
