@@ -20,7 +20,7 @@ public class MakeDirectoryCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Create a new dataset or member";
+        return "Create a new dataset using standard dataset notation.";
     }
 
     @Override

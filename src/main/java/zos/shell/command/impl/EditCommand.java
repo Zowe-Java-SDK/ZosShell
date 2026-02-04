@@ -19,7 +19,7 @@ public class EditCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Edit a dataset, member or dataset(member) using the native OS editor.\n" +
+        return "Edit a sequential dataset, member or dataset(member) using the native OS editor.\n" +
                 "Save changes in the editor, then run the save command in this shell.";
     }
 
