@@ -78,7 +78,7 @@ public abstract class AbstractCommand implements CommandHandler {
     /**
      * Print help/usage cleanly
      */
-    protected void printHelp(CommandContext ctx) {
+    public void printHelp(CommandContext ctx) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(120);
 
