@@ -22,6 +22,7 @@ public class CommandRegistry {
 
         // File operations
         register("mkdir", new MakeDirectoryCommand());
+        register("e", new EditCommand());
         register("edit", new EditCommand());
         register("v", new VisitedCommand());
         register("visited", new VisitedCommand());
