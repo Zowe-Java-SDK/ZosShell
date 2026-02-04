@@ -1,6 +1,7 @@
 package zos.shell.command;
 
 import zos.shell.command.impl.*;
+import zos.shell.singleton.CommandRegistrySingleton;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -81,6 +82,8 @@ public class CommandRegistry {
         register("echo", new EchoCommand());
         register("files", new FilesCommand());
         register("count", new CountCommand());
+
+        CommandRegistrySingleton.getInstance().set(this.commands);
     }
 
     private void register(String name, CommandHandler handler) {

@@ -9,7 +9,7 @@ public class EditCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "vi <SOURCE>";
+        return "edit <SOURCE>";
     }
 
     @Override

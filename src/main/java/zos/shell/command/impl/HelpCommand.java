@@ -1,15 +1,19 @@
 package zos.shell.command.impl;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import zos.shell.command.AbstractCommand;
 import zos.shell.command.CommandContext;
-import zos.shell.constants.Constants;
-import zos.shell.service.help.HelpService;
-import zos.shell.service.search.SearchCache;
+import zos.shell.command.CommandHandler;
+import zos.shell.command.NoOptionCommand;
+import zos.shell.singleton.CommandRegistrySingleton;
 
-public class HelpCommand extends AbstractCommand {
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class HelpCommand extends NoOptionCommand {
+
+    private Map<String, CommandHandler> commands;
+
+    private CommandContext ctx;
 
     @Override
     protected String name() {
@@ -23,55 +27,44 @@ public class HelpCommand extends AbstractCommand {
 
     @Override
     protected String description() {
-        return "Display help information";
+        return "Show help for commands";
     }
 
     @Override
     protected String usage() {
-        return "help [OPTION] [COMMAND_NAME]";
-    }
-
-    @Override
-    protected Options options() {
-        Options opts = new Options();
-        opts.addOption(Option.builder("l")
-                .longOpt("list")
-                .desc("List out all command names")
-                .build());
-        return opts;
+        return "help [COMMAND_NAME]...";
     }
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
-        if (cmd.getArgList().size() != 1) {
-            printHelp(ctx);
-            return;
-        }
-
-        SearchCache searchCache;
-
-        if (cmd.hasOption("l")) {
-            // If -l is specified, list all command names
-            searchCache = HelpService.displayCommandNames(ctx.terminal);
+        this.commands = CommandRegistrySingleton.getInstance().getRegistry();
+        this.ctx = ctx;
+        if (cmd.getArgList().isEmpty()) {
+            printAllCommands();
         } else {
-            var args = cmd.getArgList();
-            if (args.isEmpty()) {
-                // No args: display full help
-                searchCache = HelpService.display(ctx.terminal);
-            } else {
-                // Display specific command help
-                searchCache = HelpService.displayCommand(ctx.terminal, args.get(0));
-                if (searchCache.getOutput().length() == 0) {
-                    // Try abbreviations if exact command not found
-                    searchCache = HelpService.displayCommandAbbreviation(ctx.terminal, args.get(0));
-                }
-            }
-        }
-
-        if (searchCache.getOutput().length() == 0) {
-            ctx.terminal.println(Constants.HELP_COMMAND_NOT_FOUND);
-        } else {
-            ctx.searchCache = searchCache;
+            printCommandHelp(cmd);
         }
     }
+
+    private void printAllCommands() {
+        commands.keySet().stream()
+                .sorted()
+                .forEach(ctx.terminal::println);
+    }
+
+    private void printCommandHelp(CommandLine cmd) {
+        AtomicInteger count = new AtomicInteger(1);
+        AtomicInteger size = new AtomicInteger(cmd.getArgList().size());
+        cmd.getArgList().forEach(c -> {
+            if (commands.containsKey(c)) {
+                commands.get(c).printHelp(ctx);
+                System.out.println(size.get() + " " + count.get());
+                if (size.get() != count.get()) {
+                    ctx.terminal.println();
+                }
+                count.incrementAndGet();
+            }
+        });
+    }
+
 }
