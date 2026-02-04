@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class EnvVariableSingleton {
+public final class EnvVariableSingleton {
 
     private static final Logger LOG = LoggerFactory.getLogger(EnvVariableSingleton.class);
 

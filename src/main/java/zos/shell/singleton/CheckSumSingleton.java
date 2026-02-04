@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CheckSumSingleton {
+public final class CheckSumSingleton {
 
     private static final Logger LOG = LoggerFactory.getLogger(CheckSumSingleton.class);
 

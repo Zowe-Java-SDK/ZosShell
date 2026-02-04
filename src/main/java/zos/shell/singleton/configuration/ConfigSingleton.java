@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class ConfigSingleton {
+public final class ConfigSingleton {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConfigSingleton.class);
     private static final int WINDOW_UPDATE_DELAY_MS = 500;

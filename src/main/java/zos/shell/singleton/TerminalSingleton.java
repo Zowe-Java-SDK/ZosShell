@@ -18,7 +18,7 @@ import javax.swing.*;
 import java.net.URL;
 import java.util.List;
 
-public class TerminalSingleton {
+public final class TerminalSingleton {
 
     private static final Logger LOG = LoggerFactory.getLogger(TerminalSingleton.class);
 

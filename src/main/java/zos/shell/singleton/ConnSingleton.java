@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 
-public class ConnSingleton {
+public final class ConnSingleton {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConnSingleton.class);
 

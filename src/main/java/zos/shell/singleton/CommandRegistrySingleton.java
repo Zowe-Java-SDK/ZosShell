@@ -7,7 +7,7 @@ import zos.shell.command.CommandHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandRegistrySingleton {
+public final class CommandRegistrySingleton {
 
     private static final Logger LOG = LoggerFactory.getLogger(CommandRegistrySingleton.class);
 
