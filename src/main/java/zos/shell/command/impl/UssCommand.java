@@ -9,7 +9,7 @@ public class UssCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "ussh \"<COMMAND_STRING>\"";
+        return "uss \"<COMMAND_STRING>\"";
     }
 
     @Override
@@ -19,7 +19,8 @@ public class UssCommand extends NoOptionCommand {
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
-        if (cmd.getArgList().size() != 1) {
+        // Everything after "uss" is treated as the uss command
+        if (cmd.getArgList().isEmpty()) {
             printHelp(ctx);
             return;
         }

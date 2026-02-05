@@ -128,7 +128,7 @@ Along with the following custom commands:
     quit                                - exit UI shell
     files                               - list all files under local PWD drive value
     ls --long-no-attr <arg>             - same as ls -l without attribute info
-    mvs <arg>                           - execute console command, arg=command in double quotes
+    mvs <arg>                           - execute console command, arg=command 
     p | purge <arg>                     - arg=job name or id; purge   
     rn | rename <arg1> <arg2>           - rename member or sequential, arg1=old arg2=new
     save <arg>                          - arg=file name from files command to the current PWD
@@ -137,8 +137,8 @@ Along with the following custom commands:
     submit <arg>                        - arg=member or dataset(member); submit  
     tail <arg1> <arg2> <arg3>           - arg1=task/job name; display content from bottom; arg2 & arg3 = optional; arg2=limit num (25 default) and arg3=all spool content
     t | timeout <arg>                   - echo current timeout value or change value with arg
-    tso <arg>                           - execute OMVS/USS command via SSH connection, arg=command within double quotes
-    ussh <arg>                          - execute a uss (unix) command via SSH connection where arg is a command string within double quotes
+    tso <arg>                           - execute OMVS/USS command via SSH connection, arg=command
+    ussh <arg>                          - execute a uss (unix) command via SSH connection where arg is a command string
     v | visited                         - list of visited datasets  
   
 Key combinations provide the following functionality within the shell:    
