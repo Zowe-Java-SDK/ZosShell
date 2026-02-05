@@ -3,6 +3,7 @@ package zos.shell.command;
 import org.apache.commons.cli.*;
 
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 
 /**
@@ -36,7 +37,7 @@ public abstract class AbstractCommand implements CommandHandler {
     /**
      * Main command logic
      */
-    protected abstract void run(CommandContext ctx, CommandLine cmd) throws Exception;
+    protected abstract void run(CommandContext ctx, CommandLine cmd);
 
     /**
      * Custom usage string (for full control over placeholders)
@@ -75,7 +76,11 @@ public abstract class AbstractCommand implements CommandHandler {
             printHelp(ctx);
         } catch (Exception e) {
             ctx.terminal.println("Exception: " + e.getMessage());
-            e.printStackTrace();
+            // Capture the full stack trace as a string
+            var sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            // display the full trace in UI
+            ctx.terminal.println(sw.toString());
         }
     }
 
