@@ -15,7 +15,7 @@ public class TsoCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Issue a TSO command";
+        return "Issue a TSO command. All arguments following the command name are treated as the command string and passed through as-is.";
     }
 
     @Override

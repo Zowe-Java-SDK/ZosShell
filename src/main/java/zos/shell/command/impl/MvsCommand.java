@@ -15,7 +15,7 @@ public class MvsCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Issue an MVS console command";
+        return "Issue an MVS console command. All arguments following the command name are treated as the command string and passed through as-is.";
     }
 
     @Override

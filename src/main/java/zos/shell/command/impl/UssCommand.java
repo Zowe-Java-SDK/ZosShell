@@ -14,7 +14,7 @@ public class UssCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        return "Issue a Unix System Services (USS) shell command";
+        return "Issue a Unix System Services (USS) shell command. All arguments following the command name are treated as the command string and passed through as-is.";
     }
 
     @Override
