@@ -31,12 +31,17 @@ public class ColorCommand extends NoOptionCommand {
             return;
         }
 
-        try {
-            ColorUtil.validate(args.get(0));
-            ColorUtil.validate(args.size() == 2 ? args.get(1) : null);
-        } catch (IllegalArgumentException e) {
-            ctx.terminal.println(e.getMessage());
+        boolean isColor = ColorUtil.validate(args.get(0));
+        if (!isColor) {
+            ctx.terminal.println("Invalid color: " + args.get(0));
             return;
+        }
+        if (args.size() > 1) {
+            isColor = ColorUtil.validate(args.get(1));
+            if (!isColor) {
+                ctx.terminal.println("Invalid color: " + args.get(1));
+                return;
+            }
         }
 
         var controller = ControllerFactoryContainerHolder

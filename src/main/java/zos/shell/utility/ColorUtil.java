@@ -1,7 +1,6 @@
 package zos.shell.utility;
 
 import java.awt.*;
-import java.lang.reflect.Field;
 
 public final class ColorUtil {
 
@@ -9,16 +8,12 @@ public final class ColorUtil {
         throw new IllegalStateException("Utility class");
     }
 
-    public static void validate(String colorName) {
-        if (colorName == null) {
-            return;
-        }
+    public static boolean validate(String colorName) {
         try {
-            Field field = Color.class.getField(colorName.toLowerCase());
-            field.get(null); // access static field
+            Color.class.getField(colorName.toUpperCase());
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid color: " + colorName);
+            return false;
         }
+        return true;
     }
-
 }
