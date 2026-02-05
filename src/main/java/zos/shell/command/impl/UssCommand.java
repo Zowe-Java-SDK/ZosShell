@@ -9,12 +9,17 @@ public class UssCommand extends NoOptionCommand {
 
     @Override
     protected String name() {
-        return "uss \"<COMMAND_STRING>\"";
+        return "uss <COMMAND_STRING>";
     }
 
     @Override
     protected String description() {
         return "Issue a Unix System Services (USS) shell command";
+    }
+
+    @Override
+    protected boolean stopOptionParsing() {
+        return true;
     }
 
     @Override

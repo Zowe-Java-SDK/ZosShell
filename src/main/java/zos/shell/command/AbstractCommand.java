@@ -45,6 +45,10 @@ public abstract class AbstractCommand implements CommandHandler {
         return name(); // the default usage is just the command name
     }
 
+    protected boolean stopOptionParsing() {
+        return false;
+    }
+
     @Override
     public final void execute(CommandContext ctx, String input) {
         try {
@@ -57,7 +61,7 @@ public abstract class AbstractCommand implements CommandHandler {
             opts.addOption("h", "help", false, "display help");
 
             CommandLineParser parser = new DefaultParser();
-            CommandLine cmd = parser.parse(opts, args);
+            CommandLine cmd = parser.parse(opts, args, this.stopOptionParsing());
 
             if (cmd.hasOption("h")) {
                 printHelp(ctx);

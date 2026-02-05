@@ -19,6 +19,11 @@ public class TsoCommand extends NoOptionCommand {
     }
 
     @Override
+    protected boolean stopOptionParsing() {
+        return true;
+    }
+
+    @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         // Everything after "tso" is treated as the tso command
         if (cmd.getArgList().isEmpty()) {
@@ -39,9 +44,9 @@ public class TsoCommand extends NoOptionCommand {
             return;
         }
 
-        var tsoController =
-                ControllerFactoryContainerHolder.container()
-                        .getTsoController(ctx.zosConnection, acct, ctx.timeout);
+        var tsoController = ControllerFactoryContainerHolder
+                .container()
+                .getTsoController(ctx.zosConnection, acct, ctx.timeout);
 
         String result = tsoController.issueCommand(tsoCmd);
 
