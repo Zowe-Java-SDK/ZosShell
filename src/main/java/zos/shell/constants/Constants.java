@@ -30,7 +30,6 @@ public final class Constants {
     public static final String DOWNLOAD_NOT_SEQ_DATASET_WARNING = "specify sequential dataset, try again...";
     public static final String EXECUTE_ERROR_MSG = "execute error...";
     public static final long FUTURE_TIMEOUT_VALUE = 10;
-    public static final String HELP_COMMAND_NOT_FOUND = "command not found, try again...";
     public static final int HISTORY_SIZE = 200;
     public static final String INVALID_ARGUMENTS = "invalid arguments, try again...";
     public static final String INVALID_COMMAND = "invalid command, try again...";
