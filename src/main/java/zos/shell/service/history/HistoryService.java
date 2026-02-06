@@ -51,15 +51,11 @@ public class HistoryService {
             str.append(" ");
         });
         var command = str.toString();
-        if (!command.startsWith("history")) {
-            if (commandLst.size() == Constants.HISTORY_SIZE) {
-                commandLst.remove(0);
-            }
-            if (commandLst.isEmpty() || !getLastHistory().equals(command)) {
-                commandLst.add(command);
-                circularLinkedList.add(command);
-            }
+        if (commandLst.size() == Constants.HISTORY_SIZE) {
+            commandLst.remove(0);
         }
+        commandLst.add(command);
+        circularLinkedList.add(command);
         // reset the currNode pointer used to handle history scrolling...
         circularLinkedList.currNode = null;
     }
