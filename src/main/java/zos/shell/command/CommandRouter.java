@@ -25,12 +25,12 @@ public class CommandRouter {
         String cmdName = input.split("\\s+")[0].toLowerCase();
         CommandHandler handler = registry.get(cmdName);
 
+        HistorySingleton.getInstance().getHistory().addHistory(input.split("\\s+"));
+
         if (handler == null) {
             terminal.println(Constants.INVALID_COMMAND);
             return;
         }
-
-        HistorySingleton.getInstance().getHistory().addHistory(input.split("\\s+"));
 
         CommandContext ctx = new CommandContext(
                 terminal,
