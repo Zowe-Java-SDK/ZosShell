@@ -1,12 +1,16 @@
 package zos.shell.command.impl;
 
 import org.apache.commons.cli.CommandLine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 import zos.shell.utility.ColorUtil;
 
 public class ColorCommand extends NoOptionCommand {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ColorCommand.class);
 
     @Override
     protected String name() {
@@ -25,6 +29,7 @@ public class ColorCommand extends NoOptionCommand {
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
+        LOG.debug("*** ColorCommand.run ***");
         var args = cmd.getArgList();
         if (args.isEmpty() || args.size() > 2) {
             printHelp(ctx);
@@ -50,4 +55,5 @@ public class ColorCommand extends NoOptionCommand {
         String result = controller.changeColorSettings(args.get(0), args.size() == 2 ? args.get(1) : null);
         ctx.terminal.println(result);
     }
+
 }

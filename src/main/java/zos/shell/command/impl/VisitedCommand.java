@@ -1,6 +1,8 @@
 package zos.shell.command.impl;
 
 import org.apache.commons.cli.CommandLine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
 import zos.shell.constants.Constants;
@@ -8,6 +10,8 @@ import zos.shell.constants.Constants;
 import java.util.List;
 
 public class VisitedCommand extends NoOptionCommand {
+
+    private static final Logger LOG = LoggerFactory.getLogger(VisitedCommand.class);
 
     @Override
     protected String name() {
@@ -26,6 +30,7 @@ public class VisitedCommand extends NoOptionCommand {
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
+        LOG.debug("*** VisitedCommand.run ***");
         if (cmd.getArgList().size() != 1) {
             printHelp(ctx);
             return;
@@ -40,4 +45,5 @@ public class VisitedCommand extends NoOptionCommand {
                     String.format("%" + ctx.currDatasetMax + "s -> %s", d.toUpperCase(), host)));
         });
     }
+
 }

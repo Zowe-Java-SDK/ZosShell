@@ -3,11 +3,15 @@ package zos.shell.command.impl;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.command.AbstractCommand;
 import zos.shell.command.CommandContext;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 
 public class UsermodCommand extends AbstractCommand {
+
+    private static final Logger LOG = LoggerFactory.getLogger(UsermodCommand.class);
 
     @Override
     protected String name() {
@@ -45,6 +49,7 @@ public class UsermodCommand extends AbstractCommand {
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
+        LOG.debug("*** UsermodCommand.run ***");
         if (!cmd.hasOption("u") && !cmd.hasOption("p")) {
             printHelp(ctx);
             return;
@@ -64,5 +69,6 @@ public class UsermodCommand extends AbstractCommand {
 
         ctx.terminal.println(result.trim());
     }
+
 }
 

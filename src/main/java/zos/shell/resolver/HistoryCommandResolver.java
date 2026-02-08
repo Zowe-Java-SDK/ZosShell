@@ -1,15 +1,21 @@
 package zos.shell.resolver;
 
 import org.beryx.textio.TextTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.history.HistoryService;
+import zos.shell.utility.ColorUtil;
 
 public class HistoryCommandResolver {
+
+    private static final Logger LOG = LoggerFactory.getLogger(HistoryCommandResolver.class);
 
     private final TextTerminal<?> terminal;
     private final HistoryService historyService;
 
     public HistoryCommandResolver(TextTerminal<?> terminal, HistoryService historyService) {
+        LOG.debug("*** HistoryCommandResolver ***");
         this.terminal = terminal;
         this.historyService = historyService;
     }
@@ -19,6 +25,7 @@ public class HistoryCommandResolver {
      * Returns null if the command cannot be resolved.
      */
     public String[] resolve(String[] command) {
+        LOG.debug("*** resolve ***");
         if (command.length == 0 || !command[0].startsWith("!")) {
             return command;
         }
@@ -49,6 +56,7 @@ public class HistoryCommandResolver {
     }
 
     private boolean isNumeric(String str) {
+        LOG.debug("*** isNumeric ***");
         try {
             Integer.parseInt(str);
             return true;
@@ -56,5 +64,5 @@ public class HistoryCommandResolver {
             return false;
         }
     }
-}
 
+}

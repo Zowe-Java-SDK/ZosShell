@@ -1,6 +1,8 @@
 package zos.shell.command.impl;
 
 import org.apache.commons.cli.CommandLine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
 import zos.shell.constants.Constants;
@@ -10,6 +12,8 @@ import zos.shell.singleton.TerminalSingleton;
 import zos.shell.utility.DsnUtil;
 
 public class RemoveCommand extends NoOptionCommand {
+
+    private static final Logger LOG = LoggerFactory.getLogger(RemoveCommand.class);
 
     @Override
     protected String name() {
@@ -24,6 +28,7 @@ public class RemoveCommand extends NoOptionCommand {
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
+        LOG.debug("*** RemoveCommand.run ***");
         var args = cmd.getArgList();
         if (args.size() != 1) {
             printHelp(ctx);

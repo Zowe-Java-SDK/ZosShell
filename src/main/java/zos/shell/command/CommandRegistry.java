@@ -14,6 +14,7 @@ public class CommandRegistry {
         // Browse Job
         register("bj", new BrowseJobCommand());
         register("browsejob", new BrowseJobCommand());
+        register("tail", new TailCommand());
 
         // Download / Download Job
         register("d", new DownloadCommand());

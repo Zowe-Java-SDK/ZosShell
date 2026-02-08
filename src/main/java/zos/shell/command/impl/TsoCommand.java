@@ -1,12 +1,16 @@
 package zos.shell.command.impl;
 
 import org.apache.commons.cli.CommandLine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 import zos.shell.service.search.SearchCache;
 
 public class TsoCommand extends NoOptionCommand {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TsoCommand.class);
 
     @Override
     protected String name() {
@@ -26,6 +30,7 @@ public class TsoCommand extends NoOptionCommand {
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
+        LOG.debug("*** TsoCommand.run ***");
         // Everything after "tso" is treated as the tso command
         if (cmd.getArgList().isEmpty()) {
             printHelp(ctx);
@@ -54,4 +59,5 @@ public class TsoCommand extends NoOptionCommand {
         ctx.searchCache = new SearchCache("tso", new StringBuilder(result));
         ctx.terminal.println(result);
     }
+
 }

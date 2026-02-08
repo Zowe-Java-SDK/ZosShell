@@ -1,6 +1,8 @@
 package zos.shell.command.impl;
 
 import org.apache.commons.cli.CommandLine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.CommandHandler;
 import zos.shell.command.NoOptionCommand;
@@ -10,6 +12,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class HelpCommand extends NoOptionCommand {
+
+    private static final Logger LOG = LoggerFactory.getLogger(HelpCommand.class);
 
     private Map<String, CommandHandler> commands;
 
@@ -37,6 +41,7 @@ public class HelpCommand extends NoOptionCommand {
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
+        LOG.debug("*** HelpCommand.run ***");
         this.commands = CommandRegistrySingleton.getInstance().getRegistry();
         this.ctx = ctx;
         if (cmd.getArgList().isEmpty()) {

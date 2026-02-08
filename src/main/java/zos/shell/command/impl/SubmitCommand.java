@@ -1,11 +1,15 @@
 package zos.shell.command.impl;
 
 import org.apache.commons.cli.CommandLine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 
 public class SubmitCommand extends NoOptionCommand {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SubmitCommand.class);
 
     @Override
     protected String name() {
@@ -19,6 +23,7 @@ public class SubmitCommand extends NoOptionCommand {
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
+        LOG.debug("*** SubmitCommand.run ***");
         var args = cmd.getArgList();
         if (cmd.getArgList().size() != 1) {
             printHelp(ctx);

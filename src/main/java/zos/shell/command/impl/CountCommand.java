@@ -2,11 +2,15 @@ package zos.shell.command.impl;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.command.AbstractCommand;
 import zos.shell.command.CommandContext;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 
 public class CountCommand extends AbstractCommand {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CountCommand.class);
 
     @Override
     protected String name() {
@@ -25,7 +29,7 @@ public class CountCommand extends AbstractCommand {
 
     @Override
     protected String usage() {
-        return "count [OPTION]";
+        return "count <OPTION>";
     }
 
     protected Options options() {
@@ -37,6 +41,7 @@ public class CountCommand extends AbstractCommand {
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
+        LOG.debug("*** CountCommand.run ***");
         boolean memberOpt = cmd.hasOption("m");
         boolean datasetOpt = cmd.hasOption("d");
 
@@ -58,4 +63,5 @@ public class CountCommand extends AbstractCommand {
             ctx.terminal.println(result);
         }
     }
+
 }
