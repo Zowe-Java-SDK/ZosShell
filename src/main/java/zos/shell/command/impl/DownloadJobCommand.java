@@ -40,6 +40,12 @@ public class DownloadJobCommand extends AbstractCommand {
                 .longOpt("all")
                 .desc("Download all job steps")
                 .build());
+        opts.addOption(Option.builder("i")
+                .longOpt("id")
+                .hasArg()
+                .argName("jobId")
+                .desc("Job ID associated with the download")
+                .build());
         return opts;
     }
 
@@ -53,8 +59,12 @@ public class DownloadJobCommand extends AbstractCommand {
         }
 
         boolean all = cmd.hasOption("a");
-        var controller = ControllerFactoryContainerHolder.container()
-                .getDownloadJobController(ctx.zosConnection, all, ctx.timeout);
+        String jobId = cmd.getOptionValue("i");
+
+        var controller = ControllerFactoryContainerHolder
+                .container()
+                .getDownloadJobController(ctx.zosConnection, all, jobId, ctx.timeout);
+
         String result = controller.downloadJob(args.get(0));
         ctx.terminal.println(result);
     }

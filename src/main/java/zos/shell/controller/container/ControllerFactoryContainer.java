@@ -210,13 +210,13 @@ public class ControllerFactoryContainer {
     }
 
     public DownloadJobController getDownloadJobController(final ZosConnection connection, final boolean isAll,
-                                                          final long timeout) {
+                                                          final String jobId, final long timeout) {
         LOG.debug("*** getDownloadJobController ***");
         var controller = (DownloadJobController) controllers.get(ContainerType.Name.DOWNLOAD_JOB);
-        var dependency = new Dependency.Builder().zosConnection(connection).toggle(isAll).timeout(timeout).build();
+        var dependency = new Dependency.Builder().zosConnection(connection).toggle(isAll).data(jobId).timeout(timeout).build();
         if (controller == null || controller.isNotValid(dependency)) {
             var jobGet = new JobGet(connection);
-            var service = new DownloadJobService(jobGet, this.pathService, isAll, timeout);
+            var service = new DownloadJobService(jobGet, this.pathService, isAll, jobId, timeout);
             controller = new DownloadJobController(service, dependency);
             this.controllers.put(ContainerType.Name.DOWNLOAD_JOB, controller);
         }

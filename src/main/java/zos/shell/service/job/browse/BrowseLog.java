@@ -34,6 +34,10 @@ public class BrowseLog {
     }
 
     protected ResponseStatus browseLog(final String target) {
+        return browseLog(target, null);
+    }
+
+    protected ResponseStatus browseLog(final String target, String jobId) {
         LOG.debug("*** browseLog ***");
         var jobParams = new JobGetInputData.Builder("*").prefix(target).build();
         try {
@@ -50,8 +54,17 @@ public class BrowseLog {
         final Predicate<Job> isActive = j -> "ACTIVE".equalsIgnoreCase(j.getStatus());
         final Predicate<Job> isInput = j -> "INPUT".equalsIgnoreCase(j.getStatus());
 
-        Optional<Job> jobStillRunning = jobs.stream().filter(isActive.or(isInput)).findAny();
-        Job job = jobStillRunning.orElse(jobs.get(0));
+        Optional<Job> activeJob = jobs.stream().filter(isActive.or(isInput)).findAny();
+        Job job = activeJob.orElse(jobs.get(0));
+
+        if (jobId != null) {
+            job = jobs.stream().filter(j -> j.getJobId().equals(jobId)).findAny().orElse(null);
+            if (job == null) {
+                var errMsg = "job id " + jobId + " does not exist, try again...";
+                return new ResponseStatus(errMsg, false);
+            }
+        }
+
         List<JobFile> files;
         try {
             files = retrieve.getSpoolFilesByJob(job);

@@ -9,7 +9,6 @@ import zos.shell.command.AbstractCommand;
 import zos.shell.command.CommandContext;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
 import zos.shell.service.search.SearchCache;
-import zos.shell.utility.ColorUtil;
 
 public class BrowseJobCommand extends AbstractCommand {
 

@@ -26,13 +26,13 @@ public class DownloadJob {
         this.browseLogService = new BrowseLogService(retrieve, isAll, timeout);
     }
 
-    public ResponseStatus download(final String target) {
+    public ResponseStatus download(final String target, final String jobId) {
         LOG.debug("*** download ***");
         if (!DsnUtil.isMember(target)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
         }
 
-        ResponseStatus responseStatus = browseLogService.browseJob(target);
+        ResponseStatus responseStatus = browseLogService.browseJob(target, jobId);
         if (!responseStatus.isStatus() && responseStatus.getMessage().contains("timeout")) {
             return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
         } else if (!responseStatus.isStatus()) {
@@ -40,7 +40,7 @@ public class DownloadJob {
         }
 
         var output = responseStatus.getMessage();
-        String id = browseLogService.jobs.get(0).getJobId();
+        String id = jobId == null ? browseLogService.jobs.get(0).getJobId() : jobId;
 
         this.pathService.createPathsForMember(target, id);
         try {
