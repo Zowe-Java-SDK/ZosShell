@@ -57,10 +57,10 @@ public class BrowseLog {
         Optional<Job> activeJob = jobs.stream().filter(isActive.or(isInput)).findAny();
         Job job = activeJob.orElse(jobs.get(0));
 
-        if (target != null) {
-            var errMsg = "job id " + target + " does not exist, try again...";
+        if (jobId != null) {
             job = jobs.stream().filter(j -> j.getJobId().equals(jobId)).findAny().orElse(null);
             if (job == null) {
+                var errMsg = "job id " + target + " does not exist, try again...";
                 return new ResponseStatus(errMsg, false);
             }
         }
