@@ -14,9 +14,9 @@ public class BrowseLogService extends BrowseLog {
         LOG.debug("*** BrowseLogService ***");
     }
 
-    public ResponseStatus browseJob(final String target) {
+    public ResponseStatus browseJob(final String target, final String jobId) {
         LOG.debug("*** browseJob ***");
-        return browseLog(target);
+        return browseLog(target, jobId);
     }
 
 }

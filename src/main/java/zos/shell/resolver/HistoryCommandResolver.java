@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.history.HistoryService;
-import zos.shell.utility.ColorUtil;
 
 public class HistoryCommandResolver {
 

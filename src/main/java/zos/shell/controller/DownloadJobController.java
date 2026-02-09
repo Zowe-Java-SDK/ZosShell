@@ -19,9 +19,9 @@ public class DownloadJobController extends DependencyController {
         this.downloadJobService = downloadJobService;
     }
 
-    public String downloadJob(final String target) {
+    public String downloadJob(final String target, final String jobid) {
         LOG.debug("*** downloadJob ***");
-        ResponseStatus responseStatus = downloadJobService.download(target);
+        ResponseStatus responseStatus = downloadJobService.download(target, jobid);
         return responseStatus.getMessage();
     }
 

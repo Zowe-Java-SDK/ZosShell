@@ -10,16 +10,18 @@ import java.util.concurrent.Callable;
 public class FutureDownloadJob extends DownloadJob implements Callable<ResponseStatus> {
 
     private final String target;
+    private final String jobId;
 
     public FutureDownloadJob(final JobGet retrieve, final PathService pathService, final String target,
-                             final boolean isAll, final long timeout) {
+                             final boolean isAll, final String jobId, final long timeout) {
         super(retrieve, pathService, isAll, timeout);
         this.target = target;
+        this.jobId = jobId;
     }
 
     @Override
     public ResponseStatus call() {
-        ResponseStatus responseStatus = this.download(target);
+        ResponseStatus responseStatus = this.download(target, jobId);
         if (responseStatus != null && responseStatus.isStatus()) {
             FileUtil.openFileLocation(responseStatus.getOptionalData());
         }

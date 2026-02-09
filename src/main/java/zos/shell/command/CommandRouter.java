@@ -3,7 +3,6 @@ package zos.shell.command;
 import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.command.impl.WhoamiCommand;
 import zos.shell.constants.Constants;
 import zos.shell.service.search.SearchCache;
 import zos.shell.singleton.ConnSingleton;

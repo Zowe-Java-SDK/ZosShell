@@ -30,11 +30,11 @@ public class DownloadJobService {
         this.timeout = timeout;
     }
 
-    public ResponseStatus download(final String target) {
+    public ResponseStatus download(final String target, final String jobId) {
         LOG.debug("*** download ***");
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
         Future<ResponseStatus> submit = pool.submit(
-                new FutureDownloadJob(retrieve, pathService, target, this.isAll, this.timeout));
+                new FutureDownloadJob(retrieve, pathService, target, this.isAll, jobId, this.timeout));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 
