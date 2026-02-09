@@ -63,9 +63,9 @@ public class DownloadJobCommand extends AbstractCommand {
 
         var controller = ControllerFactoryContainerHolder
                 .container()
-                .getDownloadJobController(ctx.zosConnection, all, ctx.timeout);
+                .getDownloadJobController(ctx.zosConnection, all, jobId, ctx.timeout);
 
-        String result = controller.downloadJob(args.get(0), jobId);
+        String result = controller.downloadJob(args.get(0));
         ctx.terminal.println(result);
     }
 
