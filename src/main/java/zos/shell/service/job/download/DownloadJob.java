@@ -40,7 +40,7 @@ public class DownloadJob {
         }
 
         var output = responseStatus.getMessage();
-        String id = browseLogService.jobs.get(0).getJobId();
+        String id = jobId == null ? browseLogService.jobs.get(0).getJobId(): jobId;
 
         this.pathService.createPathsForMember(target, id);
         try {
