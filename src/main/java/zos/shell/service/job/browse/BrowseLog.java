@@ -60,7 +60,7 @@ public class BrowseLog {
         if (jobId != null) {
             job = jobs.stream().filter(j -> j.getJobId().equals(jobId)).findAny().orElse(null);
             if (job == null) {
-                var errMsg = "job id " + target + " does not exist, try again...";
+                var errMsg = "job id " + jobId + " does not exist, try again...";
                 return new ResponseStatus(errMsg, false);
             }
         }
