@@ -10,6 +10,7 @@ import zos.shell.service.path.PathService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.FileUtil;
 import zowe.client.sdk.zosjobs.methods.JobGet;
+import zowe.client.sdk.zosjobs.model.Job;
 
 import java.io.IOException;
 
@@ -40,7 +41,17 @@ public class DownloadJob {
         }
 
         var output = responseStatus.getMessage();
-        String id = jobId == null ? browseLogService.jobs.get(0).getJobId() : jobId;
+        String id;
+        if (jobId != null) {
+            id = jobId;
+        } else {
+            id = browseLogService.jobs.stream()
+                    .filter(job -> job.getStatus().equals("ACTIVE"))
+                    .findFirst()
+                    .or(() -> browseLogService.jobs.stream().findFirst())
+                    .map(Job::getJobId)
+                    .orElseThrow(() -> new IllegalStateException("jobId is null"));
+        }
 
         this.pathService.createPathsForMember(target, id);
         try {
