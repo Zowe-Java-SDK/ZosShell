@@ -27,38 +27,10 @@ public class TailService {
         this.timeout = timeout;
     }
 
-    public ResponseStatus tail(String[] params, final boolean isAll) {
+    public ResponseStatus tail(String target, int lines) {
         LOG.debug("*** tail ***");
-
-        // example: tail jobOrTaskName 25 all
-        if (params.length == 4 && "all".equalsIgnoreCase(params[3])) {
-            try {
-                Integer.parseInt(params[2]);
-            } catch (NumberFormatException e) {
-                return new ResponseStatus(Constants.INVALID_PARAMETER, false);
-            }
-        }
-
-        // example: tail jobOrTaskName 25
-        if (params.length == 3 && !"all".equalsIgnoreCase(params[2])) {
-            try {
-                Integer.parseInt(params[2]);
-            } catch (NumberFormatException e) {
-                return new ResponseStatus(Constants.INVALID_PARAMETER, false);
-            }
-        }
-
-        // example: tail jobOrTaskName 25 25
-        if (params.length == 4 && !"all".equalsIgnoreCase(params[3])) {
-            return new ResponseStatus(Constants.INVALID_PARAMETER, false);
-        }
-
-        return doTail(params, isAll);
-    }
-
-    private ResponseStatus doTail(String[] params, final boolean isAll) {
         ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureTail(terminal, retrieve, isAll, timeout, params));
+        Future<ResponseStatus> submit = pool.submit(new FutureTail(terminal, retrieve, lines, timeout, target));
         return FutureUtil.getFutureResponse(submit, pool, timeout);
     }
 

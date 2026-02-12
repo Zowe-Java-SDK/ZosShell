@@ -16,7 +16,7 @@ public class TailCommand extends AbstractCommand {
 
     @Override
     protected String name() {
-        return "tail <JOBNAME>";
+        return "tail [OPTION] <JOBNAME>";
     }
 
     @Override
@@ -31,7 +31,7 @@ public class TailCommand extends AbstractCommand {
                 .longOpt("lines")
                 .hasArg()
                 .argName("count")
-                .desc("Number of lines to display")
+                .desc("Number of lines to display; default is last 10 lines. ")
                 .build());
         return opts;
     }
@@ -58,7 +58,7 @@ public class TailCommand extends AbstractCommand {
         var controller = ControllerFactoryContainerHolder.container()
                 .getTailController(ctx.zosConnection, ctx.terminal, lines);
 
-        String result = String.valueOf(controller.tail(args));
+        String result = controller.tail(args[0], lines);
         ctx.terminal.println(result);
         ctx.searchCache = new SearchCache("tail", new StringBuilder(result));
     }

@@ -6,9 +6,6 @@ import zos.shell.controller.dependency.Dependency;
 import zos.shell.controller.dependency.DependencyController;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.job.tail.TailService;
-import zos.shell.service.search.SearchCache;
-
-import java.util.Arrays;
 
 public class TailController extends DependencyController {
 
@@ -22,11 +19,11 @@ public class TailController extends DependencyController {
         this.tailService = tailService;
     }
 
-    public SearchCache tail(final String[] params) {
+    public String tail(final String target, int lines) {
         LOG.debug("*** tail ***");
-        long allCount = Arrays.stream(params).filter("ALL"::equalsIgnoreCase).count();
-        ResponseStatus responseStatus = tailService.tail(params, allCount == 1);
-        return new SearchCache("tail", new StringBuilder(responseStatus.getMessage()));
+        ResponseStatus responseStatus = tailService.tail(target, lines);
+        LOG.info("tail response status: {}", responseStatus);
+        return responseStatus.getMessage();
     }
 
 }

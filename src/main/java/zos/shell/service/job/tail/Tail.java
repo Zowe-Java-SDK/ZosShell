@@ -16,30 +16,21 @@ public class Tail extends BrowseLog {
 
     private final TextTerminal<?> terminal;
 
-    public Tail(final TextTerminal<?> terminal, final JobGet retrieve, final boolean isAll, final long timeout) {
-        super(retrieve, isAll, timeout);
+    public Tail(final TextTerminal<?> terminal, final JobGet retrieve, final long timeout) {
+        super(retrieve, true, timeout);
         LOG.debug("*** Tail ***");
         this.terminal = terminal;
     }
 
-    public ResponseStatus tail(final String[] params) {
+    public ResponseStatus tail(final String target, final int lines) {
         LOG.debug("*** tail ***");
-        final ResponseStatus result = browseLog(params[1]);
+        final ResponseStatus result = this.browseLog(target);
         if (!result.isStatus()) {
             return result;
         }
-        var output = Arrays.asList(result.getMessage().split("\n"));
 
+        var output = Arrays.asList(result.getMessage().split("\n"));
         int size = output.size();
-        int lines = 0;
-        if (params.length == 3) {
-            if (!"all".equalsIgnoreCase(params[2])) {
-                lines = Integer.parseInt(params[2]);
-            }
-        }
-        if (params.length == 4) {
-            lines = Integer.parseInt(params[2]);
-        }
 
         if (lines > 0) {
             if (lines < size) {
