@@ -31,7 +31,7 @@ public class VisitedCommand extends NoOptionCommand {
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
         LOG.debug("*** VisitedCommand.run ***");
-        if (cmd.getArgList().size() != 1) {
+        if (!cmd.getArgList().isEmpty()) {
             printHelp(ctx);
             return;
         }
