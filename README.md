@@ -107,6 +107,7 @@ The shell performs the following Linux-like commands:
     pwd                     - current working dataset location
     rm <arg>                - arg is member with wildcard "*", member, dataset, or dataset(member)
     set <arg>               - set environment variable with arg value in the following format: key=value
+    tail [option] <arg>     - arg is task/job name; option accepts -n # for number of lines; default is 10 lines
     touch <arg>             - create empty member if does not exist, arg represents a member or dataset(member)
     uname                   - echo connection hostname and z/OS version
     usermod <arg>           - modify username or password of current connection, arg can be either -u or -p
@@ -121,7 +122,7 @@ Along with the following custom commands:
     connections                         - connection(s) list from config.json   
     count <arg>                         - number of members or datasets in PWD, arg = -m | -d | --members | --datasets
     d | download <arg1> <arg2>          - arg1="*", member(*), dataset(member) or sequential dataset; download to \downloadpath\$HOSTNAME\pwd or \downloadpath\$HOSTNAME\SEQUENTIAL_DATASET; arg2=optional or -b for binary download   
-    dj | downloadjob <arg1> <arg2>      - arg1=task/job name; download JESMSGLG spool output; arg2=-a or --all (optional), all=download all spool content
+    dj | downloadjob [option] <arg>     - argis task/job name; download JESMSGLG spool output; option accepts -a for all, all=download all spool content
     e | edit <arg>                      - arg is a sequential dataset, member or dataset(member); save changes in the editor, then run the save command in this shell.
     end                                 - exit UI shell
     exit                                - exit UI shell
@@ -129,16 +130,15 @@ Along with the following custom commands:
     files                               - list all files under local PWD drive value
     ls --long-no-attr <arg>             - same as ls -l without attribute info
     mvs <arg>                           - execute console command, arg=command 
-    p | purge <arg>                     - arg=job name or id; purge   
+    p | purge <arg>                     - arg=job name or id; purge a job  
     rn | rename <arg1> <arg2>           - rename member or sequential, arg1=old arg2=new
     save <arg>                          - arg=file name from files command to the current PWD
     search <arg>                        - search previous command contents  
     stop <arg>                          - arg=task/job name; stop
-    submit <arg>                        - arg=member or dataset(member); submit  
-    tail <arg1> <arg2> <arg3>           - arg1=task/job name; display content from bottom; arg2 & arg3 = optional; arg2=limit num (25 default) and arg3=all spool content
+    submit <arg>                        - arg=member or dataset(member); submit
     t | timeout <arg>                   - echo current timeout value or change value with arg
-    tso <arg>                           - execute OMVS/USS command via SSH connection, arg=command
-    ussh <arg>                          - execute a uss (unix) command via SSH connection where arg is a command string
+    tso <arg>                           - execute tso command via SSH connection, arg=command
+    uss <arg>                           - execute OMVS/USS (unix) command via SSH connection where arg is a command string
     v | visited                         - list of visited datasets  
   
 Key combinations provide the following functionality within the shell:    
