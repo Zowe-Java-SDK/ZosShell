@@ -86,60 +86,55 @@ The app works well on Windows and macOS.
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/save-demo.gif)
       
 The shell performs the following Linux-like commands:    
-    
-    cat <arg>               - arg=member, display contents
-    cd <arg>                - arg is a dataset value or ..
-    cls | clear             - clear screen contents and search cache
-    cp | copy <arg> <arg>   - arg can be ".", member, dataset or dataset(member)
-    echo <arg>              - echo arg value and translate any environment value delimited with $
-    env                     - echo all environment variables
-    g | grep <arg> <arg2>   - arg is search string and arg2 is member value can contain wild card
-    h | help <arg>          - list all commands-details; arg=-l, list all command names; arg=command, list command-detail 
-    history <arg>           - arg is optional and indicates the number to display from bottom 
-    hostname                - echo hostname connection
-    !n                      - n=number, execute command from history list   
-    !string                 - execute previous string=command from history list
-    !!                      - execute previous command
-    ls <arg>                - arg is optional; list members/datasets in PWD; arg=filter(*); filter is dataset or member value
-    ls -l <arg>             - arg is optional; list members/datasets with attributes in PWD; arg=filter(*); filter is dataset or member value
-    mkdir <arg>             - arg is a dataset using standard dataset notation
-    ps <arg>                - arg is optional; list all tasks/jobs; arg=filter(*)   
-    pwd                     - current working dataset location
-    rm <arg>                - arg is member with wildcard "*", member, dataset, or dataset(member)
-    set <arg>               - set environment variable with arg value in the following format: key=value
-    tail [option] <arg>     - arg is task/job name; option accepts -n # for number of lines; default is 10 lines
-    touch <arg>             - create empty member if does not exist, arg represents a member or dataset(member)
-    uname                   - echo connection hostname and z/OS version
-    usermod <arg>           - modify username or password of current connection, arg can be either -u or -p
-    whoami                  - current connection's username  
-  
-Along with the following custom commands:  
 
-    bj | browsejob <arg1> <arg2>        - arg1=task/job name; display job's JESMSGLG spool output; arg2=-a or --all (optional); all=display all job's spool output
-    cancel <arg>                        - arg=task/job name; cancel  
-    change <arg>                        - arg=connection number, ordered connections defined in config.json
-    color <arg> <arg2>                  - change color arg is prompt and text and arg2 is background color, i.e. blue, yellow, cyan etc..
-    connections                         - connection(s) list from config.json   
-    count <arg>                         - number of members or datasets in PWD, arg = -m | -d | --members | --datasets
-    d | download <arg1> <arg2>          - arg1="*", member(*), dataset(member) or sequential dataset; download to \downloadpath\$HOSTNAME\pwd or \downloadpath\$HOSTNAME\SEQUENTIAL_DATASET; arg2=optional or -b for binary download   
-    dj | downloadjob [option] <arg>     - argis task/job name; download JESMSGLG spool output; option accepts -a for all, all=download all spool content
-    e | edit <arg>                      - arg is a sequential dataset, member or dataset(member); save changes in the editor, then run the save command in this shell.
-    end                                 - exit UI shell
-    exit                                - exit UI shell
-    quit                                - exit UI shell
-    files                               - list all files under local PWD drive value
-    ls --long-no-attr <arg>             - same as ls -l without attribute info
-    mvs <arg>                           - execute console command, arg=command 
-    p | purge <arg>                     - arg=job name or id; purge a job  
-    rn | rename <arg1> <arg2>           - rename member or sequential, arg1=old arg2=new
-    save <arg>                          - arg=file name from files command to the current PWD
-    search <arg>                        - search previous command contents  
-    stop <arg>                          - arg=task/job name; stop
-    submit <arg>                        - arg=member or dataset(member); submit
-    t | timeout <arg>                   - echo current timeout value or change value with arg
-    tso <arg>                           - execute tso command via SSH connection, arg=command
-    uss <arg>                           - execute OMVS/USS (unix) command via SSH connection where arg is a command string
-    v | visited                         - list of visited datasets  
+    cat <arg>                       Display member contents
+    cd <arg>                        Change working dataset
+    cls / clear                     Clear screen & search cache
+    cp / copy <src> <dst>           Copy files or datasets
+    echo <arg>                      Print text; expands $VARIABLE
+    env                             List environment variables
+    g / grep <pattern> <member>     Search within output/member
+    history [n]                     Show last n commands
+    hostname                        Show connected host
+    !!                              Repeat last command
+    !n / !string	                Repeat history item
+    ls [filter]                     List members/datasets
+    ls -l [filter]	                Long listing with attributes
+    mkdir <dataset>	                Create dataset
+    ps [filter]                     List started tasks/jobs
+    pwd                             Show current dataset path
+    rm <arg>                        Remove members/datasets
+    set <key=value>	                Set environment variable
+    tail [options] <job>	        Show bottom of job output
+    touch <arg>                     Create member if absent
+    uname	                        Host & z/OS version
+    usermod <arg>	                Change user/password
+    whoami	                        Current username
+
+Along with the following custom commands - extend functionality beyond basic shell operations:
+
+    bj / browsejob <job> <opt>      Display JESMSGLG spool output (-a for all)
+    cancel <job>	                Cancel the specified started task/job
+    change <num>	                Switch to a different connection profile
+    color <prompt> <background>     Set prompt colors
+    connections                     List configured connections
+    count <arg>                     Count members (-m) or datasets (-d)
+    d / download <src> <opt>        Download dataset/member (-b for binary)
+    dj / downloadjob [opt] <job>	Download job spool output (-a all)
+    e / edit <arg>	                Edit dataset/member then save
+    end / exit / quit               Quit shell
+    files	                        List local directory files
+    mvs <cmd>                       Execute MVS console command
+    p / purge <job>	                Purge started task/job from JES
+    rn / rename <old> <new>	        Rename member or dataset
+    save <arg>                      Save edits to file in working dir
+    search <pattern>                Search cached outputs
+    stop <job>                      Stop the specified started task/job
+    submit <member>	                Submit a started task/job
+    t / timeout <val>               Show or change timeout
+    tso <cmd>                       Execute TSO command 
+    uss <cmd>                       Execute USS (Unix) command via SSH
+    v / visited                     List visited datasets
   
 Key combinations provide the following functionality within the shell:    
   
@@ -155,7 +150,14 @@ All key combinations work on Windows and macOS unless specified otherwise.
     SHIFT DOWN arrow        - decrease font size  (macOS)
     TAB                     - command autofill key - type a few characters then click on TAB key 
     
-To quit from the command shell UI, you can either press 'X' windows close icon or enter: end, exit, or quit keyword.  
+To quit from the command shell UI, you can either press 'X' windows close icon or enter: end, exit, or quit keyword.
+
+Help Command Syntax:
+
+You can get help inside the shell:
+
+    h or help           Lists all commands
+    help <command>      Details for specific command
   
 ## Requirements  
 
@@ -171,17 +173,17 @@ At the root directory prompt, execute the following maven command:
   
 Change the directory to the target directory and execute the following command:  
   
-    java -jar zosshell-4.1.0.jar   
+    java -jar zosshell-5.0.0.jar   
   
 Since version 3.0.0, you can send an argument value to the java command above, for instance:  
   
-    java -jar zosshell-4.1.0.jar 2  
+    java -jar zosshell-5.0.0.jar 2  
   
 This will load the second profile defined in config.json at startup instead of the first one, which is done by default.  
   
 If you are planning to browse large job output, you may want to set the JVM memory usage higher than the default, i.e.  
   
-    java -jar -Xmx2G zosshell-4.1.0.jar   
+    java -jar -Xmx2G zosshell-5.0.0.jar   
   
 ### Terminal configuration properties
   
