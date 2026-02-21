@@ -108,7 +108,7 @@ The shell performs the following Linux-like commands:
     tail [options] <job>	        Show bottom of job output
     touch <arg>                     Create member if absent
     uname	                        Host & z/OS version
-    usermod <arg>	                Change user/password
+    usermod <arg>	                Change username (-u)/password (-p)
     whoami	                        Current username
 
 Along with the following custom commands - extend functionality beyond basic shell operations:
@@ -133,7 +133,7 @@ Along with the following custom commands - extend functionality beyond basic she
     submit <member>	                Submit a started task/job
     t / timeout <val>               Show or change timeout
     tso <cmd>                       Execute TSO command 
-    uss <cmd>                       Execute USS (Unix) command via SSH
+    uss <cmd>                       Execute USS (Unix) command
     v / visited                     List visited datasets
   
 Key combinations provide the following functionality within the shell:    
