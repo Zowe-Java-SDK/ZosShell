@@ -59,7 +59,10 @@ public class DownloadJobCommand extends AbstractCommand {
         }
 
         boolean all = cmd.hasOption("a");
-        String jobId = cmd.getOptionValue("i").toUpperCase();
+        String jobId = cmd.getOptionValue("i");
+        if (jobId != null) {
+            jobId = jobId.trim().toUpperCase();
+        }
 
         var controller = ControllerFactoryContainerHolder
                 .container()
