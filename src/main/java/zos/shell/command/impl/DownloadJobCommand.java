@@ -30,7 +30,7 @@ public class DownloadJobCommand extends AbstractCommand {
 
     @Override
     protected String usage() {
-        return "downloadjob [OPTION] <JOBNAME>";
+        return "downloadjob [OPTIONS] <JOBNAME>";
     }
 
     @Override
