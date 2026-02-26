@@ -91,7 +91,7 @@ public class DownloadSeqDatasetService {
             pool.shutdown();
         }
 
-        return responseStatus.getMessage().contains("dsorg=Optional[PS]");
+        return responseStatus.getMessage().contains("dsorg='PS'");
     }
 
 }
