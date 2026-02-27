@@ -26,7 +26,8 @@ public class DatasetInfo {
         try {
             response = dsnGet.getDsnInfo(dataset);
         } catch (ZosmfRequestException e) {
-            return ResponseUtil.getByteResponseStatus(e);
+            var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+            return new ResponseStatus(errMsg != null ? errMsg : e.getMessage(), false);
         }
 
         return new ResponseStatus(response.toString(), true);
