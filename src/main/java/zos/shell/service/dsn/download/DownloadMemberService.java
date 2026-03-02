@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class DownloadMemberService {
+public class DownloadMemberService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(DownloadMemberService.class);
 
@@ -22,9 +22,10 @@ public class DownloadMemberService {
     private final PathService pathService;
     private final boolean isBinary;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
-    public DownloadMemberService(final ZosConnection connection, final PathService pathService, final boolean isBinary,
-                                 final long timeout) {
+    public DownloadMemberService(final ZosConnection connection, final PathService pathService,
+                                 final boolean isBinary, final long timeout) {
         LOG.debug("*** DownloadMemberService ***");
         this.connection = connection;
         this.pathService = pathService;
@@ -33,33 +34,45 @@ public class DownloadMemberService {
     }
 
     public List<ResponseStatus> downloadMember(final String dataset, String target) {
-        LOG.debug("*** downloadMember ***");
+        LOG.debug("Downloading member {} from dataset {}", dataset, target);
         List<ResponseStatus> results = new ArrayList<>();
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = null;
+        Future<ResponseStatus> future = pool.submit(new FutureMemberDownload(
+                new DsnGet(connection),
+                pathService,
+                dataset,
+                target,
+                isBinary
+        ));
 
         try {
-            submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), pathService, dataset, target, isBinary));
-            results.add(submit.get(timeout, TimeUnit.SECONDS));
+            ResponseStatus status = future.get(timeout, TimeUnit.SECONDS);
+            results.add(status);
+            if (status.isStatus() && status.getOptionalData() != null) {
+                FileUtil.openFileLocation(new File(status.getOptionalData()).getAbsolutePath());
+            }
         } catch (InterruptedException | ExecutionException e) {
-            LOG.debug(String.valueOf(e));
-            submit.cancel(true);
-            results.add(new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
-                    e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG, false));
+            LOG.debug("Exception downloading member", e);
+            future.cancel(true);
+            results.add(new ResponseStatus(getErrorMessage(e), false));
         } catch (TimeoutException e) {
-            submit.cancel(true);
+            LOG.debug("Timeout downloading member", e);
+            future.cancel(true);
             results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
-        } finally {
-            pool.shutdown();
-        }
-
-        if (results.get(0).isStatus()) {
-            var file = new File(results.get(0).getOptionalData());
-            FileUtil.openFileLocation(file.getAbsolutePath());
-            return results;
         }
 
         return results;
+    }
+
+    @Override
+    public void close() {
+        pool.shutdown();
+    }
+
+    private String getErrorMessage(final Exception e) {
+        LOG.debug("*** getErrorMessage ***");
+        return e.getMessage() != null && !e.getMessage().isBlank()
+                ? e.getMessage()
+                : Constants.COMMAND_EXECUTION_ERROR_MSG;
     }
 
 }

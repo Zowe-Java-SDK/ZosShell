@@ -33,21 +33,22 @@ public class DownloadAllMembersService {
     }
 
     public List<ResponseStatus> downloadAllMembers(final String target) {
-        LOG.debug("*** downloadAllMembers ***");
-        List<ResponseStatus> results = new ArrayList<>();
-        List<Member> members;
+        LOG.debug("Downloading all members for target: {}", target);
 
+        final List<Member> members;
         try {
-            members = new MemberListingService(new DsnList(connection), timeout).memberLst(target);
+            DsnList dsnList = new DsnList(connection);
+            members = new MemberListingService(dsnList, timeout).memberLst(target);
         } catch (ZosmfRequestException e) {
             var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return List.of(new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false));
         }
+
         if (members.isEmpty()) {
-            results.add(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
+            return List.of(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
         }
-        results.addAll(downloadMembersService.downloadMembers(target, members));
-        return results;
+
+        return new ArrayList<>(downloadMembersService.downloadMembers(target, members));
     }
 
 }

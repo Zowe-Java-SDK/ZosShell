@@ -32,23 +32,24 @@ public class DownloadMembersService {
         this.timeout = timeout;
     }
 
-    public List<ResponseStatus> downloadMembers(final String dataset, final String target) {
-        LOG.debug("*** downloadMembers ***");
-        List<ResponseStatus> results = new ArrayList<>();
-        List<Member> members;
+    public List<ResponseStatus> downloadMembers(final String dataset, final String memberPrefix) {
+        LOG.debug("Downloading members from dataset '{}' with prefix '{}'", dataset, memberPrefix);
 
+        List<Member> members;
         try {
-            members = new MemberListingService(new DsnList(connection), timeout).memberLst(dataset);
+            DsnList dsnList = new DsnList(connection);
+            members = new MemberListingService(dsnList, timeout).memberLst(dataset);
         } catch (ZosmfRequestException e) {
             var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return List.of(new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false));
         }
-        members = DsnUtil.getMembersByStartsWithFilter(target, members);
-        if (members.isEmpty()) {
-            results.add(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
+
+        List<Member> filteredMembers = DsnUtil.getMembersByStartsWithFilter(memberPrefix, members);
+        if (filteredMembers.isEmpty()) {
+            return List.of(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
         }
-        results.addAll(downloadMembersService.downloadMembers(dataset, members));
-        return results;
+
+        return new ArrayList<>(downloadMembersService.downloadMembers(dataset, filteredMembers));
     }
 
 }
