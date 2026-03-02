@@ -35,7 +35,7 @@ public class DownloadMembersService {
     public List<ResponseStatus> downloadMembers(final String dataset, final String memberPrefix) {
         LOG.debug("Downloading members from dataset '{}' with prefix '{}'", dataset, memberPrefix);
 
-        final List<Member> members;
+        List<Member> members;
         try {
             DsnList dsnList = new DsnList(connection);
             members = new MemberListingService(dsnList, timeout).memberLst(dataset);
@@ -44,7 +44,7 @@ public class DownloadMembersService {
             return List.of(new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false));
         }
 
-        final List<Member> filteredMembers = DsnUtil.getMembersByStartsWithFilter(memberPrefix, members);
+        List<Member> filteredMembers = DsnUtil.getMembersByStartsWithFilter(memberPrefix, members);
         if (filteredMembers.isEmpty()) {
             return List.of(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
         }
