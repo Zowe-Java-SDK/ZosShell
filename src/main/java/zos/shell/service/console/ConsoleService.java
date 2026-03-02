@@ -34,11 +34,11 @@ public class ConsoleService implements AutoCloseable {
         try {
             return future.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
-            LOG.debug("Exception console service", e);
+            LOG.debug("Exception in ConsoleService", e);
             future.cancel(true);
             return new ResponseStatus(getErrorMessage(e), false);
         } catch (TimeoutException e) {
-            LOG.debug("Timeout console service", e);
+            LOG.debug("Timeout in ConsoleService", e);
             future.cancel(true);
             return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
         }
