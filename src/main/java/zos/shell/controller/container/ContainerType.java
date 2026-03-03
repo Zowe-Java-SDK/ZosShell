@@ -13,6 +13,7 @@ public class ContainerType {
         COPY,
         COUNT,
         DELETE,
+        DOWNLOAD,
         DOWNLOAD_JOB,
         ECHO,
         EDIT,

@@ -191,7 +191,7 @@ public class ControllerFactoryContainer {
     public DownloadDsnController getDownloadDsnController(final ZosConnection connection, final boolean isBinary,
                                                           final long timeout) {
         LOG.debug("*** getDownloadDsnController ***");
-        var controller = (DownloadDsnController) controllers.get(ContainerType.Name.DELETE);
+        var controller = (DownloadDsnController) controllers.get(ContainerType.Name.DOWNLOAD);
         var dependency = new Dependency.Builder().zosConnection(connection).toggle(isBinary).timeout(timeout).build();
         if (controller == null || controller.isNotValid(dependency)) {
             var downloadMemberService = new DownloadMemberService(connection, this.pathService, isBinary, timeout);
@@ -204,7 +204,7 @@ public class ControllerFactoryContainer {
             controller = new DownloadDsnController(downloadMemberService, downloadPdsMemberService,
                     downloadSeqDatasetService, downloadAllMembersService, downloadMembersService,
                     this.envVariableController, dependency);
-            this.controllers.put(ContainerType.Name.DELETE, controller);
+            this.controllers.put(ContainerType.Name.DOWNLOAD, controller);
         }
         return controller;
     }
