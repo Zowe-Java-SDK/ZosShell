@@ -43,12 +43,9 @@ public class DownloadMemberListService implements AutoCloseable {
             try {
                 results.add(future.get(timeout, TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException e) {
-                LOG.debug("Exception downloading member list", e);
                 future.cancel(true);
-                results.add(new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
-                        e.getMessage() : Constants.EXECUTE_ERROR_MSG, false));
+                results.add(new ResponseStatus(getErrorMessage(e), false));
             } catch (TimeoutException e) {
-                LOG.debug("Timeout downloading member list", e);
                 future.cancel(true);
                 results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
             }
@@ -88,6 +85,13 @@ public class DownloadMemberListService implements AutoCloseable {
     @Override
     public void close() {
         pool.shutdown();
+    }
+
+    private String getErrorMessage(final Exception e) {
+        LOG.debug("*** getErrorMessage ***");
+        return e.getMessage() != null && !e.getMessage().isBlank()
+                ? e.getMessage()
+                : Constants.COMMAND_EXECUTION_ERROR_MSG;
     }
 
 }

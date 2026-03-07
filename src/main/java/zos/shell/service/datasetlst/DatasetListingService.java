@@ -36,11 +36,9 @@ public class DatasetListingService implements AutoCloseable {
         try {
             datasets = future.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
-            LOG.debug("Exception dataset listing", e);
             future.cancel(true);
             throw new ZosmfRequestException(getErrorMessage(e));
         } catch (TimeoutException e) {
-            LOG.debug("Timeout dataset listing", e);
             future.cancel(true);
             throw new ZosmfRequestException(Constants.TIMEOUT_MESSAGE);
         }

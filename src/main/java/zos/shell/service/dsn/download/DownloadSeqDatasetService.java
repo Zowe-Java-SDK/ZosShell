@@ -105,10 +105,8 @@ public class DownloadSeqDatasetService implements AutoCloseable {
             boolean isSequential = responseStatus.getMessage().contains("dsorg='PS'");
             return new SequentialDatasetCheckResult(isSequential, null);
         } catch (TimeoutException e) {
-            LOG.debug("Timeout checking dataset", e);
             return new SequentialDatasetCheckResult(false, e);
         } catch (ExecutionException | InterruptedException e) {
-            LOG.debug("Error checking dataset", e);
             return new SequentialDatasetCheckResult(false, e);
         }
     }

@@ -52,11 +52,9 @@ public class DownloadPdsMemberService implements AutoCloseable {
                 FileUtil.openFileLocation(new File(status.getOptionalData()).getAbsolutePath());
             }
         } catch (InterruptedException | ExecutionException e) {
-            LOG.debug("Exception downloading PDS member", e);
             future.cancel(true);
             results.add(new ResponseStatus(getErrorMessage(e), false));
         } catch (TimeoutException e) {
-            LOG.debug("Timeout downloading PDS member", e);
             future.cancel(true);
             results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
         }
