@@ -61,13 +61,16 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void initializeTerminal(final TerminalSingleton terminalSingleton) {
+        LOG.debug("*** initializeTerminal ***");        
         terminalSingleton.setMainTerminal(new SwingTextTerminal());
         terminalSingleton.getMainTerminal().init();
         terminalSingleton.setMainTextIO(new TextIO(terminalSingleton.getMainTerminal()));
         terminalSingleton.setTerminalProperties();
     }
 
-    private static void readConfiguration(final TerminalSingleton terminalSingleton, final String connectionIdentifier) {
+    private static void readConfiguration(final TerminalSingleton terminalSingleton, 
+                                          final String connectionIdentifier) {
+        LOG.debug("*** readConfiguration ***");        
         try {
             ConfigSingleton.getInstance().readConfig(connectionIdentifier);
         } catch (NumberFormatException | IOException e) {
@@ -81,6 +84,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     }
 
     private static void applyConfiguredFontSize(final TerminalSingleton terminalSingleton) {
+        LOG.debug("*** applyConfiguredFontSize ***");        
         ConfigSettings configSettings = ConfigSingleton.getInstance().getConfigSettings();
         if (configSettings == null) {
             return;
@@ -96,16 +100,19 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
     private static void initializeInteractiveTerminal(final TextIO textIO,
                                                       final TerminalSingleton terminalSingleton,
                                                       final ConfigSingleton configSingleton) {
+        LOG.debug("*** initializeInteractiveTerminal ***");       
         terminalSingleton.setTerminal(textIO.getTextTerminal());
         terminalSingleton.getTerminal().setBookmark("top");
         configSingleton.updateWindowSettings(terminalSingleton.getTerminal());
     }
 
     private static void initializeHistory(final TerminalSingleton terminalSingleton) {
+        LOG.debug("*** initializeHistory ***");        
         HistorySingleton.getInstance().setHistory(terminalSingleton.getTerminal());
     }
 
     private static void failAndExit(final Exception e) {
+        LOG.debug("*** failAndExit ***");       
         final var mainTerminal = TerminalSingleton.getInstance().getMainTerminal();
         mainTerminal.println("ERROR: Default connection invalid, try again...");
         mainTerminal.println("Error: " + e.getMessage());
