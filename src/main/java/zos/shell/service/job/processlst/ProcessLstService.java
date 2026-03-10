@@ -11,12 +11,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class ProcessLstService {
+public class ProcessLstService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProcessLstService.class);
 
     private final JobGet jobGet;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
     public ProcessLstService(final JobGet jobGet, long timeout) {
         LOG.debug("*** ProcessLstService ***");
@@ -26,9 +27,13 @@ public class ProcessLstService {
 
     public ResponseStatus processLst(final String target) {
         LOG.debug("*** processLst ***");
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureProcessListing(jobGet, target));
-        return FutureUtil.getFutureResponse(submit, pool, timeout);
+        Future<ResponseStatus> future = pool.submit(new FutureProcessListing(jobGet, target));
+        return FutureUtil.waitForResult(future, timeout);
+    }
+
+    @Override
+    public void close() {
+        pool.shutdown();
     }
 
 }

@@ -85,14 +85,16 @@ public class ListingService {
 
     private List<Member> getMembers(final String member) throws ZosmfRequestException {
         LOG.debug("*** getMembers ***");
-        var memberListingService = new MemberListingService(dsnList, timeout);
-        return memberListingService.memberLst(member);
+        try (var memberListingService = new MemberListingService(dsnList, timeout)) {
+            return memberListingService.listMembers(member);
+        }
     }
 
     private List<Dataset> getDataSets(final String dataset) throws ZosmfRequestException {
         LOG.debug("*** getDataSets ***");
-        var datasetListingService = new DatasetListingService(dsnList, timeout);
-        return datasetListingService.datasetLst(dataset);
+        try (var datasetListingService = new DatasetListingService(dsnList, timeout)) {
+            return datasetListingService.listDatasets(dataset);
+        }
     }
 
     private void displayListStatus(final int membersSize, final int dataSetsSize) {

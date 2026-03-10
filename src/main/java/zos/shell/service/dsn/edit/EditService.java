@@ -8,8 +8,11 @@ import zos.shell.service.checksum.CheckSumService;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.service.path.PathService;
 import zos.shell.utility.DsnUtil;
+import zos.shell.utility.FutureUtil;
 
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class EditService implements AutoCloseable {
 
@@ -21,8 +24,10 @@ public class EditService implements AutoCloseable {
     private final long timeout;
     private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
-    public EditService(final Download download, final PathService pathService,
-                       final CheckSumService checkSumService, final long timeout) {
+    public EditService(final Download download,
+                       final PathService pathService,
+                       final CheckSumService checkSumService,
+                       final long timeout) {
         LOG.debug("*** EditService ***");
         this.download = download;
         this.pathService = pathService;
@@ -32,41 +37,21 @@ public class EditService implements AutoCloseable {
 
     public ResponseStatus open(final String dataset, final String target) {
         LOG.debug("Opening editor for dataset '{}' target '{}'", dataset, target);
-
         if (DsnUtil.isMember(target) && dataset.isBlank()) {
             return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
         }
-
         Future<ResponseStatus> future = pool.submit(new FutureEdit(download,
                 pathService,
                 checkSumService,
                 dataset,
                 target
         ));
-
-        try {
-            return future.get(timeout, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException e) {
-            LOG.debug("Exception open service", e);
-            future.cancel(true);
-            return new ResponseStatus(getErrorMessage(e), false);
-        } catch (TimeoutException e) {
-            LOG.debug("Timeout open service", e);
-            future.cancel(true);
-            return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
-        }
+        return FutureUtil.waitForResult(future, timeout);
     }
 
     @Override
     public void close() {
         pool.shutdown();
-    }
-
-    private String getErrorMessage(final Exception e) {
-        LOG.debug("*** getErrorMessage ***");
-        return e.getMessage() != null && !e.getMessage().isBlank()
-                ? e.getMessage()
-                : Constants.COMMAND_EXECUTION_ERROR_MSG;
     }
 
 }

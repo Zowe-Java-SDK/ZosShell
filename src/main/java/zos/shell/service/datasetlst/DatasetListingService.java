@@ -3,6 +3,7 @@ package zos.shell.service.datasetlst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.model.Dataset;
@@ -24,38 +25,29 @@ public class DatasetListingService implements AutoCloseable {
         this.timeout = timeout;
     }
 
-    public List<Dataset> datasetLst(final String dataset) throws ZosmfRequestException {
-        LOG.debug("*** datasetLst ***");
+    public List<Dataset> listDatasets(final String dataset) throws ZosmfRequestException {
+        LOG.debug("*** listDatasets ***");
         Future<List<Dataset>> future = pool.submit(new FutureDatasetListing(
                 dsnList,
                 dataset,
                 timeout
         ));
 
-        List<Dataset> datasets;
+        //noinspection DuplicatedCode
         try {
-            datasets = future.get(timeout, TimeUnit.SECONDS);
+            return future.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
             future.cancel(true);
-            throw new ZosmfRequestException(getErrorMessage(e));
+            throw new ZosmfRequestException(FutureUtil.getErrorMessage(e));
         } catch (TimeoutException e) {
             future.cancel(true);
             throw new ZosmfRequestException(Constants.TIMEOUT_MESSAGE);
         }
-
-        return datasets;
     }
 
     @Override
     public void close() {
         pool.shutdown();
-    }
-
-    private String getErrorMessage(final Exception e) {
-        LOG.debug("*** getErrorMessage ***");
-        return e.getMessage() != null && !e.getMessage().isBlank()
-                ? e.getMessage()
-                : Constants.COMMAND_EXECUTION_ERROR_MSG;
     }
 
 }

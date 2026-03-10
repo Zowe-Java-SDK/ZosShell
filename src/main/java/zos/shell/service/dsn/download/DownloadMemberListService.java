@@ -68,15 +68,13 @@ public class DownloadMemberListService implements AutoCloseable {
                 continue;
             }
 
-            futures.add(pool.submit(
-                    new FutureMemberDownload(
-                            dsnGet,
-                            pathService,
-                            dataset,
-                            memberName,
-                            isBinary
-                    )
-            ));
+            futures.add(pool.submit(new FutureMemberDownload(
+                    dsnGet,
+                    pathService,
+                    dataset,
+                    memberName,
+                    isBinary
+            )));
         }
 
         return futures;

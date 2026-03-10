@@ -6,6 +6,7 @@ import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.path.PathService;
 import zos.shell.utility.FileUtil;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 
@@ -75,18 +76,11 @@ public class DownloadSeqDatasetService implements AutoCloseable {
                 target,
                 isBinary
         ));
-        try {
-            ResponseStatus status = future.get(timeout, TimeUnit.SECONDS);
-            results.add(status);
-            if (status.isStatus()) {
-                FileUtil.openFileLocation(new File(status.getOptionalData()).getAbsolutePath());
-            }
-        } catch (TimeoutException e) {
-            future.cancel(true);
-            results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
-        } catch (Exception e) {
-            future.cancel(true);
-            results.add(new ResponseStatus(getErrorMessage(e), false));
+
+        ResponseStatus status = FutureUtil.waitForResult(future, timeout);
+        results.add(status);
+        if (status.isStatus()) {
+            FileUtil.openFileLocation(new File(status.getOptionalData()).getAbsolutePath());
         }
 
         return results;
@@ -104,9 +98,7 @@ public class DownloadSeqDatasetService implements AutoCloseable {
             ResponseStatus responseStatus = future.get(timeout, TimeUnit.SECONDS);
             boolean isSequential = responseStatus.getMessage().contains("dsorg='PS'");
             return new SequentialDatasetCheckResult(isSequential, null);
-        } catch (TimeoutException e) {
-            return new SequentialDatasetCheckResult(false, e);
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (TimeoutException | ExecutionException | InterruptedException e) {
             return new SequentialDatasetCheckResult(false, e);
         }
     }

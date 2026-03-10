@@ -4,10 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.zosfiles.dsn.input.DsnCreateInputData;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnCreate;
 
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class MakeDirService implements AutoCloseable {
 
@@ -23,37 +26,19 @@ public class MakeDirService implements AutoCloseable {
         this.timeout = timeout;
     }
 
-    public ResponseStatus create(final String dataset, final DsnCreateInputData params) {
+    public ResponseStatus create(final String dataset, final DsnCreateInputData inputData) {
         LOG.debug("*** create ***");
         Future<ResponseStatus> future = pool.submit(new FutureMakeDirectory(
                 dsnCreate,
                 dataset,
-                params
+                inputData
         ));
-
-        try {
-            return future.get(timeout, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException e) {
-            LOG.debug("Exception in MakeDirService", e);
-            future.cancel(true);
-            return new ResponseStatus(getErrorMessage(e), false);
-        } catch (TimeoutException e) {
-            LOG.debug("Timeout in MakeDirService", e);
-            future.cancel(true);
-            return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
-        }
+        return FutureUtil.waitForResult(future, timeout);
     }
 
     @Override
     public void close() {
         pool.shutdown();
-    }
-
-    private String getErrorMessage(final Exception e) {
-        LOG.debug("*** getErrorMessage ***");
-        return e.getMessage() != null && !e.getMessage().isBlank()
-                ? e.getMessage()
-                : Constants.COMMAND_EXECUTION_ERROR_MSG;
     }
 
 }

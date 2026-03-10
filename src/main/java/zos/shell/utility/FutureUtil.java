@@ -7,7 +7,10 @@ import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public final class FutureUtil {
 
@@ -17,34 +20,35 @@ public final class FutureUtil {
         throw new IllegalStateException("Utility class");
     }
 
-    public static ResponseStatus getFutureResponse(final Future<ResponseStatus> future, final ExecutorService pool,
-                                                   final long timeout) {
-        LOG.debug("*** getFutureResponse ***");
+    public static ResponseStatus waitForResult(final Future<ResponseStatus> future, final long timeout) {
+        LOG.debug("*** waitForResult ***");
         try {
             return future.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
-            LOG.debug(String.valueOf(e));
             future.cancel(true);
-            boolean isErrMsg = e.getMessage() != null && !e.getMessage().isBlank();
-            var errMsg = isErrMsg ? e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG;
-            return new ResponseStatus(errMsg, false);
+            return new ResponseStatus(getErrorMessage(e), false);
         } catch (TimeoutException e) {
             future.cancel(true);
             return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
-        } finally {
-            pool.shutdown();
         }
     }
 
+    public static String getErrorMessage(final Exception e) {
+        LOG.debug("*** getErrorMessage ***");
+        return e.getMessage() != null && !e.getMessage().isBlank()
+                ? e.getMessage()
+                : Constants.COMMAND_EXECUTION_ERROR_MSG;
+    }
+
     public static ResponseStatus getFutureResponses(final List<Future<ResponseStatus>> futures,
-                                                    final ExecutorService pool, final long timeout,
+                                                    final long timeout,
                                                     final int padLength) {
         LOG.debug("*** getFutureResponses ***");
         var results = new StringBuilder();
+
         futures.forEach(future -> {
-            ResponseStatus responseStatus;
             try {
-                responseStatus = future.get(timeout, TimeUnit.SECONDS);
+                ResponseStatus responseStatus = future.get(timeout, TimeUnit.SECONDS);
                 var arrowMsg = Strings.padStart(responseStatus.getOptionalData(), padLength, ' ');
                 arrowMsg += Constants.ARROW;
                 results.append(arrowMsg).append(responseStatus.getMessage()).append("\n");
@@ -60,7 +64,6 @@ public final class FutureUtil {
             }
         });
 
-        pool.shutdown();
         return new ResponseStatus(results.toString(), true);
     }
 

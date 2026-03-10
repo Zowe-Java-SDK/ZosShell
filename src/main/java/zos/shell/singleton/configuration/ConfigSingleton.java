@@ -47,7 +47,7 @@ public final class ConfigSingleton {
         return ConfigSingleton.Holder.instance;
     }
 
-    public void readConfig() throws IOException {
+    public void readConfig(final String connectionIdentifier) throws IOException {
         LOG.debug("*** readConfig ***");
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         Map<String, String> env = System.getenv();
@@ -77,16 +77,22 @@ public final class ConfigSingleton {
         }
         this.createZosConnections();
         this.createSshConnections();
-        this.initialConfigSettings();
+        this.initialConfigSettings(connectionIdentifier);
     }
 
-    private void initialConfigSettings() {
+    private void initialConfigSettings(final String connectionIdentifier) {
         LOG.debug("*** initialConfigSettings ***");
         if (profiles.isEmpty()) {
             configSettings = null;
             return;
         }
-        var profile = this.getProfileByIndex(0);
+        int index = 0;
+        try {
+            index = Integer.parseInt(connectionIdentifier);
+        } catch (NumberFormatException ignored) {
+        }
+
+        var profile = this.getProfileByIndex(index);
         configSettings = new ConfigSettings(
                 profile.getHostname(),
                 profile.getDownloadpath(),

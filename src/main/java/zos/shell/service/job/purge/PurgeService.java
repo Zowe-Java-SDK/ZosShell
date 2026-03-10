@@ -12,13 +12,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class PurgeService {
+public class PurgeService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(PurgeService.class);
 
     private final JobDelete delete;
     private final JobGet retrieve;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
     public PurgeService(final JobDelete delete, final JobGet retrieve, final long timeout) {
         LOG.debug("*** PurgeService ***");
@@ -29,9 +30,17 @@ public class PurgeService {
 
     public ResponseStatus purge(String filter) {
         LOG.debug("*** purge ***");
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FuturePurge(delete, retrieve, filter));
-        return FutureUtil.getFutureResponse(submit, pool, timeout);
+        Future<ResponseStatus> future = pool.submit(new FuturePurge(
+                delete,
+                retrieve,
+                filter
+        ));
+        return FutureUtil.waitForResult(future, timeout);
+    }
+
+    @Override
+    public void close() {
+        pool.shutdown();
     }
 
 }

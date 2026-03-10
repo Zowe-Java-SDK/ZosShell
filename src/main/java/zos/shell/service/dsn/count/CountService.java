@@ -39,18 +39,16 @@ public class CountService {
         List<Member> members = new ArrayList<>();
 
         if ("members".equalsIgnoreCase(filter)) {
-            var memberListingService = new MemberListingService(dsnList, timeout);
-            try {
-                members = memberListingService.memberLst(dataset);
+            try (var memberListingService = new MemberListingService(dsnList, timeout)) {
+                members = memberListingService.listMembers(dataset);
             } catch (ZosmfRequestException e) {
                 return new ResponseStatus(e.getMessage(), false);
             }
         }
 
         if ("datasets".equalsIgnoreCase(filter)) {
-            var datasetListingService = new DatasetListingService(dsnList, timeout);
-            try {
-                datasets = datasetListingService.datasetLst(dataset);
+            try (var datasetListingService = new DatasetListingService(dsnList, timeout)) {
+                datasets = datasetListingService.listDatasets(dataset);
             } catch (ZosmfRequestException e) {
                 return new ResponseStatus(e.getMessage(), false);
             }

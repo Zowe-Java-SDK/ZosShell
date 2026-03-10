@@ -12,12 +12,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class TerminateService {
+public class TerminateService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(TerminateService.class);
 
     private final ConsoleCmd issueConsole;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
     public enum Type {
         STOP,
@@ -30,9 +31,9 @@ public class TerminateService {
         this.timeout = timeout;
     }
 
-    public ResponseStatus terminate(final TerminateService.Type type, final String consoleName, final String target) {
+    public ResponseStatus terminate(final Type type, final String consoleName, final String target) {
         LOG.debug("*** terminate ***");
-        String command;
+        final String command;
         switch (type) {
             case STOP:
                 command = "P " + target;
@@ -41,12 +42,19 @@ public class TerminateService {
                 command = "C " + target;
                 break;
             default:
-                return new ResponseStatus("invalid termination type, try again...", false);
+                return new ResponseStatus("Invalid termination type.", false);
         }
+        Future<ResponseStatus> future = pool.submit(new FutureConsole(
+                issueConsole,
+                consoleName,
+                command
+        ));
+        return FutureUtil.waitForResult(future, timeout);
+    }
 
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureConsole(issueConsole, consoleName, command));
-        return FutureUtil.getFutureResponse(submit, pool, timeout);
+    @Override
+    public void close() {
+        pool.shutdown();
     }
 
 }

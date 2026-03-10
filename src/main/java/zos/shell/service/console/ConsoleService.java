@@ -4,10 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosconsole.method.ConsoleCmd;
 
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ConsoleService implements AutoCloseable {
 
@@ -30,28 +33,12 @@ public class ConsoleService implements AutoCloseable {
                 consoleName,
                 command
         ));
-
-        try {
-            return future.get(timeout, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException e) {
-            future.cancel(true);
-            return new ResponseStatus(getErrorMessage(e), false);
-        } catch (TimeoutException e) {
-            future.cancel(true);
-            return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
-        }
+        return FutureUtil.waitForResult(future, timeout);
     }
 
     @Override
     public void close() {
         pool.shutdown();
-    }
-
-    private String getErrorMessage(final Exception e) {
-        LOG.debug("*** getErrorMessage ***");
-        return e.getMessage() != null && !e.getMessage().isBlank()
-                ? e.getMessage()
-                : Constants.COMMAND_EXECUTION_ERROR_MSG;
     }
 
 }

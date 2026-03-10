@@ -3,21 +3,21 @@ package zos.shell.service.memberlst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.model.Member;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.*;
-import java.util.function.Predicate;
 
-public class MemberListingService {
+public class MemberListingService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(MemberListingService.class);
 
     private final DsnList dsnList;
     private final long timeout;
-
     private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
     public MemberListingService(final DsnList dsnList, long timeout) {
@@ -26,52 +26,43 @@ public class MemberListingService {
         this.timeout = timeout;
     }
 
-    public boolean memberExist(final String dataset, final String member) throws ZosmfRequestException {
-        LOG.debug("*** memberExist ***");
-        Future<List<Member>> submit = pool.submit(new FutureMemberListing(dsnList, dataset, timeout));
-
-        List<Member> members;
-        try {
-            members = submit.get(timeout, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException e) {
-            LOG.debug(String.valueOf(e));
-            submit.cancel(true);
-            throw new ZosmfRequestException(e.getMessage() != null && !e.getMessage().isBlank() ?
-                    e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG);
-        } catch (TimeoutException e) {
-            submit.cancel(true);
-            throw new ZosmfRequestException(Constants.TIMEOUT_MESSAGE);
-        } finally {
-            pool.shutdown();
-        }
-
-        if (members.isEmpty()) {
-            return false;
-        }
-
-        Predicate<Member> isMemberPresent = m -> !m.getMember().isBlank();
-        Predicate<Member> isMemberEquals = m -> m.getMember().equalsIgnoreCase(member);
-        return members.stream().anyMatch(isMemberPresent.and(isMemberEquals));
+    public boolean memberExists(final String dataset, final String member) throws ZosmfRequestException {
+        LOG.debug("*** memberExists ***");
+        return getMembers(dataset).stream()
+                .map(Member::getMember)
+                .filter(Objects::nonNull)
+                .filter(name -> !name.isBlank())
+                .anyMatch(name -> name.equalsIgnoreCase(member));
     }
 
-    public List<Member> memberLst(final String dataset) throws ZosmfRequestException {
+    public List<Member> listMembers(final String dataset) throws ZosmfRequestException {
         LOG.debug("*** memberLst ***");
-        Future<List<Member>> submit = pool.submit(new FutureMemberListing(dsnList, dataset, timeout));
+        return this.getMembers(dataset);
+    }
 
-        List<Member> members = List.of();
+    private List<Member> getMembers(final String dataset) throws ZosmfRequestException {
+        LOG.debug("*** getMembers ***");
+        Future<List<Member>> future = pool.submit(new FutureMemberListing(
+                dsnList,
+                dataset,
+                timeout
+        ));
+
+        //noinspection DuplicatedCode
         try {
-            members = submit.get(timeout, TimeUnit.SECONDS);
+            return future.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
-            LOG.debug(String.valueOf(e));
-            submit.cancel(true);
+            future.cancel(true);
+            throw new ZosmfRequestException(FutureUtil.getErrorMessage(e));
         } catch (TimeoutException e) {
-            submit.cancel(true);
+            future.cancel(true);
             throw new ZosmfRequestException(Constants.TIMEOUT_MESSAGE);
-        } finally {
-            pool.shutdown();
         }
+    }
 
-        return members;
+    @Override
+    public void close() {
+        pool.shutdown();
     }
 
 }

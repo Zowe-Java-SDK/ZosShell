@@ -52,10 +52,8 @@ public class GrepService {
 
         List<Member> members = new ArrayList<>();
         if (memberWildCard || wildCardOnly) {
-            var memberListingService = new MemberListingService(new DsnList(connection), timeout);
-
-            try {
-                members = memberListingService.memberLst(dataset);
+            try (var memberListingService = new MemberListingService(new DsnList(connection), timeout)) {
+                members = memberListingService.listMembers(dataset);
             } catch (ZosmfRequestException e) {
                 var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
                 result.add(errMsg != null ? errMsg : e.getMessage());
@@ -89,7 +87,6 @@ public class GrepService {
             try {
                 result.addAll(submit.get(timeout, TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException e) {
-                LOG.debug(String.valueOf(e));
                 submit.cancel(true);
                 result.add(e.getMessage() != null && !e.getMessage().isBlank() ?
                         e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG);
@@ -120,7 +117,6 @@ public class GrepService {
             try {
                 result.addAll(future.get(timeout, TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException e) {
-                LOG.debug(String.valueOf(e));
                 future.cancel(true);
                 result.add(e.getMessage() != null && !e.getMessage().isBlank() ?
                         e.getMessage() : Constants.EXECUTE_ERROR_MSG);

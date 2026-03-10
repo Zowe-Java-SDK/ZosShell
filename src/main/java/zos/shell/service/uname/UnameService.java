@@ -12,12 +12,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class UnameService {
+public class UnameService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(UnameService.class);
+    private static final String IPLINFO_COMMAND = "D IPLINFO";
+    private static final String RELEASE_PREFIX = "RELEASE z/OS ";
+    private static final int RELEASE_LENGTH = 22;
 
     private final ConsoleCmd issueConsole;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
     public UnameService(final ConsoleCmd issueConsole, final long timeout) {
         LOG.debug("*** UnameService ***");
@@ -28,23 +32,36 @@ public class UnameService {
     public String getUname(final String hostName, final String consoleName) {
         LOG.debug("*** getUname ***");
 
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureConsole(issueConsole, consoleName, "D IPLINFO"));
-        ResponseStatus responseStatus = FutureUtil.getFutureResponse(submit, pool, timeout);
+        Future<ResponseStatus> future = pool.submit(new FutureConsole(
+                issueConsole,
+                consoleName,
+                IPLINFO_COMMAND
+        ));
 
+        ResponseStatus responseStatus = FutureUtil.waitForResult(future, timeout);
         if (!responseStatus.isStatus()) {
             return Constants.NO_INFO;
         }
-        var output = responseStatus.getMessage();
-        int index = output.indexOf("RELEASE z/OS ");
-        String zosVersion = null;
-        if (index >= 0) {
-            zosVersion = output.substring(index, index + 22);
-        }
-        if (zosVersion == null) {
+
+        String output = responseStatus.getMessage();
+        if (output == null || output.isBlank()) {
             return Constants.NO_INFO;
         }
+
+        int index = output.indexOf(RELEASE_PREFIX);
+        if (index < 0) {
+            return Constants.NO_INFO;
+        }
+
+        int endIndex = Math.min(output.length(), index + RELEASE_LENGTH);
+        String zosVersion = output.substring(index, endIndex);
+
         return "hostname: " + hostName + ", " + zosVersion;
+    }
+
+    @Override
+    public void close() {
+        pool.shutdown();
     }
 
 }

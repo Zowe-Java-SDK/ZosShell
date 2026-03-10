@@ -32,24 +32,39 @@ public class DownloadMembersService {
         this.timeout = timeout;
     }
 
-    public List<ResponseStatus> downloadMembers(final String dataset, final String memberPrefix) {
-        LOG.debug("Downloading members from dataset '{}' with prefix '{}'", dataset, memberPrefix);
+    public List<ResponseStatus> downloadMembers(final String dataset, final String prefix) {
+        LOG.debug("Downloading members from dataset '{}' with prefix '{}'", dataset, prefix);
+        return downloadMembersCommon(dataset, prefix);
+    }
+
+    public List<ResponseStatus> downloadMembers(final String dataset) {
+        LOG.debug("Downloading all members for dataset: {}", dataset);
+        return downloadMembersCommon(dataset, null);
+    }
+
+    private List<ResponseStatus> downloadMembersCommon(final String dataset, final String prefix) {
+        LOG.debug("*** downloadMembersCommon ***");
 
         List<Member> members;
-        try {
-            DsnList dsnList = new DsnList(connection);
-            members = new MemberListingService(dsnList, timeout).memberLst(dataset);
+        try (var memberListingService = new MemberListingService(new DsnList(connection), timeout)) {
+            members = memberListingService.listMembers(dataset);
         } catch (ZosmfRequestException e) {
             var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
             return List.of(new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false));
         }
 
-        List<Member> filteredMembers = DsnUtil.getMembersByStartsWithFilter(memberPrefix, members);
-        if (filteredMembers.isEmpty()) {
+        if (members.isEmpty()) {
             return List.of(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
         }
 
-        return new ArrayList<>(downloadMembersService.downloadMembers(dataset, filteredMembers));
+        List<Member> result = members;
+        if (prefix != null && !prefix.isEmpty()) {
+            result = DsnUtil.getMembersByStartsWithFilter(prefix, members);
+            if (result.isEmpty()) {
+                return List.of(new ResponseStatus(Constants.DOWNLOAD_NOTHING_WARNING, false));
+            }
+        }
+        return new ArrayList<>(downloadMembersService.downloadMembers(dataset, result));
     }
 
 }

@@ -6,13 +6,16 @@ import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.path.PathService;
 import zos.shell.utility.FileUtil;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class DownloadMemberService implements AutoCloseable {
 
@@ -44,33 +47,17 @@ public class DownloadMemberService implements AutoCloseable {
                 isBinary
         ));
 
-        try {
-            ResponseStatus status = future.get(timeout, TimeUnit.SECONDS);
-            results.add(status);
-            if (status.isStatus() && status.getOptionalData() != null) {
-                FileUtil.openFileLocation(new File(status.getOptionalData()).getAbsolutePath());
-            }
-        } catch (InterruptedException | ExecutionException e) {
-            future.cancel(true);
-            results.add(new ResponseStatus(getErrorMessage(e), false));
-        } catch (TimeoutException e) {
-            future.cancel(true);
-            results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
+        ResponseStatus status = FutureUtil.waitForResult(future, timeout);
+        results.add(status);
+        if (status.isStatus() && status.getOptionalData() != null) {
+            FileUtil.openFileLocation(new File(status.getOptionalData()).getAbsolutePath());
         }
-
         return results;
     }
 
     @Override
     public void close() {
         pool.shutdown();
-    }
-
-    private String getErrorMessage(final Exception e) {
-        LOG.debug("*** getErrorMessage ***");
-        return e.getMessage() != null && !e.getMessage().isBlank()
-                ? e.getMessage()
-                : Constants.COMMAND_EXECUTION_ERROR_MSG;
     }
 
 }

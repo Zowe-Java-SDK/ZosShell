@@ -12,12 +12,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class ConcatService {
+public class ConcatService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConcatService.class);
 
     private final Download download;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
     public ConcatService(final Download download, final long timeout) {
         LOG.debug("*** ConcatService ***");
@@ -30,9 +31,17 @@ public class ConcatService {
         if (DsnUtil.isMember(target) && dataset.isBlank()) {
             return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
         }
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureConcat(download, dataset, target));
-        return FutureUtil.getFutureResponse(submit, pool, timeout);
+        Future<ResponseStatus> future = pool.submit(new FutureConcat(
+                download,
+                dataset,
+                target
+        ));
+        return FutureUtil.waitForResult(future, timeout);
+    }
+
+    @Override
+    public void close() {
+        pool.shutdown();
     }
 
 }
