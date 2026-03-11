@@ -19,6 +19,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("unused")
 public final class TerminalSingleton {
 
     private static final Logger LOG = LoggerFactory.getLogger(TerminalSingleton.class);
