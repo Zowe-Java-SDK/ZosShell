@@ -14,25 +14,29 @@ import zos.shell.service.autocomplete.SearchCommandService;
 import zos.shell.service.history.HistoryService;
 import zos.shell.utility.PromptUtil;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 import java.net.URL;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public final class TerminalSingleton {
 
     private static final Logger LOG = LoggerFactory.getLogger(TerminalSingleton.class);
 
-    private static final SearchCommandService searchCommandService = new SearchCommandService();
-    private static SwingTextTerminal mainTerminal;
-    private static TextTerminal<?> terminal;
-    private static TextIO mainTextIO;
-    private static final int defaultFontSize = Constants.DEFAULT_FONT_SIZE;
-    private static int fontSize = defaultFontSize;
-    private static boolean fontSizeChanged = false;
-    private static boolean disableKeys = false;
+    private static final Pattern ALPHABETIC_PATTERN = Pattern.compile("[a-zA-Z]*");
+    private static final SearchCommandService SEARCH_COMMAND_SERVICE = new SearchCommandService();
+
+    private final int defaultFontSize = Constants.DEFAULT_FONT_SIZE;
+
+    private SwingTextTerminal mainTerminal;
+    private TextTerminal<?> terminal;
+    private TextIO mainTextIO;
+    private int fontSize = defaultFontSize;
+    private boolean fontSizeChanged;
+    private boolean disableKeys;
 
     private static class Holder {
-        private static final TerminalSingleton instance = new TerminalSingleton();
+        private static final TerminalSingleton INSTANCE = new TerminalSingleton();
     }
 
     private TerminalSingleton() {
@@ -41,7 +45,7 @@ public final class TerminalSingleton {
 
     public static TerminalSingleton getInstance() {
         LOG.debug("*** getInstance ***");
-        return TerminalSingleton.Holder.instance;
+        return Holder.INSTANCE;
     }
 
     public SwingTextTerminal getMainTerminal() {
@@ -51,7 +55,7 @@ public final class TerminalSingleton {
 
     public void setMainTerminal(final SwingTextTerminal mainTerminal) {
         LOG.debug("*** setMainTerminal ***");
-        TerminalSingleton.mainTerminal = mainTerminal;
+        this.mainTerminal = mainTerminal;
     }
 
     public TextTerminal<?> getTerminal() {
@@ -61,7 +65,7 @@ public final class TerminalSingleton {
 
     public void setTerminal(final TextTerminal<?> terminal) {
         LOG.debug("*** setTerminal ***");
-        TerminalSingleton.terminal = terminal;
+        this.terminal = terminal;
     }
 
     public TextIO getMainTextIO() {
@@ -71,12 +75,17 @@ public final class TerminalSingleton {
 
     public void setMainTextIO(final TextIO mainTextIO) {
         LOG.debug("*** setMainTextIO ***");
-        TerminalSingleton.mainTextIO = mainTextIO;
+        this.mainTextIO = mainTextIO;
+    }
+
+    public int getFontSize() {
+        LOG.debug("*** getFontSize ***");
+        return fontSize;
     }
 
     public void setFontSize(final int fontSize) {
         LOG.debug("*** setFontSize ***");
-        TerminalSingleton.fontSize = fontSize;
+        this.fontSize = fontSize;
     }
 
     public boolean isFontSizeChanged() {
@@ -86,128 +95,163 @@ public final class TerminalSingleton {
 
     public void setFontSizeChanged(final boolean fontSizeChanged) {
         LOG.debug("*** setFontSizeChanged ***");
-        TerminalSingleton.fontSizeChanged = fontSizeChanged;
+        this.fontSizeChanged = fontSizeChanged;
+    }
+
+    public boolean isDisableKeys() {
+        LOG.debug("*** isDisableKeys ***");
+        return disableKeys;
     }
 
     public void setDisableKeys(final boolean disableKeys) {
         LOG.debug("*** setDisableKeys ***");
-        TerminalSingleton.disableKeys = disableKeys;
+        this.disableKeys = disableKeys;
     }
 
     public void setTerminalProperties() {
         LOG.debug("*** setTerminalProperties ***");
-        var title = "";
+
+        if (mainTerminal == null) {
+            throw new IllegalStateException("Main terminal must be initialized before setting terminal properties.");
+        }
+
+        setPaneTitle();
+        setApplicationIcon();
+        registerHandlers();
+    }
+
+    private void setPaneTitle() {
+        String titleSuffix = "";
         var zosConnection = ConnSingleton.getInstance().getCurrZosConnection();
         if (zosConnection != null) {
-            title = " - " + zosConnection.getHost().toUpperCase();
+            titleSuffix = " - " + zosConnection.getHost().toUpperCase();
         }
-        mainTerminal.setPaneTitle(Constants.APP_TITLE + title);
+        mainTerminal.setPaneTitle(Constants.APP_TITLE + titleSuffix);
+    }
 
-        URL iconURL = ZosShell.class.getResource("/image/zowe-icon.png");
-        if (iconURL != null) {
-            var icon = new ImageIcon(iconURL);
+    private void setApplicationIcon() {
+        URL iconUrl = ZosShell.class.getResource("/image/zowe-icon.png");
+        if (iconUrl != null) {
+            ImageIcon icon = new ImageIcon(iconUrl);
             mainTerminal.getFrame().setIconImage(icon.getImage());
         }
+    }
 
-        mainTerminal.registerHandler("ctrl C", t -> {
-            t.getTextPane().copy();
-            return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+    private void registerHandlers() {
+        registerCopyHandler();
+        registerHistoryHandlers();
+        registerFontResizeHandlers();
+        registerAutocompleteHandler();
+    }
+
+    private void registerCopyHandler() {
+        mainTerminal.registerHandler("ctrl C", terminal -> {
+            terminal.getTextPane().copy();
+            return continueAction();
         });
-        mainTerminal.registerHandler("UP", t -> {
+    }
+
+    private void registerHistoryHandlers() {
+        mainTerminal.registerHandler("UP", terminal -> {
             if (disableKeys) {
-                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+                return continueAction();
             }
-            HistorySingleton.getInstance().getHistory().navigateHistory(HistoryService.NavigationDirection.UP);
-            return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+            HistorySingleton.getInstance()
+                    .getHistory()
+                    .navigateHistory(HistoryService.NavigationDirection.UP);
+            return continueAction();
         });
-        mainTerminal.registerHandler("DOWN", t -> {
+
+        mainTerminal.registerHandler("DOWN", terminal -> {
             if (disableKeys) {
-                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+                return continueAction();
             }
-            HistorySingleton.getInstance().getHistory().navigateHistory(HistoryService.NavigationDirection.DOWN);
-            return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+            HistorySingleton.getInstance()
+                    .getHistory()
+                    .navigateHistory(HistoryService.NavigationDirection.DOWN);
+            return continueAction();
         });
+    }
+
+    private void registerFontResizeHandlers() {
         if (SystemUtils.IS_OS_WINDOWS) {
-            mainTerminal.registerHandler("ctrl UP", t -> {
-                if (disableKeys) {
-                    return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
-                }
-                fontSize++;
-                mainTerminal.setInputFontSize(fontSize);
-                mainTerminal.setPromptFontSize(fontSize);
-                mainTerminal.moveToLineStart();
-                mainTerminal.print(PromptUtil.getPrompt() + " Increased font size to " + fontSize + ".");
-                fontSizeChanged = true;
-                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
-            });
-            mainTerminal.registerHandler("ctrl DOWN", t -> {
-                if (disableKeys) {
-                    return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
-                }
-                if (fontSize != defaultFontSize) {
-                    fontSize--;
-                    mainTerminal.setInputFontSize(fontSize);
-                    mainTerminal.setPromptFontSize(fontSize);
-                    mainTerminal.moveToLineStart();
-                    mainTerminal.print(PromptUtil.getPrompt() + " Decreased font size to " + fontSize + ".");
-                    fontSizeChanged = true;
-                }
-                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
-            });
+            mainTerminal.registerHandler("ctrl UP", terminal -> adjustFontSize(+1));
+            mainTerminal.registerHandler("ctrl DOWN", terminal -> adjustFontSize(-1));
         } else {
-            mainTerminal.registerHandler("shift UP", t -> {
-                if (disableKeys) {
-                    return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
-                }
-                fontSize++;
-                mainTerminal.setInputFontSize(fontSize);
-                mainTerminal.setPromptFontSize(fontSize);
-                mainTerminal.moveToLineStart();
-                mainTerminal.print(PromptUtil.getPrompt() + " Increased font size to " + fontSize + ".");
-                fontSizeChanged = true;
-                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
-            });
-            mainTerminal.registerHandler("shift DOWN", t -> {
-                if (disableKeys) {
-                    return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
-                }
-                if (fontSize != defaultFontSize) {
-                    fontSize--;
-                    mainTerminal.setInputFontSize(fontSize);
-                    mainTerminal.setPromptFontSize(fontSize);
-                    mainTerminal.moveToLineStart();
-                    mainTerminal.print(PromptUtil.getPrompt() + " Decreased font size to " + fontSize + ".");
-                    fontSizeChanged = true;
-                }
-                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
-            });
+            mainTerminal.registerHandler("shift UP", terminal -> adjustFontSize(+1));
+            mainTerminal.registerHandler("shift DOWN", terminal -> adjustFontSize(-1));
         }
-        mainTerminal.registerHandler("TAB", t -> {
+    }
+
+    private ReadHandlerData adjustFontSize(final int delta) {
+        if (disableKeys) {
+            return continueAction();
+        }
+
+        int newFontSize = fontSize + delta;
+        if (newFontSize < defaultFontSize) {
+            return continueAction();
+        }
+
+        fontSize = newFontSize;
+        mainTerminal.setInputFontSize(fontSize);
+        mainTerminal.setPromptFontSize(fontSize);
+        mainTerminal.moveToLineStart();
+
+        String action = delta > 0 ? "Increased" : "Decreased";
+        mainTerminal.print(PromptUtil.getPrompt() + " " + action + " font size to " + fontSize + ".");
+        fontSizeChanged = true;
+
+        return continueAction();
+    }
+
+    private void registerAutocompleteHandler() {
+        mainTerminal.registerHandler("TAB", terminal -> {
             if (disableKeys) {
-                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+                return continueAction();
             }
-            var items = mainTerminal.getTextPane().getText().split(PromptUtil.getPrompt());
-            var candidateStr = items[items.length - 1].trim();
-            candidateStr = candidateStr.replaceAll("[\\p{Cf}]", "");
-            if (candidateStr.contains(" ")) {  // invalid look up
-                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+
+            String candidate = extractAutocompleteCandidate();
+            if (!isValidAutocompleteCandidate(candidate)) {
+                return continueAction();
             }
-            boolean isAlphabetOnly = candidateStr.matches("[a-zA-Z]*");
-            if (!isAlphabetOnly) {
-                return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+
+            List<String> candidates = SEARCH_COMMAND_SERVICE.search(candidate);
+            if (candidates.isEmpty()) {
+                return continueAction();
             }
-            List<String> candidateLst = searchCommandService.search(candidateStr);
-            if (!candidateLst.isEmpty()) {
-                mainTerminal.moveToLineStart();
-                if (candidateLst.size() == 1) {
-                    mainTerminal.replaceInput(candidateLst.get(0), false);
-                } else {
-                    mainTextIO.newStringInputReader().withDefaultValue("hit enter to skip")
-                            .read((PromptUtil.getPrompt() + " " + candidateLst));
-                }
+
+            mainTerminal.moveToLineStart();
+            if (candidates.size() == 1) {
+                mainTerminal.replaceInput(candidates.get(0), false);
+            } else {
+                mainTextIO.newStringInputReader()
+                        .withDefaultValue("hit enter to skip")
+                        .read(PromptUtil.getPrompt() + " " + candidates);
             }
-            return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
+
+            return continueAction();
         });
+    }
+
+    private String extractAutocompleteCandidate() {
+        String[] items = mainTerminal.getTextPane().getText().split(Pattern.quote(PromptUtil.getPrompt()));
+        String candidate = items[items.length - 1].trim();
+        return candidate.replaceAll("[\\p{Cf}]", "");
+    }
+
+    private boolean isValidAutocompleteCandidate(final String candidate) {
+        if (candidate.isEmpty()) {
+            return true;
+        }
+        if (candidate.contains(" ")) {
+            return false;
+        }
+        return ALPHABETIC_PATTERN.matcher(candidate).matches();
+    }
+
+    private ReadHandlerData continueAction() {
+        return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
     }
 
 }
