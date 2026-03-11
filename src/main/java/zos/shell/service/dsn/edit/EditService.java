@@ -8,7 +8,7 @@ import zos.shell.service.checksum.CheckSumService;
 import zos.shell.service.dsn.download.Download;
 import zos.shell.service.path.PathService;
 import zos.shell.utility.DsnUtil;
-import zos.shell.utility.FutureUtil;
+import zos.shell.utility.FutureResponseUtil;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -46,7 +46,7 @@ public class EditService implements AutoCloseable {
                 dataset,
                 target
         ));
-        return FutureUtil.waitForResult(future, timeout);
+        return FutureResponseUtil.waitForResult(future, timeout);
     }
 
     @Override

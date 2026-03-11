@@ -3,7 +3,7 @@ package zos.shell.service.memberlst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.utility.FutureUtil;
+import zos.shell.utility.FutureResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.model.Member;
@@ -53,7 +53,7 @@ public class MemberListingService implements AutoCloseable {
             return future.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
             future.cancel(true);
-            throw new ZosmfRequestException(FutureUtil.getErrorMessage(e));
+            throw new ZosmfRequestException(FutureResponseUtil.getErrorMessage(e));
         } catch (TimeoutException e) {
             future.cancel(true);
             throw new ZosmfRequestException(Constants.TIMEOUT_MESSAGE);

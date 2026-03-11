@@ -7,7 +7,7 @@ import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.memberlst.MemberListingService;
 import zos.shell.utility.DsnUtil;
-import zos.shell.utility.FutureUtil;
+import zos.shell.utility.FutureResponseUtil;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
@@ -58,7 +58,7 @@ public class TouchService implements AutoCloseable {
         }
 
         Future<ResponseStatus> future = pool.submit(new FutureTouch(dsnWrite, dataset, target));
-        return FutureUtil.waitForResult(future, timeout);
+        return FutureResponseUtil.waitForResult(future, timeout);
     }
 
     private ResponseStatus buildErrorResponse(final ZosmfRequestException e) {

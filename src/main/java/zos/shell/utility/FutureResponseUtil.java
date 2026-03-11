@@ -12,11 +12,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public final class FutureUtil {
+public final class FutureResponseUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FutureUtil.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FutureResponseUtil.class);
 
-    private FutureUtil() {
+    private FutureResponseUtil() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -53,11 +53,8 @@ public final class FutureUtil {
                 arrowMsg += Constants.ARROW;
                 results.append(arrowMsg).append(responseStatus.getMessage()).append("\n");
             } catch (InterruptedException | ExecutionException e) {
-                LOG.debug(String.valueOf(e));
                 future.cancel(true);
-                var isErrMsg = e.getMessage() != null && !e.getMessage().isBlank();
-                var errMsg = isErrMsg ? e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG;
-                results.append(errMsg).append("\n");
+                results.append(getErrorMessage(e)).append("\n");
             } catch (TimeoutException e) {
                 future.cancel(true);
                 results.append(Constants.TIMEOUT_MESSAGE).append("\n");

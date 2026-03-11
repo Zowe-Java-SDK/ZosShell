@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.path.PathService;
-import zos.shell.utility.FutureUtil;
+import zos.shell.utility.FutureResponseUtil;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.concurrent.ExecutorService;
@@ -46,7 +46,7 @@ public class DownloadJobService implements AutoCloseable {
                 this.jobId,
                 this.timeout
         ));
-        return FutureUtil.waitForResult(future, timeout);
+        return FutureResponseUtil.waitForResult(future, timeout);
     }
 
     @Override

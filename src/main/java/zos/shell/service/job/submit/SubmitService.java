@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.utility.FutureUtil;
+import zos.shell.utility.FutureResponseUtil;
 import zowe.client.sdk.zosjobs.methods.JobSubmit;
 
 import java.util.concurrent.ExecutorService;
@@ -31,7 +31,7 @@ public class SubmitService implements AutoCloseable {
                 this.submit,
                 dataset,
                 target));
-        return FutureUtil.waitForResult(future, timeout);
+        return FutureResponseUtil.waitForResult(future, timeout);
     }
 
     @Override
