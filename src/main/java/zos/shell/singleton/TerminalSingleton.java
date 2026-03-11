@@ -14,7 +14,7 @@ import zos.shell.service.autocomplete.SearchCommandService;
 import zos.shell.service.history.HistoryService;
 import zos.shell.utility.PromptUtil;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 import java.net.URL;
 import java.util.List;
 import java.util.regex.Pattern;

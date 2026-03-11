@@ -21,6 +21,7 @@ public class ListingController extends DependencyController {
         this.listingService = listingService;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public ResponseStatus ls(final String member, final String dataset) {
         LOG.debug("*** ls 1 ***");
         try {
@@ -32,6 +33,7 @@ public class ListingController extends DependencyController {
         return new ResponseStatus("success", true);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public ResponseStatus ls(final String dataset) {
         LOG.debug("*** ls 2 ***");
         try {
@@ -43,6 +45,7 @@ public class ListingController extends DependencyController {
         return new ResponseStatus("success", true);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public ResponseStatus lsl(final String dataset, final boolean isAttributes) {
         LOG.debug("*** lsl 1 ***");
         return this.lsl(null, dataset, isAttributes);
