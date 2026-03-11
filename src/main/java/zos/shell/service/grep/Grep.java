@@ -94,8 +94,8 @@ public class Grep {
          *   - each matching line is returned once
          *   - the same line is not scanned repeatedly
          */
-        // Continue searching until we reach the end of the content
         while (searchFrom < content.length()) {
+            // Continue searching until we reach the end of the content
 
             // Search for the pattern starting from the current search position.
             // findPosition() returns the index relative to the substring we pass in.
