@@ -122,6 +122,7 @@ public final class TerminalSingleton {
     }
 
     private void setPaneTitle() {
+        LOG.debug("*** setPaneTitle ***");
         String titleSuffix = "";
         var zosConnection = ConnSingleton.getInstance().getCurrZosConnection();
         if (zosConnection != null) {
@@ -131,6 +132,7 @@ public final class TerminalSingleton {
     }
 
     private void setApplicationIcon() {
+        LOG.debug("*** setApplicationIcon ***");
         URL iconUrl = ZosShell.class.getResource("/image/zowe-icon.png");
         if (iconUrl != null) {
             ImageIcon icon = new ImageIcon(iconUrl);
@@ -139,6 +141,7 @@ public final class TerminalSingleton {
     }
 
     private void registerHandlers() {
+        LOG.debug("*** registerHandlers ***");
         registerCopyHandler();
         registerHistoryHandlers();
         registerFontResizeHandlers();
@@ -146,6 +149,7 @@ public final class TerminalSingleton {
     }
 
     private void registerCopyHandler() {
+        LOG.debug("*** registerCopyHandler ***");
         mainTerminal.registerHandler("ctrl C", terminal -> {
             terminal.getTextPane().copy();
             return continueAction();
@@ -153,6 +157,7 @@ public final class TerminalSingleton {
     }
 
     private void registerHistoryHandlers() {
+        LOG.debug("*** registerHistoryHandlers ***");
         mainTerminal.registerHandler("UP", terminal -> {
             if (disableKeys) {
                 return continueAction();
@@ -175,6 +180,7 @@ public final class TerminalSingleton {
     }
 
     private void registerFontResizeHandlers() {
+        LOG.debug("*** registerFontResizeHandlers ***");
         if (SystemUtils.IS_OS_WINDOWS) {
             mainTerminal.registerHandler("ctrl UP", terminal -> adjustFontSize(+1));
             mainTerminal.registerHandler("ctrl DOWN", terminal -> adjustFontSize(-1));
@@ -185,6 +191,7 @@ public final class TerminalSingleton {
     }
 
     private ReadHandlerData adjustFontSize(final int delta) {
+        LOG.debug("*** adjustFontSize ***");
         if (disableKeys) {
             return continueAction();
         }
@@ -207,6 +214,7 @@ public final class TerminalSingleton {
     }
 
     private void registerAutocompleteHandler() {
+        LOG.debug("*** registerAutocompleteHandler ***");
         mainTerminal.registerHandler("TAB", terminal -> {
             if (disableKeys) {
                 return continueAction();
@@ -236,12 +244,14 @@ public final class TerminalSingleton {
     }
 
     private String extractAutocompleteCandidate() {
+        LOG.debug("*** extractAutocompleteCandidate ***");
         String[] items = mainTerminal.getTextPane().getText().split(Pattern.quote(PromptUtil.getPrompt()));
         String candidate = items[items.length - 1].trim();
         return candidate.replaceAll("[\\p{Cf}]", "");
     }
 
     private boolean isValidAutocompleteCandidate(final String candidate) {
+        LOG.debug("*** isValidAutocompleteCandidate ***");
         if (candidate.isEmpty()) {
             return true;
         }
@@ -252,6 +262,7 @@ public final class TerminalSingleton {
     }
 
     private ReadHandlerData continueAction() {
+        LOG.debug("*** continueAction ***");
         return new ReadHandlerData(ReadInterruptionStrategy.Action.CONTINUE);
     }
 

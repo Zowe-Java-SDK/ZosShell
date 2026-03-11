@@ -46,7 +46,6 @@ public class GrepService implements AutoCloseable {
 
     public List<String> search(final String dataset, final String target) {
         LOG.debug("*** search ***");
-
         List<String> result = new ArrayList<>();
 
         boolean isWildCardOnly = "*".equals(target);
@@ -78,6 +77,7 @@ public class GrepService implements AutoCloseable {
     }
 
     private List<Member> loadMembers(final String dataset, final List<String> result) {
+        LOG.debug("*** loadMembers ***");
         try (var memberListingService = new MemberListingService(new DsnList(connection), timeout)) {
             List<Member> members = memberListingService.listMembers(dataset);
             if (members.isEmpty()) {
@@ -94,6 +94,7 @@ public class GrepService implements AutoCloseable {
     private List<String> searchSingleTarget(final String dataset,
                                             final String target,
                                             final List<String> result) {
+        LOG.debug("*** searchSingleTarget ***");
         DsnGet dsnGet = new DsnGet(this.connection);
         Download download = new Download(dsnGet, this.pathService, false);
         ConcatService concatService = new ConcatService(download, this.timeout);
@@ -124,6 +125,7 @@ public class GrepService implements AutoCloseable {
     }
 
     private boolean isMemberWildcard(final String target) {
+        LOG.debug("*** isMemberWildcard ***");
         long count = target.chars().filter(ch -> ch == '*').count();
         return count == 1 && target.endsWith("*");
     }
@@ -131,7 +133,7 @@ public class GrepService implements AutoCloseable {
     private List<String> futureResults(final String dataset,
                                        final List<String> result,
                                        final List<Member> members) {
-
+        LOG.debug("*** futureResults ***");
         List<Future<List<String>>> futures = new ArrayList<>();
 
         for (Member member : members) {
@@ -165,6 +167,7 @@ public class GrepService implements AutoCloseable {
 
     // Create per-task service chain to avoid sharing non-thread-safe state across grep tasks.
     private ConcatService createConcatServiceForMemberSearch() {
+        LOG.debug("*** createConcatServiceForMemberSearch ***");
         DsnGet dsnGet = new DsnGet(this.connection);
         EnvVariableService envVarService = new EnvVariableService();
         EnvVariableController envVarController = new EnvVariableController(envVarService);
