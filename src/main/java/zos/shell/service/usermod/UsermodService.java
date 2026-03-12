@@ -39,7 +39,12 @@ public class UsermodService {
             password = PromptUtil.getPromptInfo("password:", true);
             confirmPassword = PromptUtil.getPromptInfo("confirm password:", true);
         }
-        var zosConnection = ZosConnectionFactory.createBasicConnection(this.host, this.zosmfPort, this.username, password);
+        var zosConnection = ZosConnectionFactory.createBasicConnection(
+                this.host,
+                this.zosmfPort,
+                this.username,
+                password
+        );
         var sshConnection = new SshConnection(this.host, this.sshPort, this.username, password);
         ConfigSingleton.getInstance().setZosConnectionByIndex(zosConnection, index);
         ConnSingleton.getInstance().setCurrZosConnection(zosConnection, index);
@@ -50,7 +55,12 @@ public class UsermodService {
     public void changeUsername() {
         LOG.debug("*** changeUsername ***");
         var username = PromptUtil.getPromptInfo("username:", false);
-        var zosConnection = ZosConnectionFactory.createBasicConnection(this.host, this.zosmfPort, username, this.password);
+        var zosConnection = ZosConnectionFactory.createBasicConnection(
+                this.host,
+                this.zosmfPort,
+                username,
+                this.password
+        );
         var sshConnection = new SshConnection(this.host, this.sshPort, username, this.password);
         ConfigSingleton.getInstance().setZosConnectionByIndex(zosConnection, index);
         ConnSingleton.getInstance().setCurrZosConnection(zosConnection, index);
