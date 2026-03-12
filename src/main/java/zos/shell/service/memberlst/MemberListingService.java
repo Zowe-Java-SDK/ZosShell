@@ -36,7 +36,7 @@ public class MemberListingService implements AutoCloseable {
     }
 
     public List<Member> listMembers(final String dataset) throws ZosmfRequestException {
-        LOG.debug("*** memberLst ***");
+        LOG.debug("*** listMembers ***");
         return this.getMembers(dataset);
     }
 
@@ -48,10 +48,13 @@ public class MemberListingService implements AutoCloseable {
                 timeout
         ));
 
-        //noinspection DuplicatedCode
         try {
             return future.get(timeout, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException e) {
+            future.cancel(true);
+            Thread.currentThread().interrupt();
+            throw new ZosmfRequestException(FutureResponseUtil.getErrorMessage(e));
+        } catch (ExecutionException e) {
             future.cancel(true);
             throw new ZosmfRequestException(FutureResponseUtil.getErrorMessage(e));
         } catch (TimeoutException e) {

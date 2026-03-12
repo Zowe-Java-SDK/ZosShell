@@ -153,7 +153,11 @@ public class GrepService implements AutoCloseable {
         for (var future : futures) {
             try {
                 result.addAll(future.get(this.timeout, TimeUnit.SECONDS));
-            } catch (InterruptedException | ExecutionException e) {
+            } catch (InterruptedException e) {
+                future.cancel(true);
+                Thread.currentThread().interrupt();
+                result.add(getErrorMessage(Constants.EXECUTE_ERROR_MSG, e));
+            } catch (ExecutionException e) {
                 future.cancel(true);
                 result.add(getErrorMessage(Constants.EXECUTE_ERROR_MSG, e));
             } catch (TimeoutException e) {

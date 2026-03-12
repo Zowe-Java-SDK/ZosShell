@@ -24,7 +24,11 @@ public final class FutureResponseUtil {
         LOG.debug("*** waitForResult ***");
         try {
             return future.get(timeout, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException e) {
+            future.cancel(true);
+            Thread.currentThread().interrupt();
+            return new ResponseStatus(getErrorMessage(e), false);
+        } catch (ExecutionException e) {
             future.cancel(true);
             return new ResponseStatus(getErrorMessage(e), false);
         } catch (TimeoutException e) {
@@ -46,20 +50,25 @@ public final class FutureResponseUtil {
         LOG.debug("*** getFutureResponses ***");
         var results = new StringBuilder();
 
-        futures.forEach(future -> {
+        for (Future<ResponseStatus> future : futures) {
             try {
                 ResponseStatus responseStatus = future.get(timeout, TimeUnit.SECONDS);
                 var arrowMsg = Strings.padStart(responseStatus.getOptionalData(), padLength, ' ');
                 arrowMsg += Constants.ARROW;
                 results.append(arrowMsg).append(responseStatus.getMessage()).append("\n");
-            } catch (InterruptedException | ExecutionException e) {
+            } catch (InterruptedException e) {
+                future.cancel(true);
+                Thread.currentThread().interrupt();
+                results.append(getErrorMessage(e)).append("\n");
+                break;
+            } catch (ExecutionException e) {
                 future.cancel(true);
                 results.append(getErrorMessage(e)).append("\n");
             } catch (TimeoutException e) {
                 future.cancel(true);
                 results.append(Constants.TIMEOUT_MESSAGE).append("\n");
             }
-        });
+        }
 
         return new ResponseStatus(results.toString(), true);
     }

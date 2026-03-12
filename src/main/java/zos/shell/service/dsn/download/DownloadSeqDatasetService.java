@@ -44,8 +44,10 @@ public class DownloadSeqDatasetService implements AutoCloseable {
         }
     }
 
-    public DownloadSeqDatasetService(final ZosConnection connection, final PathService pathService,
-                                     final boolean isBinary, final long timeout) {
+    public DownloadSeqDatasetService(final ZosConnection connection,
+                                     final PathService pathService,
+                                     final boolean isBinary,
+                                     final long timeout) {
         LOG.debug("*** DownloadSeqDatasetService ***");
         this.connection = connection;
         this.pathService = pathService;
@@ -63,7 +65,7 @@ public class DownloadSeqDatasetService implements AutoCloseable {
             if (exception instanceof TimeoutException) {
                 results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
             } else if (exception != null) {
-                results.add(new ResponseStatus(getErrorMessage(exception), false));
+                results.add(new ResponseStatus(FutureResponseUtil.getErrorMessage(exception), false));
             } else {
                 results.add(new ResponseStatus(Constants.DOWNLOAD_NOT_SEQ_DATASET_WARNING, false));
             }
@@ -93,21 +95,19 @@ public class DownloadSeqDatasetService implements AutoCloseable {
 
     private SequentialDatasetCheckResult checkSequentialDataset(final String target) {
         LOG.debug("*** checkSequentialDataset ***");
+        Future<ResponseStatus> future = pool.submit(new FutureDatasetInfo(new DsnGet(connection), target));
         try {
-            Future<ResponseStatus> future = pool.submit(new FutureDatasetInfo(new DsnGet(connection), target));
             ResponseStatus responseStatus = future.get(timeout, TimeUnit.SECONDS);
             boolean isSequential = responseStatus.getMessage().contains("dsorg='PS'");
             return new SequentialDatasetCheckResult(isSequential, null);
-        } catch (TimeoutException | ExecutionException | InterruptedException e) {
+        } catch (InterruptedException e) {
+            future.cancel(true);
+            Thread.currentThread().interrupt();
+            return new SequentialDatasetCheckResult(false, e);
+        } catch (ExecutionException | TimeoutException e) {
+            future.cancel(true);
             return new SequentialDatasetCheckResult(false, e);
         }
-    }
-
-    private String getErrorMessage(final Exception e) {
-        LOG.debug("*** getErrorMessage ***");
-        return e.getMessage() != null && !e.getMessage().isBlank()
-                ? e.getMessage()
-                : Constants.COMMAND_EXECUTION_ERROR_MSG;
     }
 
 }

@@ -8,6 +8,7 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.service.env.EnvVariableService;
 import zos.shell.service.path.PathService;
 import zos.shell.singleton.ConnSingleton;
+import zos.shell.utility.FutureResponseUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 import zowe.client.sdk.zosfiles.dsn.model.Member;
@@ -35,16 +36,20 @@ public class DownloadMemberListService implements AutoCloseable {
 
     public List<ResponseStatus> downloadMembers(final String dataset, final List<Member> members) {
         LOG.debug("Downloading {} members from dataset: {}", members.size(), dataset);
-
-        final List<Future<ResponseStatus>> futures = submitDownloads(dataset, members);
-        final List<ResponseStatus> results = new ArrayList<>(futures.size());
+        List<Future<ResponseStatus>> futures = submitDownloads(dataset, members);
+        List<ResponseStatus> results = new ArrayList<>(futures.size());
 
         for (Future<ResponseStatus> future : futures) {
             try {
                 results.add(future.get(timeout, TimeUnit.SECONDS));
-            } catch (InterruptedException | ExecutionException e) {
+            } catch (InterruptedException e) {
                 future.cancel(true);
-                results.add(new ResponseStatus(getErrorMessage(e), false));
+                Thread.currentThread().interrupt();
+                results.add(new ResponseStatus(FutureResponseUtil.getErrorMessage(e), false));
+                break;
+            } catch (ExecutionException e) {
+                future.cancel(true);
+                results.add(new ResponseStatus(FutureResponseUtil.getErrorMessage(e), false));
             } catch (TimeoutException e) {
                 future.cancel(true);
                 results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
@@ -56,14 +61,14 @@ public class DownloadMemberListService implements AutoCloseable {
 
     private List<Future<ResponseStatus>> submitDownloads(final String dataset,
                                                          final List<Member> members) {
-        final List<Future<ResponseStatus>> futures = new ArrayList<>();
-        final DsnGet dsnGet = new DsnGet(connection);
-        final EnvVariableService envVariableService = new EnvVariableService();
-        final EnvVariableController envVariableController = new EnvVariableController(envVariableService);
-        final PathService pathService = new PathService(ConnSingleton.getInstance(), envVariableController);
+        List<Future<ResponseStatus>> futures = new ArrayList<>(members.size());
+        DsnGet dsnGet = new DsnGet(connection);
+        EnvVariableService envVariableService = new EnvVariableService();
+        EnvVariableController envVariableController = new EnvVariableController(envVariableService);
+        PathService pathService = new PathService(ConnSingleton.getInstance(), envVariableController);
 
         for (Member member : members) {
-            final String memberName = member.getMember();
+            String memberName = member.getMember();
             if (memberName == null || memberName.isBlank()) {
                 continue;
             }
@@ -83,13 +88,6 @@ public class DownloadMemberListService implements AutoCloseable {
     @Override
     public void close() {
         pool.shutdown();
-    }
-
-    private String getErrorMessage(final Exception e) {
-        LOG.debug("*** getErrorMessage ***");
-        return e.getMessage() != null && !e.getMessage().isBlank()
-                ? e.getMessage()
-                : Constants.COMMAND_EXECUTION_ERROR_MSG;
     }
 
 }

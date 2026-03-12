@@ -88,7 +88,11 @@ public class BrowseLog implements AutoCloseable {
         try {
             StringBuilder result = future.get(timeout, TimeUnit.SECONDS);
             return new ResponseStatus(result.toString(), true);
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (InterruptedException e) {
+            future.cancel(true);
+            Thread.currentThread().interrupt();
+            return new ResponseStatus(FutureResponseUtil.getErrorMessage(e), false);
+        } catch (ExecutionException e) {
             future.cancel(true);
             return new ResponseStatus(FutureResponseUtil.getErrorMessage(e), false);
         } catch (TimeoutException e) {
