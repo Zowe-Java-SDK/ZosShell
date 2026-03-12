@@ -30,8 +30,8 @@ public class GrepService implements AutoCloseable {
     private final PathService pathService;
     private final String pattern;
     private final long timeout;
-    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-    private final ExecutorService bulkPool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
+    private final ExecutorService poolMin = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+    private final ExecutorService poolMax = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
 
     public GrepService(final ZosConnection connection,
                        final PathService pathService,
@@ -99,7 +99,7 @@ public class GrepService implements AutoCloseable {
         Download download = new Download(dsnGet, this.pathService, false);
         ConcatService concatService = new ConcatService(download, this.timeout);
 
-        Future<List<String>> future = pool.submit(new FutureGrep(
+        Future<List<String>> future = poolMin.submit(new FutureGrep(
                 concatService,
                 dataset,
                 target,
@@ -140,7 +140,7 @@ public class GrepService implements AutoCloseable {
             if (member != null && member.getMember() != null && !member.getMember().isBlank()) {
                 String name = member.getMember();
                 ConcatService concatService = createConcatServiceForMemberSearch();
-                futures.add(bulkPool.submit(new FutureGrep(
+                futures.add(poolMax.submit(new FutureGrep(
                         concatService,
                         dataset,
                         name,
@@ -182,8 +182,8 @@ public class GrepService implements AutoCloseable {
 
     @Override
     public void close() {
-        pool.shutdown();
-        bulkPool.shutdown();
+        poolMin.shutdown();
+        poolMax.shutdown();
     }
 
     private static String getErrorMessage(final String msg, final Exception e) {
