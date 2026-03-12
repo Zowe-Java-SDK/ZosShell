@@ -178,8 +178,8 @@ public class GrepService implements AutoCloseable {
 
     @Override
     public void close() {
-        poolMax.shutdownNow();
-        poolMin.shutdownNow();
+        poolMax.shutdown();
+        poolMin.shutdown();
     }
 
     private static String getErrorMessage(final String msg, final Exception e) {
