@@ -21,12 +21,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class DeleteService {
+public class DeleteService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(DeleteService.class);
 
     private final ZosConnection connection;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+    private final ExecutorService bulkPool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
 
     public DeleteService(final ZosConnection connection, final long timeout) {
         LOG.debug("*** DeleteService ***");
@@ -34,89 +36,129 @@ public class DeleteService {
         this.timeout = timeout;
     }
 
-    public ResponseStatus delete(final String currDataSet, String target) {
+    public ResponseStatus delete(final String currDataSet, final String target) {
         LOG.debug("*** delete ***");
-        List<Member> members;
 
-        var datasetMemberTarget = DatasetMember.getDatasetAndMember(target);
-        // delete dataset(member) not in currDataset
+        final var datasetMemberTarget = DatasetMember.getDatasetAndMember(target);
+
         if (datasetMemberTarget != null) {
             return processRequest(datasetMemberTarget.getDataset(), datasetMemberTarget.getMember());
         }
 
-        // delete currDataset(member)
         if (DsnUtil.isMember(target)) {
-            if (currDataSet.isBlank()) {
-                new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
-            }
-
-            try {
-                members = new MemberListingService(new DsnList(connection), timeout).memberLst(currDataSet);
-            } catch (ZosmfRequestException e) {
-                var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
-                return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
-            }
-            if (DsnUtil.getMembersByFilter(target, members).isEmpty()) {
-                return new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
-            }
-            return processRequest(currDataSet, target);
+            return deleteMemberFromCurrentDataset(currDataSet, target);
         }
 
-        // handle sequential dataset
         if (DsnUtil.isDataset(target)) {
             return processRequest(target, null);
         }
 
-        long numOfAsterisk = target.chars().filter(ch -> ch == '*').count();
-        boolean copyWildCard = numOfAsterisk == 1 && DsnUtil.isMember(target.substring(0, target.indexOf("*")));
-
-        // copy member wild card to dataset
-        if (copyWildCard) {
-            try {
-                members = new MemberListingService(new DsnList(connection), timeout).memberLst(currDataSet);
-            } catch (ZosmfRequestException e) {
-                var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
-                return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
-            }
-            if (members.isEmpty()) {
-                return new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
-            }
-
-            // transform target is a member string without * (a wild card)
-            target = target.substring(0, target.indexOf("*"));
-            members = DsnUtil.getMembersByStartsWithFilter(target, members);
-            if (members.size() == 1 && !members.get(0).getMember().isBlank()) {
-                return processRequest(currDataSet, members.get(0).getMember());
-            }
-
-            List<Future<ResponseStatus>> futures = new ArrayList<>();
-            ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
-            for (var member : members) {
-                var name = member.getMember();
-                var dsnDelete = new DsnDelete(connection);
-                var future = new FutureDelete(dsnDelete, currDataSet, name);
-                futures.add(pool.submit(future));
-            }
-            return FutureUtil.getFutureResponses(futures, pool, timeout, Constants.STRING_PAD_LENGTH);
+        if (isSingleMemberWildcard(target)) {
+            return deleteWildcardMembers(currDataSet, target);
         }
 
-        String errMsg;
         if ("*".equals(target)) {
-            errMsg = "no support for removal of all members for now, try again...";
-        } else {
-            errMsg = Constants.INVALID_ARGUMENTS;
+            return new ResponseStatus("no support for removal of all members for now, try again...", false);
         }
 
-        return new ResponseStatus(errMsg, false);
+        return new ResponseStatus(Constants.INVALID_ARGUMENTS, false);
+    }
+
+    private ResponseStatus deleteMemberFromCurrentDataset(final String currDataSet, final String target) {
+        if (currDataSet == null || currDataSet.isBlank()) {
+            return new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
+        }
+
+        final List<Member> members;
+        try {
+            members = listMembers(currDataSet);
+        } catch (ZosmfRequestException e) {
+            return buildErrorResponse(e);
+        }
+
+        if (DsnUtil.getMembersByFilter(target, members).isEmpty()) {
+            return new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
+        }
+
+        return processRequest(currDataSet, target);
+    }
+
+    private ResponseStatus deleteWildcardMembers(final String currDataSet, final String target) {
+        if (currDataSet == null || currDataSet.isBlank()) {
+            return new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
+        }
+
+        List<Member> members;
+        try {
+            members = listMembers(currDataSet);
+        } catch (ZosmfRequestException e) {
+            return buildErrorResponse(e);
+        }
+
+        if (members.isEmpty()) {
+            return new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
+        }
+
+        final String memberPrefix = target.substring(0, target.indexOf('*'));
+        members = DsnUtil.getMembersByStartsWithFilter(memberPrefix, members);
+
+        if (members.isEmpty()) {
+            return new ResponseStatus(Constants.DELETE_NOTHING_ERROR, false);
+        }
+
+        if (members.size() == 1 && !members.get(0).getMember().isBlank()) {
+            return processRequest(currDataSet, members.get(0).getMember());
+        }
+
+        return processWildcardDeletes(currDataSet, members);
+    }
+
+    private List<Member> listMembers(final String dataset) throws ZosmfRequestException {
+        try (var memberListingService = new MemberListingService(new DsnList(connection), timeout)) {
+            return memberListingService.listMembers(dataset);
+        }
+    }
+
+    private ResponseStatus processWildcardDeletes(final String dataset, final List<Member> members) {
+        LOG.debug("*** processWildcardDeletes ***");
+
+        final List<Future<ResponseStatus>> futures = new ArrayList<>();
+
+        for (Member member : members) {
+            futures.add(bulkPool.submit(new FutureDelete(
+                    new DsnDelete(connection),
+                    dataset,
+                    member.getMember()
+            )));
+        }
+
+        return FutureUtil.collectFutureResponses(futures, timeout, Constants.STRING_PAD_LENGTH);
+    }
+
+    private boolean isSingleMemberWildcard(final String target) {
+        final long numOfAsterisk = target.chars().filter(ch -> ch == '*').count();
+        return numOfAsterisk == 1
+                && target.indexOf('*') > 0
+                && DsnUtil.isMember(target.substring(0, target.indexOf('*')));
     }
 
     private ResponseStatus processRequest(final String dataset, final String member) {
         LOG.debug("*** processRequest ***");
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        var dsnDelete = new DsnDelete(connection);
-        var futureDelete = new FutureDelete(dsnDelete, dataset, member);
-        Future<ResponseStatus> submit = pool.submit(futureDelete);
-        return FutureUtil.getFutureResponse(submit, pool, timeout);
+        final Future<ResponseStatus> future = pool.submit(
+                new FutureDelete(new DsnDelete(connection), dataset, member)
+        );
+        return FutureUtil.getResponseStatus(future, timeout);
+    }
+
+    private ResponseStatus buildErrorResponse(final ZosmfRequestException e) {
+        final String errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+        return new ResponseStatus(errMsg != null ? errMsg : e.getMessage(), false);
+    }
+
+    @Override
+    public void close() {
+        pool.shutdown();
+        bulkPool.shutdown();
     }
 
 }

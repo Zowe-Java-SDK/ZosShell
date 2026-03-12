@@ -6,15 +6,18 @@ import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.path.PathService;
 import zos.shell.utility.FileUtil;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-public class DownloadMemberService {
+public class DownloadMemberService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(DownloadMemberService.class);
 
@@ -22,9 +25,10 @@ public class DownloadMemberService {
     private final PathService pathService;
     private final boolean isBinary;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
-    public DownloadMemberService(final ZosConnection connection, final PathService pathService, final boolean isBinary,
-                                 final long timeout) {
+    public DownloadMemberService(final ZosConnection connection, final PathService pathService,
+                                 final boolean isBinary, final long timeout) {
         LOG.debug("*** DownloadMemberService ***");
         this.connection = connection;
         this.pathService = pathService;
@@ -33,33 +37,27 @@ public class DownloadMemberService {
     }
 
     public List<ResponseStatus> downloadMember(final String dataset, String target) {
-        LOG.debug("*** downloadMember ***");
+        LOG.debug("Downloading member {} from dataset {}", dataset, target);
         List<ResponseStatus> results = new ArrayList<>();
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = null;
+        Future<ResponseStatus> future = pool.submit(new FutureMemberDownload(
+                new DsnGet(connection),
+                pathService,
+                dataset,
+                target,
+                isBinary
+        ));
 
-        try {
-            submit = pool.submit(new FutureMemberDownload(new DsnGet(connection), pathService, dataset, target, isBinary));
-            results.add(submit.get(timeout, TimeUnit.SECONDS));
-        } catch (InterruptedException | ExecutionException e) {
-            LOG.debug(String.valueOf(e));
-            submit.cancel(true);
-            results.add(new ResponseStatus(e.getMessage() != null && !e.getMessage().isBlank() ?
-                    e.getMessage() : Constants.COMMAND_EXECUTION_ERROR_MSG, false));
-        } catch (TimeoutException e) {
-            submit.cancel(true);
-            results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
-        } finally {
-            pool.shutdown();
+        ResponseStatus status = FutureUtil.getResponseStatus(future, timeout);
+        results.add(status);
+        if (status.isStatus() && status.getOptionalData() != null) {
+            FileUtil.openFileLocation(new File(status.getOptionalData()).getAbsolutePath());
         }
-
-        if (results.get(0).isStatus()) {
-            var file = new File(results.get(0).getOptionalData());
-            FileUtil.openFileLocation(file.getAbsolutePath());
-            return results;
-        }
-
         return results;
+    }
+
+    @Override
+    public void close() {
+        pool.shutdown();
     }
 
 }

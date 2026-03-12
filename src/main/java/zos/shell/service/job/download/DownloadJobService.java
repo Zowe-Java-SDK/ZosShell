@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class DownloadJobService {
+public class DownloadJobService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(DownloadJobService.class);
 
@@ -21,9 +21,13 @@ public class DownloadJobService {
     private final boolean isAll;
     private final String jobId;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
-    public DownloadJobService(final JobGet retrieve, final PathService pathService, final boolean isAll,
-                              final String jobId, final long timeout) {
+    public DownloadJobService(final JobGet retrieve,
+                              final PathService pathService,
+                              final boolean isAll,
+                              final String jobId,
+                              final long timeout) {
         LOG.debug("*** DownloadJobService ***");
         this.retrieve = retrieve;
         this.pathService = pathService;
@@ -33,11 +37,21 @@ public class DownloadJobService {
     }
 
     public ResponseStatus download(final String target) {
-        LOG.debug("*** download ***");
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(
-                new FutureDownloadJob(retrieve, pathService, target, this.isAll, this.jobId, this.timeout));
-        return FutureUtil.getFutureResponse(submit, pool, timeout);
+        LOG.info("Starting download job for '{}'", target);
+        Future<ResponseStatus> future = pool.submit(new FutureDownloadJob(
+                retrieve,
+                pathService,
+                target,
+                this.isAll,
+                this.jobId,
+                this.timeout
+        ));
+        return FutureUtil.getResponseStatus(future, timeout);
+    }
+
+    @Override
+    public void close() {
+        pool.shutdown();
     }
 
 }

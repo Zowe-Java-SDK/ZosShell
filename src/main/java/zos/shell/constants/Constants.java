@@ -38,7 +38,6 @@ public final class Constants {
             "invalid member, dataset or dataset(member) specified, try again...";
     public static final String INVALID_NUMBER = "invalid number, try again...";
     public static final String INVALID_MEMBER = "invalid member name format specified, try again...";
-    public static final String INVALID_PARAMETER = "invalid parameter, try again...";
     public static final String NO_CONNECTION_INFO = "no info, check connection settings...";
     public static final String NO_CONNECTION = "no connection, try again...";
     public static final String NO_FILES = "no files, try again...";

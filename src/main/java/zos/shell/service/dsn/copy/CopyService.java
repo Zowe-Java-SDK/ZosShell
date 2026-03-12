@@ -21,12 +21,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class CopyService {
+public class CopyService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(CopyService.class);
 
     private final ZosConnection connection;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+    private final ExecutorService bulkPool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
 
     public CopyService(final ZosConnection connection, final long timeout) {
         LOG.debug("*** CopyService ***");
@@ -125,53 +127,18 @@ public class CopyService {
         }
 
         long numOfAsterisk = firstParam.chars().filter(ch -> ch == '*').count();
-        boolean copyWildCard = numOfAsterisk == 1 && DsnUtil.isMember(firstParam.substring(0, firstParam.indexOf("*")));
+        boolean copyWildCard = numOfAsterisk == 1
+                && DsnUtil.isMember(firstParam.substring(0, firstParam.indexOf("*")));
 
         // copy member wild card to dataset
         if (copyWildCard) {
-            List<Member> members;
-            try {
-                members = new MemberListingService(new DsnList(connection), timeout).memberLst(currDataSet);
-            } catch (ZosmfRequestException e) {
-                var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
-                return new ResponseStatus((errMsg != null ? errMsg : e.getMessage()), false);
-            }
-
-            toDataSetName = secondParam;
-            if (!DsnUtil.isDataset(toDataSetName)) {
-                return new ResponseStatus("specify valid dataset destination, try again...", false);
-            }
-
-            // target is a member string without * (a wild card)
-            var target = firstParam.substring(0, firstParam.indexOf("*"));
-            members = DsnUtil.getMembersByStartsWithFilter(target, members);
-            if (members.size() == 1) {
-                var name = members.get(0).getMember();
-                fromDataSetName = currDataSet + "(" + name + ")";
-                return processRequest(fromDataSetName, toDataSetName, false);
-            }
-
-            if (members.isEmpty()) {
-                return new ResponseStatus(Constants.COPY_NOTHING_WARNING, false);
-            }
-
-            List<Future<ResponseStatus>> futures = new ArrayList<>();
-            ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
-            for (var member : members) {
-                var name = member.getMember();
-                fromDataSetName = currDataSet + "(" + name + ")";
-                var destination = toDataSetName + "(" + name + ")";
-                var dsnCopy = new DsnCopy(connection);
-                var future = new FutureCopy(dsnCopy, fromDataSetName, destination, false);
-                futures.add(pool.submit(future));
-            }
-            return FutureUtil.getFutureResponses(futures, pool, timeout,
-                    toDataSetName.length() + Constants.STRING_PAD_LENGTH);
+            return processWildcardCopy(currDataSet, firstParam, secondParam);
         }
 
         var dataSetMemberFirstParam = DatasetMember.getDatasetAndMember(firstParam);
         var dataSetMemberSecondParam = DatasetMember.getDatasetAndMember(secondParam);
-        String errMsg;
+
+        final String errMsg;
         if (DsnUtil.isDataset(firstParam)) {
             errMsg = "invalid second argument, enter valid sequential dataset and try again...";
         } else if (DsnUtil.isMember(firstParam)) {
@@ -192,12 +159,68 @@ public class CopyService {
     }
 
     private ResponseStatus processRequest(final String source, final String destination, final boolean isCopyAll) {
-        LOG.debug("*** processResult ***");
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+        LOG.debug("*** processRequest ***");
         var dsnCopy = new DsnCopy(connection);
         var futureCopy = new FutureCopy(dsnCopy, source, destination, isCopyAll);
-        Future<ResponseStatus> submit = pool.submit(futureCopy);
-        return FutureUtil.getFutureResponse(submit, pool, timeout);
+        Future<ResponseStatus> future = pool.submit(futureCopy);
+        return FutureUtil.getResponseStatus(future, timeout);
+    }
+
+    private ResponseStatus processWildcardCopy(final String currDataSet,
+                                               final String firstParam,
+                                               final String secondParam) {
+        LOG.debug("*** processWildcardCopy ***");
+
+        if (currDataSet.isBlank()) {
+            return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
+        }
+
+        List<Member> members;
+        try (var memberListingService = new MemberListingService(new DsnList(connection), timeout)) {
+            members = memberListingService.listMembers(currDataSet);
+        } catch (ZosmfRequestException e) {
+            var errMsg = ResponseUtil.getResponsePhrase(e.getResponse());
+            return new ResponseStatus(errMsg != null ? errMsg : e.getMessage(), false);
+        }
+
+        if (!DsnUtil.isDataset(secondParam)) {
+            return new ResponseStatus("specify valid dataset destination, try again...", false);
+        }
+
+        var target = firstParam.substring(0, firstParam.indexOf("*"));
+        members = DsnUtil.getMembersByStartsWithFilter(target, members);
+
+        if (members.isEmpty()) {
+            return new ResponseStatus(Constants.COPY_NOTHING_WARNING, false);
+        }
+
+        if (members.size() == 1) {
+            var name = members.get(0).getMember();
+            var source = currDataSet + "(" + name + ")";
+            return processRequest(source, secondParam, false);
+        }
+
+        List<Future<ResponseStatus>> futures = new ArrayList<>();
+        for (var member : members) {
+            var name = member.getMember();
+            var source = currDataSet + "(" + name + ")";
+            var destination = secondParam + "(" + name + ")";
+            var dsnCopy = new DsnCopy(connection);
+            var future = new FutureCopy(dsnCopy, source, destination, false);
+            futures.add(bulkPool.submit(future));
+        }
+
+        return FutureUtil.collectFutureResponses(
+                futures,
+                timeout,
+                secondParam.length() + Constants.STRING_PAD_LENGTH
+        );
+    }
+
+    @Override
+    public void close() {
+        pool.shutdown();
+        bulkPool.shutdown();
     }
 
 }

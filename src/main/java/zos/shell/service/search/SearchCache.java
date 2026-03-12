@@ -1,5 +1,6 @@
 package zos.shell.service.search;
 
+@SuppressWarnings("unused")
 public class SearchCache {
 
     private final String name;

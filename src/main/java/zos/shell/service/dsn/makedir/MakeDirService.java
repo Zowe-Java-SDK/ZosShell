@@ -12,24 +12,33 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class MakeDirService {
+public class MakeDirService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(MakeDirService.class);
 
     private final DsnCreate dsnCreate;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
-    public MakeDirService(final DsnCreate dsnCreate, long timeout) {
+    public MakeDirService(final DsnCreate dsnCreate, final long timeout) {
         LOG.debug("*** MakeDirService ***");
         this.dsnCreate = dsnCreate;
         this.timeout = timeout;
     }
 
-    public ResponseStatus create(final String dataset, final DsnCreateInputData params) {
+    public ResponseStatus create(final String dataset, final DsnCreateInputData inputData) {
         LOG.debug("*** create ***");
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureMakeDirectory(dsnCreate, dataset, params));
-        return FutureUtil.getFutureResponse(submit, pool, timeout);
+        Future<ResponseStatus> future = pool.submit(new FutureMakeDirectory(
+                dsnCreate,
+                dataset,
+                inputData
+        ));
+        return FutureUtil.getResponseStatus(future, timeout);
+    }
+
+    @Override
+    public void close() {
+        pool.shutdown();
     }
 
 }

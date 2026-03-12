@@ -13,12 +13,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class RenameService {
+public class RenameService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(RenameService.class);
 
     private final ZosConnection connection;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
     public RenameService(final ZosConnection connection, final long timeout) {
         LOG.debug("*** RenameService ***");
@@ -29,8 +30,9 @@ public class RenameService {
     public ResponseStatus rename(final String dataset, final String source, final String destination) {
         LOG.debug("*** rename ***");
 
-        boolean isMember = DsnUtil.isMember(source);
-        boolean isDataSet = DsnUtil.isDataset(source);
+        final boolean isMember = DsnUtil.isMember(source);
+        final boolean isDataSet = DsnUtil.isDataset(source);
+        final Future<ResponseStatus> future;
 
         if (isMember && !DsnUtil.isMember(destination)) {
             return new ResponseStatus(Constants.INVALID_MEMBER, false);
@@ -40,22 +42,33 @@ public class RenameService {
             return new ResponseStatus(Constants.INVALID_DATASET, false);
         }
 
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit;
-
         if (isMember) {
-            if (dataset.isBlank()) {
+            if (dataset == null || dataset.isBlank()) {
                 return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
             }
-            submit = pool.submit(new FutureRenameMember(new DsnRename(connection), dataset, source, destination));
-            return FutureUtil.getFutureResponse(submit, pool, timeout);
+
+            future = pool.submit(new FutureRenameMember(
+                    new DsnRename(connection),
+                    dataset,
+                    source,
+                    destination
+            ));
         } else if (isDataSet) {
-            submit = pool.submit(new FutureRenameDataset(new DsnRename(connection), source, destination));
-            return FutureUtil.getFutureResponse(submit, pool, timeout);
+            future = pool.submit(new FutureRenameDataset(
+                    new DsnRename(connection),
+                    source,
+                    destination
+            ));
         } else {
             return new ResponseStatus(Constants.INVALID_COMMAND, false);
         }
 
+        return FutureUtil.getResponseStatus(future, timeout);
+    }
+
+    @Override
+    public void close() {
+        pool.shutdown();
     }
 
 }

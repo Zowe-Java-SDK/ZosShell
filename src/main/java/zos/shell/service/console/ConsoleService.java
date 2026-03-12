@@ -12,24 +12,33 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class ConsoleService {
+public class ConsoleService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConsoleService.class);
 
     private final ZosConnection connection;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
-    public ConsoleService(ZosConnection connection, long timeout) {
+    public ConsoleService(final ZosConnection connection, final long timeout) {
         LOG.debug("*** ConsoleService ***");
         this.connection = connection;
         this.timeout = timeout;
     }
 
     public ResponseStatus issueConsole(final String consoleName, final String command) {
-        LOG.debug("*** issueConsole ***");
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureConsole(new ConsoleCmd(connection), consoleName, command));
-        return FutureUtil.getFutureResponse(submit, pool, timeout);
+        LOG.debug("Issuing console command '{}' on '{}'", command, consoleName);
+        Future<ResponseStatus> future = pool.submit(new FutureConsole(
+                new ConsoleCmd(connection),
+                consoleName,
+                command
+        ));
+        return FutureUtil.getResponseStatus(future, timeout);
+    }
+
+    @Override
+    public void close() {
+        pool.shutdown();
     }
 
 }

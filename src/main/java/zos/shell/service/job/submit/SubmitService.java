@@ -11,12 +11,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class SubmitService {
+public class SubmitService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(SubmitService.class);
 
     private final JobSubmit submit;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
     public SubmitService(final JobSubmit submit, final long timeout) {
         LOG.debug("*** SubmitService ***");
@@ -26,9 +27,16 @@ public class SubmitService {
 
     public ResponseStatus submit(final String dataset, final String target) {
         LOG.debug("*** submit ***");
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureSubmit(this.submit, dataset, target));
-        return FutureUtil.getFutureResponse(submit, pool, timeout);
+        Future<ResponseStatus> future = pool.submit(new FutureSubmit(
+                this.submit,
+                dataset,
+                target));
+        return FutureUtil.getResponseStatus(future, timeout);
+    }
+
+    @Override
+    public void close() {
+        pool.shutdown();
     }
 
 }

@@ -11,7 +11,7 @@ import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.core.ZosConnectionFactory;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Objects;
 
 public class ChangeConnService {
 
@@ -27,13 +27,14 @@ public class ChangeConnService {
 
     public ZosConnection changeZosConnection(final ZosConnection zosConnection, final int index) {
         LOG.debug("*** changeZosConnection ***");
-        var numOfConnections = configSingleton.getZosConnections().size() - 1;
-        if (index < 0 || index > numOfConnections) {
+        int connectionCount = this.configSingleton.getZosConnections().size();
+        if (index < 0 || index > connectionCount) {
             terminal.println(Constants.NO_CONNECTION);
             return zosConnection;
         }
-        var profile = configSingleton.getProfileByIndex(index);
-        ConfigSingleton.getInstance().setConfigSettings(
+
+        var profile = this.configSingleton.getProfileByIndex(index);
+        this.configSingleton.setConfigSettings(
                 new ConfigSettings(
                         profile.getHostname(),
                         profile.getDownloadpath(),
@@ -44,66 +45,91 @@ public class ChangeConnService {
                         profile.getWindow()
                 ));
 
-        var zosConnectionByIndex = configSingleton.getZosConnectionByIndex(index);
-        var host = zosConnectionByIndex.getHost();
-        var username = zosConnectionByIndex.getUser();
-        var password = zosConnectionByIndex.getPassword();
-        var zosmfport = zosConnectionByIndex.getZosmfPort();
+        ZosConnection selectedZosConnection = Objects.requireNonNull(
+                this.configSingleton.getZosConnectionByIndex(index),
+                "Connection configuration missing"
+        );
+        var host = selectedZosConnection.getHost();
+        var username = selectedZosConnection.getUser();
+        var password = selectedZosConnection.getPassword();
+        var zosmfPort = selectedZosConnection.getZosmfPort();
 
-        if (host.isBlank() || zosmfport == 0) {
+        if (host.isBlank() || zosmfPort == 0) {
             terminal.println("Error: Hostname or z/OSMF port value(s) missing");
             terminal.println("Check configuration file and try again...");
             return zosConnection;
         }
 
-        var isAuthAttrsNotMissing = !(username.equals(Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE) ||
-                password.equals(Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE));
-        if (isAuthAttrsNotMissing) {
-            ConfigSingleton.getInstance().updateWindowSettings(terminal);
-            return zosConnectionByIndex;
+        boolean hasCredentials = !(username.equals(Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE)
+                || password.equals(Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE));
+
+        if (hasCredentials) {
+            this.configSingleton.updateWindowSettings(terminal);
+            return selectedZosConnection;
         }
 
         terminal.println("Enter username and password for host " + host);
         username = PromptUtil.getPromptInfo("username:", false);
-        String confirmPassword = null;
-        while (confirmPassword == null || !confirmPassword.equals(password)) {
-            password = PromptUtil.getPromptInfo("password:", true);
+
+        String newPassword;
+        String confirmPassword;
+        do {
+            newPassword = PromptUtil.getPromptInfo("password:", true);
             confirmPassword = PromptUtil.getPromptInfo("confirm password:", true);
-        }
-        ConfigSingleton.getInstance().updateWindowSettings(terminal);
-        configSingleton.setZosConnectionByIndex(
-                ZosConnectionFactory.createBasicConnection(host, zosmfport, username, password), index);
-        return configSingleton.getZosConnectionByIndex(index);
+        } while (!newPassword.equals(confirmPassword));
+
+        this.configSingleton.updateWindowSettings(terminal);
+        ZosConnection newZosConnection = ZosConnectionFactory.createBasicConnection(
+                host,
+                zosmfPort,
+                username,
+                newPassword
+        );
+        this.configSingleton.setZosConnectionByIndex(newZosConnection, index);
+        return newZosConnection;
     }
 
     public SshConnection changeSshConnection(final SshConnection sshConnection, final int index) {
         LOG.debug("*** changeSshConnection ***");
-        var numOfConnections = configSingleton.getZosConnections().size() - 1;
-        if (index < 0 || index > numOfConnections) {
+        var connectionCount = this.configSingleton.getZosConnections().size();
+        if (index < 0 || index > connectionCount) {
             return sshConnection;
         }
 
-        var zosConnectionByIndex = configSingleton.getZosConnectionByIndex(index);
-        var zosUsername = zosConnectionByIndex.getUser();
-        var zosPassword = zosConnectionByIndex.getPassword();
+        ZosConnection selectedZosConnection = Objects.requireNonNull(
+                this.configSingleton.getZosConnectionByIndex(index),
+                "ZosConnection configuration missing"
+        );
+        var zosUsername = selectedZosConnection.getUser();
+        var zosPassword = selectedZosConnection.getPassword();
 
-        var sshConnectionByIndex = configSingleton.getSshConnectionByIndex(index);
-        var sshHost = sshConnectionByIndex.getHost();
-        var sshPort = sshConnectionByIndex.getPort();
+        SshConnection selectedSshConnection = Objects.requireNonNull(
+                this.configSingleton.getSshConnectionByIndex(index),
+                "SshConnection configuration missing"
+        );
+        var sshHost = selectedSshConnection.getHost();
+        var sshPort = selectedSshConnection.getPort();
 
-        configSingleton.setSshConnectionByIndex(new SshConnection(sshHost, sshPort, zosUsername, zosPassword), index);
-        return configSingleton.getSshConnectionByIndex(index);
+        SshConnection newSshConnection = new SshConnection(sshHost, sshPort, zosUsername, zosPassword);
+        this.configSingleton.setSshConnectionByIndex(newSshConnection, index);
+        return newSshConnection;
     }
 
     public void displayConnections() {
         LOG.debug("*** displayConnections ***");
-        var i = new AtomicInteger(1);
-        configSingleton.getZosConnections().forEach(
-                c -> terminal.println(i.getAndIncrement() + " " + "hostname: " +
-                        (c.getHost().isBlank() ? "n\\a" : c.getHost()) + ", zosmfport: " +
-                        c.getZosmfPort()));
-        if (configSingleton.getZosConnections().isEmpty()) {
+
+        if (this.configSingleton.getZosConnections().isEmpty()) {
             terminal.println(Constants.NO_CONNECTION_INFO);
+            return;
+        }
+
+        for (int i = 0; i < this.configSingleton.getZosConnections().size(); i++) {
+            ZosConnection connection = Objects.requireNonNull(
+                    this.configSingleton.getZosConnectionByIndex(i),
+                    "Connection configuration missing"
+            );
+            String host = connection.getHost().isBlank() ? "n/a" : connection.getHost();
+            terminal.println((i + 1) + " hostname: " + host + ", zosmfport: " + connection.getZosmfPort());
         }
     }
 

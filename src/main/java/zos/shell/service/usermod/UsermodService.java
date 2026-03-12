@@ -9,6 +9,8 @@ import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.core.ZosConnectionFactory;
 
+import java.util.Objects;
+
 public class UsermodService {
 
     private static final Logger LOG = LoggerFactory.getLogger(UsermodService.class);
@@ -27,7 +29,12 @@ public class UsermodService {
         this.zosmfPort = connection.getZosmfPort();
         this.username = connection.getUser();
         this.password = connection.getPassword();
-        this.sshPort = ConfigSingleton.getInstance().getSshConnectionByIndex(index).getPort();
+        this.sshPort =
+                Objects.requireNonNull(ConfigSingleton
+                                .getInstance()
+                                .getSshConnectionByIndex(index),
+                        "Ssh connection index is null"
+                ).getPort();
         this.index = index;
     }
 
@@ -39,7 +46,12 @@ public class UsermodService {
             password = PromptUtil.getPromptInfo("password:", true);
             confirmPassword = PromptUtil.getPromptInfo("confirm password:", true);
         }
-        var zosConnection = ZosConnectionFactory.createBasicConnection(this.host, this.zosmfPort, this.username, password);
+        var zosConnection = ZosConnectionFactory.createBasicConnection(
+                this.host,
+                this.zosmfPort,
+                this.username,
+                password
+        );
         var sshConnection = new SshConnection(this.host, this.sshPort, this.username, password);
         ConfigSingleton.getInstance().setZosConnectionByIndex(zosConnection, index);
         ConnSingleton.getInstance().setCurrZosConnection(zosConnection, index);
@@ -50,7 +62,12 @@ public class UsermodService {
     public void changeUsername() {
         LOG.debug("*** changeUsername ***");
         var username = PromptUtil.getPromptInfo("username:", false);
-        var zosConnection = ZosConnectionFactory.createBasicConnection(this.host, this.zosmfPort, username, this.password);
+        var zosConnection = ZosConnectionFactory.createBasicConnection(
+                this.host,
+                this.zosmfPort,
+                username,
+                this.password
+        );
         var sshConnection = new SshConnection(this.host, this.sshPort, username, this.password);
         ConfigSingleton.getInstance().setZosConnectionByIndex(zosConnection, index);
         ConnSingleton.getInstance().setCurrZosConnection(zosConnection, index);

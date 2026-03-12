@@ -7,7 +7,10 @@ import zos.shell.controller.dependency.Dependency;
 import zos.shell.controller.dependency.DependencyController;
 import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
-import zos.shell.service.dsn.download.*;
+import zos.shell.service.dsn.download.DownloadMemberService;
+import zos.shell.service.dsn.download.DownloadMembersService;
+import zos.shell.service.dsn.download.DownloadPdsMemberService;
+import zos.shell.service.dsn.download.DownloadSeqDatasetService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.ResponseUtil;
 
@@ -24,14 +27,12 @@ public class DownloadDsnController extends DependencyController {
     private final DownloadMemberService downloadMemberService;
     private final DownloadPdsMemberService downloadPdsMemberService;
     private final DownloadSeqDatasetService downloadSeqDatasetService;
-    private final DownloadAllMembersService downloadAllMembersService;
     private final DownloadMembersService downloadMembersService;
     private final EnvVariableController envVariableController;
 
     public DownloadDsnController(final DownloadMemberService downloadMemberService,
                                  final DownloadPdsMemberService downloadPdsMemberService,
                                  final DownloadSeqDatasetService downloadSeqDatasetService,
-                                 final DownloadAllMembersService downloadAllMembersService,
                                  final DownloadMembersService downloadMembersService,
                                  final EnvVariableController envVariableController,
                                  final Dependency dependency) {
@@ -40,7 +41,6 @@ public class DownloadDsnController extends DependencyController {
         this.downloadMemberService = downloadMemberService;
         this.downloadPdsMemberService = downloadPdsMemberService;
         this.downloadSeqDatasetService = downloadSeqDatasetService;
-        this.downloadAllMembersService = downloadAllMembersService;
         this.downloadMembersService = downloadMembersService;
         this.envVariableController = envVariableController;
     }
@@ -80,7 +80,7 @@ public class DownloadDsnController extends DependencyController {
                 return warning(results);
             }
             found = true;
-            responseStatus = downloadAllMembersService.downloadAllMembers(dataset);
+            responseStatus = downloadMembersService.downloadMembers(dataset);
         } else if (target.contains("*")) {
             IntStream charCodes = target.chars();
             OptionalInt last = charCodes.reduce((first, second) -> second);
