@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.utility.FutureResponseUtil;
+import zos.shell.utility.FutureUtil;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosjobs.input.JobGetInputData;
@@ -91,10 +91,10 @@ public class BrowseLog implements AutoCloseable {
         } catch (InterruptedException e) {
             future.cancel(true);
             Thread.currentThread().interrupt();
-            return new ResponseStatus(FutureResponseUtil.getErrorMessage(e), false);
+            return new ResponseStatus(FutureUtil.getErrorMessage(e), false);
         } catch (ExecutionException e) {
             future.cancel(true);
-            return new ResponseStatus(FutureResponseUtil.getErrorMessage(e), false);
+            return new ResponseStatus(FutureUtil.getErrorMessage(e), false);
         } catch (TimeoutException e) {
             future.cancel(true);
             return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);

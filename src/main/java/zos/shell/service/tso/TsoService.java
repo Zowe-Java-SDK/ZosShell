@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.utility.FutureResponseUtil;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.zostso.methods.TsoCmd;
 
 import java.util.concurrent.ExecutorService;
@@ -28,7 +28,7 @@ public class TsoService {
     public ResponseStatus issueCommand(final String command) {
         LOG.debug("*** issueCommand ***");
         Future<ResponseStatus> future = pool.submit(new FutureTso(issueTso, command));
-        return FutureResponseUtil.waitForResult(future, timeout);
+        return FutureUtil.getResponseStatus(future, timeout);
     }
 
 }

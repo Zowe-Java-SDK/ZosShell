@@ -6,7 +6,7 @@ import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.path.PathService;
 import zos.shell.utility.FileUtil;
-import zos.shell.utility.FutureResponseUtil;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 
@@ -65,7 +65,7 @@ public class DownloadSeqDatasetService implements AutoCloseable {
             if (exception instanceof TimeoutException) {
                 results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
             } else if (exception != null) {
-                results.add(new ResponseStatus(FutureResponseUtil.getErrorMessage(exception), false));
+                results.add(new ResponseStatus(FutureUtil.getErrorMessage(exception), false));
             } else {
                 results.add(new ResponseStatus(Constants.DOWNLOAD_NOT_SEQ_DATASET_WARNING, false));
             }
@@ -79,7 +79,7 @@ public class DownloadSeqDatasetService implements AutoCloseable {
                 isBinary
         ));
 
-        ResponseStatus status = FutureResponseUtil.waitForResult(future, timeout);
+        ResponseStatus status = FutureUtil.getResponseStatus(future, timeout);
         results.add(status);
         if (status.isStatus()) {
             FileUtil.openFileLocation(new File(status.getOptionalData()).getAbsolutePath());

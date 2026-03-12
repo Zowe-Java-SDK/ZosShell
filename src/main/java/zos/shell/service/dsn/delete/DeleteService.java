@@ -7,7 +7,7 @@ import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.memberlst.MemberListingService;
 import zos.shell.utility.DsnUtil;
-import zos.shell.utility.FutureResponseUtil;
+import zos.shell.utility.FutureUtil;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -132,7 +132,7 @@ public class DeleteService implements AutoCloseable {
             )));
         }
 
-        return FutureResponseUtil.getFutureResponses(futures, timeout, Constants.STRING_PAD_LENGTH);
+        return FutureUtil.collectFutureResponses(futures, timeout, Constants.STRING_PAD_LENGTH);
     }
 
     private boolean isSingleMemberWildcard(final String target) {
@@ -147,7 +147,7 @@ public class DeleteService implements AutoCloseable {
         final Future<ResponseStatus> future = pool.submit(
                 new FutureDelete(new DsnDelete(connection), dataset, member)
         );
-        return FutureResponseUtil.waitForResult(future, timeout);
+        return FutureUtil.getResponseStatus(future, timeout);
     }
 
     private ResponseStatus buildErrorResponse(final ZosmfRequestException e) {

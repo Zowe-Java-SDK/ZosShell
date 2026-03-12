@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
+import zowe.client.sdk.rest.exception.ZosmfRequestException;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -12,16 +13,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public final class FutureResponseUtil {
+public final class FutureUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FutureResponseUtil.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FutureUtil.class);
 
-    private FutureResponseUtil() {
+    private FutureUtil() {
         throw new IllegalStateException("Utility class");
     }
 
-    public static ResponseStatus waitForResult(final Future<ResponseStatus> future, final long timeout) {
-        LOG.debug("*** waitForResult ***");
+    public static ResponseStatus getResponseStatus(final Future<ResponseStatus> future, final long timeout) {
+        LOG.debug("*** getResponseStatus ***");
         try {
             return future.get(timeout, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -37,6 +38,24 @@ public final class FutureResponseUtil {
         }
     }
 
+    public static <T> T getFutureValue(final Future<T> future, final long timeout)
+            throws ZosmfRequestException {
+        LOG.debug("*** getFutureValue ***");
+        try {
+            return future.get(timeout, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            future.cancel(true);
+            Thread.currentThread().interrupt();
+            throw new ZosmfRequestException(getErrorMessage(e));
+        } catch (ExecutionException e) {
+            future.cancel(true);
+            throw new ZosmfRequestException(getErrorMessage(e));
+        } catch (TimeoutException e) {
+            future.cancel(true);
+            throw new ZosmfRequestException(Constants.TIMEOUT_MESSAGE);
+        }
+    }
+
     public static String getErrorMessage(final Exception e) {
         LOG.debug("*** getErrorMessage ***");
         return e.getMessage() != null && !e.getMessage().isBlank()
@@ -44,10 +63,10 @@ public final class FutureResponseUtil {
                 : Constants.COMMAND_EXECUTION_ERROR_MSG;
     }
 
-    public static ResponseStatus getFutureResponses(final List<Future<ResponseStatus>> futures,
-                                                    final long timeout,
-                                                    final int padLength) {
-        LOG.debug("*** getFutureResponses ***");
+    public static ResponseStatus collectFutureResponses(final List<Future<ResponseStatus>> futures,
+                                                        final long timeout,
+                                                        final int padLength) {
+        LOG.debug("*** collectFutureResponses ***");
         var results = new StringBuilder();
 
         for (Future<ResponseStatus> future : futures) {

@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.utility.FutureResponseUtil;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosconsole.method.ConsoleCmd;
 
@@ -33,7 +33,7 @@ public class ConsoleService implements AutoCloseable {
                 consoleName,
                 command
         ));
-        return FutureResponseUtil.waitForResult(future, timeout);
+        return FutureUtil.getResponseStatus(future, timeout);
     }
 
     @Override

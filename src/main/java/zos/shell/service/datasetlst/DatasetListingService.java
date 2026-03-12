@@ -3,13 +3,15 @@ package zos.shell.service.datasetlst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.utility.FutureResponseUtil;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.model.Dataset;
 
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class DatasetListingService implements AutoCloseable {
 
@@ -32,20 +34,7 @@ public class DatasetListingService implements AutoCloseable {
                 dataset,
                 timeout
         ));
-
-        try {
-            return future.get(timeout, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            future.cancel(true);
-            Thread.currentThread().interrupt();
-            throw new ZosmfRequestException(FutureResponseUtil.getErrorMessage(e));
-        } catch (ExecutionException e) {
-            future.cancel(true);
-            throw new ZosmfRequestException(FutureResponseUtil.getErrorMessage(e));
-        } catch (TimeoutException e) {
-            future.cancel(true);
-            throw new ZosmfRequestException(Constants.TIMEOUT_MESSAGE);
-        }
+        return FutureUtil.getFutureValue(future, timeout);
     }
 
     @Override

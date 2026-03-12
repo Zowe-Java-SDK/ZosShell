@@ -7,7 +7,7 @@ import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.path.PathService;
 import zos.shell.utility.FileUtil;
-import zos.shell.utility.FutureResponseUtil;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 
@@ -48,7 +48,7 @@ public class DownloadPdsMemberService implements AutoCloseable {
                 isBinary
         ));
 
-        ResponseStatus status = FutureResponseUtil.waitForResult(future, timeout);
+        ResponseStatus status = FutureUtil.getResponseStatus(future, timeout);
         results.add(status);
         if (status.isStatus() && status.getOptionalData() != null) {
             FileUtil.openFileLocation(new File(status.getOptionalData()).getAbsolutePath());

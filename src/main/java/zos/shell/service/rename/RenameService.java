@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.DsnUtil;
-import zos.shell.utility.FutureResponseUtil;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnRename;
 
@@ -63,7 +63,7 @@ public class RenameService implements AutoCloseable {
             return new ResponseStatus(Constants.INVALID_COMMAND, false);
         }
 
-        return FutureResponseUtil.waitForResult(future, timeout);
+        return FutureUtil.getResponseStatus(future, timeout);
     }
 
     @Override

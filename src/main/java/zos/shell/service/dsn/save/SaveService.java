@@ -7,7 +7,7 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.service.checksum.CheckSumService;
 import zos.shell.service.path.PathService;
 import zos.shell.utility.DsnUtil;
-import zos.shell.utility.FutureResponseUtil;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
 
 import java.util.concurrent.ExecutorService;
@@ -47,7 +47,7 @@ public class SaveService implements AutoCloseable {
                 dataset,
                 target
         ));
-        return FutureResponseUtil.waitForResult(future, timeout);
+        return FutureUtil.getResponseStatus(future, timeout);
     }
 
     @Override

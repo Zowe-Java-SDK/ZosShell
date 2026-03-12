@@ -7,7 +7,7 @@ import zos.shell.record.DatasetMember;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.memberlst.MemberListingService;
 import zos.shell.utility.DsnUtil;
-import zos.shell.utility.FutureResponseUtil;
+import zos.shell.utility.FutureUtil;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
@@ -163,7 +163,7 @@ public class CopyService implements AutoCloseable {
         var dsnCopy = new DsnCopy(connection);
         var futureCopy = new FutureCopy(dsnCopy, source, destination, isCopyAll);
         Future<ResponseStatus> future = pool.submit(futureCopy);
-        return FutureResponseUtil.waitForResult(future, timeout);
+        return FutureUtil.getResponseStatus(future, timeout);
     }
 
     private ResponseStatus processWildcardCopy(final String currDataSet,
@@ -210,7 +210,7 @@ public class CopyService implements AutoCloseable {
             futures.add(bulkPool.submit(future));
         }
 
-        return FutureResponseUtil.getFutureResponses(
+        return FutureUtil.collectFutureResponses(
                 futures,
                 timeout,
                 secondParam.length() + Constants.STRING_PAD_LENGTH

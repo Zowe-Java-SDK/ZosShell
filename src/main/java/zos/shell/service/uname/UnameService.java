@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.console.FutureConsole;
-import zos.shell.utility.FutureResponseUtil;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.zosconsole.method.ConsoleCmd;
 
 import java.util.concurrent.ExecutorService;
@@ -38,7 +38,7 @@ public class UnameService implements AutoCloseable {
                 IPLINFO_COMMAND
         ));
 
-        ResponseStatus responseStatus = FutureResponseUtil.waitForResult(future, timeout);
+        ResponseStatus responseStatus = FutureUtil.getResponseStatus(future, timeout);
         if (!responseStatus.isStatus()) {
             return Constants.NO_INFO;
         }

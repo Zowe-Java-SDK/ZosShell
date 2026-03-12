@@ -8,7 +8,7 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.service.env.EnvVariableService;
 import zos.shell.service.path.PathService;
 import zos.shell.singleton.ConnSingleton;
-import zos.shell.utility.FutureResponseUtil;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 import zowe.client.sdk.zosfiles.dsn.model.Member;
@@ -45,11 +45,11 @@ public class DownloadMemberListService implements AutoCloseable {
             } catch (InterruptedException e) {
                 future.cancel(true);
                 Thread.currentThread().interrupt();
-                results.add(new ResponseStatus(FutureResponseUtil.getErrorMessage(e), false));
+                results.add(new ResponseStatus(FutureUtil.getErrorMessage(e), false));
                 break;
             } catch (ExecutionException e) {
                 future.cancel(true);
-                results.add(new ResponseStatus(FutureResponseUtil.getErrorMessage(e), false));
+                results.add(new ResponseStatus(FutureUtil.getErrorMessage(e), false));
             } catch (TimeoutException e) {
                 future.cancel(true);
                 results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));

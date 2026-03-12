@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
-import zos.shell.utility.FutureResponseUtil;
+import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.zosjobs.methods.JobDelete;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
@@ -35,7 +35,7 @@ public class PurgeService implements AutoCloseable {
                 retrieve,
                 filter
         ));
-        return FutureResponseUtil.waitForResult(future, timeout);
+        return FutureUtil.getResponseStatus(future, timeout);
     }
 
     @Override
