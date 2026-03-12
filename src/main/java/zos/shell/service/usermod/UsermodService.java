@@ -9,6 +9,8 @@ import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.core.ZosConnectionFactory;
 
+import java.util.Objects;
+
 public class UsermodService {
 
     private static final Logger LOG = LoggerFactory.getLogger(UsermodService.class);
@@ -27,7 +29,12 @@ public class UsermodService {
         this.zosmfPort = connection.getZosmfPort();
         this.username = connection.getUser();
         this.password = connection.getPassword();
-        this.sshPort = ConfigSingleton.getInstance().getSshConnectionByIndex(index).getPort();
+        this.sshPort =
+                Objects.requireNonNull(ConfigSingleton
+                                .getInstance()
+                                .getSshConnectionByIndex(index),
+                        "Ssh connection index is null"
+                ).getPort();
         this.index = index;
     }
 
