@@ -35,7 +35,7 @@ public class EchoCommand extends NoOptionCommand {
         var echoController = ControllerFactoryContainerHolder.container().getEchoController();
         String result = echoController.getEcho(text);
 
-        ctx.terminal.println(result);
+        ctx.out(result);
     }
 
 }

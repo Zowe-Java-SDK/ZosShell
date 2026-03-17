@@ -38,7 +38,7 @@ public class RenameCommand extends NoOptionCommand {
         var controller = ControllerFactoryContainerHolder.container()
                 .getRenameController(ctx.zosConnection, ctx.timeout);
         String result = controller.rename(ctx.currDataset, args.get(0), args.get(1));
-        ctx.terminal.println(result);
+        ctx.out(result);
     }
 
 }

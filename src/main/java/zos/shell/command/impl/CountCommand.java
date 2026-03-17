@@ -55,12 +55,12 @@ public class CountCommand extends AbstractCommand {
 
         if (memberOpt) {
             String result = controller.count(ctx.currDataset, "members");
-            ctx.terminal.println(result);
+            ctx.out(result);
         }
 
         if (datasetOpt) {
             String result = controller.count(ctx.currDataset, "datasets");
-            ctx.terminal.println(result);
+            ctx.out(result);
         }
     }
 

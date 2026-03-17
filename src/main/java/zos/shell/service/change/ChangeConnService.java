@@ -4,6 +4,7 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.service.terminal.TerminalOutputService;
 import zos.shell.singleton.configuration.ConfigSingleton;
 import zos.shell.singleton.configuration.record.ConfigSettings;
 import zos.shell.utility.PromptUtil;
@@ -18,18 +19,20 @@ public class ChangeConnService {
     private static final Logger LOG = LoggerFactory.getLogger(ChangeConnService.class);
 
     private final TextTerminal<?> terminal;
+    private final TerminalOutputService terminalOutputService;
     private final ConfigSingleton configSingleton = ConfigSingleton.getInstance();
 
     public ChangeConnService(final TextTerminal<?> terminal) {
         LOG.debug("*** ChangeConnService ***");
         this.terminal = terminal;
+        this.terminalOutputService = new TerminalOutputService(terminal);
     }
 
     public ZosConnection changeZosConnection(final ZosConnection zosConnection, final int index) {
         LOG.debug("*** changeZosConnection ***");
         int connectionCount = this.configSingleton.getZosConnections().size();
         if (index < 0 || index > connectionCount) {
-            terminal.println(Constants.NO_CONNECTION);
+            this.terminalOutputService.println(Constants.NO_CONNECTION);
             return zosConnection;
         }
 
@@ -55,8 +58,8 @@ public class ChangeConnService {
         var zosmfPort = selectedZosConnection.getZosmfPort();
 
         if (host.isBlank() || zosmfPort == 0) {
-            terminal.println("Error: Hostname or z/OSMF port value(s) missing");
-            terminal.println("Check configuration file and try again...");
+            this.terminalOutputService.println("Error: Hostname or z/OSMF port value(s) missing");
+            this.terminalOutputService.println("Check configuration file and try again...");
             return zosConnection;
         }
 
@@ -64,11 +67,11 @@ public class ChangeConnService {
                 || password.equals(Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE));
 
         if (hasCredentials) {
-            this.configSingleton.updateWindowSettings(terminal);
+            this.configSingleton.updateWindowSettings(this.terminal);
             return selectedZosConnection;
         }
 
-        terminal.println("Enter username and password for host " + host);
+        this.terminalOutputService.println("Enter username and password for host " + host);
         username = PromptUtil.getPromptInfo("username:", false);
 
         String newPassword;
@@ -78,7 +81,7 @@ public class ChangeConnService {
             confirmPassword = PromptUtil.getPromptInfo("confirm password:", true);
         } while (!newPassword.equals(confirmPassword));
 
-        this.configSingleton.updateWindowSettings(terminal);
+        this.configSingleton.updateWindowSettings(this.terminal);
         ZosConnection newZosConnection = ZosConnectionFactory.createBasicConnection(
                 host,
                 zosmfPort,
@@ -119,7 +122,7 @@ public class ChangeConnService {
         LOG.debug("*** displayConnections ***");
 
         if (this.configSingleton.getZosConnections().isEmpty()) {
-            terminal.println(Constants.NO_CONNECTION_INFO);
+            this.terminalOutputService.println(Constants.NO_CONNECTION_INFO);
             return;
         }
 
@@ -129,7 +132,7 @@ public class ChangeConnService {
                     "Connection configuration missing"
             );
             String host = connection.getHost().isBlank() ? "n/a" : connection.getHost();
-            terminal.println((i + 1) + " hostname: " + host + ", zosmfport: " + connection.getZosmfPort());
+            this.terminalOutputService.println((i + 1) + " hostname: " + host + ", zosmfport: " + connection.getZosmfPort());
         }
     }
 

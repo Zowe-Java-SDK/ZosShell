@@ -36,12 +36,12 @@ public class VisitedCommand extends NoOptionCommand {
             return;
         }
         if (CommandContext.dataSets.isEmpty()) {
-            ctx.terminal.println(Constants.NO_VISITED_DATASETS);
+            ctx.out(Constants.NO_VISITED_DATASETS);
             return;
         }
         CommandContext.dataSets.keySet().forEach(host -> {
             List<String> lst = CommandContext.dataSets.get(host);
-            lst.forEach(d -> ctx.terminal.println(
+            lst.forEach(d -> ctx.out(
                     String.format("%" + ctx.currDatasetMax + "s -> %s", d.toUpperCase(), host)));
         });
     }

@@ -34,7 +34,7 @@ public class SaveCommand extends NoOptionCommand {
                 .getSaveController(ctx.zosConnection, ctx.timeout);
 
         String result = saveController.save(ctx.currDataset, args.get(0));
-        ctx.terminal.println(result);
+        ctx.out(result);
     }
 
 }

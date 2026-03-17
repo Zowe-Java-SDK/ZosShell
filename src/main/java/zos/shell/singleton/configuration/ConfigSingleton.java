@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.change.ChangeWinService;
+import zos.shell.service.terminal.TerminalOutputService;
 import zos.shell.singleton.TerminalSingleton;
 import zos.shell.singleton.configuration.model.Profile;
 import zos.shell.singleton.configuration.record.ConfigSettings;
@@ -27,12 +28,13 @@ public final class ConfigSingleton {
     private static final String DEFAULT_EMPTY_STRING = "";
     private static final int PANE_WIDTH_DEFAULT_VALUE = 640;
     private static final int PANE_HEIGHT_DEFAULT_VALUE = 480;
-    private List<Profile> profiles;
     private final ObjectMapper mapper = new ObjectMapper();
     private final LinkedHashSet<ZosConnection> zosConnections = new LinkedHashSet<>();
     private final LinkedHashSet<SshConnection> sshConnections = new LinkedHashSet<>();
+    private List<Profile> profiles;
     private ConfigSettings configSettings;
     private ChangeWinService changeWinService;
+    private TerminalOutputService outputService;
 
     private static class Holder {
         private static final ConfigSingleton instance = new ConfigSingleton();
@@ -131,8 +133,14 @@ public final class ConfigSingleton {
     public void updateWindowSettings(final TextTerminal<?> terminal) {
         LOG.debug("*** updateWindowSettings ***");
         var str = new StringBuilder();
+        if (this.outputService == null) {
+            this.outputService = new TerminalOutputService(terminal);
+        }
         if (changeWinService == null) {
-            changeWinService = new ChangeWinService(TerminalSingleton.getInstance().getTerminal());
+            changeWinService = new ChangeWinService(
+                    TerminalSingleton.getInstance().getTerminal(),
+                    outputService::redrawBufferedOutput
+            );
         }
         if (this.configSettings == null) {
             return;
@@ -179,7 +187,7 @@ public final class ConfigSingleton {
                 }
             }
         }
-        terminal.println(str.toString());
+        outputService.bufferMultilineAndPrint(str.toString());
     }
 
     private void delayWindowUpdate() {

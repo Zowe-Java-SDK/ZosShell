@@ -4,6 +4,7 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.service.terminal.TerminalOutputService;
 import zos.shell.singleton.ConnSingleton;
 import zos.shell.singleton.TerminalSingleton;
 import zos.shell.singleton.configuration.ConfigSingleton;
@@ -16,6 +17,7 @@ public class ConnectionStartupService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConnectionStartupService.class);
     private int connectionIdentifier;
+    private TerminalOutputService terminalOutputService;
 
     public void initialize(final String connectionIdentifier, final TextTerminal<?> terminal) {
         LOG.debug("*** initialize ***");
@@ -26,8 +28,9 @@ public class ConnectionStartupService {
             // Use default index of zero for invalid input
             this.connectionIdentifier = 0;
         }
+        this.terminalOutputService = new TerminalOutputService(terminal);
         selectConnection();
-        validateSelectedConnection(terminal);
+        validateSelectedConnection();
         updateTerminalTitle();
     }
 
@@ -58,7 +61,7 @@ public class ConnectionStartupService {
         }
     }
 
-    private void validateSelectedConnection(final TextTerminal<?> terminal) {
+    private void validateSelectedConnection() {
         LOG.debug("*** validateSelectedConnection ***");
 
         ConnSingleton connSingleton = ConnSingleton.getInstance();
@@ -88,12 +91,12 @@ public class ConnectionStartupService {
 
         if (authMissing) {
             if (Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE.equals(username)) {
-                terminal.println("Enter username for " + host);
+                this.terminalOutputService.println("Enter username for " + host);
                 username = PromptUtil.getPromptInfo("username:", false);
             }
 
             if (Constants.DEFAULT_EMPTY_USER_PASSWORD_VALUE.equals(password)) {
-                terminal.println("Enter password for " + host + "/" + username);
+                this.terminalOutputService.println("Enter password for " + host + "/" + username);
                 String confirmPassword = null;
                 while (confirmPassword == null || !confirmPassword.equals(password)) {
                     password = PromptUtil.getPromptInfo("password:", true);
@@ -117,7 +120,7 @@ public class ConnectionStartupService {
                 currConnection.getZosmfPort(),
                 currSshConnection.getPort()
         );
-        terminal.println(msg);
+        this.terminalOutputService.println(msg);
     }
 
     private void updateTerminalTitle() {

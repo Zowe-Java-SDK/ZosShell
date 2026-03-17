@@ -43,7 +43,7 @@ public class UssCommand extends NoOptionCommand {
                 .getUssController(ctx.sshConnection);
 
         String result = ctrl.issueUnixCommand(command);
-        ctx.terminal.println(result);
+        ctx.out(result);
     }
 
 }

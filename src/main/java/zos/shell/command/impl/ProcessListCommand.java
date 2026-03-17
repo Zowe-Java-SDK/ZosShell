@@ -38,7 +38,7 @@ public class ProcessListCommand extends NoOptionCommand {
                 ? ctrl.processList()
                 : ctrl.processList(args.get(0));
 
-        ctx.terminal.println(result);
+        ctx.out(result);
         ctx.searchCache = new SearchCache("ps", new StringBuilder(result));
     }
 

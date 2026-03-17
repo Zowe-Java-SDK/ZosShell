@@ -1,6 +1,7 @@
 package zos.shell.command;
 
 import org.apache.commons.cli.*;
+import zos.shell.utility.PromptUtil;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -53,6 +54,8 @@ public abstract class AbstractCommand implements CommandHandler {
 
     @Override
     public final void execute(CommandContext ctx, String input) {
+        ctx.store(PromptUtil.getPrompt() + " " + input);
+
         try {
             String[] tokens = input.trim().split("\\s+");
             String[] args = Arrays.copyOfRange(tokens, 1, tokens.length);
@@ -73,15 +76,15 @@ public abstract class AbstractCommand implements CommandHandler {
             run(ctx, cmd);
 
         } catch (ParseException e) {
-            ctx.terminal.println("Error: " + e.getMessage());
+            ctx.out("Error: " + e.getMessage());
             printHelp(ctx);
         } catch (Exception e) {
-            ctx.terminal.println("Exception: " + e.getMessage());
+            ctx.out("Exception: " + e.getMessage());
             // Capture the full stack trace as a string
             var sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw));
             // display the full trace in UI
-            ctx.terminal.println(sw.toString());
+            ctx.out(sw.toString());
         }
     }
 
@@ -93,24 +96,27 @@ public abstract class AbstractCommand implements CommandHandler {
         formatter.setWidth(120);
 
         // terminal writer for Commons CLI
-        PrintWriter writer = new PrintWriter(new TerminalWriter(ctx.terminal), true);
+        TerminalWriter terminalWriter = new TerminalWriter(ctx.terminalOutputService);
+        PrintWriter writer = new PrintWriter(terminalWriter, true);
 
         // print usage line using our custom usage() method
-        ctx.terminal.println("usage: " + usage());
+        ctx.out("usage: " + usage());
 
         // print the description of the command right after usage
         String desc = description();
         if (desc != null && !desc.isBlank()) {
-            ctx.terminal.println(desc);
+            ctx.out(desc);
         }
 
         // print options if any
         if (!options().getOptions().isEmpty()) {
-            formatter.printOptions(writer,
+            formatter.printOptions(
+                    writer,
                     formatter.getWidth(),
                     options(),
                     formatter.getLeftPadding(),
-                    formatter.getDescPadding());
+                    formatter.getDescPadding()
+            );
         }
 
         writer.flush();

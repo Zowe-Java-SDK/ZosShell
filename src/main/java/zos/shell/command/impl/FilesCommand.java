@@ -34,7 +34,7 @@ public class FilesCommand extends NoOptionCommand {
                 .getLocalFilesController()
                 .files(ctx.currDataset);
 
-        ctx.terminal.println(result.toString());
+        ctx.out(result.toString());
         ctx.searchCache = new SearchCache("files", result);
     }
 

@@ -34,7 +34,7 @@ public class StopCommand extends NoOptionCommand {
                 .getStopController(ctx.zosConnection, ctx.timeout);
 
         String result = stopController.stop(args.get(0));
-        ctx.terminal.println(result);
+        ctx.out(result);
     }
 
 }

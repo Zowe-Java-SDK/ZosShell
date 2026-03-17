@@ -5,6 +5,7 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
+import zos.shell.service.terminal.TerminalOutputService;
 import zos.shell.singleton.TerminalSingleton;
 
 import java.util.Arrays;
@@ -17,13 +18,13 @@ public class HistoryService {
 
     private static final Logger LOG = LoggerFactory.getLogger(HistoryService.class);
 
-    private final TextTerminal<?> terminal;
+    private final TerminalOutputService terminalOutputService;
     private final List<String> commandLst = new LinkedList<>();
     private final CircularLinkedList<String> circularLinkedList = new CircularLinkedList<>();
 
     public HistoryService(final TextTerminal<?> terminal) {
         LOG.debug("*** HistoryService ***");
-        this.terminal = terminal;
+        this.terminalOutputService = new TerminalOutputService(terminal);
     }
 
     public enum NavigationDirection {
@@ -71,12 +72,12 @@ public class HistoryService {
         try {
             num = Integer.parseInt(param);
         } catch (NumberFormatException e) {
-            terminal.println(Constants.INVALID_NUMBER);
+            terminalOutputService.println(Constants.INVALID_NUMBER);
             return;
         }
 
         if (this.commandLst.isEmpty()) {
-            terminal.println(Constants.NO_HISTORY);
+            terminalOutputService.println(Constants.NO_HISTORY);
             return;
         }
         int size = commandLst.size();
@@ -93,7 +94,7 @@ public class HistoryService {
     public String getHistoryByIndex(final int index) {
         LOG.debug("*** getHistoryByIndex ***");
         if (index > commandLst.size() - 1 || commandLst.isEmpty()) {
-            terminal.println(Constants.NO_HISTORY);
+            terminalOutputService.println(Constants.NO_HISTORY);
             return null;
         }
         return commandLst.get(index);
@@ -102,7 +103,7 @@ public class HistoryService {
     public String getLastHistory() {
         LOG.debug("*** getLastHistory ***");
         if (commandLst.isEmpty()) {
-            terminal.println(Constants.NO_HISTORY);
+            terminalOutputService.println(Constants.NO_HISTORY);
             return null;
         }
         return commandLst.get(commandLst.size() - 1);
@@ -113,7 +114,7 @@ public class HistoryService {
         List<String> lst = commandLst.stream().filter(
                 c -> c.toLowerCase().startsWith(str.toLowerCase())).collect(Collectors.toList());
         if (lst.isEmpty()) {
-            terminal.println(Constants.NO_HISTORY);
+            terminalOutputService.println(Constants.NO_HISTORY);
             return null;
         }
         return lst.get(lst.size() - 1);
@@ -128,7 +129,7 @@ public class HistoryService {
         LOG.debug("*** display ***");
         var orderNum = Strings.padStart(String.valueOf(index + 1), 4, ' ');
         var historyRow = orderNum + Constants.ARROW + commandLst.get(index);
-        terminal.println(historyRow);
+        terminalOutputService.println(historyRow);
     }
 
 }

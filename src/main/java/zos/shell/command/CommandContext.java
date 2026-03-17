@@ -4,12 +4,15 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import org.beryx.textio.TextTerminal;
 import zos.shell.service.search.SearchCache;
+import zos.shell.service.terminal.TerminalOutputService;
 import zowe.client.sdk.core.SshConnection;
 import zowe.client.sdk.core.ZosConnection;
 
+@SuppressWarnings("unused")
 public class CommandContext {
 
     public final TextTerminal<?> terminal;
+    public final TerminalOutputService terminalOutputService;
     public ZosConnection zosConnection;
     public SshConnection sshConnection;
     public long timeout;
@@ -28,6 +31,7 @@ public class CommandContext {
                           SearchCache searchCache,
                           int currZosConnectionIndex) {
         this.terminal = terminal;
+        this.terminalOutputService = new TerminalOutputService(terminal);
         this.zosConnection = zosConnection;
         this.sshConnection = sshConnection;
         this.timeout = timeout;
@@ -38,6 +42,22 @@ public class CommandContext {
         if (!currDataset.isEmpty() && !dataSets.containsEntry(zosConnection.getHost(), currDataset)) { // TODO
             dataSets.put(zosConnection.getHost(), currDataset);
         }
+    }
+
+    public void out(final String text) {
+        this.terminalOutputService.println(text);
+    }
+
+    public void outMultiLines(final String text) {
+        this.terminalOutputService.println(text);
+    }
+
+    public void store(final String text) {
+        this.terminalOutputService.store(text);
+    }
+
+    public void clear() {
+        this.terminalOutputService.clear();
     }
 
 }

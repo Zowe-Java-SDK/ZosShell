@@ -31,7 +31,7 @@ public class TimeoutCommand extends NoOptionCommand {
         var args = cmd.getArgs();
 
         if (args.length == 0) {
-            ctx.terminal.println("timeout value is " + ctx.timeout + " seconds.");
+            ctx.out("timeout value is " + ctx.timeout + " seconds.");
             return;
         }
 
@@ -42,9 +42,9 @@ public class TimeoutCommand extends NoOptionCommand {
 
         try {
             ctx.timeout = Long.parseLong(args[0]);
-            ctx.terminal.println("timeout value set to " + ctx.timeout + " seconds.");
+            ctx.out("timeout value set to " + ctx.timeout + " seconds.");
         } catch (NumberFormatException e) {
-            ctx.terminal.println("Invalid timeout value");
+            ctx.out("Invalid timeout value");
         }
     }
 

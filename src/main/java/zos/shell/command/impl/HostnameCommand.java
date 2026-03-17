@@ -28,7 +28,7 @@ public class HostnameCommand extends NoOptionCommand {
             return;
         }
 
-        ctx.terminal.println(ctx.zosConnection.getHost());
+        ctx.out(ctx.zosConnection.getHost());
     }
 
 }

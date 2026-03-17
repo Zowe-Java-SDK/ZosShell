@@ -38,7 +38,7 @@ public class TouchCommand extends NoOptionCommand {
         var ctrl = ControllerFactoryContainerHolder.container()
                 .getTouchController(ctx.zosConnection, ctx.timeout);
 
-        ctx.terminal.println(ctrl.touch(ctx.currDataset, args.get(0)));
+        ctx.out(ctrl.touch(ctx.currDataset, args.get(0)));
     }
 
 }

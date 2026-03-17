@@ -50,7 +50,7 @@ public class TailCommand extends AbstractCommand {
             try {
                 lines = Integer.parseInt(cmd.getOptionValue("n"));
             } catch (NumberFormatException e) {
-                ctx.terminal.println("Invalid line count");
+                ctx.out("Invalid line count");
                 return;
             }
         }
@@ -59,7 +59,7 @@ public class TailCommand extends AbstractCommand {
                 .getTailController(ctx.zosConnection, ctx.terminal, lines);
 
         String result = controller.tail(args[0], lines);
-        ctx.terminal.println(result);
+        ctx.out(result);
         ctx.searchCache = new SearchCache("tail", new StringBuilder(result));
     }
 

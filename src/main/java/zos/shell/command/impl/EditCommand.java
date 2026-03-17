@@ -39,7 +39,7 @@ public class EditCommand extends NoOptionCommand {
         var controller = ControllerFactoryContainerHolder.container()
                 .getEditController(ctx.zosConnection, ctx.timeout);
         String result = controller.edit(ctx.currDataset, args.get(0));
-        ctx.terminal.println(result);
+        ctx.out(result);
     }
 
 }

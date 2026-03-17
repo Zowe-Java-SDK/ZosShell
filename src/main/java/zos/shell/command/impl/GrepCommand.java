@@ -38,7 +38,7 @@ public class GrepCommand extends NoOptionCommand {
         var controller = ControllerFactoryContainerHolder.container()
                 .getGrepController(ctx.zosConnection, args.get(0), ctx.timeout);
         String result = controller.grep(args.get(1), ctx.currDataset);
-        ctx.terminal.println(result);
+        ctx.out(result);
     }
 
 }

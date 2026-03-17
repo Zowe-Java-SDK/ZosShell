@@ -46,7 +46,7 @@ public class TsoCommand extends NoOptionCommand {
         String acct = env.getValueByEnv("ACCOUNT_NUMBER");
 
         if (acct == null || acct.isBlank()) {
-            ctx.terminal.println("ACCOUNT_NUMBER not set. Use the SET command to configure it.");
+            ctx.out("ACCOUNT_NUMBER not set. Use the SET command to configure it.");
             return;
         }
 
@@ -57,7 +57,7 @@ public class TsoCommand extends NoOptionCommand {
         String result = tsoController.issueCommand(tsoCmd);
 
         ctx.searchCache = new SearchCache("tso", new StringBuilder(result));
-        ctx.terminal.println(result);
+        ctx.out(result);
     }
 
 }

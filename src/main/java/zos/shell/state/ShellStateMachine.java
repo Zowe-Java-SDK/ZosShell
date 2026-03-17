@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandRouter;
 import zos.shell.resolver.HistoryCommandResolver;
+import zos.shell.service.terminal.TerminalOutputService;
 import zos.shell.singleton.HistorySingleton;
 import zos.shell.singleton.TerminalSingleton;
 import zos.shell.utility.PromptUtil;
@@ -18,16 +19,17 @@ public class ShellStateMachine {
     private static final Logger LOG = LoggerFactory.getLogger(ShellStateMachine.class);
 
     private final TextIO textIO;
-    private final TextTerminal<?> terminal;
     private final CommandRouter commandRouter;
     private final HistoryCommandResolver historyResolver;
+    private final TerminalOutputService outputService;
 
     private ShellState state = ShellState.READ_INPUT;
     private String input;
 
     public ShellStateMachine(TextIO textIO) {
         this.textIO = textIO;
-        this.terminal = TerminalSingleton.getInstance().getTerminal();
+        TextTerminal<?> terminal = TerminalSingleton.getInstance().getTerminal();
+        this.outputService = new TerminalOutputService(terminal);
         this.commandRouter = new CommandRouter(terminal);
         this.historyResolver = new HistoryCommandResolver(terminal,
                 HistorySingleton.getInstance().getHistory());
@@ -68,7 +70,7 @@ public class ShellStateMachine {
         LOG.debug("*** ShellStateMachine.processInput ***");
         // font size change short-circuit
         if (isFontSizeChanged()) {
-            terminal.println("Font size updated.");
+            outputService.println("Font size updated.");
             state = ShellState.READ_INPUT;
             return;
         }

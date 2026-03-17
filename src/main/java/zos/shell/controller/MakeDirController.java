@@ -9,6 +9,7 @@ import zos.shell.controller.dependency.Dependency;
 import zos.shell.controller.dependency.DependencyController;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.makedir.MakeDirService;
+import zos.shell.service.terminal.TerminalOutputService;
 import zos.shell.utility.DsnUtil;
 import zos.shell.utility.StrUtil;
 import zowe.client.sdk.zosfiles.dsn.input.DsnCreateInputData;
@@ -18,40 +19,40 @@ public class MakeDirController extends DependencyController {
     private static final Logger LOG = LoggerFactory.getLogger(MakeDirController.class);
 
     private final MakeDirService makeDirService;
-    private final TextTerminal<?> terminal;
+    private final TerminalOutputService terminalOutputService;
 
     public MakeDirController(final TextTerminal<?> terminal, final MakeDirService makeDirService, final Dependency dependency) {
         super(dependency);
         LOG.debug("*** MakeDirController ***");
-        this.terminal = terminal;
+        this.terminalOutputService = new TerminalOutputService(terminal);
         this.makeDirService = makeDirService;
     }
 
     public void mkdir(final TextIO mainTextIO, final String dataset, String target) {
         LOG.debug("*** mkdir ***");
         if (target.contains(".") && !DsnUtil.isDataset(target)) {
-            terminal.println("invalid data set character sequence, try again...");
+            terminalOutputService.println("invalid data set character sequence, try again...");
             return;
         }
         if (!target.contains(".") && !DsnUtil.isMember(target)) {
-            terminal.println("invalid 8 character sequence, try again...");
+            terminalOutputService.println("invalid 8 character sequence, try again...");
             return;
         }
         if (!DsnUtil.isDataset(target) && DsnUtil.isMember(target) && !dataset.isBlank()) {
             target = dataset + "." + target;
         } else if (DsnUtil.isMember(target) && dataset.isBlank()) {
-            terminal.println(Constants.DATASET_NOT_SPECIFIED);
+            terminalOutputService.println(Constants.DATASET_NOT_SPECIFIED);
             return;
         }
         var createParamsBuilder = new DsnCreateInputData.Builder();
         var isSequential = false;
-        terminal.println("To quit, enter 'q', 'quit' or 'exit' at any prompt.");
+        terminalOutputService.println("To quit, enter 'q', 'quit' or 'exit' at any prompt.");
         String input;
         while (true) {
             input = getMakeDirStr(mainTextIO,
                     "Enter data set organization, PS (sequential) or PO (partitioned):");
             if (input == null) {
-                terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+                terminalOutputService.println(Constants.MAKE_DIR_EXIT_MSG);
                 return;
             }
             if ("PS".equalsIgnoreCase(input) || "PO".equalsIgnoreCase(input)) {
@@ -64,20 +65,20 @@ public class MakeDirController extends DependencyController {
         createParamsBuilder.dsorg(input);
         var num = getMakeDirNum(mainTextIO, "Enter primary quantity number:");
         if (num == null) {
-            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+            terminalOutputService.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.primary(num);
         num = getMakeDirNum(mainTextIO, "Enter secondary quantity number:");
         if (num == null) {
-            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+            terminalOutputService.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.secondary(num);
         if (!isSequential) {
             num = getMakeDirNum(mainTextIO, "Enter number of directory blocks:");
             if (num == null) {
-                terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+                terminalOutputService.println(Constants.MAKE_DIR_EXIT_MSG);
                 return;
             }
             createParamsBuilder.dirblk(num);
@@ -86,19 +87,19 @@ public class MakeDirController extends DependencyController {
         }
         input = getMakeDirStr(mainTextIO, "Enter record format, FB, VB, U, etc:");
         if (input == null) {
-            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+            terminalOutputService.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.recfm(input);
         num = getMakeDirNum(mainTextIO, "Enter block size number:");
         if (num == null) {
-            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+            terminalOutputService.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.blksize(num);
         num = getMakeDirNum(mainTextIO, "Enter record length number:");
         if (num == null) {
-            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+            terminalOutputService.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         createParamsBuilder.lrecl(num);
@@ -106,7 +107,7 @@ public class MakeDirController extends DependencyController {
             while (true) {
                 input = getMakeDirStr(mainTextIO, "Enter dataset type (LIBRARY or PDS or 's' to skip):");
                 if (input == null) {
-                    terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+                    terminalOutputService.println(Constants.MAKE_DIR_EXIT_MSG);
                     return;
                 }
                 if ("LIBRARY".equalsIgnoreCase(input) || "PDS".equalsIgnoreCase(input)) {
@@ -120,7 +121,7 @@ public class MakeDirController extends DependencyController {
         }
         input = getMakeDirStr(mainTextIO, "Enter volume name ('s' to skip):");
         if (input == null) {
-            terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+            terminalOutputService.println(Constants.MAKE_DIR_EXIT_MSG);
             return;
         }
         if (!"s".equalsIgnoreCase(input) && !"skip".equalsIgnoreCase(input)) {
@@ -135,15 +136,15 @@ public class MakeDirController extends DependencyController {
                 break;
             }
             if ("n".equalsIgnoreCase(input) || "no".equalsIgnoreCase(input)) {
-                terminal.println(Constants.MAKE_DIR_EXIT_MSG);
+                terminalOutputService.println(Constants.MAKE_DIR_EXIT_MSG);
                 return;
             }
         }
         ResponseStatus responseStatus = makeDirService.create(target, createParams);
-        terminal.println(responseStatus.getMessage());
+        terminalOutputService.println(responseStatus.getMessage());
         if (!responseStatus.isStatus()) {
-            terminal.println(responseStatus.getMessage());
-            terminal.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
+            terminalOutputService.println(responseStatus.getMessage());
+            terminalOutputService.println(Constants.COMMAND_EXECUTION_ERROR_MSG);
         }
     }
 

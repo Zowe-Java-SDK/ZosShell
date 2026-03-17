@@ -35,13 +35,13 @@ public class ChangeDirectoryCommand extends NoOptionCommand {
         ResponseStatus rs = ctrl.cd(ctx.currDataset, args.get(0).toUpperCase());
 
         if (!rs.isStatus()) {
-            ctx.terminal.println(rs.getMessage());
+            ctx.out(rs.getMessage());
             return;
         }
 
         ctx.currDataset = rs.getOptionalData();
         ctx.currDatasetMax = Math.max(ctx.currDatasetMax, ctx.currDataset.length());
-        ctx.terminal.println("set to " + ctx.currDataset);
+        ctx.out("set to " + ctx.currDataset);
     }
 
 }
