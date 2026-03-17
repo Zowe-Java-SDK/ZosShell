@@ -44,7 +44,7 @@ public class SetCommand extends NoOptionCommand {
         Matcher matcher = KEY_VALUE_PATTERN.matcher(kv);
 
         if (!matcher.matches()) {
-            ctx.terminal.println("Invalid syntax. Expected KEY=VALUE (exactly one '=' allowed)");
+            ctx.out("Invalid syntax. Expected KEY=VALUE (exactly one '=' allowed)");
             printHelp(ctx);
             return;
         }
@@ -57,7 +57,7 @@ public class SetCommand extends NoOptionCommand {
                 .container()
                 .getEnvVariableController();
 
-        ctx.terminal.println(env.set(key + "=" + value));
+        ctx.out(env.set(key + "=" + value));
     }
 
 }

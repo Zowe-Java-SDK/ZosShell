@@ -35,7 +35,7 @@ public class CatCommand extends NoOptionCommand {
                 .getConcatController(ctx.zosConnection, ctx.timeout);
 
         String result = ctrl.cat(ctx.currDataset, args.get(0));
-        ctx.terminal.println(result);
+        ctx.out(result);
         ctx.searchCache = new SearchCache("cat", new StringBuilder(result));
     }
 

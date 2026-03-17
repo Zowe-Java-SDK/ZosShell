@@ -46,11 +46,11 @@ public class ChangeConnectionCommand extends NoOptionCommand {
             changeIndex = num != 0 ? num - 1 : 0;
             var numOfConnections = ConfigSingleton.getInstance().getZosConnections().size() - 1;
             if (changeIndex < 0 || changeIndex > numOfConnections) {
-                ctx.terminal.println(Constants.NO_CONNECTION);
+                ctx.out(Constants.NO_CONNECTION);
                 return;
             }
         } catch (NumberFormatException e) {
-            ctx.terminal.println("Invalid index");
+            ctx.out("Invalid index");
             return;
         }
 
@@ -67,7 +67,7 @@ public class ChangeConnectionCommand extends NoOptionCommand {
         var msg = String.format("Connection changed:\nhost:%s\nuser:%s\nzosmfport:%s\nsshport:%s",
                 ctx.zosConnection.getHost(), ctx.zosConnection.getUser(), ctx.zosConnection.getZosmfPort(),
                 ctx.sshConnection.getPort());
-        ctx.terminal.println(msg);
+        ctx.out(msg);
     }
 
 }

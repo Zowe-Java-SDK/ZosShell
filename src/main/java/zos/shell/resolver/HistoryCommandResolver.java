@@ -5,17 +5,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.history.HistoryService;
+import zos.shell.service.terminal.TerminalOutputService;
 
 public class HistoryCommandResolver {
 
     private static final Logger LOG = LoggerFactory.getLogger(HistoryCommandResolver.class);
 
-    private final TextTerminal<?> terminal;
     private final HistoryService historyService;
+    private final TerminalOutputService terminalOutputService;
 
     public HistoryCommandResolver(TextTerminal<?> terminal, HistoryService historyService) {
         LOG.debug("*** HistoryCommandResolver ***");
-        this.terminal = terminal;
+        this.terminalOutputService = new TerminalOutputService(terminal);
         this.historyService = historyService;
     }
 
@@ -31,7 +32,7 @@ public class HistoryCommandResolver {
 
         String cmd = String.join(" ", command);
         if (cmd.length() == 1) { // just "!"
-            terminal.println(Constants.MISSING_PARAMETERS);
+            terminalOutputService.println(Constants.MISSING_PARAMETERS);
             return null;
         }
 
@@ -47,7 +48,7 @@ public class HistoryCommandResolver {
         }
 
         if (resolved == null) {
-            terminal.println("History not found for: " + cmd);
+            terminalOutputService.println("History not found for: " + cmd);
             return null;
         }
 

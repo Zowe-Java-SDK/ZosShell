@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.datasetlst.DatasetListingService;
 import zos.shell.service.memberlst.MemberListingService;
+import zos.shell.service.terminal.TerminalOutputService;
 import zos.shell.utility.DsnUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
@@ -21,6 +22,7 @@ public class ListingService {
     private static final Logger LOG = LoggerFactory.getLogger(ListingService.class);
 
     private final TextTerminal<?> terminal;
+    private final TerminalOutputService terminalOutputService;
     private final long timeout;
     private List<Member> members = new ArrayList<>();
     private List<Dataset> datasets = new ArrayList<>();
@@ -30,6 +32,7 @@ public class ListingService {
     public ListingService(final TextTerminal<?> terminal, final DsnList dsnList, final long timeout) {
         LOG.debug("*** ListingService ***");
         this.terminal = terminal;
+        this.terminalOutputService = new TerminalOutputService(terminal);
         this.dsnList = dsnList;
         this.timeout = timeout;
     }
@@ -42,25 +45,25 @@ public class ListingService {
             member = Optional.of(memberValue.toUpperCase());
         }
 
-        datasets = getDataSets(dataset);
-        isDatasets = datasets.size() > 1;
-        members = getMembers(dataset);
+        this.datasets = getDataSets(dataset);
+        this.isDatasets = datasets.size() > 1;
+        this.members = getMembers(dataset);
 
         member.ifPresentOrElse((m) -> {
             int index = m.indexOf("*");
             String searchForMember = index == -1 ? m : m.substring(0, index);
             if (m.equals(searchForMember)) {
-                members = DsnUtil.getMembersByFilter(searchForMember, members);
+                this.members = DsnUtil.getMembersByFilter(searchForMember, this.members);
             } else {
-                members = DsnUtil.getMembersByStartsWithFilter(searchForMember, members);
+                this.members = DsnUtil.getMembersByStartsWithFilter(searchForMember, this.members);
             }
         }, () -> displayDataSets(dataset, isColumnView, isAttributes));
-        int membersSize = members.size();
+        int membersSize = this.members.size();
         if (member.isPresent() && membersSize == 0) {
-            terminal.println(Constants.NO_MEMBERS);
+            this.terminalOutputService.println(Constants.NO_MEMBERS);
             return;
         }
-        displayListStatus(membersSize, datasets.size());
+        displayListStatus(membersSize, this.datasets.size());
 
         if (!isColumnView) {  // ls -l
             displayMembers(isAttributes);
@@ -73,11 +76,11 @@ public class ListingService {
 
         // ls
         var line = new StringBuilder();
-        for (var item : members) {
+        for (var item : this.members) {
             line.append(String.format("%-8s", item.getMember()));
             line.append(" ");
         }
-        terminal.println(line.toString());
+        this.terminalOutputService.println(line.toString());
 
         members.clear();
         datasets.clear();
@@ -100,14 +103,16 @@ public class ListingService {
     private void displayListStatus(final int membersSize, final int dataSetsSize) {
         LOG.debug("*** displayListStatus ***");
         if (membersSize == 0 && dataSetsSize == 1) {
-            terminal.println(Constants.NO_MEMBERS);
+            this.terminalOutputService.println(Constants.NO_MEMBERS);
         }
         if (membersSize == 0 && dataSetsSize == 0) {
-            terminal.println(Constants.NO_LISTING);
+            this.terminalOutputService.println(Constants.NO_LISTING);
         }
     }
 
-    private void displayDataSets(final String ignoreCurrDataSet, final boolean isColumnView, final boolean isAttributes) {
+    private void displayDataSets(final String ignoreCurrDataSet,
+                                 final boolean isColumnView,
+                                 final boolean isAttributes) {
         LOG.debug("*** displayDataSets ***");
         if (this.datasets.isEmpty() || (this.datasets.size() == 1
                 && ignoreCurrDataSet.equalsIgnoreCase(this.datasets.get(0).getDsname()))) {
@@ -115,12 +120,12 @@ public class ListingService {
         }
         if (!isColumnView && isAttributes) { // ls -l
             var columnFormat = "%-11s %-11s %-8s %-5s %-5s %-6s %-7s %-5s";
-            terminal.println(String.format(columnFormat,
+            this.terminalOutputService.println(String.format(columnFormat,
                     "cdate", "rdate", "vol", "dsorg", "recfm", "blksz", "dsntp", "dsname"));
             this.datasets.forEach(ds -> {
                 var dsname = ds.getDsname();
                 if (!dsname.equalsIgnoreCase(ignoreCurrDataSet)) {
-                    terminal.println(String.format(columnFormat, ds.getCdate(),
+                    this.terminalOutputService.println(String.format(columnFormat, ds.getCdate(),
                             ds.getRdate(), ds.getVol(),
                             ds.getDsorg(), ds.getRecfm(),
                             ds.getBlksz(), ds.getDsntp(),
@@ -131,7 +136,7 @@ public class ListingService {
             this.datasets.forEach(ds -> {
                 var dsname = ds.getDsname();
                 if (!dsname.equalsIgnoreCase(ignoreCurrDataSet)) {
-                    terminal.println(dsname);
+                    this.terminalOutputService.println(dsname);
                 }
             });
         }
@@ -143,18 +148,18 @@ public class ListingService {
             return;
         }
         var columnFormat = "%-8s %-10s %-10s %-4s %-5s";
-        if (isDatasets) {
-            terminal.println();
+        if (this.isDatasets) {
+            this.terminal.println();
         }
         if (isAttributes) {
-            terminal.println(String.format(columnFormat, "user", "cdate", "mdate", "mod", "member"));
+            this.terminalOutputService.println(String.format(columnFormat, "user", "cdate", "mdate", "mod", "member"));
             for (var member : this.members) {
-                terminal.println(String.format(columnFormat, member.getUser(),
+                this.terminalOutputService.println(String.format(columnFormat, member.getUser(),
                         member.getC4date(), member.getM4date(),
                         member.getMod(), member.getMember()));
             }
         } else {
-            this.members.forEach(m -> terminal.println(m.getMember()));
+            this.members.forEach(m -> this.terminalOutputService.println(m.getMember()));
         }
     }
 

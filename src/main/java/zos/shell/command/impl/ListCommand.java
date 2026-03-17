@@ -58,7 +58,7 @@ public class ListCommand extends AbstractCommand {
         // no source specified
         if (args.isEmpty()) {
             if (ctx.currDataset.isBlank()) {
-                ctx.terminal.println(Constants.DATASET_NOT_SPECIFIED);
+                ctx.out(Constants.DATASET_NOT_SPECIFIED);
                 return;
             }
 
@@ -69,7 +69,7 @@ public class ListCommand extends AbstractCommand {
                 responseStatus = listingController.ls(ctx.currDataset);
             }
             if (!responseStatus.isStatus()) {
-                ctx.terminal.println(responseStatus.getMessage());
+                ctx.out(responseStatus.getMessage());
             }
 
             return;
@@ -90,7 +90,7 @@ public class ListCommand extends AbstractCommand {
 
         // error out if no pwd set
         if (ctx.currDataset.isBlank()) {
-            ctx.terminal.println(Constants.DATASET_NOT_SPECIFIED);
+            ctx.out(Constants.DATASET_NOT_SPECIFIED);
             return;
         }
 

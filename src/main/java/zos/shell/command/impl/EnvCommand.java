@@ -34,7 +34,7 @@ public class EnvCommand extends NoOptionCommand {
                 .getEnvVariableController()
                 .env();
 
-        ctx.terminal.println(result);
+        ctx.out(result);
         ctx.searchCache = new SearchCache("env", new StringBuilder(result));
     }
 

@@ -67,7 +67,7 @@ public class UsermodCommand extends AbstractCommand {
             result += controller.change("-p") + "\n";
         }
 
-        ctx.terminal.println(result.trim());
+        ctx.out(result.trim());
     }
 
 }

@@ -35,6 +35,7 @@ import zos.shell.service.omvs.SshService;
 import zos.shell.service.path.PathService;
 import zos.shell.service.rename.RenameService;
 import zos.shell.service.search.SearchCacheService;
+import zos.shell.service.terminal.TerminalOutputService;
 import zos.shell.service.tso.TsoService;
 import zos.shell.service.uname.UnameService;
 import zos.shell.service.usermod.UsermodService;
@@ -118,7 +119,8 @@ public class ControllerFactoryContainer {
         LOG.debug("*** getChangeWinController ***");
         var controller = (ChangeWinController) controllers.get(ContainerType.Name.CHANGE_WINDOW);
         if (controller == null) {
-            var service = new ChangeWinService(terminal);
+            var outputService = new TerminalOutputService(terminal);
+            var service = new ChangeWinService(terminal, outputService::redrawBufferedOutput);
             controller = new ChangeWinController(service);
             this.controllers.put(ContainerType.Name.CHANGE_WINDOW, controller);
         }

@@ -33,7 +33,7 @@ public class SubmitCommand extends NoOptionCommand {
         var ctrl = ControllerFactoryContainerHolder.container()
                 .getSubmitController(ctx.zosConnection, ctx.timeout);
 
-        ctx.terminal.println(ctrl.submit(ctx.currDataset, args.get(0)));
+        ctx.out(ctrl.submit(ctx.currDataset, args.get(0)));
     }
 
 }

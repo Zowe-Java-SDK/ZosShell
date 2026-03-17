@@ -30,10 +30,10 @@ public class PwdCommand extends NoOptionCommand {
         }
 
         if (ctx.currDataset.isBlank()) {
-            ctx.terminal.println(Constants.DATASET_NOT_SPECIFIED);
+            ctx.out(Constants.DATASET_NOT_SPECIFIED);
             return;
         }
-        ctx.terminal.println(ctx.currDataset);
+        ctx.out(ctx.currDataset);
     }
 
 }

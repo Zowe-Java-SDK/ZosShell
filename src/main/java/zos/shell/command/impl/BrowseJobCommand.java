@@ -58,7 +58,7 @@ public class BrowseJobCommand extends AbstractCommand {
                 .getBrowseJobController(ctx.zosConnection, all, ctx.timeout);
 
         String result = controller.browseJob(args.get(0));
-        ctx.terminal.println(result);
+        ctx.out(result);
         ctx.searchCache = new SearchCache("browsejob", new StringBuilder(result));
     }
 

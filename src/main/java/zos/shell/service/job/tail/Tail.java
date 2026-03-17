@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.job.browse.BrowseLog;
+import zos.shell.service.terminal.TerminalOutputService;
 import zowe.client.sdk.zosjobs.methods.JobGet;
 
 import java.util.Arrays;
@@ -14,12 +15,12 @@ public class Tail extends BrowseLog {
 
     private static final Logger LOG = LoggerFactory.getLogger(Tail.class);
 
-    private final TextTerminal<?> terminal;
+    private final TerminalOutputService terminalOutputService;
 
     public Tail(final TextTerminal<?> terminal, final JobGet retrieve, final long timeout) {
         super(retrieve, true, timeout);
         LOG.debug("*** Tail ***");
-        this.terminal = terminal;
+        this.terminalOutputService = new TerminalOutputService(terminal);
     }
 
     public ResponseStatus tail(final String target, final int lines) {
@@ -52,14 +53,14 @@ public class Tail extends BrowseLog {
 
     private void displayAll(final List<String> output) {
         LOG.debug("*** displayAll ***");
-        output.forEach(terminal::println);
+        output.forEach(terminalOutputService::println);
     }
 
     private ResponseStatus display(final int lines, final int size, final List<String> output) {
         LOG.debug("*** display ***");
         var str = new StringBuilder();
         for (var i = size - lines; i < size; i++) {
-            terminal.println(output.get(i));
+            terminalOutputService.println(output.get(i));
             str.append(output.get(i)).append("\n");
         }
         return new ResponseStatus(str.toString(), true);

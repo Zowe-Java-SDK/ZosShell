@@ -36,7 +36,7 @@ public class CopyCommand extends NoOptionCommand {
                 .getCopyController(ctx.zosConnection, ctx.timeout);
 
         String result = copyController.copy(ctx.currDataset, args.toArray(String[]::new));
-        ctx.terminal.println(result);
+        ctx.out(result);
     }
 
 }

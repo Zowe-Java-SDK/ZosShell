@@ -44,7 +44,7 @@ public class MvsCommand extends NoOptionCommand {
 
         String result = ctrl.issueConsole(command);
 
-        ctx.terminal.println(result);
+        ctx.out(result);
         ctx.searchCache = new SearchCache("mvs", new StringBuilder(result));
     }
 

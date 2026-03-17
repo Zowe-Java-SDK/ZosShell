@@ -41,6 +41,7 @@ public class ClearCommand extends NoOptionCommand {
             System.gc();
         }
         ctx.terminal.println();
+        ctx.clear();
     }
 
 }

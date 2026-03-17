@@ -36,7 +36,7 @@ public class SearchCommand extends NoOptionCommand {
         }
 
         if (ctx.searchCache == null) {
-            ctx.terminal.println("No previous output to search.");
+            ctx.out("No previous output to search.");
             return;
         }
 

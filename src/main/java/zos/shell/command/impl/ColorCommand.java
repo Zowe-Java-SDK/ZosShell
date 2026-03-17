@@ -38,13 +38,13 @@ public class ColorCommand extends NoOptionCommand {
 
         boolean isColor = ColorUtil.validate(args.get(0));
         if (!isColor) {
-            ctx.terminal.println("Invalid color: " + args.get(0));
+            ctx.out("Invalid color: " + args.get(0));
             return;
         }
         if (args.size() > 1) {
             isColor = ColorUtil.validate(args.get(1));
             if (!isColor) {
-                ctx.terminal.println("Invalid color: " + args.get(1));
+                ctx.out("Invalid color: " + args.get(1));
                 return;
             }
         }
@@ -53,7 +53,7 @@ public class ColorCommand extends NoOptionCommand {
                 .container()
                 .getChangeWinController(ctx.terminal);
         String result = controller.changeColorSettings(args.get(0), args.size() == 2 ? args.get(1) : null);
-        ctx.terminal.println(result);
+        ctx.out(result);
     }
 
 }

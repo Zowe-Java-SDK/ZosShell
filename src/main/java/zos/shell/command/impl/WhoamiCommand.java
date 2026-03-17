@@ -28,7 +28,7 @@ public class WhoamiCommand extends NoOptionCommand {
             return;
         }
 
-        ctx.terminal.println(ctx.zosConnection.getUser());
+        ctx.out(ctx.zosConnection.getUser());
     }
 
 }

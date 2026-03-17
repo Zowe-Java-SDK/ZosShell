@@ -46,25 +46,25 @@ public class RemoveCommand extends NoOptionCommand {
         } else if (ctx.currDataset.isBlank() && DsnUtil.isDataset(target)) {
             prompt = "Are you sure you want to delete dataset " + target + " y/n";
         } else if (ctx.currDataset.isBlank() && DatasetMember.getDatasetAndMember(target) == null) {
-            ctx.terminal.println(Constants.DATASET_NOT_SPECIFIED);
+            ctx.out(Constants.DATASET_NOT_SPECIFIED);
             return;
         } else {
             prompt = "Are you sure you want to delete " + target + " y/n";
         }
 
-        ctx.terminal.printf("%s", prompt);
+        ctx.out(String.format("%s", prompt));
         String answer = TerminalSingleton.getInstance()
                 .getMainTextIO().newStringInputReader().read("?");
 
         if (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("yes")) {
-            ctx.terminal.println("delete canceled");
+            ctx.out("delete canceled");
             return;
         }
 
         var ctrl = ControllerFactoryContainerHolder.container()
                 .getDeleteController(ctx.zosConnection, ctx.timeout);
 
-        ctx.terminal.println(ctrl.rm(ctx.currDataset, target));
+        ctx.out(ctrl.rm(ctx.currDataset, target));
     }
 
 }
