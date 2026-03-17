@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.search.SearchCache;
+import zos.shell.service.terminal.TerminalOutputService;
 import zos.shell.singleton.ConnSingleton;
 import zos.shell.singleton.HistorySingleton;
 
@@ -13,6 +14,7 @@ public class CommandRouter {
     private static final Logger LOG = LoggerFactory.getLogger(CommandRouter.class);
 
     private final TextTerminal<?> terminal;
+    private final TerminalOutputService terminalOutputService;
     private final CommandRegistry registry = new CommandRegistry();
 
     private long timeout = Constants.FUTURE_TIMEOUT_VALUE;
@@ -23,6 +25,7 @@ public class CommandRouter {
 
     public CommandRouter(TextTerminal<?> terminal) {
         this.terminal = terminal;
+        this.terminalOutputService = new TerminalOutputService(terminal);
     }
 
     public void routeCommand(String input) {
@@ -33,12 +36,13 @@ public class CommandRouter {
         HistorySingleton.getInstance().getHistory().addHistory(input.split("\\s+"));
 
         if (handler == null) {
-            terminal.println(Constants.INVALID_COMMAND);
+            this.terminalOutputService.println(Constants.INVALID_COMMAND);
             return;
         }
 
         CommandContext ctx = new CommandContext(
                 terminal,
+                terminalOutputService,
                 ConnSingleton.getInstance().getCurrZosConnection(),
                 ConnSingleton.getInstance().getCurrSshConnection(),
                 timeout,

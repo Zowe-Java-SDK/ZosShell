@@ -23,6 +23,7 @@ public class CommandContext {
     public final static ListMultimap<String, String> dataSets = ArrayListMultimap.create();
 
     public CommandContext(TextTerminal<?> terminal,
+                          TerminalOutputService terminalOutputService,
                           ZosConnection zosConnection,
                           SshConnection sshConnection,
                           long timeout,
@@ -31,7 +32,7 @@ public class CommandContext {
                           SearchCache searchCache,
                           int currZosConnectionIndex) {
         this.terminal = terminal;
-        this.terminalOutputService = new TerminalOutputService(terminal);
+        this.terminalOutputService = terminalOutputService;
         this.zosConnection = zosConnection;
         this.sshConnection = sshConnection;
         this.timeout = timeout;
