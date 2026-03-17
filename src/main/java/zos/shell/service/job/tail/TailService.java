@@ -12,13 +12,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class TailService {
+public class TailService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(TailService.class);
 
     private final TextTerminal<?> terminal;
     private final JobGet retrieve;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
     public TailService(final TextTerminal<?> terminal, final JobGet retrieve, final long timeout) {
         LOG.debug("*** TailService ***");
@@ -29,9 +30,19 @@ public class TailService {
 
     public ResponseStatus tail(String target, int lines) {
         LOG.debug("*** tail ***");
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureTail(terminal, retrieve, lines, timeout, target));
-        return FutureUtil.getFutureResponse(submit, pool, timeout);
+        Future<ResponseStatus> future = pool.submit(new FutureTail(
+                terminal,
+                retrieve,
+                lines,
+                timeout,
+                target
+        ));
+        return FutureUtil.getResponseStatus(future, timeout);
+    }
+
+    @Override
+    public void close() {
+        pool.shutdown();
     }
 
 }

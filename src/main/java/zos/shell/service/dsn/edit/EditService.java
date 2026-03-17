@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class EditService {
+public class EditService implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(EditService.class);
 
@@ -22,9 +22,12 @@ public class EditService {
     private final PathService pathService;
     private final CheckSumService checkSumService;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
-    public EditService(final Download download, final PathService pathService, final CheckSumService checkSumService,
-                       long timeout) {
+    public EditService(final Download download,
+                       final PathService pathService,
+                       final CheckSumService checkSumService,
+                       final long timeout) {
         LOG.debug("*** EditService ***");
         this.download = download;
         this.pathService = pathService;
@@ -33,13 +36,22 @@ public class EditService {
     }
 
     public ResponseStatus open(final String dataset, final String target) {
-        LOG.debug("*** open ***");
+        LOG.debug("Opening editor for dataset '{}' target '{}'", dataset, target);
         if (DsnUtil.isMember(target) && dataset.isBlank()) {
             return new ResponseStatus(Constants.DATASET_NOT_SPECIFIED, false);
         }
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureEdit(download, pathService, checkSumService, dataset, target));
-        return FutureUtil.getFutureResponse(submit, pool, timeout);
+        Future<ResponseStatus> future = pool.submit(new FutureEdit(download,
+                pathService,
+                checkSumService,
+                dataset,
+                target
+        ));
+        return FutureUtil.getResponseStatus(future, timeout);
+    }
+
+    @Override
+    public void close() {
+        pool.shutdown();
     }
 
 }

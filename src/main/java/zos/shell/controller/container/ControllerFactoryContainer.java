@@ -197,13 +197,10 @@ public class ControllerFactoryContainer {
             var downloadMemberService = new DownloadMemberService(connection, this.pathService, isBinary, timeout);
             var downloadPdsMemberService = new DownloadPdsMemberService(connection, this.pathService, isBinary, timeout);
             var downloadSeqDatasetService = new DownloadSeqDatasetService(connection, this.pathService, isBinary, timeout);
-            var downloadAllMembersService = new DownloadAllMembersService(connection,
-                    new DownloadMemberListService(connection, isBinary, timeout), timeout);
             var downloadMembersService = new DownloadMembersService(connection,
                     new DownloadMemberListService(connection, isBinary, timeout), timeout);
             controller = new DownloadDsnController(downloadMemberService, downloadPdsMemberService,
-                    downloadSeqDatasetService, downloadAllMembersService, downloadMembersService,
-                    this.envVariableController, dependency);
+                    downloadSeqDatasetService, downloadMembersService, this.envVariableController, dependency);
             this.controllers.put(ContainerType.Name.DOWNLOAD, controller);
         }
         return controller;

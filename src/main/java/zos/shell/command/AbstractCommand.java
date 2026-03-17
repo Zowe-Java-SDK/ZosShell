@@ -10,6 +10,7 @@ import java.util.Arrays;
  * Base class for commands.
  * Provides clean usage, help support, and argument parsing via Apache Commons CLI.
  */
+@SuppressWarnings("unused")
 public abstract class AbstractCommand implements CommandHandler {
 
     /**

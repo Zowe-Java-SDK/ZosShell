@@ -17,6 +17,7 @@ public class TsoService {
 
     private final TsoCmd issueTso;
     private final long timeout;
+    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
 
     public TsoService(final TsoCmd issueTso, final long timeout) {
         LOG.debug("*** TsoService ***");
@@ -26,13 +27,8 @@ public class TsoService {
 
     public ResponseStatus issueCommand(final String command) {
         LOG.debug("*** issueCommand ***");
-        ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
-        Future<ResponseStatus> submit = pool.submit(new FutureTso(issueTso, command));
-        ResponseStatus responseStatus = FutureUtil.getFutureResponse(submit, pool, timeout);
-        if (!responseStatus.isStatus()) {
-            return new ResponseStatus(responseStatus.getMessage(), false);
-        }
-        return responseStatus;
+        Future<ResponseStatus> future = pool.submit(new FutureTso(issueTso, command));
+        return FutureUtil.getResponseStatus(future, timeout);
     }
 
 }
