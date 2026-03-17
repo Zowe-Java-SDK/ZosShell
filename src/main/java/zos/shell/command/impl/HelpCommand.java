@@ -63,7 +63,6 @@ public class HelpCommand extends NoOptionCommand {
         cmd.getArgList().forEach(c -> {
             if (commands.containsKey(c)) {
                 commands.get(c).printHelp(ctx);
-                System.out.println(size.get() + " " + count.get());
                 if (size.get() != count.get()) {
                     ctx.terminal.println();
                 }
