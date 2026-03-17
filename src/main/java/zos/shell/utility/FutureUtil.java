@@ -49,6 +49,10 @@ public final class FutureUtil {
             throw new ZosmfRequestException(getErrorMessage(e));
         } catch (ExecutionException e) {
             future.cancel(true);
+            Throwable cause = e.getCause();
+            if (cause instanceof ZosmfRequestException) {
+                throw (ZosmfRequestException) cause;
+            }
             throw new ZosmfRequestException(getErrorMessage(e));
         } catch (TimeoutException e) {
             future.cancel(true);
