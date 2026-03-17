@@ -8,6 +8,7 @@ import zos.shell.command.AbstractCommand;
 import zos.shell.command.CommandContext;
 import zos.shell.constants.Constants;
 import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.response.ResponseStatus;
 import zos.shell.utility.DsnUtil;
 
 public class ListCommand extends AbstractCommand {
@@ -60,11 +61,17 @@ public class ListCommand extends AbstractCommand {
                 ctx.terminal.println(Constants.DATASET_NOT_SPECIFIED);
                 return;
             }
+
+            ResponseStatus responseStatus;
             if (longList) {
-                listingController.lsl(ctx.currDataset, withAttr);
+                responseStatus = listingController.lsl(ctx.currDataset, withAttr);
             } else {
-                listingController.ls(ctx.currDataset);
+                responseStatus = listingController.ls(ctx.currDataset);
             }
+            if (!responseStatus.isStatus()) {
+                ctx.terminal.println(responseStatus.getMessage());
+            }
+
             return;
         }
 
