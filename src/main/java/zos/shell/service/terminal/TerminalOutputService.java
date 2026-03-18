@@ -45,6 +45,7 @@ public class TerminalOutputService {
     }
 
     public void clear() {
+        LOG.debug("*** clear ***");
         ScreenBufferSingleton.getInstance().clear();
     }
 
