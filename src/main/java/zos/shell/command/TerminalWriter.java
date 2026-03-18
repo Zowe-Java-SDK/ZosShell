@@ -3,7 +3,6 @@ package zos.shell.command;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.service.job.browse.BrowseLog;
 import zos.shell.service.terminal.TerminalOutputService;
 
 import java.io.Writer;
