@@ -52,9 +52,10 @@ public class HelpCommand extends NoOptionCommand {
     }
 
     private void printAllCommands() {
-        commands.keySet().stream()
+        commands.keySet()
+                .stream()
                 .sorted()
-                .forEach(ctx.terminal::println);
+                .forEach(ctx::out);
     }
 
     private void printCommandHelp(CommandLine cmd) {
