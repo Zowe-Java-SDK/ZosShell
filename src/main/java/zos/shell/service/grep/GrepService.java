@@ -136,7 +136,7 @@ public class GrepService implements AutoCloseable {
         LOG.debug("*** futureResults ***");
         List<Future<List<String>>> futures = new ArrayList<>();
 
-        for (Member member : members) {
+        for (var member : members) {
             if (member != null && member.getMember() != null && !member.getMember().isBlank()) {
                 String name = member.getMember();
                 ConcatService concatService = createConcatServiceForMemberSearch();
