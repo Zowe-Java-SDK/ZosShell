@@ -74,7 +74,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         try {
             ConfigSingleton.getInstance().readConfig(connectionIdentifier);
         } catch (NumberFormatException | IOException e) {
-            final var mainTerminal = terminalSingleton.getMainTerminal();
+            var mainTerminal = terminalSingleton.getMainTerminal();
             mainTerminal.println("Error reading or parsing config.json file, try again...");
             mainTerminal.println("Error: " + e.getMessage());
             mainTerminal.read(true);
@@ -113,7 +113,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private static void failAndExit(final Exception e) {
         LOG.debug("*** failAndExit ***");
-        final var mainTerminal = TerminalSingleton.getInstance().getMainTerminal();
+        var mainTerminal = TerminalSingleton.getInstance().getMainTerminal();
         mainTerminal.println("ERROR: Default connection invalid, try again...");
         mainTerminal.println("Error: " + e.getMessage());
         LOG.error("Default connection invalid.", e);
