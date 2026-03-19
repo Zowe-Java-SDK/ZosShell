@@ -27,6 +27,7 @@ public class ShellStateMachine {
     private String input;
 
     public ShellStateMachine(TextIO textIO) {
+        LOG.debug("*** ShellStateMachine ***");
         this.textIO = textIO;
         TextTerminal<?> terminal = TerminalSingleton.getInstance().getTerminal();
         this.outputService = new TerminalOutputService(terminal);
@@ -36,8 +37,7 @@ public class ShellStateMachine {
     }
 
     public void run() {
-        LOG.debug("*** ShellStateMachine.run ***");
-
+        LOG.debug("*** run ***");
         while (state != ShellState.EXIT) {
             switch (state) {
                 case READ_INPUT:
@@ -53,7 +53,7 @@ public class ShellStateMachine {
     }
 
     private void readInput() {
-        LOG.debug("*** ShellStateMachine.readInput ***");
+        LOG.debug("*** readInput ***");
         input = textIO
                 .newStringInputReader()
                 .withMaxLength(80)
@@ -67,7 +67,7 @@ public class ShellStateMachine {
     }
 
     private void processInput() {
-        LOG.debug("*** ShellStateMachine.processInput ***");
+        LOG.debug("*** processInput ***");
         // font size change short-circuit
         if (isFontSizeChanged()) {
             outputService.println("Font size updated.");
@@ -100,14 +100,14 @@ public class ShellStateMachine {
     }
 
     private boolean isExitCommand(String input) {
-        LOG.debug("*** ShellStateMachine.isExitCommand ***");
+        LOG.debug("*** isExitCommand ***");
         return "end".equalsIgnoreCase(input)
                 || "exit".equalsIgnoreCase(input)
                 || "quit".equalsIgnoreCase(input);
     }
 
     private boolean isFontSizeChanged() {
-        LOG.debug("*** ShellStateMachine.isFontSizeChanged ***");
+        LOG.debug("*** isFontSizeChanged ***");
         if (TerminalSingleton.getInstance().isFontSizeChanged()) {
             TerminalSingleton.getInstance().setFontSizeChanged(false);
             return true;
