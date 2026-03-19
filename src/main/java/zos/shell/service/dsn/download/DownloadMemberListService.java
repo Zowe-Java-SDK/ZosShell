@@ -67,7 +67,7 @@ public class DownloadMemberListService implements AutoCloseable {
         EnvVariableController envVariableController = new EnvVariableController(envVariableService);
         PathService pathService = new PathService(ConnSingleton.getInstance(), envVariableController);
 
-        for (Member member : members) {
+        for (var member : members) {
             String memberName = member.getMember();
             if (memberName == null || memberName.isBlank()) {
                 continue;
