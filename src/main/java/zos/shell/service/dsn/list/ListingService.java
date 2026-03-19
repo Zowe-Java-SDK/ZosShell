@@ -21,7 +21,6 @@ public class ListingService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ListingService.class);
 
-    private final TextTerminal<?> terminal;
     private final TerminalOutputService terminalOutputService;
     private final long timeout;
     private List<Member> members = new ArrayList<>();
@@ -31,7 +30,6 @@ public class ListingService {
 
     public ListingService(final TextTerminal<?> terminal, final DsnList dsnList, final long timeout) {
         LOG.debug("*** ListingService ***");
-        this.terminal = terminal;
         this.terminalOutputService = new TerminalOutputService(terminal);
         this.dsnList = dsnList;
         this.timeout = timeout;
