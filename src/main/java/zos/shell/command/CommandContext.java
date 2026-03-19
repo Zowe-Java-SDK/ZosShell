@@ -49,6 +49,10 @@ public class CommandContext {
         this.terminalOutputService.println(text);
     }
 
+    public void out() {
+        this.terminalOutputService.println();
+    }
+
     public void outMultiLines(final String text) {
         this.terminalOutputService.println(text);
     }

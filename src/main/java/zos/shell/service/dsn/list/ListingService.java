@@ -149,7 +149,7 @@ public class ListingService {
         }
         var columnFormat = "%-8s %-10s %-10s %-4s %-5s";
         if (this.isDatasets) {
-            this.terminal.println();
+            this.terminalOutputService.println();
         }
         if (isAttributes) {
             this.terminalOutputService.println(String.format(columnFormat, "user", "cdate", "mdate", "mod", "member"));

@@ -23,6 +23,12 @@ public class TerminalOutputService {
         terminal.println(text);
     }
 
+    public void println() {
+        LOG.debug("*** println no arg ***");
+        ScreenBufferSingleton.getInstance().addLine("");
+        terminal.println();
+    }
+
     public void print(final String text) {
         LOG.debug("*** print ***");
         ScreenBufferSingleton.getInstance().addLine(text);

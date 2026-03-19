@@ -65,7 +65,7 @@ public class HelpCommand extends NoOptionCommand {
             if (commands.containsKey(c)) {
                 commands.get(c).printHelp(ctx);
                 if (size.get() != count.get()) {
-                    ctx.terminal.println();
+                    ctx.out();
                 }
                 count.incrementAndGet();
             }

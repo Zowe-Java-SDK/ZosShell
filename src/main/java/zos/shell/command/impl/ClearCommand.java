@@ -33,14 +33,14 @@ public class ClearCommand extends NoOptionCommand {
             return;
         }
 
-        ctx.terminal.println();
+        ctx.out();
         ctx.terminal.resetToBookmark("top");
         if (ctx.searchCache != null) {
             ctx.searchCache.getOutput().setLength(0);
             ctx.searchCache = null;
             System.gc();
         }
-        ctx.terminal.println();
+        ctx.out();
         ctx.clear();
     }
 
