@@ -30,11 +30,6 @@ public class EnvVariableService {
 
     public void setEnvVariable(final String key, String value) {
         LOG.debug("*** setEnvVariable ***");
-        var p = Pattern.compile("\"([^\"]*)\"");
-        var m = p.matcher(value);
-        while (m.find()) {
-            value = m.group(1);
-        }
         ENV_VARIABLE_SINGLETON.set(key.toUpperCase().trim(), value.trim());
     }
 
