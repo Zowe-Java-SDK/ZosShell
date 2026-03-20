@@ -85,7 +85,7 @@ public class CommandRegistry {
         register("files", new FilesCommand());
         register("count", new CountCommand());
 
-        CommandRegistrySingleton.getInstance().set(this.commands);
+        CommandRegistrySingleton.getInstance().setRegistry(this.commands);
     }
 
     private void register(String name, CommandHandler handler) {

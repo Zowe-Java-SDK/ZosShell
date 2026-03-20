@@ -11,25 +11,30 @@ public final class CommandRegistrySingleton {
 
     private static final Logger LOG = LoggerFactory.getLogger(CommandRegistrySingleton.class);
 
-    public static Map<String, CommandHandler> commands = new HashMap<>();
+    private static final CommandRegistrySingleton INSTANCE = new CommandRegistrySingleton();
 
-    private static class Holder {
-        private static final CommandRegistrySingleton instance = new CommandRegistrySingleton();
+    private final Map<String, CommandHandler> commands = new HashMap<>();
+
+    private CommandRegistrySingleton() {
+        LOG.debug("*** CommandRegistrySingleton ***");
     }
 
     public static CommandRegistrySingleton getInstance() {
         LOG.debug("*** getInstance ***");
-        return CommandRegistrySingleton.Holder.instance;
+        return INSTANCE;
     }
 
-    public Map<String, CommandHandler> getRegistry() {
-        LOG.debug("*** get ***");
-        return commands;
+    public synchronized Map<String, CommandHandler> getRegistry() {
+        LOG.debug("*** getRegistry ***");
+        return new HashMap<>(commands);
     }
 
-    public void set(Map<String, CommandHandler> commands) {
-        LOG.debug("*** register ***");
-        CommandRegistrySingleton.commands = commands;
+    public synchronized void setRegistry(final Map<String, CommandHandler> newCommands) {
+        LOG.debug("*** setRegistry ***");
+        commands.clear();
+        if (newCommands != null) {
+            commands.putAll(newCommands);
+        }
     }
 
 }
