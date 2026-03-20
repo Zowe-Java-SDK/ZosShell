@@ -303,9 +303,9 @@ Here the window is set to display its background in green and font as yellow/bol
 
 ## Troubleshooting
     
-Logging framework log4j2 is configured for the project. Log4j2 configuration is located under src/main/resources/log4j2.xml.  
+Logging framework logback is configured for the project. Logback configuration is located under src/main/resources/logback.xml.  
     
 It is configured to produce output logging while the application is running under the running directory where the application was kicked off.
       
-You are free to change configuration accordingly for your needs. 
+You are free to change configuration accordingly for your needs.  
   
