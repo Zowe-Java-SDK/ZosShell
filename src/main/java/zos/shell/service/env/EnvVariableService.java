@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import zos.shell.singleton.EnvVariableSingleton;
 
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class EnvVariableService {
 
