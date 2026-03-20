@@ -26,9 +26,7 @@ public class EnvVariableController {
         new TreeMap<>(variables).forEach((key, value) -> str.append(key)
                 .append(ENV_SEPARATOR)
                 .append(value)
-                .append(System.lineSeparator()
-                )
-        );
+                .append(System.lineSeparator()));
 
         return str.toString();
     }
