@@ -66,6 +66,7 @@ public class CommandRegistry {
         register("hostname", new HostnameCommand());
         register("whoami", new WhoamiCommand());
         register("uname", new UnameCommand());
+        register("unset", new UnsetCommand());
         register("set", new SetCommand());
 
         // Search / Help

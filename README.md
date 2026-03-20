@@ -108,6 +108,7 @@ The shell performs the following Linux-like commands:
     tail [options] <job>	        Show bottom of job output
     touch <arg>                     Create member if absent
     uname	                        Host & z/OS version
+    unset <arg ...>                 Remove one or more environment variables
     usermod <arg>	                Change username (-u)/password (-p)
     whoami	                        Current username
 

@@ -36,9 +36,9 @@ public final class EnvVariableSingleton {
         return variables.get(key);
     }
 
-    public synchronized void remove(final String key) {
+    public synchronized String remove(final String key) {
         LOG.debug("*** remove ***");
-        variables.remove(key);
+        return variables.remove(key);
     }
 
     public synchronized Map<String, String> getAll() {

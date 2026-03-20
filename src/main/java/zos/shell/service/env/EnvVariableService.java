@@ -32,4 +32,9 @@ public class EnvVariableService {
         ENV_VARIABLE_SINGLETON.set(key.toUpperCase().trim(), value.trim());
     }
 
+    public String removeEnvVariable(final String key) {
+        LOG.debug("*** removeEnvVariable ***");
+        return ENV_VARIABLE_SINGLETON.remove(key.toUpperCase());
+    }
+
 }

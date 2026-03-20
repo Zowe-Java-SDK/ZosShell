@@ -46,4 +46,9 @@ public class EnvVariableController {
         return envVariableService.getValueByEnvName(key);
     }
 
+    public String remove(final String key) {
+        LOG.debug("*** remove ***");
+        return envVariableService.removeEnvVariable(key);
+    }
+
 }
