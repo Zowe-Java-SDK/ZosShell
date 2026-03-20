@@ -159,6 +159,7 @@ public class GrepService implements AutoCloseable {
                 future.cancel(true);
                 Thread.currentThread().interrupt();
                 result.add(getErrorMessage(Constants.EXECUTE_ERROR_MSG, e));
+                break;
             } catch (ExecutionException e) {
                 future.cancel(true);
                 result.add(getErrorMessage(Constants.EXECUTE_ERROR_MSG, e));
