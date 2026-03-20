@@ -30,6 +30,7 @@ public class GrepService implements AutoCloseable {
     private final PathService pathService;
     private final String pattern;
     private final long timeout;
+    private final EnvVariableController envVarController;
     private final ExecutorService poolMin = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
     private final ExecutorService poolMax = Executors.newFixedThreadPool(Constants.THREAD_POOL_MAX);
 
@@ -42,6 +43,7 @@ public class GrepService implements AutoCloseable {
         this.pathService = pathService;
         this.pattern = pattern;
         this.timeout = timeout;
+        this.envVarController = new EnvVariableController(new EnvVariableService());
     }
 
     public List<String> search(final String dataset, final String target) {
@@ -169,19 +171,21 @@ public class GrepService implements AutoCloseable {
         return result;
     }
 
-    // Create per-task service chain to avoid sharing non-thread-safe state across grep tasks.
+    // Create per-task path/download chain since PathService holds mutable per-request state.
     private ConcatService createConcatServiceForMemberSearch() {
         LOG.debug("*** createConcatServiceForMemberSearch ***");
         DsnGet dsnGet = new DsnGet(this.connection);
-        EnvVariableService envVarService = new EnvVariableService();
-        EnvVariableController envVarController = new EnvVariableController(envVarService);
-        PathService memberPathService = new PathService(ConnSingleton.getInstance(), envVarController);
+        PathService memberPathService = new PathService(
+                ConnSingleton.getInstance(),
+                this.envVarController
+        );
         Download download = new Download(dsnGet, memberPathService, true);
         return new ConcatService(download, this.timeout);
     }
 
     @Override
     public void close() {
+        LOG.debug("*** close ***");
         poolMin.shutdown();
         poolMax.shutdown();
     }
