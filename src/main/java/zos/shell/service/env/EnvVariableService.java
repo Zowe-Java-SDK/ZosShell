@@ -11,7 +11,7 @@ public class EnvVariableService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EnvVariableService.class);
 
-    private static final EnvVariableSingleton envVariableSingleton = EnvVariableSingleton.getInstance();
+    private static final EnvVariableSingleton ENV_VARIABLE_SINGLETON = EnvVariableSingleton.getInstance();
 
     public EnvVariableService() {
         LOG.debug("*** EnvVariableService ***");
@@ -19,13 +19,13 @@ public class EnvVariableService {
 
     public String getValueByEnvName(final String key) {
         LOG.debug("*** getValueByEnvName ***");
-        return envVariableSingleton.get(key.toUpperCase()) != null ?
-                envVariableSingleton.get(key.toUpperCase()) : "";
+        String value = ENV_VARIABLE_SINGLETON.get(key.toUpperCase());
+        return value != null ? value : "";
     }
 
     public Map<String, String> getEnvVariables() {
         LOG.debug("*** getEnvVariables ***");
-        return envVariableSingleton.getAll();
+        return ENV_VARIABLE_SINGLETON.getAll();
     }
 
     public void setEnvVariable(final String key, String value) {
@@ -35,7 +35,7 @@ public class EnvVariableService {
         while (m.find()) {
             value = m.group(1);
         }
-        envVariableSingleton.set(key.toUpperCase().trim(), value.trim());
+        ENV_VARIABLE_SINGLETON.set(key.toUpperCase().trim(), value.trim());
     }
 
 }
