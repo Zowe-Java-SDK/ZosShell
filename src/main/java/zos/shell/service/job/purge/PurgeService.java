@@ -40,6 +40,7 @@ public class PurgeService implements AutoCloseable {
 
     @Override
     public void close() {
+        LOG.debug("*** close ***");
         pool.shutdown();
     }
 

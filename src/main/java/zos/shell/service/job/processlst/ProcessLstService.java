@@ -33,6 +33,7 @@ public class ProcessLstService implements AutoCloseable {
 
     @Override
     public void close() {
+        LOG.debug("*** close ***");
         pool.shutdown();
     }
 

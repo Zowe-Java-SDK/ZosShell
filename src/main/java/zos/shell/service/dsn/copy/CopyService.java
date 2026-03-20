@@ -219,6 +219,7 @@ public class CopyService implements AutoCloseable {
 
     @Override
     public void close() {
+        LOG.debug("*** close ***");
         pool.shutdown();
         bulkPool.shutdown();
     }

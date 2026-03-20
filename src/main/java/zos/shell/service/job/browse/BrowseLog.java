@@ -103,6 +103,7 @@ public class BrowseLog implements AutoCloseable {
 
     @Override
     public void close() {
+        LOG.debug("*** close ***");
         pool.shutdown();
     }
 
