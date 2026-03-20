@@ -62,10 +62,8 @@ public class DownloadMemberListService implements AutoCloseable {
     private List<Future<ResponseStatus>> submitDownloads(final String dataset,
                                                          final List<Member> members) {
         List<Future<ResponseStatus>> futures = new ArrayList<>(members.size());
-        DsnGet dsnGet = new DsnGet(connection);
         EnvVariableService envVariableService = new EnvVariableService();
         EnvVariableController envVariableController = new EnvVariableController(envVariableService);
-        PathService pathService = new PathService(ConnSingleton.getInstance(), envVariableController);
 
         for (var member : members) {
             String memberName = member.getMember();
@@ -74,8 +72,11 @@ public class DownloadMemberListService implements AutoCloseable {
             }
 
             futures.add(pool.submit(new FutureMemberDownload(
-                    dsnGet,
-                    pathService,
+                    new DsnGet(connection),
+                    new PathService(
+                            ConnSingleton.getInstance(),
+                            envVariableController
+                    ),
                     dataset,
                     memberName,
                     isBinary
