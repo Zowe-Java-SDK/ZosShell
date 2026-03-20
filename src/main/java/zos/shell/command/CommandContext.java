@@ -3,6 +3,8 @@ package zos.shell.command;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import org.beryx.textio.TextTerminal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.service.search.SearchCache;
 import zos.shell.service.terminal.TerminalOutputService;
 import zowe.client.sdk.core.SshConnection;
@@ -10,6 +12,8 @@ import zowe.client.sdk.core.ZosConnection;
 
 @SuppressWarnings("unused")
 public class CommandContext {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CommandContext.class);
 
     public final TextTerminal<?> terminal;
     public final TerminalOutputService terminalOutputService;
@@ -31,6 +35,7 @@ public class CommandContext {
                           int currDatasetMax,
                           SearchCache searchCache,
                           int currZosConnectionIndex) {
+        LOG.debug("*** CommandContext ***");
         this.terminal = terminal;
         this.terminalOutputService = terminalOutputService;
         this.zosConnection = zosConnection;
@@ -46,22 +51,27 @@ public class CommandContext {
     }
 
     public void out(final String text) {
+        LOG.debug("*** out ***");
         this.terminalOutputService.println(text);
     }
 
     public void out() {
+        LOG.debug("*** out no arg ***");
         this.terminalOutputService.println();
     }
 
     public void outMultiLines(final String text) {
+        LOG.debug("*** outMultiLines ***");
         this.terminalOutputService.println(text);
     }
 
     public void store(final String text) {
+        LOG.debug("*** store ***");
         this.terminalOutputService.store(text);
     }
 
     public void clear() {
+        LOG.debug("*** clear ***");
         this.terminalOutputService.clear();
     }
 

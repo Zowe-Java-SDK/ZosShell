@@ -1,6 +1,8 @@
 package zos.shell.command;
 
 import org.apache.commons.cli.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zos.shell.utility.PromptUtil;
 
 import java.io.PrintWriter;
@@ -13,6 +15,8 @@ import java.util.Arrays;
  */
 @SuppressWarnings("unused")
 public abstract class AbstractCommand implements CommandHandler {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractCommand.class);
 
     /**
      * Command name, e.g., "ls"
@@ -54,6 +58,7 @@ public abstract class AbstractCommand implements CommandHandler {
 
     @Override
     public final void execute(CommandContext ctx, String input) {
+        LOG.debug("*** execute ***");
         ctx.store(PromptUtil.getPrompt() + " " + input);
 
         try {
@@ -92,6 +97,7 @@ public abstract class AbstractCommand implements CommandHandler {
      * Print help/usage cleanly
      */
     public void printHelp(CommandContext ctx) {
+        LOG.debug("*** printHelp ***");
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(120);
 

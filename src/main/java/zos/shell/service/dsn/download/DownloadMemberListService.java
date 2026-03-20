@@ -61,6 +61,7 @@ public class DownloadMemberListService implements AutoCloseable {
 
     private List<Future<ResponseStatus>> submitDownloads(final String dataset,
                                                          final List<Member> members) {
+        LOG.debug("*** submitDownloads ***");
         List<Future<ResponseStatus>> futures = new ArrayList<>(members.size());
         EnvVariableService envVariableService = new EnvVariableService();
         EnvVariableController envVariableController = new EnvVariableController(envVariableService);
@@ -88,6 +89,7 @@ public class DownloadMemberListService implements AutoCloseable {
 
     @Override
     public void close() {
+        LOG.debug("*** close ***");
         pool.shutdown();
     }
 

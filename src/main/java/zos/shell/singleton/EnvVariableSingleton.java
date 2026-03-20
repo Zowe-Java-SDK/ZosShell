@@ -26,7 +26,7 @@ public final class EnvVariableSingleton {
     }
 
     public synchronized void set(final String key, final String value) {
-        LOG.debug("*** set ***");
+        LOG.debug(" *** Setting env variable: key='{}', value='{}' *** ", key, value);
         if (key == null) return;
         variables.put(key, value);
     }

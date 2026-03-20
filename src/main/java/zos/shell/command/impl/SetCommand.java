@@ -23,6 +23,7 @@ public class SetCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
+        LOG.debug("*** SetCommand.description ***");
         return "Set an environment variable in the form KEY=VALUE. " +
                 "Everything after '=' is treated as the value. " +
                 "KEY is converted to uppercase and spaces around '=' are allowed.";
@@ -72,6 +73,7 @@ public class SetCommand extends NoOptionCommand {
     }
 
     private boolean hasUnmatchedQuotes(final String value) {
+        LOG.debug("*** SetCommand.hasUnmatchedQuotes ***");
         boolean inSingle = false;
         boolean inDouble = false;
 
@@ -89,6 +91,7 @@ public class SetCommand extends NoOptionCommand {
     }
 
     private String stripOuterMatchingQuotes(final String value) {
+        LOG.debug("*** SetCommand.stripOuterMatchingQuotes ***");
         if (value.length() >= 2) {
             if ((value.startsWith("\"") && value.endsWith("\"")) ||
                     (value.startsWith("'") && value.endsWith("'"))) {
