@@ -19,13 +19,13 @@ public class EnvVariableService {
 
     public String getValueByEnvName(final String key) {
         LOG.debug("*** getValueByEnvName ***");
-        return envVariableSingleton.getVariables().get(key.toUpperCase()) != null ?
-                envVariableSingleton.getVariables().get(key.toUpperCase()) : "";
+        return envVariableSingleton.get(key.toUpperCase()) != null ?
+                envVariableSingleton.get(key.toUpperCase()) : "";
     }
 
     public Map<String, String> getEnvVariables() {
         LOG.debug("*** getEnvVariables ***");
-        return envVariableSingleton.getVariables();
+        return envVariableSingleton.getAll();
     }
 
     public void setEnvVariable(final String key, String value) {
@@ -35,7 +35,7 @@ public class EnvVariableService {
         while (m.find()) {
             value = m.group(1);
         }
-        envVariableSingleton.getVariables().put(key.toUpperCase().trim(), value.trim());
+        envVariableSingleton.set(key.toUpperCase().trim(), value.trim());
     }
 
 }

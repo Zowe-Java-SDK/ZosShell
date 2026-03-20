@@ -18,27 +18,27 @@ public class ConfigSettings {
                           final Window window) {
         this.hostName = hostName;
         if (hostName != null && !hostName.isBlank()) {
-            EnvVariableSingleton.getInstance().getVariables().put("HOSTNAME", hostName.trim());
+            EnvVariableSingleton.getInstance().set("HOSTNAME", hostName.trim());
         }
         this.downloadPath = downloadPath;
         if (downloadPath != null && !downloadPath.isBlank()) {
-            EnvVariableSingleton.getInstance().getVariables().put("DOWNLOAD_PATH", downloadPath.trim());
+            EnvVariableSingleton.getInstance().set("DOWNLOAD_PATH", downloadPath.trim());
         }
         this.consoleName = consoleName;
         if (consoleName != null && !consoleName.isBlank()) {
-            EnvVariableSingleton.getInstance().getVariables().put("CONSOLE_NAME", consoleName.trim());
+            EnvVariableSingleton.getInstance().set("CONSOLE_NAME", consoleName.trim());
         }
         this.accountNumber = accountNumber;
         if (accountNumber != null && !accountNumber.isBlank()) {
-            EnvVariableSingleton.getInstance().getVariables().put("ACCOUNT_NUMBER", accountNumber.trim());
+            EnvVariableSingleton.getInstance().set("ACCOUNT_NUMBER", accountNumber.trim());
         }
         this.browseLimit = browseLimit;
         if (browseLimit != null && !browseLimit.isBlank()) {
-            EnvVariableSingleton.getInstance().getVariables().put("BROWSE_LIMIT", browseLimit.trim());
+            EnvVariableSingleton.getInstance().set("BROWSE_LIMIT", browseLimit.trim());
         }
         this.prompt = prompt;
         if (prompt != null && !prompt.isBlank()) {
-            EnvVariableSingleton.getInstance().getVariables().put("PROMPT", prompt);
+            EnvVariableSingleton.getInstance().set("PROMPT", prompt);
         }
         this.window = window;
     }
