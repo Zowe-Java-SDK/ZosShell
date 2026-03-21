@@ -23,7 +23,6 @@ public class SetCommand extends NoOptionCommand {
 
     @Override
     protected String description() {
-        LOG.debug("*** SetCommand.description ***");
         return "Set an environment variable in the form KEY=VALUE. " +
                 "Everything after '=' is treated as the value. " +
                 "KEY is converted to uppercase and spaces around '=' are allowed.";
