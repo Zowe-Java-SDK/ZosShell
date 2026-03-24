@@ -28,28 +28,20 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     public static void main(String[] args) {
         LOG.debug("*** main ***");
-
-        TerminalSingleton terminalSingleton = TerminalSingleton.getInstance();
-        initializeTerminal(terminalSingleton);
-
-        String connectionIdentifier = args.length > 0 ? args[0] : "";
-
-        readConfiguration(terminalSingleton, connectionIdentifier);
-        applyConfiguredFontSize(terminalSingleton);
-
+        var terminalSingleton = TerminalSingleton.getInstance();
+        var connectionIdentifier = args.length > 0 ? args[0] : "";
+        initializeTerminal(terminalSingleton, connectionIdentifier);
         new ZosShell(connectionIdentifier).accept(terminalSingleton.getMainTextIO(), null);
     }
 
     @Override
     public void accept(final TextIO textIO, final RunnerData runnerData) {
         LOG.debug("*** accept ***");
-
-        TerminalSingleton terminalSingleton = TerminalSingleton.getInstance();
-        ConfigSingleton configSingleton = ConfigSingleton.getInstance();
+        var terminalSingleton = TerminalSingleton.getInstance();
+        var configSingleton = ConfigSingleton.getInstance();
 
         initializeInteractiveTerminal(textIO, terminalSingleton, configSingleton);
         initializeHistory(terminalSingleton);
-
         try {
             new ConnectionStartupService().initialize(connectionArgument, textIO.getTextTerminal());
         } catch (Exception e) {
@@ -60,12 +52,29 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         textIO.dispose();
     }
 
-    private static void initializeTerminal(final TerminalSingleton terminalSingleton) {
+    private static void initializeTerminal(final TerminalSingleton terminalSingleton,
+                                           final String connectionIdentifier) {
         LOG.debug("*** initializeTerminal ***");
-        terminalSingleton.setMainTerminal(new SwingTextTerminal());
-        terminalSingleton.getMainTerminal().init();
-        terminalSingleton.setMainTextIO(new TextIO(terminalSingleton.getMainTerminal()));
+        var mainTerminal = new SwingTextTerminal();
+        terminalSingleton.setMainTerminal(mainTerminal);
         terminalSingleton.setTerminalProperties();
+        readConfiguration(terminalSingleton, connectionIdentifier);
+
+        ConfigSettings configSettings = ConfigSingleton.getInstance().getConfigSettings();
+        try {
+            int paneWidth = Integer.parseInt(configSettings.getWindow().getPaneWidth());
+            int paneHeight = Integer.parseInt(configSettings.getWindow().getPaneHeight());
+
+            mainTerminal.getProperties().setPaneWidth(paneWidth);
+            mainTerminal.getProperties().setPaneHeight(paneHeight);
+        } catch (NumberFormatException e) {
+            LOG.debug("Invalid pane size width / height", e);
+        }
+
+        mainTerminal.init();
+        terminalSingleton.setMainTextIO(new TextIO(mainTerminal));
+
+        applyConfiguredFontSize(terminalSingleton);
     }
 
     private static void readConfiguration(final TerminalSingleton terminalSingleton,

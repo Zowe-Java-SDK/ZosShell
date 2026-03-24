@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.change.ChangeWinService;
 import zos.shell.service.terminal.TerminalOutputService;
-import zos.shell.singleton.TerminalSingleton;
 import zos.shell.singleton.configuration.model.Profile;
 import zos.shell.singleton.configuration.record.ConfigSettings;
 import zowe.client.sdk.core.SshConnection;
@@ -94,6 +93,11 @@ public final class ConfigSingleton {
         } catch (NumberFormatException ignored) {
         }
 
+        // -1 value to start at 0,1,2,etc...
+        if (index > 0) {
+            index--;
+        }
+
         var profile = this.getProfileByIndex(index);
         configSettings = new ConfigSettings(
                 profile.getHostname(),
@@ -137,10 +141,8 @@ public final class ConfigSingleton {
             this.outputService = new TerminalOutputService(terminal);
         }
         if (changeWinService == null) {
-            changeWinService = new ChangeWinService(
-                    TerminalSingleton.getInstance().getTerminal(),
-                    outputService::redrawBufferedOutput
-            );
+            changeWinService = new ChangeWinService(terminal,
+                    outputService::redrawBufferedOutput);
         }
         if (this.configSettings == null) {
             return;
