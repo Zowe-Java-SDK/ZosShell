@@ -2,20 +2,18 @@ package zos.shell.service.checksum;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zos.shell.singleton.CheckSumSingleton;
 
-import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CheckSumService {
 
     private static final Logger LOG = LoggerFactory.getLogger(CheckSumService.class);
 
-    private static final CheckSumSingleton checkSumSingleton = CheckSumSingleton.getInstance();
+    private final Map<String, String> checksums = new HashMap<>();
 
     public CheckSumService() {
         LOG.debug("*** CheckSumService ***");
@@ -23,23 +21,30 @@ public class CheckSumService {
 
     public void addCheckSum(final String target) {
         LOG.debug("*** addCheckSum ***");
-        checkSumSingleton.put(target, calculateCheckSum(target));
+        checksums.put(target, calculateCheckSum(target));
     }
 
     public String getCheckSum(final String target) {
         LOG.debug("*** getCheckSum ***");
-        return checkSumSingleton.get(target);
+        return checksums.get(target);
     }
 
     public String calculateCheckSum(final String target) {
-        LOG.debug("*** calculateCheckSum ***");
-        byte[] hash = new byte[0];
         try {
-            byte[] data = Files.readAllBytes(Paths.get(target));
-            hash = MessageDigest.getInstance("MD5").digest(data);
-        } catch (IOException | NoSuchAlgorithmException ignored) {
+            byte[] fileBytes = Files.readAllBytes(Paths.get(target));
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digest = md.digest(fileBytes);
+
+            StringBuilder sb = new StringBuilder();
+            for (byte b : digest) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+
+        } catch (Exception e) {
+            LOG.error("Error calculating checksum for {}", target, e);
+            throw new RuntimeException(e);
         }
-        return new BigInteger(1, hash).toString(16);
     }
 
 }

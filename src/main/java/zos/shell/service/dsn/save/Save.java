@@ -57,7 +57,7 @@ public class Save {
 
         try (var br = new BufferedReader(new FileReader(this.pathService.getPathWithFile()))) {
             var sb = new StringBuilder();
-            var line = br.readLine();
+            String line = br.readLine();
 
             while (line != null) {
                 sb.append(line);
@@ -66,7 +66,7 @@ public class Save {
             }
             var content = sb.toString().replaceAll("(\\r)", "");
 
-            var checksum = checkSumService.calculateCheckSum(this.pathService.getPathWithFile());
+            String checksum = checkSumService.calculateCheckSum(this.pathService.getPathWithFile());
             if (checksum.equals(checkSumService.getCheckSum(this.pathService.getPathWithFile()))) {
                 return new ResponseStatus("nothing to save, perform editor save and try again...", false);
             }

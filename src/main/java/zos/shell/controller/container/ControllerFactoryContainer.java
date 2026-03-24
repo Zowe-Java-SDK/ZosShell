@@ -58,6 +58,7 @@ import java.util.Map;
 public class ControllerFactoryContainer {
 
     private static final Logger LOG = LoggerFactory.getLogger(ControllerFactoryContainer.class);
+    private final CheckSumService checkSumService = new CheckSumService();
     private final EnvVariableController envVariableController = new EnvVariableController(new EnvVariableService());
     private final PathService pathService = new PathService(ConnSingleton.getInstance(), this.envVariableController);
     private final Map<ContainerType.Name, Object> controllers = new HashMap<>();
@@ -240,8 +241,7 @@ public class ControllerFactoryContainer {
         if (controller == null || controller.isNotValid(dependency)) {
             var dsnGet = new DsnGet(connection);
             var download = new Download(dsnGet, this.pathService, false);
-            var checkSumService = new CheckSumService();
-            var editService = new EditService(download, this.pathService, checkSumService, timeout);
+            var editService = new EditService(download, this.pathService, this.checkSumService, timeout);
             controller = new EditController(editService, dependency);
             this.controllers.put(ContainerType.Name.EDIT, controller);
         }
@@ -347,8 +347,7 @@ public class ControllerFactoryContainer {
         var controller = (SaveController) controllers.get(ContainerType.Name.SAVE);
         var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
         if (controller == null || controller.isNotValid(dependency)) {
-            var checkSumService = new CheckSumService();
-            var service = new SaveService(new DsnWrite(connection), this.pathService, checkSumService, timeout);
+            var service = new SaveService(new DsnWrite(connection), this.pathService, this.checkSumService, timeout);
             controller = new SaveController(service, dependency);
             this.controllers.put(ContainerType.Name.SAVE, controller);
         }
