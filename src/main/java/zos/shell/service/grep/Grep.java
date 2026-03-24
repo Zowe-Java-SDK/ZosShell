@@ -99,15 +99,12 @@ public class Grep {
 
             // Search for the pattern starting from the current search position.
             // findPosition() returns the index relative to the substring we pass in.
-            int relativeIndex = findPosition(content.substring(searchFrom));
+            int index = findPosition(content, searchFrom);
 
             // If no match was found (-1), we are done searching.
-            if (relativeIndex < 0) {
+            if (index < 0) {
                 break;
             }
-
-            // Convert the relative match index into the absolute index in the full content.
-            int index = searchFrom + relativeIndex;
 
             // Find the start of the line containing the match.
             // lastIndexOf searches backwards from the match position for a newline.
@@ -142,14 +139,14 @@ public class Grep {
         return lines;
     }
 
-    private int findPosition(final String text) {
+    private int findPosition(final String text, final int start) {
         LOG.debug("*** findPosition ***");
 
         int lengthOfPattern = pattern.length();
         int lengthOfText = text.length();
         int numOfSkips;
 
-        for (int i = 0; i <= lengthOfText - lengthOfPattern; i += numOfSkips) {
+        for (int i = start; i <= lengthOfText - lengthOfPattern; i += numOfSkips) {
             numOfSkips = 0;
 
             for (int j = lengthOfPattern - 1; j >= 0; j--) {
@@ -161,7 +158,7 @@ public class Grep {
             }
 
             if (numOfSkips == 0) {
-                return i;
+                return i; // absolute index now
             }
         }
 
