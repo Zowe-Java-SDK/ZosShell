@@ -10,7 +10,6 @@ import zos.shell.singleton.HistorySingleton;
 import zos.shell.singleton.TerminalSingleton;
 import zos.shell.singleton.configuration.ConfigSingleton;
 import zos.shell.singleton.configuration.model.Window;
-import zos.shell.singleton.configuration.record.ConfigSettings;
 import zos.shell.state.ShellStateMachine;
 
 import java.io.IOException;
@@ -60,7 +59,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         terminalSingleton.setTerminalProperties();
         readConfiguration(terminalSingleton, connectionIdentifier);
 
-        ConfigSettings configSettings = ConfigSingleton.getInstance().getConfigSettings();
+        var configSettings = ConfigSingleton.getInstance().getConfigSettings();
         try {
             int paneWidth = Integer.parseInt(configSettings.getWindow().getPaneWidth());
             int paneHeight = Integer.parseInt(configSettings.getWindow().getPaneHeight());
@@ -94,7 +93,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
     private static void applyConfiguredFontSize(final TerminalSingleton terminalSingleton) {
         LOG.debug("*** applyConfiguredFontSize ***");
-        ConfigSettings configSettings = ConfigSingleton.getInstance().getConfigSettings();
+        var configSettings = ConfigSingleton.getInstance().getConfigSettings();
         if (configSettings == null) {
             return;
         }

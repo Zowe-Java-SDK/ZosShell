@@ -30,6 +30,7 @@ public class CheckSumService {
     }
 
     public String calculateCheckSum(final String target) {
+        LOG.debug("*** calculateCheckSum ***");
         try {
             byte[] fileBytes = Files.readAllBytes(Paths.get(target));
             MessageDigest md = MessageDigest.getInstance("MD5");
