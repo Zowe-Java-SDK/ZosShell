@@ -6,7 +6,7 @@ import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.console.FutureConsole;
 import zos.shell.utility.FutureUtil;
-import zowe.client.sdk.zosconsole.method.ConsoleCmd;
+import zowe.client.sdk.zosconsole.methods.ConsoleCmd;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

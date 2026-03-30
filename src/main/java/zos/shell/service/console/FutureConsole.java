@@ -1,7 +1,7 @@
 package zos.shell.service.console;
 
 import zos.shell.response.ResponseStatus;
-import zowe.client.sdk.zosconsole.method.ConsoleCmd;
+import zowe.client.sdk.zosconsole.methods.ConsoleCmd;
 
 import java.util.concurrent.Callable;
 
