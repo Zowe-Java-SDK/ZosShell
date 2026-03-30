@@ -8,7 +8,7 @@ import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 import zowe.client.sdk.zosconsole.ConsoleConstants;
 import zowe.client.sdk.zosconsole.input.ConsoleCmdInputData;
-import zowe.client.sdk.zosconsole.method.ConsoleCmd;
+import zowe.client.sdk.zosconsole.methods.ConsoleCmd;
 import zowe.client.sdk.zosconsole.response.ConsoleCmdResponse;
 
 import java.util.regex.Pattern;
