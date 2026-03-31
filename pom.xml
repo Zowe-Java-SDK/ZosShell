@@ -122,7 +122,7 @@
         <dependency>
             <groupId>org.zowe.client.java.sdk</groupId>
             <artifactId>zowe-client-java-sdk</artifactId>
-            <version>6.1.1</version>
+            <version>6.1.2</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
