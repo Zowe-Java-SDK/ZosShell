@@ -3,7 +3,7 @@ package zos.shell.utility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
-import zos.shell.controller.container.ControllerFactories;
+import zos.shell.controller.factory.ControllerFactories;
 import zos.shell.singleton.TerminalSingleton;
 
 public final class PromptUtil {

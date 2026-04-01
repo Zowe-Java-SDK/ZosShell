@@ -1,8 +1,8 @@
-package zos.shell.controller.container;
+package zos.shell.controller.factory;
 
-import zos.shell.controller.container.impl.ChangeControllerFactory;
-import zos.shell.controller.container.impl.DatasetControllerFactory;
-import zos.shell.controller.container.impl.JobControllerFactory;
+import zos.shell.controller.factory.impl.ChangeControllerFactory;
+import zos.shell.controller.factory.impl.DatasetControllerFactory;
+import zos.shell.controller.factory.impl.JobControllerFactory;
 
 public final class ControllerFactories {
 

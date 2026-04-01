@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.AbstractCommand;
 import zos.shell.command.CommandContext;
-import zos.shell.controller.container.ControllerFactories;
+import zos.shell.controller.factory.ControllerFactories;
 import zos.shell.service.search.SearchCache;
 
 public class BrowseJobCommand extends AbstractCommand {

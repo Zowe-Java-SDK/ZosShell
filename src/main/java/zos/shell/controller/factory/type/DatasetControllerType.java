@@ -1,4 +1,4 @@
-package zos.shell.controller.container.type;
+package zos.shell.controller.factory.type;
 
 public class DatasetControllerType {
 

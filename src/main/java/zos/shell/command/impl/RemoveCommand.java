@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
 import zos.shell.constants.Constants;
-import zos.shell.controller.container.ControllerFactories;
+import zos.shell.controller.factory.ControllerFactories;
 import zos.shell.record.DatasetMember;
 import zos.shell.singleton.TerminalSingleton;
 import zos.shell.utility.DsnUtil;

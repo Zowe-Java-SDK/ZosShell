@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactories;
+import zos.shell.controller.factory.ControllerFactories;
 
 public class GrepCommand extends NoOptionCommand {
 
