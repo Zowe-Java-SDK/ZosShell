@@ -33,7 +33,7 @@ public class CopyCommand extends NoOptionCommand {
         }
 
         var copyController = ControllerFactories
-                .datasetFactory()
+                .getDatasetFactory()
                 .getCopyController(ctx.zosConnection, ctx.timeout);
 
         String result = copyController.copy(ctx.currDataset, args.toArray(String[]::new));

@@ -32,7 +32,7 @@ public class ChangeDirectoryCommand extends NoOptionCommand {
         }
 
         var ctrl = ControllerFactories
-                .changeFactory()
+                .getChangeFactory()
                 .getChangeDirectoryController();
         ResponseStatus rs = ctrl.cd(ctx.currDataset, args.get(0).toUpperCase());
 

@@ -55,7 +55,7 @@ public class ChangeConnectionCommand extends NoOptionCommand {
         }
 
         var changeConnController = ControllerFactories
-                .changeFactory()
+                .getChangeFactory()
                 .getChangeConnectionController(ctx.terminal);
         ctx.zosConnection = changeConnController.changeZosConnection(ctx.zosConnection, changeIndex);
         ConnSingleton.getInstance().setCurrZosConnection(ctx.zosConnection, changeIndex);

@@ -39,7 +39,7 @@ public class UssCommand extends NoOptionCommand {
         String command = String.join(" ", cmd.getArgList());
 
         var ctrl = ControllerFactories
-                .container()
+                .getGlobalFactory()
                 .getUssController(ctx.sshConnection);
 
         String result = ctrl.issueUnixCommand(command);

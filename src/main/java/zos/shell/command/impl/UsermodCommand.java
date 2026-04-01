@@ -55,7 +55,8 @@ public class UsermodCommand extends AbstractCommand {
             return;
         }
 
-        var controller = ControllerFactories.container()
+        var controller = ControllerFactories
+                .getGlobalFactory()
                 .getUsermodController(ctx.zosConnection, ctx.currZosConnectionIndex);
 
         String result = "";

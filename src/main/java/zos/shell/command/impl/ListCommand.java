@@ -50,7 +50,7 @@ public class ListCommand extends AbstractCommand {
         boolean withAttr = cmd.hasOption("l");
 
         var listingController = ControllerFactories
-                .datasetFactory()
+                .getDatasetFactory()
                 .getListingController(ctx.zosConnection, ctx.terminal, ctx.timeout);
 
         var args = cmd.getArgList();

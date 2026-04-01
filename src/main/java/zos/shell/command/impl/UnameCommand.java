@@ -29,7 +29,8 @@ public class UnameCommand extends NoOptionCommand {
             return;
         }
 
-        var ctrl = ControllerFactories.container()
+        var ctrl = ControllerFactories
+                .getGlobalFactory()
                 .getUnameController(ctx.zosConnection, ctx.timeout);
         ctx.out(ctrl.uname(ctx.zosConnection));
     }

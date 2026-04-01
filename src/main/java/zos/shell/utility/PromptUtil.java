@@ -17,7 +17,7 @@ public final class PromptUtil {
     @SuppressWarnings("SameReturnValue")
     public static String getPrompt() {
         LOG.debug("*** getPrompt ***");
-        var controllerFactoryContainer = ControllerFactories.container();
+        var controllerFactoryContainer = ControllerFactories.getGlobalFactory();
         var envVariableController = controllerFactoryContainer.getEnvVariableController();
         var promptStr = envVariableController.getValueByEnv("PROMPT");
         if (promptStr != null && !promptStr.isBlank()) {

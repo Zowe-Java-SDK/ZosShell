@@ -37,7 +37,7 @@ public class EditCommand extends NoOptionCommand {
         }
 
         var controller = ControllerFactories
-                .datasetFactory()
+                .getDatasetFactory()
                 .getEditController(ctx.zosConnection, ctx.timeout);
         String result = controller.edit(ctx.currDataset, args.get(0));
         ctx.out(result);

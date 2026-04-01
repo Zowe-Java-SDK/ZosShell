@@ -62,7 +62,7 @@ public class RemoveCommand extends NoOptionCommand {
         }
 
         var ctrl = ControllerFactories
-                .datasetFactory()
+                .getDatasetFactory()
                 .getDeleteController(ctx.zosConnection, ctx.timeout);
 
         ctx.out(ctrl.rm(ctx.currDataset, target));

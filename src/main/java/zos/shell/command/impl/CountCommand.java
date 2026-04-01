@@ -51,7 +51,7 @@ public class CountCommand extends AbstractCommand {
         }
 
         var controller = ControllerFactories
-                .datasetFactory()
+                .getDatasetFactory()
                 .getCountController(ctx.zosConnection, ctx.timeout);
 
         if (memberOpt) {

@@ -39,7 +39,8 @@ public class MvsCommand extends NoOptionCommand {
 
         String command = String.join(" ", cmd.getArgList());
 
-        var ctrl = ControllerFactories.container()
+        var ctrl = ControllerFactories
+                .getGlobalFactory()
                 .getConsoleController(ctx.zosConnection, ctx.timeout);
 
         String result = ctrl.issueConsole(command);

@@ -50,7 +50,7 @@ public class ColorCommand extends NoOptionCommand {
         }
 
         var controller = ControllerFactories
-                .changeFactory()
+                .getChangeFactory()
                 .getChangeWindowController(ctx.terminal);
         String result = controller.changeColorSettings(args.get(0), args.size() == 2 ? args.get(1) : null);
         ctx.out(result);

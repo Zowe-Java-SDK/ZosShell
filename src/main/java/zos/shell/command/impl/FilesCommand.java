@@ -30,7 +30,8 @@ public class FilesCommand extends NoOptionCommand {
             return;
         }
 
-        var result = ControllerFactories.container()
+        var result = ControllerFactories
+                .getGlobalFactory()
                 .getLocalFilesController()
                 .files(ctx.currDataset);
 

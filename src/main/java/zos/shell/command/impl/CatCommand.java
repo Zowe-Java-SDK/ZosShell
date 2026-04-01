@@ -32,7 +32,7 @@ public class CatCommand extends NoOptionCommand {
         }
 
         var ctrl = ControllerFactories
-                .datasetFactory()
+                .getDatasetFactory()
                 .getConcatController(ctx.zosConnection, ctx.timeout);
 
         String result = ctrl.cat(ctx.currDataset, args.get(0));

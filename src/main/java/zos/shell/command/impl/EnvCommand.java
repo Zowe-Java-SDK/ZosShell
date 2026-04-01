@@ -30,7 +30,8 @@ public class EnvCommand extends NoOptionCommand {
             return;
         }
 
-        String result = ControllerFactories.container()
+        String result = ControllerFactories
+                .getGlobalFactory()
                 .getEnvVariableController()
                 .env();
 

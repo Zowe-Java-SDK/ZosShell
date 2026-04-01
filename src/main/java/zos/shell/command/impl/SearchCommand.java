@@ -40,7 +40,9 @@ public class SearchCommand extends NoOptionCommand {
             return;
         }
 
-        var controller = ControllerFactories.container().getSearchCacheController();
+        var controller = ControllerFactories
+                .getGlobalFactory()
+                .getSearchCacheController();
         controller.search(ctx.searchCache, args.get(0)).forEach(ctx.terminal::println);
     }
 

@@ -31,7 +31,7 @@ public class SaveCommand extends NoOptionCommand {
         }
 
         var saveController = ControllerFactories
-                .datasetFactory()
+                .getDatasetFactory()
                 .getSaveController(ctx.zosConnection, ctx.timeout);
 
         String result = saveController.save(ctx.currDataset, args.get(0));

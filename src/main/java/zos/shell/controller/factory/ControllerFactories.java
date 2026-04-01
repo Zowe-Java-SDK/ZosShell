@@ -14,19 +14,19 @@ public final class ControllerFactories {
     private ControllerFactories() {
     }
 
-    public static ControllerFactoryContainer container() {
+    public static ControllerFactoryContainer getGlobalFactory() {
         return GLOBAL_FACTORY;
     }
 
-    public static ChangeControllerFactory changeFactory() {
+    public static ChangeControllerFactory getChangeFactory() {
         return CHANGE_FACTORY;
     }
 
-    public static DatasetControllerFactory datasetFactory() {
+    public static DatasetControllerFactory getDatasetFactory() {
         return DATASET_FACTORY;
     }
 
-    public static JobControllerFactory jobFactory() {
+    public static JobControllerFactory getJobFactory() {
         return JOB_FACTORY;
     }
 

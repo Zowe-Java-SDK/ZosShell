@@ -30,7 +30,7 @@ public class ConnectionsCommand extends NoOptionCommand {
         }
 
         ControllerFactories
-                .changeFactory()
+                .getChangeFactory()
                 .getChangeConnectionController(ctx.terminal)
                 .displayConnections();
     }

@@ -65,7 +65,7 @@ public class SetCommand extends NoOptionCommand {
         value = stripOuterMatchingQuotes(value);
 
         var env = ControllerFactories
-                .container()
+                .getGlobalFactory()
                 .getEnvVariableController();
 
         ctx.out(env.set(key, value));

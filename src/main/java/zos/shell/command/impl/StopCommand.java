@@ -30,7 +30,8 @@ public class StopCommand extends NoOptionCommand {
             return;
         }
 
-        var stopController = ControllerFactories.container()
+        var stopController = ControllerFactories
+                .getGlobalFactory()
                 .getStopController(ctx.zosConnection, ctx.timeout);
 
         String result = stopController.stop(args.get(0));

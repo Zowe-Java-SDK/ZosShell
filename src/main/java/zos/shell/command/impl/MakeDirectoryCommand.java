@@ -38,7 +38,7 @@ public class MakeDirectoryCommand extends NoOptionCommand {
 
         TerminalSingleton.getInstance().setDisableKeys(true);
         var controller = ControllerFactories
-                .datasetFactory()
+                .getDatasetFactory()
                 .getMakeDirectoryController(ctx.zosConnection, ctx.terminal, ctx.timeout);
         controller.mkdir(TerminalSingleton.getInstance().getMainTextIO(), ctx.currDataset, args.get(0));
         TerminalSingleton.getInstance().setDisableKeys(false);

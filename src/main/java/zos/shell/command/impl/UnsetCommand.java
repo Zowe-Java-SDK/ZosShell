@@ -36,7 +36,7 @@ public class UnsetCommand extends NoOptionCommand {
         }
 
         var controller = ControllerFactories
-                .container()
+                .getGlobalFactory()
                 .getEnvVariableController();
 
         args.forEach(name ->

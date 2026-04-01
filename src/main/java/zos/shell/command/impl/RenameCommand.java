@@ -28,7 +28,7 @@ public class RenameCommand extends NoOptionCommand {
 
     @Override
     protected void run(CommandContext ctx, CommandLine cmd) {
-        LOG.debug("*** RenameCommand ***");
+        LOG.debug("*** RenameCommand.run ***");
         var args = cmd.getArgList();
         if (args.size() != 2) {
             printHelp(ctx);
@@ -36,7 +36,7 @@ public class RenameCommand extends NoOptionCommand {
         }
 
         var controller = ControllerFactories
-                .datasetFactory()
+                .getDatasetFactory()
                 .getRenameController(ctx.zosConnection, ctx.timeout);
         String result = controller.rename(ctx.currDataset, args.get(0), args.get(1));
         ctx.out(result);

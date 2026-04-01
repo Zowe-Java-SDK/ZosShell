@@ -56,7 +56,7 @@ public class DownloadCommand extends AbstractCommand {
 
         boolean isBinary = cmd.hasOption("b");
         var controller = ControllerFactories
-                .datasetFactory()
+                .getDatasetFactory()
                 .getDownloadDsnController(ctx.zosConnection, isBinary, ctx.timeout);
         List<String> result = controller.download(ctx.currDataset, args.get(0));
         result.forEach(ctx.terminal::println);

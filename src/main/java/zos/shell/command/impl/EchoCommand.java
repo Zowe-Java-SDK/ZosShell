@@ -32,7 +32,7 @@ public class EchoCommand extends NoOptionCommand {
 
         String text = String.join(" ", args);
 
-        var echoController = ControllerFactories.container().getEchoController();
+        var echoController = ControllerFactories.getGlobalFactory().getEchoController();
         String result = echoController.getEcho(text);
 
         ctx.out(result);

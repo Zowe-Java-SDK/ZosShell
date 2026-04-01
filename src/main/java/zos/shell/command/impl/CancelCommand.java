@@ -30,7 +30,7 @@ public class CancelCommand extends NoOptionCommand {
             return;
         }
 
-        var ctrl = ControllerFactories.container()
+        var ctrl = ControllerFactories.getGlobalFactory()
                 .getCancelController(ctx.zosConnection, ctx.timeout);
 
         ctx.out(ctrl.cancel(args.get(0)));

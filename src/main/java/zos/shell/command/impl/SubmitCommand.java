@@ -30,7 +30,8 @@ public class SubmitCommand extends NoOptionCommand {
             return;
         }
 
-        var ctrl = ControllerFactories.container()
+        var ctrl = ControllerFactories
+                .getGlobalFactory()
                 .getSubmitController(ctx.zosConnection, ctx.timeout);
 
         ctx.out(ctrl.submit(ctx.currDataset, args.get(0)));

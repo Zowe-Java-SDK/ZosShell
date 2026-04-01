@@ -40,7 +40,7 @@ public class TsoCommand extends NoOptionCommand {
         String tsoCmd = String.join(" ", cmd.getArgList());
 
         var env = ControllerFactories
-                .container()
+                .getGlobalFactory()
                 .getEnvVariableController();
 
         String acct = env.getValueByEnv("ACCOUNT_NUMBER");
@@ -51,7 +51,7 @@ public class TsoCommand extends NoOptionCommand {
         }
 
         var tsoController = ControllerFactories
-                .container()
+                .getGlobalFactory()
                 .getTsoController(ctx.zosConnection, acct, ctx.timeout);
 
         String result = tsoController.issueCommand(tsoCmd);
