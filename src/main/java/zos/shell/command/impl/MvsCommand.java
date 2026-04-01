@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.container.ControllerFactories;
 import zos.shell.service.search.SearchCache;
 
 public class MvsCommand extends NoOptionCommand {
@@ -39,7 +39,7 @@ public class MvsCommand extends NoOptionCommand {
 
         String command = String.join(" ", cmd.getArgList());
 
-        var ctrl = ControllerFactoryContainerHolder.container()
+        var ctrl = ControllerFactories.container()
                 .getConsoleController(ctx.zosConnection, ctx.timeout);
 
         String result = ctrl.issueConsole(command);

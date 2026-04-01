@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.container.ControllerFactories;
 
 public class CancelCommand extends NoOptionCommand {
 
@@ -30,7 +30,7 @@ public class CancelCommand extends NoOptionCommand {
             return;
         }
 
-        var ctrl = ControllerFactoryContainerHolder.container()
+        var ctrl = ControllerFactories.container()
                 .getCancelController(ctx.zosConnection, ctx.timeout);
 
         ctx.out(ctrl.cancel(args.get(0)));

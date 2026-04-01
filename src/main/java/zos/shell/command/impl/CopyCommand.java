@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.container.ControllerFactories;
 
 import java.util.List;
 
@@ -32,7 +32,8 @@ public class CopyCommand extends NoOptionCommand {
             return;
         }
 
-        var copyController = ControllerFactoryContainerHolder.container()
+        var copyController = ControllerFactories
+                .datasetFactory()
                 .getCopyController(ctx.zosConnection, ctx.timeout);
 
         String result = copyController.copy(ctx.currDataset, args.toArray(String[]::new));

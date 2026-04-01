@@ -1,8 +1,9 @@
-package zos.shell.controller.container;
+package zos.shell.controller.container.type;
 
 public class ContainerType {
 
     public enum Name {
+
         BROWSE_JOB,
         CANCEL,
         CHANGE_CONNECTION,
@@ -33,6 +34,7 @@ public class ContainerType {
         TSO,
         UNAME,
         USS
+
     }
 
 }

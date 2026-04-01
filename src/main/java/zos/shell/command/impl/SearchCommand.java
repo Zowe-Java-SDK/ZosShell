@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.container.ControllerFactories;
 
 public class SearchCommand extends NoOptionCommand {
 
@@ -40,7 +40,7 @@ public class SearchCommand extends NoOptionCommand {
             return;
         }
 
-        var controller = ControllerFactoryContainerHolder.container().getSearchCacheController();
+        var controller = ControllerFactories.container().getSearchCacheController();
         controller.search(ctx.searchCache, args.get(0)).forEach(ctx.terminal::println);
     }
 

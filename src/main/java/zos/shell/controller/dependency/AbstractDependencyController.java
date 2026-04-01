@@ -3,13 +3,13 @@ package zos.shell.controller.dependency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class DependencyController {
+public abstract class AbstractDependencyController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DependencyController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractDependencyController.class);
 
     private final Dependency dependency;
 
-    protected DependencyController(Dependency dependency) {
+    protected AbstractDependencyController(Dependency dependency) {
         LOG.debug("*** DependencyController ***");
         this.dependency = dependency;
     }

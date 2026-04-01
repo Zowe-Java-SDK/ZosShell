@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.AbstractCommand;
 import zos.shell.command.CommandContext;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.container.ControllerFactories;
 
 public class DownloadJobCommand extends AbstractCommand {
 
@@ -64,7 +64,7 @@ public class DownloadJobCommand extends AbstractCommand {
             jobId = jobId.trim().toUpperCase();
         }
 
-        var controller = ControllerFactoryContainerHolder
+        var controller = ControllerFactories
                 .container()
                 .getDownloadJobController(ctx.zosConnection, all, jobId, ctx.timeout);
 

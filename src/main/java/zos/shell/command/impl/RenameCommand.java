@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.container.ControllerFactories;
 
 public class RenameCommand extends NoOptionCommand {
 
@@ -35,7 +35,8 @@ public class RenameCommand extends NoOptionCommand {
             return;
         }
 
-        var controller = ControllerFactoryContainerHolder.container()
+        var controller = ControllerFactories
+                .datasetFactory()
                 .getRenameController(ctx.zosConnection, ctx.timeout);
         String result = controller.rename(ctx.currDataset, args.get(0), args.get(1));
         ctx.out(result);

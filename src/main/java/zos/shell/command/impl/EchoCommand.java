@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.container.ControllerFactories;
 
 public class EchoCommand extends NoOptionCommand {
 
@@ -32,7 +32,7 @@ public class EchoCommand extends NoOptionCommand {
 
         String text = String.join(" ", args);
 
-        var echoController = ControllerFactoryContainerHolder.container().getEchoController();
+        var echoController = ControllerFactories.container().getEchoController();
         String result = echoController.getEcho(text);
 
         ctx.out(result);

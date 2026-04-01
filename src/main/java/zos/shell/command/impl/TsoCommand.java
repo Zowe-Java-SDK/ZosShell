@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.container.ControllerFactories;
 import zos.shell.service.search.SearchCache;
 
 public class TsoCommand extends NoOptionCommand {
@@ -39,7 +39,7 @@ public class TsoCommand extends NoOptionCommand {
 
         String tsoCmd = String.join(" ", cmd.getArgList());
 
-        var env = ControllerFactoryContainerHolder
+        var env = ControllerFactories
                 .container()
                 .getEnvVariableController();
 
@@ -50,7 +50,7 @@ public class TsoCommand extends NoOptionCommand {
             return;
         }
 
-        var tsoController = ControllerFactoryContainerHolder
+        var tsoController = ControllerFactories
                 .container()
                 .getTsoController(ctx.zosConnection, acct, ctx.timeout);
 

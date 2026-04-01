@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.AbstractCommand;
 import zos.shell.command.CommandContext;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.container.ControllerFactories;
 
 import java.util.List;
 
@@ -55,7 +55,8 @@ public class DownloadCommand extends AbstractCommand {
         }
 
         boolean isBinary = cmd.hasOption("b");
-        var controller = ControllerFactoryContainerHolder.container()
+        var controller = ControllerFactories
+                .datasetFactory()
                 .getDownloadDsnController(ctx.zosConnection, isBinary, ctx.timeout);
         List<String> result = controller.download(ctx.currDataset, args.get(0));
         result.forEach(ctx.terminal::println);

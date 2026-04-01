@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.container.ControllerFactories;
 import zos.shell.service.search.SearchCache;
 
 public class FilesCommand extends NoOptionCommand {
@@ -30,7 +30,7 @@ public class FilesCommand extends NoOptionCommand {
             return;
         }
 
-        var result = ControllerFactoryContainerHolder.container()
+        var result = ControllerFactories.container()
                 .getLocalFilesController()
                 .files(ctx.currDataset);
 

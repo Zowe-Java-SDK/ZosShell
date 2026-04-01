@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.AbstractCommand;
 import zos.shell.command.CommandContext;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.container.ControllerFactories;
 import zos.shell.service.search.SearchCache;
 
 public class BrowseJobCommand extends AbstractCommand {
@@ -54,7 +54,7 @@ public class BrowseJobCommand extends AbstractCommand {
         }
 
         boolean all = cmd.hasOption("a");
-        var controller = ControllerFactoryContainerHolder.container()
+        var controller = ControllerFactories.container()
                 .getBrowseJobController(ctx.zosConnection, all, ctx.timeout);
 
         String result = controller.browseJob(args.get(0));
