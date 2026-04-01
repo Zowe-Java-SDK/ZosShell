@@ -6,35 +6,16 @@ import org.slf4j.LoggerFactory;
 import zos.shell.controller.ChangeConnController;
 import zos.shell.controller.ChangeDirController;
 import zos.shell.controller.ChangeWinController;
+import zos.shell.controller.container.AbstractController;
 import zos.shell.controller.container.type.ChangeControllerType;
 import zos.shell.service.change.ChangeConnService;
 import zos.shell.service.change.ChangeDirService;
 import zos.shell.service.change.ChangeWinService;
 import zos.shell.service.terminal.TerminalOutputService;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Supplier;
-
-public class ChangeControllerFactory {
+public class ChangeControllerFactory extends AbstractController<ChangeControllerType.Name> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChangeControllerFactory.class);
-
-    private final Map<ChangeControllerType.Name, Object> controllers = new HashMap<>();
-
-    public <T> T getOrCreateController(final ChangeControllerType.Name key,
-                                       final Class<T> controllerClass,
-                                       final Supplier<T> creator) {
-
-        var controller = controllerClass.cast(this.controllers.get(key));
-        if (controller != null) {
-            return controller;
-        }
-
-        T newController = creator.get();
-        this.controllers.put(key, newController);
-        return newController;
-    }
 
     public ChangeConnController getChangeConnectionController(final TextTerminal<?> terminal) {
         LOG.debug("*** getChangeConnectionController ***");

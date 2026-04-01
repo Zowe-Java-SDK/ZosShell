@@ -4,8 +4,8 @@ import org.beryx.textio.TextTerminal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.controller.*;
+import zos.shell.controller.container.AbstractDependencyControllerFactory;
 import zos.shell.controller.container.type.DatasetControllerType;
-import zos.shell.controller.dependency.AbstractDependencyController;
 import zos.shell.controller.dependency.Dependency;
 import zos.shell.service.checksum.CheckSumService;
 import zos.shell.service.dsn.concat.ConcatService;
@@ -29,31 +29,9 @@ import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnList;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnWrite;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Supplier;
-
-public class DatasetControllerFactory {
+public class DatasetControllerFactory extends AbstractDependencyControllerFactory<DatasetControllerType.Name> {
 
     private static final Logger LOG = LoggerFactory.getLogger(DatasetControllerFactory.class);
-
-    private final Map<DatasetControllerType.Name, Object> controllers = new HashMap<>();
-
-    public <T extends AbstractDependencyController> T getOrCreateController(
-            final DatasetControllerType.Name key,
-            final Class<T> controllerClass,
-            final Dependency dependency,
-            final Supplier<T> creator) {
-
-        T controller = controllerClass.cast(this.controllers.get(key));
-        if (controller != null && !controller.isNotValid(dependency)) {
-            return controller;
-        }
-
-        final T newController = creator.get();
-        this.controllers.put(key, newController);
-        return newController;
-    }
 
 
     public ConcatController getConcatController(final ZosConnection connection, final long timeout) {
