@@ -20,15 +20,15 @@ import java.util.Map;
 public class GlobalControllerFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(GlobalControllerFactory.class);
+
     private final EnvVariableController envVariableController = new EnvVariableController(new EnvVariableService());
     private final Map<GlobalControllerType.Name, Object> controllers = new HashMap<>();
 
     public EchoController getEchoController() {
         LOG.debug("*** getEchoController ***");
-        var controller = (EchoController) controllers.get(GlobalControllerType.Name.ECHO);
+        var controller = (EchoController) this.controllers.get(GlobalControllerType.Name.ECHO);
         if (controller == null) {
-            var service = new EchoService(this.envVariableController);
-            controller = new EchoController(service);
+            controller = new EchoController(new EchoService(this.envVariableController));
             this.controllers.put(GlobalControllerType.Name.ECHO, controller);
         }
         return controller;
@@ -41,10 +41,9 @@ public class GlobalControllerFactory {
 
     public LocalFilesController getLocalFilesController() {
         LOG.debug("*** getLocalFilesController ***");
-        var controller = (LocalFilesController) controllers.get(GlobalControllerType.Name.LOCAL_FILE);
+        var controller = (LocalFilesController) this.controllers.get(GlobalControllerType.Name.LOCAL_FILE);
         if (controller == null) {
-            var service = new LocalFileService(this.envVariableController);
-            controller = new LocalFilesController(service);
+            controller = new LocalFilesController(new LocalFileService(this.envVariableController));
             this.controllers.put(GlobalControllerType.Name.LOCAL_FILE, controller);
         }
         return controller;
@@ -52,10 +51,9 @@ public class GlobalControllerFactory {
 
     public SearchCacheController getSearchCacheController() {
         LOG.debug("*** getSearchCacheController ***");
-        var controller = (SearchCacheController) controllers.get(GlobalControllerType.Name.SEARCH_CACHE);
+        var controller = (SearchCacheController) this.controllers.get(GlobalControllerType.Name.SEARCH_CACHE);
         if (controller == null) {
-            var service = new SearchCacheService();
-            controller = new SearchCacheController(service);
+            controller = new SearchCacheController(new SearchCacheService());
             this.controllers.put(GlobalControllerType.Name.SEARCH_CACHE, controller);
         }
         return controller;
@@ -63,21 +61,29 @@ public class GlobalControllerFactory {
 
     public UnameController getUnameController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getUnameController ***");
-        var controller = (UnameController) controllers.get(GlobalControllerType.Name.UNAME);
-        var dependency = new Dependency.Builder().zosConnection(connection).timeout(timeout).build();
+        var controller = (UnameController) this.controllers.get(GlobalControllerType.Name.UNAME);
+        var dependency = new Dependency.Builder()
+                .zosConnection(connection)
+                .timeout(timeout)
+                .build();
+
         if (controller == null || controller.isNotValid(dependency)) {
-            var issueConsole = new ConsoleCmd(connection);
-            var service = new UnameService(issueConsole, timeout);
-            controller = new UnameController(service, this.envVariableController, dependency);
+            controller = new UnameController(
+                    new UnameService(new ConsoleCmd(connection), timeout),
+                    this.envVariableController,
+                    dependency
+            );
             this.controllers.put(GlobalControllerType.Name.UNAME, controller);
         }
+
         return controller;
     }
 
     public UsermodController getUsermodController(final ZosConnection connection, final int index) {
         LOG.debug("*** getUsermodController ***");
-        var service = new UsermodService(connection, index == 0 ? index : index - 1);
-        return new UsermodController(service);
+        return new UsermodController(
+                new UsermodService(connection, index == 0 ? index : index - 1)
+        );
     }
-
+    
 }
