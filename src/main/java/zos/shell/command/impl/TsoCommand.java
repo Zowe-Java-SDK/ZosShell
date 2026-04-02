@@ -51,7 +51,7 @@ public class TsoCommand extends NoOptionCommand {
         }
 
         var tsoController = ControllerFactories
-                .getGlobalFactory()
+                .getTsoFactory()
                 .getTsoController(ctx.zosConnection, acct, ctx.timeout);
 
         String result = tsoController.issueCommand(tsoCmd);
