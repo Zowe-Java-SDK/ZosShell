@@ -173,7 +173,8 @@ public class JobControllerFactory extends AbstractDependencyControllerFactory<Jo
         );
     }
 
-    public TailController getTailController(final ZosConnection connection, final TextTerminal<?> terminal,
+    public TailController getTailController(final ZosConnection connection,
+                                            final TextTerminal<?> terminal,
                                             final long timeout) {
         LOG.debug("*** getTailController ***");
         var dependency = new Dependency.Builder()
