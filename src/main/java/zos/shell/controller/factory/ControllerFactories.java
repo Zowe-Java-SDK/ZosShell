@@ -1,20 +1,21 @@
 package zos.shell.controller.factory;
 
-import zos.shell.controller.factory.impl.ChangeControllerFactory;
-import zos.shell.controller.factory.impl.DatasetControllerFactory;
-import zos.shell.controller.factory.impl.JobControllerFactory;
+import zos.shell.controller.factory.impl.*;
 
 public final class ControllerFactories {
 
-    private static final ControllerFactoryContainer GLOBAL_FACTORY = new ControllerFactoryContainer();
+    private static final GlobalControllerFactory GLOBAL_FACTORY = new GlobalControllerFactory();
     private static final ChangeControllerFactory CHANGE_FACTORY = new ChangeControllerFactory();
     private static final DatasetControllerFactory DATASET_FACTORY = new DatasetControllerFactory();
     private static final JobControllerFactory JOB_FACTORY = new JobControllerFactory();
+    private static final TsoControllerFactory TSO_FACTORY = new TsoControllerFactory();
+    private static final ConsoleControllerFactory CONSOLE_FACTORY = new ConsoleControllerFactory();
+    private static final UssControllerFactory USS_FACTORY = new UssControllerFactory();
 
     private ControllerFactories() {
     }
 
-    public static ControllerFactoryContainer getGlobalFactory() {
+    public static GlobalControllerFactory getGlobalFactory() {
         return GLOBAL_FACTORY;
     }
 
@@ -28,6 +29,18 @@ public final class ControllerFactories {
 
     public static JobControllerFactory getJobFactory() {
         return JOB_FACTORY;
+    }
+
+    public static TsoControllerFactory getTsoFactory() {
+        return TSO_FACTORY;
+    }
+
+    public static ConsoleControllerFactory getConsoleFactory() {
+        return CONSOLE_FACTORY;
+    }
+
+    public static UssControllerFactory getUssFactory() {
+        return USS_FACTORY;
     }
 
 }
