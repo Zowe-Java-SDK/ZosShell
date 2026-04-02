@@ -2,12 +2,12 @@ package zos.shell.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.controller.dependency.AbstractDependencyController;
 import zos.shell.controller.dependency.Dependency;
-import zos.shell.controller.dependency.DependencyController;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.job.processlst.ProcessLstService;
 
-public class ProcessLstController extends DependencyController {
+public class ProcessLstController extends AbstractDependencyController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProcessLstController.class);
 

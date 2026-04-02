@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.factory.ControllerFactories;
 
 import java.util.regex.Pattern;
 
@@ -64,8 +64,8 @@ public class SetCommand extends NoOptionCommand {
 
         value = stripOuterMatchingQuotes(value);
 
-        var env = ControllerFactoryContainerHolder
-                .container()
+        var env = ControllerFactories
+                .getGlobalFactory()
                 .getEnvVariableController();
 
         ctx.out(env.set(key, value));

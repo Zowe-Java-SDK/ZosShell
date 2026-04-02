@@ -2,14 +2,14 @@ package zos.shell.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import zos.shell.controller.dependency.AbstractDependencyController;
 import zos.shell.controller.dependency.Dependency;
-import zos.shell.controller.dependency.DependencyController;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.list.ListingService;
 import zos.shell.utility.ResponseUtil;
 import zowe.client.sdk.rest.exception.ZosmfRequestException;
 
-public class ListingController extends DependencyController {
+public class ListingController extends AbstractDependencyController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ListingController.class);
 

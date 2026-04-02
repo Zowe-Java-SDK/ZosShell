@@ -9,7 +9,6 @@ import zos.shell.service.connection.ConnectionStartupService;
 import zos.shell.singleton.HistorySingleton;
 import zos.shell.singleton.TerminalSingleton;
 import zos.shell.singleton.configuration.ConfigSingleton;
-import zos.shell.singleton.configuration.model.Window;
 import zos.shell.state.ShellStateMachine;
 
 import java.io.IOException;
@@ -98,7 +97,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
             return;
         }
 
-        Window window = configSettings.getWindow();
+        var window = configSettings.getWindow();
         if (window != null && window.getFontsize() != null) {
             int fontSize = Integer.parseInt(window.getFontsize());
             terminalSingleton.setFontSize(fontSize);

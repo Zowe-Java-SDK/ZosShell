@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.AbstractCommand;
 import zos.shell.command.CommandContext;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.factory.ControllerFactories;
 
 public class UsermodCommand extends AbstractCommand {
 
@@ -55,7 +55,8 @@ public class UsermodCommand extends AbstractCommand {
             return;
         }
 
-        var controller = ControllerFactoryContainerHolder.container()
+        var controller = ControllerFactories
+                .getGlobalFactory()
                 .getUsermodController(ctx.zosConnection, ctx.currZosConnectionIndex);
 
         String result = "";

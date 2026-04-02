@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.factory.ControllerFactories;
 import zos.shell.response.ResponseStatus;
 
 public class ChangeDirectoryCommand extends NoOptionCommand {
@@ -31,7 +31,9 @@ public class ChangeDirectoryCommand extends NoOptionCommand {
             return;
         }
 
-        var ctrl = ControllerFactoryContainerHolder.container().getChangeDirController();
+        var ctrl = ControllerFactories
+                .getChangeFactory()
+                .getChangeDirectoryController();
         ResponseStatus rs = ctrl.cd(ctx.currDataset, args.get(0).toUpperCase());
 
         if (!rs.isStatus()) {

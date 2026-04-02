@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.factory.ControllerFactories;
 
 public class SaveCommand extends NoOptionCommand {
 
@@ -30,7 +30,8 @@ public class SaveCommand extends NoOptionCommand {
             return;
         }
 
-        var saveController = ControllerFactoryContainerHolder.container()
+        var saveController = ControllerFactories
+                .getDatasetFactory()
                 .getSaveController(ctx.zosConnection, ctx.timeout);
 
         String result = saveController.save(ctx.currDataset, args.get(0));

@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
 import zos.shell.constants.Constants;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.factory.ControllerFactories;
 import zos.shell.singleton.ConnSingleton;
 import zos.shell.singleton.TerminalSingleton;
 import zos.shell.singleton.configuration.ConfigSingleton;
@@ -54,8 +54,9 @@ public class ChangeConnectionCommand extends NoOptionCommand {
             return;
         }
 
-        var changeConnController = ControllerFactoryContainerHolder.container()
-                .getChangeConnController(ctx.terminal);
+        var changeConnController = ControllerFactories
+                .getChangeFactory()
+                .getChangeConnectionController(ctx.terminal);
         ctx.zosConnection = changeConnController.changeZosConnection(ctx.zosConnection, changeIndex);
         ConnSingleton.getInstance().setCurrZosConnection(ctx.zosConnection, changeIndex);
         ctx.sshConnection = changeConnController.changeSshConnection(ctx.sshConnection, changeIndex);

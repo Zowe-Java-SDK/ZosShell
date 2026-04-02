@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.AbstractCommand;
 import zos.shell.command.CommandContext;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.factory.ControllerFactories;
 import zos.shell.service.search.SearchCache;
 
 public class TailCommand extends AbstractCommand {
@@ -55,7 +55,8 @@ public class TailCommand extends AbstractCommand {
             }
         }
 
-        var controller = ControllerFactoryContainerHolder.container()
+        var controller = ControllerFactories
+                .getJobFactory()
                 .getTailController(ctx.zosConnection, ctx.terminal, lines);
 
         String result = controller.tail(args[0], lines);

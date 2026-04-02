@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.command.AbstractCommand;
 import zos.shell.command.CommandContext;
 import zos.shell.constants.Constants;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.factory.ControllerFactories;
 import zos.shell.response.ResponseStatus;
 import zos.shell.utility.DsnUtil;
 
@@ -49,8 +49,8 @@ public class ListCommand extends AbstractCommand {
         boolean longList = cmd.hasOption("l") || cmd.hasOption("long-no-attr");
         boolean withAttr = cmd.hasOption("l");
 
-        var listingController = ControllerFactoryContainerHolder
-                .container()
+        var listingController = ControllerFactories
+                .getDatasetFactory()
                 .getListingController(ctx.zosConnection, ctx.terminal, ctx.timeout);
 
         var args = cmd.getArgList();

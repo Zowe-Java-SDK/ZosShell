@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.AbstractCommand;
 import zos.shell.command.CommandContext;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.factory.ControllerFactories;
 
 public class CountCommand extends AbstractCommand {
 
@@ -50,7 +50,8 @@ public class CountCommand extends AbstractCommand {
             return;
         }
 
-        var controller = ControllerFactoryContainerHolder.container()
+        var controller = ControllerFactories
+                .getDatasetFactory()
                 .getCountController(ctx.zosConnection, ctx.timeout);
 
         if (memberOpt) {

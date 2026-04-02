@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.factory.ControllerFactories;
 
 public class SubmitCommand extends NoOptionCommand {
 
@@ -30,7 +30,8 @@ public class SubmitCommand extends NoOptionCommand {
             return;
         }
 
-        var ctrl = ControllerFactoryContainerHolder.container()
+        var ctrl = ControllerFactories
+                .getJobFactory()
                 .getSubmitController(ctx.zosConnection, ctx.timeout);
 
         ctx.out(ctrl.submit(ctx.currDataset, args.get(0)));

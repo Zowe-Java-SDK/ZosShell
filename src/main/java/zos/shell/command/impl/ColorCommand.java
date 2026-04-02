@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.factory.ControllerFactories;
 import zos.shell.utility.ColorUtil;
 
 public class ColorCommand extends NoOptionCommand {
@@ -49,9 +49,9 @@ public class ColorCommand extends NoOptionCommand {
             }
         }
 
-        var controller = ControllerFactoryContainerHolder
-                .container()
-                .getChangeWinController(ctx.terminal);
+        var controller = ControllerFactories
+                .getChangeFactory()
+                .getChangeWindowController(ctx.terminal);
         String result = controller.changeColorSettings(args.get(0), args.size() == 2 ? args.get(1) : null);
         ctx.out(result);
     }

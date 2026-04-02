@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.factory.ControllerFactories;
 
 public class EditCommand extends NoOptionCommand {
 
@@ -36,7 +36,8 @@ public class EditCommand extends NoOptionCommand {
             return;
         }
 
-        var controller = ControllerFactoryContainerHolder.container()
+        var controller = ControllerFactories
+                .getDatasetFactory()
                 .getEditController(ctx.zosConnection, ctx.timeout);
         String result = controller.edit(ctx.currDataset, args.get(0));
         ctx.out(result);

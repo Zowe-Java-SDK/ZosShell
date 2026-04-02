@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.command.CommandContext;
 import zos.shell.command.NoOptionCommand;
-import zos.shell.controller.container.ControllerFactoryContainerHolder;
+import zos.shell.controller.factory.ControllerFactories;
 
 public class ConnectionsCommand extends NoOptionCommand {
 
@@ -29,8 +29,9 @@ public class ConnectionsCommand extends NoOptionCommand {
             return;
         }
 
-        ControllerFactoryContainerHolder.container()
-                .getChangeConnController(ctx.terminal)
+        ControllerFactories
+                .getChangeFactory()
+                .getChangeConnectionController(ctx.terminal)
                 .displayConnections();
     }
 
