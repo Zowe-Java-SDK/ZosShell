@@ -36,7 +36,7 @@ public class PurgeCommand extends NoOptionCommand {
         }
 
         var ctrl = ControllerFactories
-                .getGlobalFactory()
+                .getJobFactory()
                 .getPurgeController(ctx.zosConnection, ctx.timeout);
 
         ctx.out(ctrl.purge(args.get(0).toUpperCase()));

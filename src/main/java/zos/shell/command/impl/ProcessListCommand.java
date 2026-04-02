@@ -31,7 +31,7 @@ public class ProcessListCommand extends NoOptionCommand {
         }
 
         var ctrl = ControllerFactories
-                .getGlobalFactory()
+                .getJobFactory()
                 .getProcessLstController(ctx.zosConnection, ctx.timeout);
 
         var args = cmd.getArgList();

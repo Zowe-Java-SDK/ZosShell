@@ -31,7 +31,7 @@ public class SubmitCommand extends NoOptionCommand {
         }
 
         var ctrl = ControllerFactories
-                .getGlobalFactory()
+                .getJobFactory()
                 .getSubmitController(ctx.zosConnection, ctx.timeout);
 
         ctx.out(ctrl.submit(ctx.currDataset, args.get(0)));

@@ -54,7 +54,8 @@ public class BrowseJobCommand extends AbstractCommand {
         }
 
         boolean all = cmd.hasOption("a");
-        var controller = ControllerFactories.getGlobalFactory()
+        var controller = ControllerFactories
+                .getJobFactory()
                 .getBrowseJobController(ctx.zosConnection, all, ctx.timeout);
 
         String result = controller.browseJob(args.get(0));

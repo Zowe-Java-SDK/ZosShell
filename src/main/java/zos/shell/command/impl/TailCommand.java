@@ -56,7 +56,7 @@ public class TailCommand extends AbstractCommand {
         }
 
         var controller = ControllerFactories
-                .getGlobalFactory()
+                .getJobFactory()
                 .getTailController(ctx.zosConnection, ctx.terminal, lines);
 
         String result = controller.tail(args[0], lines);
