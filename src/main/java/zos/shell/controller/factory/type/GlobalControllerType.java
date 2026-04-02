@@ -6,8 +6,10 @@ public class GlobalControllerType {
 
         ECHO,
         ENV,
-        PATH,
         LOCAL_FILE,
+        PATH,
+        SEARCH_CACHE,
+        UNAME
 
     }
 
