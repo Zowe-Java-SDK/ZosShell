@@ -169,13 +169,37 @@ public class DatasetControllerFactory extends AbstractDependencyControllerFactor
                 () -> {
                     var envVariableController = new EnvVariableController(new EnvVariableService());
                     var pathService = new PathService(ConnSingleton.getInstance(), envVariableController);
-                    var downloadMemberService = new DownloadMemberService(connection, pathService, isBinary, timeout);
-                    var downloadPdsMemberService = new DownloadPdsMemberService(connection, pathService, isBinary, timeout);
-                    var downloadSeqDatasetService = new DownloadSeqDatasetService(connection, pathService, isBinary, timeout);
-                    var downloadMembersService = new DownloadMembersService(connection,
-                            new DownloadMemberListService(connection, isBinary, timeout), timeout);
-                    return new DownloadDsnController(downloadMemberService, downloadPdsMemberService,
-                            downloadSeqDatasetService, downloadMembersService, envVariableController, dependency);
+                    var downloadMemberService = new DownloadMemberService(
+                            connection,
+                            pathService,
+                            isBinary,
+                            timeout
+                    );
+                    var downloadPdsMemberService = new DownloadPdsMemberService(
+                            connection,
+                            pathService,
+                            isBinary,
+                            timeout
+                    );
+                    var downloadSeqDatasetService = new DownloadSeqDatasetService(
+                            connection,
+                            pathService,
+                            isBinary,
+                            timeout
+                    );
+                    var downloadMembersService = new DownloadMembersService(
+                            connection,
+                            new DownloadMemberListService(connection, isBinary, timeout),
+                            timeout
+                    );
+                    return new DownloadDsnController(
+                            downloadMemberService,
+                            downloadPdsMemberService,
+                            downloadSeqDatasetService,
+                            downloadMembersService,
+                            envVariableController,
+                            dependency
+                    );
                 }
         );
     }
