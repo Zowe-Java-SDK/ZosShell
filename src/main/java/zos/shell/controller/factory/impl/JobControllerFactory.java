@@ -162,7 +162,7 @@ public class JobControllerFactory extends AbstractDependencyControllerFactory<Jo
                 .build();
 
         return this.getOrCreateController(
-                JobControllerType.Name.PURGE,
+                JobControllerType.Name.SUBMIT,
                 SubmitController.class,
                 dependency,
                 () -> {
