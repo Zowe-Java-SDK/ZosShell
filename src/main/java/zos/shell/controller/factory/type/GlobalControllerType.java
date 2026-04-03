@@ -5,9 +5,7 @@ public class GlobalControllerType {
     public enum Name {
 
         ECHO,
-        ENV,
         LOCAL_FILE,
-        PATH,
         SEARCH_CACHE,
         UNAME
 
