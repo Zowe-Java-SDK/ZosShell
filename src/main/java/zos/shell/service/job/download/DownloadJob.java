@@ -13,6 +13,7 @@ import zowe.client.sdk.zosjobs.methods.JobGet;
 import zowe.client.sdk.zosjobs.model.Job;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class DownloadJob {
 
@@ -42,16 +43,12 @@ public class DownloadJob {
 
         var output = responseStatus.getMessage();
         String id;
-        if (jobId != null) {
-            id = jobId;
-        } else {
-            id = browseLogService.jobs.stream()
-                    .filter(job -> job.getStatus().equals("ACTIVE"))
-                    .findFirst()
-                    .or(() -> browseLogService.jobs.stream().findFirst())
-                    .map(Job::getJobId)
-                    .orElseThrow(() -> new IllegalStateException("jobId is null"));
-        }
+        id = Objects.requireNonNullElseGet(jobId, () -> browseLogService.jobs.stream()
+                .filter(job -> job.getStatus().equals("ACTIVE"))
+                .findFirst()
+                .or(() -> browseLogService.jobs.stream().findFirst())
+                .map(Job::getJobId)
+                .orElseThrow(() -> new IllegalStateException("jobId is null")));
 
         this.pathService.createPathsForMember(target, id);
         try {
