@@ -16,15 +16,11 @@ import zos.shell.service.usermod.UsermodService;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosconsole.methods.ConsoleCmd;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class GlobalControllerFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(GlobalControllerFactory.class);
 
     private final EnvVariableController envVariableController = new EnvVariableController(new EnvVariableService());
-    private final Map<GlobalControllerType.Name, Object> controllers = new HashMap<>();
     private final SimpleControllerCache simpleControllerCache = new SimpleControllerCache();
     private final DependencyControllerCache dependencyControllerCache = new DependencyControllerCache();
 
