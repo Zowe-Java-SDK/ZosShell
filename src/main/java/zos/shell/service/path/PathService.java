@@ -47,13 +47,13 @@ public class PathService {
 
         if (SystemUtils.IS_OS_WINDOWS) {
             pathToDirectory = !downloadPath.isBlank() ? downloadPath +
-                                                        (!downloadPath.endsWith("\\") ? "\\" : "") +
+                    (!downloadPath.endsWith("\\") ? "\\" : "") +
                     connSingleton.getCurrZosConnection().getHost() + "\\" + dataset :
                     DIRECTORY_PATH_WINDOWS + connSingleton.getCurrZosConnection().getHost() + "\\" + dataset;
             pathToDirectoryWithFileName = pathToDirectory + "\\" + target;
         } else if (SystemUtils.IS_OS_MAC_OSX) {
             pathToDirectory = !downloadPath.isBlank() ? downloadPath +
-                                                        (!downloadPath.endsWith("/") ? "/" : "") +
+                    (!downloadPath.endsWith("/") ? "/" : "") +
                     connSingleton.getCurrZosConnection().getHost() + "/" + dataset :
                     DIRECTORY_PATH_MAC + connSingleton.getCurrZosConnection().getHost() + "/" + dataset;
             pathToDirectoryWithFileName = pathToDirectory + "/" + target;

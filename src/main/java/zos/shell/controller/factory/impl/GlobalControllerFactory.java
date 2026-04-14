@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.controller.*;
 import zos.shell.controller.dependency.Dependency;
+import zos.shell.controller.factory.AbstractController;
+import zos.shell.controller.factory.AbstractDependencyControllerFactory;
 import zos.shell.controller.factory.type.GlobalControllerType;
 import zos.shell.service.echo.EchoService;
 import zos.shell.service.env.EnvVariableService;
@@ -23,15 +25,16 @@ public class GlobalControllerFactory {
 
     private final EnvVariableController envVariableController = new EnvVariableController(new EnvVariableService());
     private final Map<GlobalControllerType.Name, Object> controllers = new HashMap<>();
+    private final SimpleControllerCache simpleControllerCache = new SimpleControllerCache();
+    private final DependencyControllerCache dependencyControllerCache = new DependencyControllerCache();
 
     public EchoController getEchoController() {
         LOG.debug("*** getEchoController ***");
-        var controller = (EchoController) this.controllers.get(GlobalControllerType.Name.ECHO);
-        if (controller == null) {
-            controller = new EchoController(new EchoService(this.envVariableController));
-            this.controllers.put(GlobalControllerType.Name.ECHO, controller);
-        }
-        return controller;
+        return this.simpleControllerCache.getOrCreateController(
+                GlobalControllerType.Name.ECHO,
+                EchoController.class,
+                () -> new EchoController(new EchoService(this.envVariableController))
+        );
     }
 
     public EnvVariableController getEnvVariableController() {
@@ -41,49 +44,49 @@ public class GlobalControllerFactory {
 
     public LocalFilesController getLocalFilesController() {
         LOG.debug("*** getLocalFilesController ***");
-        var controller = (LocalFilesController) this.controllers.get(GlobalControllerType.Name.LOCAL_FILE);
-        if (controller == null) {
-            controller = new LocalFilesController(new LocalFileService(this.envVariableController));
-            this.controllers.put(GlobalControllerType.Name.LOCAL_FILE, controller);
-        }
-        return controller;
+        return this.simpleControllerCache.getOrCreateController(
+                GlobalControllerType.Name.LOCAL_FILE,
+                LocalFilesController.class,
+                () -> new LocalFilesController(new LocalFileService(this.envVariableController))
+        );
     }
 
     public SearchCacheController getSearchCacheController() {
         LOG.debug("*** getSearchCacheController ***");
-        var controller = (SearchCacheController) this.controllers.get(GlobalControllerType.Name.SEARCH_CACHE);
-        if (controller == null) {
-            controller = new SearchCacheController(new SearchCacheService());
-            this.controllers.put(GlobalControllerType.Name.SEARCH_CACHE, controller);
-        }
-        return controller;
+        return this.simpleControllerCache.getOrCreateController(
+                GlobalControllerType.Name.SEARCH_CACHE,
+                SearchCacheController.class,
+                () -> new SearchCacheController(new SearchCacheService())
+        );
     }
 
     public UnameController getUnameController(final ZosConnection connection, final long timeout) {
         LOG.debug("*** getUnameController ***");
-        var controller = (UnameController) this.controllers.get(GlobalControllerType.Name.UNAME);
         var dependency = new Dependency.Builder()
                 .zosConnection(connection)
                 .timeout(timeout)
                 .build();
 
-        if (controller == null || controller.isNotValid(dependency)) {
-            controller = new UnameController(
-                    new UnameService(new ConsoleCmd(connection), timeout),
-                    this.envVariableController,
-                    dependency
-            );
-            this.controllers.put(GlobalControllerType.Name.UNAME, controller);
-        }
-
-        return controller;
+        return this.dependencyControllerCache.getOrCreateController(
+                GlobalControllerType.Name.UNAME,
+                UnameController.class,
+                dependency,
+                () -> {
+                    var unameService = new UnameService(new ConsoleCmd(connection), timeout);
+                    return new UnameController(unameService, this.envVariableController, dependency);
+                }
+        );
     }
 
     public UsermodController getUsermodController(final ZosConnection connection, final int index) {
         LOG.debug("*** getUsermodController ***");
-        return new UsermodController(
-                new UsermodService(connection, index == 0 ? index : index - 1)
-        );
+        return new UsermodController(new UsermodService(connection, index == 0 ? index : index - 1));
     }
-    
+
+    private static final class SimpleControllerCache extends AbstractController<GlobalControllerType.Name> {
+    }
+
+    private static final class DependencyControllerCache extends AbstractDependencyControllerFactory<GlobalControllerType.Name> {
+    }
+
 }
