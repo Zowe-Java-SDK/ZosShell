@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zos.shell.controller.*;
 import zos.shell.controller.dependency.Dependency;
-import zos.shell.controller.factory.AbstractController;
+import zos.shell.controller.factory.AbstractControllerFactory;
 import zos.shell.controller.factory.AbstractDependencyControllerFactory;
 import zos.shell.controller.factory.type.GlobalControllerType;
 import zos.shell.service.echo.EchoService;
@@ -83,7 +83,7 @@ public class GlobalControllerFactory {
         return new UsermodController(new UsermodService(connection, index == 0 ? index : index - 1));
     }
 
-    private static final class SimpleControllerCache extends AbstractController<GlobalControllerType.Name> {
+    private static final class SimpleControllerCache extends AbstractControllerFactory<GlobalControllerType.Name> {
     }
 
     private static final class DependencyControllerCache extends AbstractDependencyControllerFactory<GlobalControllerType.Name> {

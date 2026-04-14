@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public abstract class AbstractController<K> {
+public abstract class AbstractControllerFactory<K> {
 
     private final Map<K, Object> controllers = new HashMap<>();
 

@@ -6,14 +6,14 @@ import org.slf4j.LoggerFactory;
 import zos.shell.controller.ChangeConnController;
 import zos.shell.controller.ChangeDirController;
 import zos.shell.controller.ChangeWinController;
-import zos.shell.controller.factory.AbstractController;
+import zos.shell.controller.factory.AbstractControllerFactory;
 import zos.shell.controller.factory.type.ChangeControllerType;
 import zos.shell.service.change.ChangeConnService;
 import zos.shell.service.change.ChangeDirService;
 import zos.shell.service.change.ChangeWinService;
 import zos.shell.service.terminal.TerminalOutputService;
 
-public class ChangeControllerFactory extends AbstractController<ChangeControllerType.Name> {
+public class ChangeControllerFactory extends AbstractControllerFactory<ChangeControllerType.Name> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ChangeControllerFactory.class);
 
