@@ -76,7 +76,7 @@ public class GlobalControllerFactory {
 
     public UsermodController getUsermodController(final ZosConnection connection, final int index) {
         LOG.debug("*** getUsermodController ***");
-        return new UsermodController(new UsermodService(connection, index == 0 ? index : index - 1));
+        return new UsermodController(new UsermodService(connection, Math.max(0, index - 1)));
     }
 
     private static final class SimpleControllerCache extends AbstractControllerFactory<GlobalControllerType.Name> {
