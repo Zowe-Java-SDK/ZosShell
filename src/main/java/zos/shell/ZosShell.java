@@ -55,7 +55,7 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
         LOG.debug("*** initializeTerminal ***");
         var mainTerminal = new SwingTextTerminal();
         terminalSingleton.setMainTerminal(mainTerminal);
-        terminalSingleton.setTerminalProperties();
+
         readConfiguration(terminalSingleton, connectionIdentifier);
 
         var configSettings = ConfigSingleton.getInstance().getConfigSettings();
@@ -71,6 +71,9 @@ public class ZosShell implements BiConsumer<TextIO, RunnerData> {
 
         mainTerminal.init();
         terminalSingleton.setMainTextIO(new TextIO(mainTerminal));
+
+        // register handlers AFTER init()
+        terminalSingleton.setTerminalProperties();
 
         applyConfiguredFontSize(terminalSingleton);
     }
