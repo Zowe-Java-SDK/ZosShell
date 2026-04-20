@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import zos.shell.constants.Constants;
 import zos.shell.service.change.ChangeWinService;
 import zos.shell.service.terminal.TerminalOutputService;
+import zos.shell.singleton.TerminalSingleton;
 import zos.shell.singleton.configuration.model.Profile;
 import zos.shell.singleton.configuration.record.ConfigSettings;
 import zowe.client.sdk.core.SshConnection;
@@ -161,6 +162,9 @@ public final class ConfigSingleton {
         result = changeWinService.setFontSize(window != null && window.getFontsize() != null ?
                 configSettings.getWindow().getFontsize() : String.valueOf(Constants.DEFAULT_FONT_SIZE));
         str.append(result != null ? result : DEFAULT_EMPTY_STRING);
+
+        TerminalSingleton.getInstance().setFontSize(window != null && window.getFontsize() != null ?
+                Integer.parseInt(configSettings.getWindow().getFontsize()) : Constants.DEFAULT_FONT_SIZE);
 
         if (window != null) {
             var paneWidth = window.getPaneWidth();
