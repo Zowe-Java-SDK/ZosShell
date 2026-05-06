@@ -6,9 +6,7 @@ import zos.shell.response.ResponseStatus;
 import zos.shell.service.dsn.concat.ConcatService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Grep {
 
@@ -17,7 +15,6 @@ public class Grep {
     private final ConcatService concatenate;
     private final String pattern;
     private final boolean withMember;
-    private final Map<Character, Integer> misMatchShiftsTable = new HashMap<>();
 
     public Grep(final ConcatService concatenate, final String pattern, final boolean withMember) {
         LOG.debug("*** Grep ***");
@@ -27,7 +24,6 @@ public class Grep {
         this.concatenate = concatenate;
         this.pattern = pattern;
         this.withMember = withMember;
-        compileMisMatchShiftsTable();
     }
 
     public List<String> search(final String currDataSet, final String target) {
@@ -141,37 +137,7 @@ public class Grep {
 
     private int findPosition(final String text, final int start) {
         LOG.debug("*** findPosition ***");
-
-        int lengthOfPattern = pattern.length();
-        int lengthOfText = text.length();
-        int numOfSkips;
-
-        for (int i = start; i <= lengthOfText - lengthOfPattern; i += numOfSkips) {
-            numOfSkips = 0;
-
-            for (int j = lengthOfPattern - 1; j >= 0; j--) {
-                if (pattern.charAt(j) != text.charAt(i + j)) {
-                    Integer shift = misMatchShiftsTable.get(text.charAt(i + j));
-                    numOfSkips = (shift != null) ? shift : lengthOfPattern;
-                    break;
-                }
-            }
-
-            if (numOfSkips == 0) {
-                return i; // absolute index now
-            }
-        }
-
-        return -1;
-    }
-
-    private void compileMisMatchShiftsTable() {
-        LOG.debug("*** compileMisMatchShiftsTable ***");
-
-        int lengthOfPattern = pattern.length();
-        for (int i = 0; i < lengthOfPattern; i++) {
-            misMatchShiftsTable.put(pattern.charAt(i), Math.max(1, lengthOfPattern - i - 1));
-        }
+        return text.indexOf(this.pattern, Math.max(0, start));
     }
 
 }
