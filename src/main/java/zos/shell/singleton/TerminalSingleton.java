@@ -133,7 +133,7 @@ public final class TerminalSingleton {
 
     private void setApplicationIcon() {
         LOG.debug("*** setApplicationIcon ***");
-        URL iconUrl = ZosShell.class.getResource("/image/zowe-icon.png");
+        URL iconUrl = ZosShell.class.getResource("/image/zosshell.png");
         if (iconUrl != null) {
             ImageIcon icon = new ImageIcon(iconUrl);
             mainTerminal.getFrame().setIconImage(icon.getImage());
