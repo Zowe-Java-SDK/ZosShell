@@ -1,5 +1,7 @@
 # ZosShell  
-![zosshell.png](src/main/resources/image/zosshell.png)
+
+<img src="src/main/resources/image/zosshell.png" alt="ZosShell Logo" width="400"/>
+
 ZosShell provides a client like Linux shell to perform z/OS system service commands.  
   
 The commands exploit the z/OSMF Rest API layer on z/OS. 
