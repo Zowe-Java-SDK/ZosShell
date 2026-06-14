@@ -1,75 +1,94 @@
 # ZosShell  
 
-<img src="src/main/resources/image/zosshell.png" alt="ZosShell Logo" width="400"/>
+<p align="center">
+  <img src="src/main/resources/image/zosshell.png" alt="ZosShell Logo" width="400"/>
+</p>
 
-ZosShell provides a client like Linux shell to perform z/OS system service commands.  
-  
-The commands exploit the z/OSMF Rest API layer on z/OS. 
-  
-ZosShell acts like a Bash shell. It provides similar bash concepts and processing. Examples of shell functionality are: keeping track of command history, changing directories represented as a partition dataset, history shortcuts with exclamation mark, auto command type ahead with a TAB key and much more. It also caches each command output that can be searched by the search command.  
+---
 
-The project arose because of a need for something more simple, direct and less verbiage than [Zowe CLI](https://github.com/zowe/zowe-cli) for the most common commands. 
-  
-ZosShell demonstrates the usage of [Zowe Client Java SDK](https://github.com/zowe/zowe-client-java-sdk).    
-    
-Zowe Client Java SDK provides the plumbing to perform z/OSMF Rest API calls.     
-  
-With ZosShell, the following z/OS service commands can be performed:  
-  
-MVS
-  
-    MVS console command
+## Overview
 
-TSO  
+**ZosShell** provides a Linux-like shell experience for interacting with z/OS system services. It offers a simple, interactive command-line interface for executing common z/OS operations using the z/OSMF REST API layer.
 
-    TSO console command
+ZosShell behaves similarly to a Bash shell and supports familiar shell concepts such as:
 
-Member  
+* Command history and history shortcuts (`!`)
+* Directory navigation, where directories map to partitioned data sets (PDS)
+* Command auto-completion using the **TAB** key
+* Cached command output, searchable via a built-in search command
 
-    copy
-    create
-    delete
-    download
-    edit
-    list
-    rename
-    save
-    view
+The goal of ZosShell is to provide a more direct and lightweight alternative to **Zowe CLI** for frequently used commands, with less verbosity and faster interaction.
 
-Partition Dataset (PDS)
+---
 
-    copy
-    create
-    delete
-    list
-    rename
-    view
+## Architecture
 
-Sequential Dataset  
+ZosShell demonstrates the usage of the **Zowe Client Java SDK**, which provides the underlying plumbing for invoking z/OSMF REST APIs. ZosShell builds on this foundation to expose an interactive shell-style experience tailored for day-to-day z/OS operations.
 
-    copy
-    create
-    delete
-    download
-    edit
-    list
-    rename
-    save
-    view
+---
 
-Job and StartedTask      
+## Supported z/OS Services and Commands
 
-    cancel
-    browse log
-    download log
-    list
-    monitor
-    purge
-    start
-    stop
-    submit  
-  
-The app works well on Windows and macOS.   
+### MVS
+
+* Console command
+
+### TSO
+
+* TSO command
+
+### Member
+
+* copy
+* create
+* delete
+* download
+* edit
+* list
+* rename
+* save
+* view
+
+### Partitioned Data Set (PDS)
+
+* copy
+* create
+* delete
+* list
+* rename
+* view
+
+### Sequential Data Set
+
+* copy
+* create
+* delete
+* download
+* edit
+* list
+* rename
+* save
+* view
+
+### Jobs and Started Tasks
+
+* cancel
+* browse log
+* download log
+* list
+* monitor
+* purge
+* start
+* stop
+* submit
+
+---
+
+## Platform Support
+
+ZosShell runs reliably on **Windows** and **macOS**.
+
+---
           
 ## Main Demo  
   
