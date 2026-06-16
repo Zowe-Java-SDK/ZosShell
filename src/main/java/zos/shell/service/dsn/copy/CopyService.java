@@ -41,8 +41,8 @@ public class CopyService implements AutoCloseable {
         var fromDataSetName = "";
         var toDataSetName = "";
 
-        var firstParam = params[1].toUpperCase();
-        var secondParam = params[2].toUpperCase();
+        var firstParam = params[0].toUpperCase();
+        var secondParam = params[1].toUpperCase();
 
         var datasetMemberFirstParam = DatasetMember.getDatasetAndMember(firstParam);
         if (datasetMemberFirstParam != null) {
