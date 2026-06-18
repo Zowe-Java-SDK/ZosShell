@@ -106,87 +106,128 @@ ZosShell runs reliably on **Windows** and **macOS**.
   
 ![Demo](https://github.com/frankgiordano/ZosShell/blob/master/demos/save-demo.gif)
       
-The shell performs the following Linux-like commands:    
+---
 
-    cat <arg>                       Display member contents
-    cd <arg>                        Change working dataset
-    cls / clear                     Clear screen & search cache
-    cp / copy <src> <dst>           Copy files or datasets
-    echo <arg>                      Print text; expands $VARIABLE
-    env                             List environment variables
-    g / grep <pattern> <member>     Search within output/member
-    history [n]                     Show last n commands
-    hostname                        Show connected host
-    !!                              Repeat last command
-    !n / !string	                Repeat history item
-    ls [filter]                     List members/datasets
-    ls -l [filter]	                Long listing with attributes
-    mkdir <dataset>	                Create dataset
-    ps [filter]                     List started tasks/jobs
-    pwd                             Show current dataset path
-    rm <arg>                        Remove members/datasets
-    set <key=value>	                Set environment variable
-    tail [options] <job>	        Show bottom of job output
-    touch <arg>                     Create member if absent
-    uname	                        Host & z/OS version
-    unset <arg ...>                 Remove one or more environment variables
-    usermod <arg>	                Change username (-u)/password (-p)
-    whoami	                        Current username
+## Supported Shell Commands
 
-Along with the following custom commands - extend functionality beyond basic shell operations:
+The shell provides a set of **Linux-like commands** for navigating and interacting with z/OS datasets and jobs.
 
-    bj / browsejob <job> <opt>      Display JESMSGLG spool output (-a for all)
-    cancel <job>	                Cancel the specified started task/job
-    change <num>	                Switch to a different connection profile
-    color <prompt> <background>     Set prompt colors
-    connections                     List configured connections
-    count <arg>                     Count members (-m) or datasets (-d)
-    d / download <src> <opt>        Download dataset/member (-b for binary)
-    dj / downloadjob [opt] <job>	Download job spool output (-a all)
-    e / edit <arg>	                Edit dataset/member then save
-    end / exit / quit               Quit shell
-    files	                        List local directory files
-    mvs <cmd>                       Execute MVS console command
-    p / purge <job>	                Purge started task/job from JES
-    rn / rename <old> <new>	        Rename member or dataset
-    save <arg>                      Save edits to file in working dir
-    search <pattern>                Search cached outputs
-    stop <job>                      Stop the specified started task/job
-    submit <member>	                Submit a started task/job
-    t / timeout <val>               Show or change timeout
-    tso <cmd>                       Execute TSO command 
-    uss <cmd>                       Execute USS (Unix) command
-    v / visited                     List visited datasets
-  
-Key combinations provide the following functionality within the shell:    
-  
-All key combinations work on Windows and macOS unless specified otherwise.  
-      
-    CTRL C                  - copy text
-    CTRL V                  - paste coped text
-    UP arrow                - scroll up through history list 
-    DOWN arrow              - scroll down through history list
-    CTRL UP arrow           - increase font size  (Windows)
-    CTRL DOWN arrow         - decrease font size  (Windows)
-    SHIFT UP arrow          - increase font size  (macOS)
-    SHIFT DOWN arrow        - decrease font size  (macOS)
-    TAB                     - command autofill key - type a few characters then click on TAB key 
-    
-To quit from the command shell UI, you can either press 'X' windows close icon or enter: end, exit, or quit keyword.
+### Standard Commands
 
-Help Command Syntax:
+```
+cat <arg>                       Display member contents
+cd <arg>                        Change the working dataset
+cls | clear                     Clear the screen and search cache
+cp | copy <src> <dst>           Copy files or datasets
+echo <arg>                      Print text (expands $VARIABLE)
+env                             List environment variables
+g | grep <pattern> <member>     Search within output or a member
+history [n]                     Display the last n commands
+hostname                        Display the connected host
+!!                              Repeat the last command
+!n | !string                    Repeat a command from history
+ls [filter]                     List members or datasets
+ls -l [filter]                  Long listing with attributes
+mkdir <dataset>                 Create a dataset
+ps [filter]                     List started tasks or jobs
+pwd                             Display the current dataset path
+rm <arg>                        Remove members or datasets
+set <key=value>                 Set an environment variable
+tail [options] <job>            Display the bottom of job output
+touch <arg>                     Create a member if it does not exist
+uname                           Display host and z/OS version
+unset <arg ...>                 Remove one or more environment variables
+usermod <arg>                   Change username (-u) or password (-p)
+whoami                          Display the current username
+```
 
-You can get help inside the shell:
+---
 
-    h or help           Lists all commands
-    help <command>      Details for specific command
-  
-## Requirements  
+## Extended (Custom) Commands
 
-    Maven
-    Compatible with all Java versions 11 and above.
-    z/OSMF installed on your backend z/OS instance.
-              
+The following commands extend the basic shell functionality with z/OS-specific operations:
+
+```
+bj | browsejob <job> <opt>      Display JESMSGLG spool output (-a for all)
+cancel <job>                    Cancel a started task or job
+change <num>                    Switch to a different connection profile
+color <prompt> <background>     Set prompt colors
+connections                     List configured connections
+count <arg>                     Count members (-m) or datasets (-d)
+d | download <src> <opt>        Download a dataset or member (-b for binary)
+dj | downloadjob [opt] <job>    Download job spool output (-a for all)
+e | edit <arg>                  Edit a dataset or member and save changes
+end | exit | quit               Exit the shell
+files                           List files in the local directory
+mvs <cmd>                       Execute an MVS console command
+p | purge <job>                 Purge a job or started task from JES
+rn | rename <old> <new>         Rename a member or dataset
+save <arg>                      Save edits to a file in the working directory
+search <pattern>                Search cached outputs
+stop <job>                      Stop a started task or job
+submit <member>                 Submit a job or started task
+t | timeout <val>               Display or set the command timeout
+tso <cmd>                       Execute a TSO command
+uss <cmd>                       Execute a USS (Unix System Services) command
+v | visited                     List visited datasets
+```
+
+---
+
+## Keyboard Shortcuts
+
+Key combinations provide enhanced usability within the shell.
+
+> **Note:** All shortcuts work on Windows and macOS unless stated otherwise.
+
+```
+CTRL + C            Copy selected text
+CTRL + V            Paste copied text
+UP Arrow            Scroll backward through command history
+DOWN Arrow          Scroll forward through command history
+CTRL + UP Arrow     Increase font size (Windows)
+CTRL + DOWN Arrow   Decrease font size (Windows)
+SHIFT + UP Arrow    Increase font size (macOS)
+SHIFT + DOWN Arrow  Decrease font size (macOS)
+TAB                 Command auto-completion
+```
+
+---
+
+## Exiting the Shell
+
+To exit the shell UI, you may either:
+
+* Click the window **Close (X)** button, or
+* Enter one of the following commands:
+
+```
+end
+exit
+quit
+```
+
+---
+
+## Help Commands
+
+You can access help directly from within the shell:
+
+```
+h | help            List all available commands
+help <command>      Display detailed help for a specific command
+```
+
+---
+
+## Requirements
+
+* **Maven**
+* **Java 11 or later**
+* **z/OSMF** installed and configured on the target z/OS system
+
+---
+
 ## Build And Execute  
           
 At the root directory prompt, execute the following maven command:  
