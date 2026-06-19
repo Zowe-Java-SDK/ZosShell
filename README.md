@@ -222,7 +222,7 @@ help <command>      Display detailed help for a specific command
 
 ## Requirements
 
-* **Maven**
+* **Maven** (only for building)
 * **Java 11 or later**
 * **z/OSMF** installed and configured on the target z/OS system
 
