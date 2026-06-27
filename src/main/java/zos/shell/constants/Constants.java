@@ -13,7 +13,8 @@ public final class Constants {
     public static final String COPY_NO_MEMBER_ERROR =
             "first argument invalid for copy, specified a member, try again...";
     public static final int BROWSE_LIMIT = 10000;
-    public static final String BROWSE_LIMIT_WARNING = "too large of a job log to display, try increasing browse limit...";
+    public static final String BROWSE_LIMIT_WARNING =
+            "too large of a job log to display, try increasing browse limit...";
     public static final String DEFAULT_BACKGROUND_COLOR = "black";
     public static final String DEFAULT_CONFIG_MAC = "/ZosShell/config.json";
     public static final String DEFAULT_CONFIG_WINDOWS = "C:\\ZosShell\\config.json";
@@ -27,7 +28,8 @@ public final class Constants {
     public static final String DELETE_NOTHING_ERROR = "nothing to delete, try again...";
     public static final String DOWNLOAD_FAIL = "download failed, try again...";
     public static final String DOWNLOAD_NOTHING_WARNING = "nothing to download, try again...";
-    public static final String DOWNLOAD_NOT_SEQ_DATASET_WARNING = "not found dsorg='PS' property for specified sequential dataset, try again...";
+    public static final String DOWNLOAD_NOT_SEQ_DATASET_WARNING =
+            "not found dsorg='PS' property for specified sequential dataset, try again...";
     public static final String EXECUTE_ERROR_MSG = "execute error...";
     public static final long FUTURE_TIMEOUT_VALUE = 10;
     public static final int HISTORY_SIZE = 200;
@@ -55,7 +57,8 @@ public final class Constants {
     public static final int STRING_PAD_LENGTH = 8;
     public static final int THREAD_POOL_MIN = 1;
     public static final int THREAD_POOL_MAX = 10;
-    public static final String TIMEOUT_MESSAGE = "command exceeded timeout value, try again by increasing timeout value..";
+    public static final String TIMEOUT_MESSAGE =
+            "command exceeded timeout value, try again by increasing timeout value..";
     public static final String UTF8 = "UTF8";
     public static final String WINDOWS_EDITOR_NAME = "notepad";
     public static final String OS_ERROR = "command is only supported on Windows and macOS...";
