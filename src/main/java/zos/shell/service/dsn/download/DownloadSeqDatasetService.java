@@ -6,7 +6,6 @@ import zos.shell.constants.Constants;
 import zos.shell.response.ResponseStatus;
 import zos.shell.service.path.PathService;
 import zos.shell.utility.FileUtil;
-import zos.shell.utility.FutureUtil;
 import zowe.client.sdk.core.ZosConnection;
 import zowe.client.sdk.zosfiles.dsn.methods.DsnGet;
 
@@ -21,93 +20,152 @@ public class DownloadSeqDatasetService implements AutoCloseable {
 
     private final ZosConnection connection;
     private final PathService pathService;
-    private final boolean isBinary;
-    private final long timeout;
-    private final ExecutorService pool = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
+    private final boolean binary;
+    private final long timeoutSeconds;
+    private final ExecutorService executor;
 
-    public static class SequentialDatasetCheckResult {
-
-        private final boolean isValid;
-        private final Exception exception;
-
-        public SequentialDatasetCheckResult(boolean isValid, Exception exception) {
-            this.isValid = isValid;
-            this.exception = exception;
-        }
-
-        public boolean isValid() {
-            return isValid;
-        }
-
-        public Exception getException() {
-            return exception;
-        }
-    }
-
-    public DownloadSeqDatasetService(final ZosConnection connection,
-                                     final PathService pathService,
-                                     final boolean isBinary,
-                                     final long timeout) {
-        LOG.debug("*** DownloadSeqDatasetService ***");
+    public DownloadSeqDatasetService(ZosConnection connection,
+                                     PathService pathService,
+                                     boolean binary,
+                                     long timeoutSeconds) {
         this.connection = connection;
         this.pathService = pathService;
-        this.isBinary = isBinary;
-        this.timeout = timeout;
+        this.binary = binary;
+        this.timeoutSeconds = timeoutSeconds;
+        this.executor = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
     }
 
-    public List<ResponseStatus> downloadSeqDataset(final String target) {
+    public List<ResponseStatus> downloadSeqDataset(String target) {
         LOG.debug("*** downloadSeqDataset ***");
+
         List<ResponseStatus> results = new ArrayList<>();
 
-        SequentialDatasetCheckResult result = checkSequentialDataset(target);
-        if (!result.isValid()) {
-            Exception exception = result.getException();
-            if (exception instanceof TimeoutException) {
-                results.add(new ResponseStatus(Constants.TIMEOUT_MESSAGE, false));
-            } else if (exception != null) {
-                results.add(new ResponseStatus(FutureUtil.getErrorMessage(exception), false));
-            } else {
-                results.add(new ResponseStatus(Constants.DOWNLOAD_NOT_SEQ_DATASET_WARNING, false));
-            }
+        SequentialDatasetCheckResult check = checkSequentialDataset(target);
+        if (!check.isValid()) {
+            results.add(toFailureStatus(check));
             return results;
         }
 
-        Future<ResponseStatus> future = pool.submit(new FutureDatasetDownload(
-                new DsnGet(connection),
-                pathService,
-                target,
-                isBinary
-        ));
+        Future<ResponseStatus> future = executor.submit(new FutureDatasetDownload(
+                        new DsnGet(connection),
+                        pathService,
+                        target,
+                        binary
+                )
+        );
 
-        ResponseStatus status = FutureUtil.getResponseStatus(future, timeout);
+        ResponseStatus status = getWithTimeout(future);
         results.add(status);
+
         if (status.isStatus()) {
-            FileUtil.openFileLocation(new File(status.getOptionalData()).getAbsolutePath());
+            openDownloadedFile(status);
         }
 
         return results;
     }
 
+    private SequentialDatasetCheckResult checkSequentialDataset(String target) {
+        LOG.debug("*** checkSequentialDataset ***");
+
+        Future<ResponseStatus> future =
+                executor.submit(new FutureDatasetInfo(new DsnGet(connection), target));
+
+        try {
+            ResponseStatus rs = future.get(timeoutSeconds, TimeUnit.SECONDS);
+            boolean isSequential = rs.getMessage().contains("dsorg='PS'");
+            return SequentialDatasetCheckResult.valid(isSequential, rs.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            future.cancel(true);
+            return SequentialDatasetCheckResult.failure(e);
+        } catch (ExecutionException | TimeoutException e) {
+            future.cancel(true);
+            return SequentialDatasetCheckResult.failure(e);
+        }
+    }
+
+    private ResponseStatus getWithTimeout(Future<ResponseStatus> future) {
+        try {
+            return future.get(timeoutSeconds, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            future.cancel(true);
+            return new ResponseStatus(e.getCause().getMessage(), false);
+        } catch (TimeoutException e) {
+            future.cancel(true);
+            return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
+        } catch (ExecutionException e) {
+            future.cancel(true);
+            return new ResponseStatus(e.getCause().getMessage(), false);
+        }
+    }
+
+    private ResponseStatus toFailureStatus(SequentialDatasetCheckResult check) {
+        Exception ex = check.getException();
+
+        if (ex instanceof TimeoutException) {
+            return new ResponseStatus(Constants.TIMEOUT_MESSAGE, false);
+        }
+
+        if (ex != null) {
+            return new ResponseStatus(ex.getMessage(), false);
+        }
+
+        if (check.getResponseMessage() != null) {
+            String msg = check.getResponseMessage() + "\n" + Constants.DOWNLOAD_NOT_SEQ_DATASET_WARNING;
+            return new ResponseStatus(msg, false);
+        }
+
+        return new ResponseStatus(Constants.DOWNLOAD_NOT_SEQ_DATASET_WARNING, false);
+    }
+
+    private void openDownloadedFile(ResponseStatus status) {
+        String path = status.getOptionalData();
+        if (path != null) {
+            FileUtil.openFileLocation(new File(path).getAbsolutePath());
+        }
+    }
+
     @Override
     public void close() {
         LOG.debug("*** close ***");
-        pool.shutdown();
+        executor.shutdown();
     }
 
-    private SequentialDatasetCheckResult checkSequentialDataset(final String target) {
-        LOG.debug("*** checkSequentialDataset ***");
-        Future<ResponseStatus> future = pool.submit(new FutureDatasetInfo(new DsnGet(connection), target));
-        try {
-            ResponseStatus responseStatus = future.get(timeout, TimeUnit.SECONDS);
-            boolean isSequential = responseStatus.getMessage().contains("dsorg='PS'");
-            return new SequentialDatasetCheckResult(isSequential, null);
-        } catch (InterruptedException e) {
-            future.cancel(true);
-            Thread.currentThread().interrupt();
-            return new SequentialDatasetCheckResult(false, e);
-        } catch (ExecutionException | TimeoutException e) {
-            future.cancel(true);
-            return new SequentialDatasetCheckResult(false, e);
+    /* ------------------------------------------------------------------ */
+
+    static final class SequentialDatasetCheckResult {
+
+        private final boolean valid;
+        private final String responseMessage;
+        private final Exception exception;
+
+        private SequentialDatasetCheckResult(boolean valid,
+                                             String responseMessage,
+                                             Exception exception) {
+            this.valid = valid;
+            this.responseMessage = responseMessage;
+            this.exception = exception;
+        }
+
+        static SequentialDatasetCheckResult valid(boolean isSequential, String message) {
+            return new SequentialDatasetCheckResult(isSequential, message, null);
+        }
+
+        static SequentialDatasetCheckResult failure(Exception e) {
+            return new SequentialDatasetCheckResult(false, null, e);
+        }
+
+        boolean isValid() {
+            return valid;
+        }
+
+        String getResponseMessage() {
+            return responseMessage;
+        }
+
+        Exception getException() {
+            return exception;
         }
     }
 
