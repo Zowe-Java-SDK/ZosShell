@@ -24,10 +24,10 @@ public class DownloadSeqDatasetService implements AutoCloseable {
     private final long timeoutSeconds;
     private final ExecutorService executor;
 
-    public DownloadSeqDatasetService(ZosConnection connection,
-                                     PathService pathService,
-                                     boolean binary,
-                                     long timeoutSeconds) {
+    public DownloadSeqDatasetService(final ZosConnection connection,
+                                     final PathService pathService,
+                                     final boolean binary,
+                                     final long timeoutSeconds) {
         this.connection = connection;
         this.pathService = pathService;
         this.binary = binary;
@@ -35,7 +35,7 @@ public class DownloadSeqDatasetService implements AutoCloseable {
         this.executor = Executors.newFixedThreadPool(Constants.THREAD_POOL_MIN);
     }
 
-    public List<ResponseStatus> downloadSeqDataset(String target) {
+    public List<ResponseStatus> downloadSeqDataset(final String target) {
         LOG.debug("*** downloadSeqDataset ***");
 
         List<ResponseStatus> results = new ArrayList<>();
@@ -64,7 +64,7 @@ public class DownloadSeqDatasetService implements AutoCloseable {
         return results;
     }
 
-    private SequentialDatasetCheckResult checkSequentialDataset(String target) {
+    private SequentialDatasetCheckResult checkSequentialDataset(final String target) {
         LOG.debug("*** checkSequentialDataset ***");
 
         Future<ResponseStatus> future =
@@ -100,7 +100,7 @@ public class DownloadSeqDatasetService implements AutoCloseable {
         }
     }
 
-    private ResponseStatus toFailureStatus(SequentialDatasetCheckResult check) {
+    private ResponseStatus toFailureStatus(final SequentialDatasetCheckResult check) {
         Exception ex = check.getException();
 
         if (ex instanceof TimeoutException) {
@@ -119,7 +119,7 @@ public class DownloadSeqDatasetService implements AutoCloseable {
         return new ResponseStatus(Constants.DOWNLOAD_NOT_SEQ_DATASET_WARNING, false);
     }
 
-    private void openDownloadedFile(ResponseStatus status) {
+    private void openDownloadedFile(final ResponseStatus status) {
         String path = status.getOptionalData();
         if (path != null) {
             FileUtil.openFileLocation(new File(path).getAbsolutePath());
@@ -148,11 +148,11 @@ public class DownloadSeqDatasetService implements AutoCloseable {
             this.exception = exception;
         }
 
-        static SequentialDatasetCheckResult valid(boolean isSequential, String message) {
+        static SequentialDatasetCheckResult valid(final boolean isSequential, final String message) {
             return new SequentialDatasetCheckResult(isSequential, message, null);
         }
 
-        static SequentialDatasetCheckResult failure(Exception e) {
+        static SequentialDatasetCheckResult failure(final Exception e) {
             return new SequentialDatasetCheckResult(false, null, e);
         }
 
