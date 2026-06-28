@@ -242,7 +242,9 @@ Since version 3.0.0, you can send an argument value to the java command above, f
   
     java -jar zosshell-5.0.2.jar 2  
   
-This will load the second profile defined in config.json at startup instead of the first one, which is done by default.  
+This will load the third profile defined in config.json at startup instead of the first one, which is done by default.  
+
+Indexing value starts at zero. 
   
 If you are planning to browse large job output, you may want to set the JVM memory usage higher than the default, i.e.  
   

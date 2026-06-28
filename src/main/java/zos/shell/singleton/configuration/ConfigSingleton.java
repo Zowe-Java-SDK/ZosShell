@@ -94,11 +94,6 @@ public final class ConfigSingleton {
         } catch (NumberFormatException ignored) {
         }
 
-        // -1 value to start at 0,1,2,etc...
-        if (index > 0) {
-            index--;
-        }
-
         var profile = this.getProfileByIndex(index);
         configSettings = new ConfigSettings(
                 profile.getHostname(),

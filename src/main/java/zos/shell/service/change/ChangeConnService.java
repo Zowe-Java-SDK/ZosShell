@@ -132,7 +132,7 @@ public class ChangeConnService {
                     "Connection configuration missing"
             );
             String host = connection.getHost().isBlank() ? "n/a" : connection.getHost();
-            this.terminalOutputService.println((i + 1) + " hostname: " + host + ", zosmfport: " + connection.getZosmfPort());
+            this.terminalOutputService.println((i) + " hostname: " + host + ", zosmfport: " + connection.getZosmfPort());
         }
     }
 

@@ -40,12 +40,11 @@ public class ChangeConnectionCommand extends NoOptionCommand {
             return;
         }
 
-        int changeIndex;
+        int index;
         try {
-            int num = Integer.parseInt(args.get(0));
-            changeIndex = num != 0 ? num - 1 : 0;
+            index = Integer.parseInt(args.get(0));
             var numOfConnections = ConfigSingleton.getInstance().getZosConnections().size() - 1;
-            if (changeIndex < 0 || changeIndex > numOfConnections) {
+            if (index < 0 || index > numOfConnections) {
                 ctx.out(Constants.NO_CONNECTION);
                 return;
             }
@@ -57,11 +56,11 @@ public class ChangeConnectionCommand extends NoOptionCommand {
         var changeConnController = ControllerFactories
                 .getChangeFactory()
                 .getChangeConnectionController(ctx.terminal);
-        ctx.zosConnection = changeConnController.changeZosConnection(ctx.zosConnection, changeIndex);
-        ConnSingleton.getInstance().setCurrZosConnection(ctx.zosConnection, changeIndex);
-        ctx.sshConnection = changeConnController.changeSshConnection(ctx.sshConnection, changeIndex);
+        ctx.zosConnection = changeConnController.changeZosConnection(ctx.zosConnection, index);
+        ConnSingleton.getInstance().setCurrZosConnection(ctx.zosConnection, index);
+        ctx.sshConnection = changeConnController.changeSshConnection(ctx.sshConnection, index);
         ConnSingleton.getInstance().setCurrSshConnection(ctx.sshConnection);
-        ctx.currZosConnectionIndex = changeIndex;
+        ctx.currZosConnectionIndex = index;
 
         TerminalSingleton.getInstance().getMainTerminal()
                 .setPaneTitle(Constants.APP_TITLE + " - " + ctx.zosConnection.getHost().toUpperCase());
