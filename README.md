@@ -21,6 +21,28 @@ The goal of ZosShell is to provide a more direct and lightweight alternative to 
 
 ---
 
+## Quick Start
+
+``` bash
+# Build the project
+mvnw clean install
+
+# Run ZosShell
+java -jar target/zosshell-5.0.3.jar
+```
+
+> By default, ZosShell loads the first profile (`index 0`) from
+> `config.json`. You can select a different profile by passing its
+> zero-based index:
+>
+> ``` bash
+> java -jar target/zosshell-5.0.3.jar 2
+> ```
+
+Ensure `config.json` is properly configured before launching the shell. See below for more detailed instructions. 
+
+---
+
 ## Architecture
 
 ZosShell demonstrates the usage of the **Zowe Client Java SDK**, which provides the underlying plumbing for invoking z/OSMF REST APIs. ZosShell builds on this foundation to expose an interactive shell-style experience tailored for day-to-day z/OS operations.
@@ -227,35 +249,62 @@ help <command>      Display detailed help for a specific command
 
 ---
 
-## Build And Execute  
-          
-At the root directory prompt, execute the following maven command:  
-  
-    mvnw clean install  
-  
-Change the directory to the target directory and execute the following command:  
-  
-    java -jar zosshell-5.0.3.jar   
-  
-Since version 3.0.0, you can send an argument value to the java command above, for instance:  
-  
-    java -jar zosshell-5.0.3.jar 2  
-  
-This will load the third profile defined in config.json at startup instead of the first one, which is done by default.  
+## Build and Run
 
-Indexing value starts at zero. 
-  
-If you are planning to browse large job output, you may want to set the JVM memory usage higher than the default, i.e.  
-  
-    java -jar -Xmx2G zosshell-5.0.3.jar   
-  
-### Terminal configuration properties
-  
-By default, the configuration file name is config.json located within C:\ZosShell directory for Windows or /ZosShell for macOS.  
-  
-You can override the default file name and its location by setting the following OS environment variable:  
-  
-    ZOSSHELL_CONFIG_PATH  
+From the project root directory, build the application using Maven:
+
+``` bash
+mvnw clean install
+```
+
+After the build completes, change to the `target` directory and run the
+application:
+
+``` bash
+java -jar zosshell-5.0.3.jar
+```
+
+### Selecting a Profile at Startup
+
+Starting with version **3.0.0**, you can pass an optional numeric
+argument to select which profile from `config.json` is loaded at
+startup.
+
+For example:
+
+``` bash
+java -jar zosshell-5.0.3.jar 2
+```
+
+This loads the **third** profile defined in `config.json` instead of the
+default first profile.
+
+> **Note:** Profile indexing is zero-based (the first profile is index
+> `0`).
+
+### Increasing JVM Memory
+
+If you plan to browse large job outputs, you may want to increase the
+JVM heap size:
+
+``` bash
+java -Xmx2G -jar zosshell-5.0.3.jar
+```
+
+------------------------------------------------------------------------
+
+## Terminal Configuration Properties
+
+By default, the configuration file is named `config.json` and is located
+at:
+
+-   **Windows:** `C:\ZosShell`
+-   **macOS:** `/ZosShell`
+
+You can override both the file name and location by setting the
+following environment variable:
+
+    ZOSSHELL_CONFIG_PATH
   
 The configuration file consists of JSON data. The configuration JSON string is defined as a JSON array structure. The array will consist of one or more profile(s).
   
