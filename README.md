@@ -222,7 +222,6 @@ help <command>      Display detailed help for a specific command
 
 ## Requirements
 
-* **Maven** (only for building)
 * **Java 11 or later**
 * **z/OSMF** installed and configured on the target z/OS system
 
@@ -232,7 +231,7 @@ help <command>      Display detailed help for a specific command
           
 At the root directory prompt, execute the following maven command:  
   
-    mvn clean install  
+    mvnw clean install  
   
 Change the directory to the target directory and execute the following command:  
   
