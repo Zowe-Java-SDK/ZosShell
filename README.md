@@ -306,17 +306,20 @@ following environment variable:
 
     ZOSSHELL_CONFIG_PATH
   
-The configuration file consists of JSON data. The configuration JSON string is defined as a JSON array structure. The array will consist of one or more profile(s).
   
-A profile is a one-to-one relationship of the [Profile.java](https://github.com/Zowe-Java-SDK/ZosShell/blob/master/src/main/java/zos/shell/singleton/configuration/model/Profile.java) file within the project. It contains variables as a placeholder for configuration information, such as z/OSMF and SSH connection information, properties to control the Window environment and much more.  
-   
-The first JSON array entry in the example below shows all the attributes defined to be read by the application.  
-  
-The other JSON array entries show that you don't need to specify all attributes and its values. The attributes required are those that specify a z/OSMF connection: hostname and zosmfport.    
-   
-The username and password entries are optional. It is recommended to not specify those settings. When not specified, the application will prompt the end user for a username and password for the current connection.   
-    
-For further details on username and password usage, see [here](https://github.com/Zowe-Java-SDK/ZosShell/issues/182).    
+## Configuration File Overview
+
+The configuration file is written in JSON format. The configuration itself is represented as a JSON array, where each element in the array defines a profile. A valid configuration must contain one or more profiles.
+
+A **profile** corresponds directly to the `Profile.java` model within the project. It serves as a container for configuration variables used throughout the application, including connection details for z/OSMF and SSH, along with settings that control the shell window environment and other runtime behavior.
+
+The first entry in the JSON array example demonstrates a fully populated profile, showing all supported attributes that can be consumed by the application.
+
+Subsequent entries illustrate that not all attributes are required. At a minimum, a profile must include the z/OSMF connection properties: **hostname** and **zosmfport**.
+
+The **username** and **password** fields are optional and should generally be omitted. When they are not provided, the application will prompt the user to enter credentials at runtime for the active connection.
+
+For additional details on username and password handling, see the documentation linked [here](https://github.com/Zowe-Java-SDK/ZosShell/issues/182).   
     
 Example of config.json:  
 
@@ -365,24 +368,38 @@ Example of config.json:
         }
     ]
   
-Explanation of some of the variable settings:
-  
-    downloadpath specifies the location on your disk drive to store downloaded data
-    consolename specifies the console name to use to perform MVS console command
-    accountnumber specifies the account number needed to perform TSO command
-    prompt specifies value to display for the application prompt
-    window is a subsection specifies values to control the application window settings
-  
-NOTE: The following are the default values for paneHeight (480) and paneWidth (640); values lower than these are ignored, and the default(s) is used instead.  
+## Common Configuration Properties
+
+- **downloadpath**  Local directory used to store downloaded data.
+
+- **consolename**  Console name used for issuing MVS console commands.
+
+- **accountnumber**  Account number required for executing TSO commands.
+
+- **browselimit**  Maximum number of lines returned when browsing output.
+
+- **prompt**  Value displayed as the shell prompt.
+
+- **window**  Subsection that controls shell window appearance.
+
+---
+
+### Note
+
+Default values for `paneHeight` and `paneWidth` are **480** and **640**.  
+Any values lower than these defaults are ignored.
    
 The following JSON variable settings are converted into environmental variables within the shell:
   
-    hostname as HOSTNAME
-    downloadpath as DOWNLOAD_PATH
-    consolename as CONSOLE_NAME
-    accountnumber as ACCOUNT_NUMBER
-    browselimit as BROWSE_LIMIT
-    prompt as PROMPT
+| JSON Property   | Environment Variable |
+| --------------- | -------------------- |
+| `hostname`      | `HOSTNAME`           |
+| `downloadpath`  | `DOWNLOAD_PATH`      |
+| `consolename`   | `CONSOLE_NAME`       |
+| `accountnumber` | `ACCOUNT_NUMBER`     |
+| `browselimit`   | `BROWSE_LIMIT`       |
+| `prompt`        | `PROMPT`             |
+
   
 Each of these environmental variables will appear at app startup via ENV command if any have a value specified within the configuration JSON file.
 
