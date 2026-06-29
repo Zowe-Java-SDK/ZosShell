@@ -45,7 +45,7 @@ Ensure `config.json` is properly configured before launching the shell. See belo
 
 ## Architecture
 
-ZosShell demonstrates the usage of the **Zowe Client Java SDK**, which provides the underlying plumbing for invoking z/OSMF REST APIs. ZosShell builds on this foundation to expose an interactive shell-style experience tailored for day-to-day z/OS operations.
+ZosShell demonstrates the usage of the [**Zowe Client Java SDK**](https://github.com/zowe/zowe-client-java-sdk), which provides the underlying plumbing for invoking z/OSMF REST APIs. ZosShell builds on this foundation to expose an interactive shell-style experience tailored for day-to-day z/OS operations.
 
 ---
 
